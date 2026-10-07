@@ -1,0 +1,3 @@
+from pathlib import Path
+p=Path('work/qa/android.mjs');s=p.read_text(encoding='utf-8');s="import fs from 'node:fs';\n"+s;s=s.replace("await page.goto('http://127.0.0.1:5175/');", "const nativeSource=fs.readFileSync('outputs/android/src/chat/cloudlet/phone/MainActivity.java','utf8'),csp=nativeSource.match(/headers\\.put\\(\"Content-Security-Policy\",\"([^\"]+)\"\\)/)[1];await context.route('http://127.0.0.1:5175/',async route=>{const response=await route.fetch();await route.fulfill({response,headers:{...response.headers(),'content-security-policy':csp}});});await page.goto('http://127.0.0.1:5175/');")
+Path('work/qa/repair-csp.mjs').write_text(s,encoding='utf-8')

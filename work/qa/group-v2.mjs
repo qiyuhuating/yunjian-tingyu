@@ -1,0 +1,12 @@
+import {chromium} from 'playwright';
+const browser=await chromium.launch({executablePath:'D:/xiaofeng/dev-cache/ms-playwright/chromium-1223/chrome-win64/chrome.exe',headless:true});
+const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();
+page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+await page.goto('http://127.0.0.1:5173/signin-with-chatgpt?return_to=/');await page.locator('.home-screen').waitFor();
+await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.waitForTimeout(350);
+console.log('chat',await page.locator('.app-window').innerText());
+await page.getByRole('button',{name:'新建群聊'}).click();await page.waitForTimeout(150);
+console.log('form',await page.locator('.form-card').innerText());
+await page.getByRole('textbox',{name:'群聊名称'}).fill('验收小群2');await page.getByRole('checkbox',{name:'云汐',exact:true}).check();await page.getByRole('checkbox',{name:'苏小满',exact:true}).check();await page.getByRole('button',{name:'创建群聊',exact:true}).click();await page.waitForTimeout(700);
+console.log('after',await page.locator('.app-window').innerText());
+await browser.close();

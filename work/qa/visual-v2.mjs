@@ -1,0 +1,13 @@
+import {chromium} from 'playwright';
+const browser=await chromium.launch({executablePath:'D:/xiaofeng/dev-cache/ms-playwright/chromium-1223/chrome-win64/chrome.exe',headless:true});
+const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();
+page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+await page.goto('http://127.0.0.1:5173/signin-with-chatgpt?return_to=/');
+await page.locator('.home-screen').waitFor();
+await page.screenshot({path:'D:/Codex存储文件夹/2026-10-06/c/work/home-v2-mobile.png',fullPage:true});
+await page.locator('.pet-peek').click();
+await page.locator('.pet-screen').waitFor();
+await page.waitForTimeout(400);
+await page.screenshot({path:'D:/Codex存储文件夹/2026-10-06/c/work/pet-v2-mobile.png',fullPage:true});
+console.log(JSON.stringify({homeText:await page.locator('.home-screen').innerText(),petText:(await page.locator('.pet-screen').innerText()).slice(0,800),window:await page.locator('.app-window').evaluate(e=>{const s=getComputedStyle(e);return {background:s.backgroundColor,z:s.zIndex,opacity:s.opacity,rect:e.getBoundingClientRect().toJSON()}})}));
+await browser.close();

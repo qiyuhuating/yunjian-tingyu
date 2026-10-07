@@ -1,0 +1,15 @@
+import {chromium} from 'playwright';
+import fs from 'node:fs/promises';
+import {createRequire} from 'node:module';
+const root='D:/Codex存储文件夹/2026-10-06/c',project=root+'/outputs/mori-phone',require=createRequire(project+'/package.json'),ts=require('typescript');
+const code=ts.transpileModule(await fs.readFile(project+'/lib/phone-model.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,m={exports:{}};new Function('require','module','exports',code)(require,m,m.exports);
+const browser=await chromium.launch({executablePath:'D:/xiaofeng/dev-cache/ms-playwright/chromium-1223/chrome-win64/chrome.exe'}),page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2});
+await page.goto('http://127.0.0.1:5173/signin-with-chatgpt?return_to=/');await page.locator('.home-screen').waitFor();await page.evaluate(async fresh=>{const current=await fetch('/api/state').then(r=>r.json());const res=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:fresh,version:current.version})});if(!res.ok)throw Error('Local preview reset failed');},m.exports.freshState());await page.reload();await page.locator('.home-screen').waitFor();await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(500);
+await page.screenshot({path:root+'/outputs/界面预览.png'});
+const open=async name=>{await page.locator('.home-screen').getByRole('button',{name:'全部应用',exact:true}).click();await page.locator('.launcher-grid').getByRole('button',{name,exact:true}).click();};
+await open('聊天');await page.locator('.contact-row').filter({hasText:'云汐'}).first().click();await page.waitForTimeout(300);await page.screenshot({path:root+'/outputs/聊天预览.png'});
+await page.getByRole('button',{name:'返回桌面',exact:true}).click();await open('角色设定');await page.locator('.character-row').filter({hasText:'云汐'}).first().locator('button').first().click();await page.waitForTimeout(300);await page.screenshot({path:root+'/outputs/角色设定预览.png'});
+await page.getByRole('button',{name:'返回桌面',exact:true}).click();await open('设置');await page.waitForTimeout(300);await page.screenshot({path:root+'/outputs/设置预览.png'});
+await page.getByRole('button',{name:'返回桌面',exact:true}).click();await open('小云');await page.waitForTimeout(300);await page.screenshot({path:root+'/outputs/桌宠预览.png'});
+await page.evaluate(()=>{const e=document.querySelector('.desktop');e.classList.remove('theme-sky');e.classList.add('theme-night');});await page.screenshot({path:root+'/outputs/夜间界面预览.png'});
+await browser.close();console.log('Clean default previews generated; only loopback fixture state changed.');

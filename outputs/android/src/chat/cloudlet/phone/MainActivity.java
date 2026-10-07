@@ -1,0 +1,137 @@
+package chat.cloudlet.phone;
+import android.Manifest;
+import android.app.Activity;
+import android.content.*;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.*;
+import android.speech.tts.*;
+import android.util.Base64;
+import android.webkit.*;
+import android.widget.Toast;
+import org.json.*;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.*;
+
+public final class MainActivity extends Activity {
+    private static final String HOST="appassets.androidplatform.net";
+    private WebView web;
+    private ValueCallback<Uri[]> picker;
+    private PermissionRequest mediaPermission;
+    private final ExecutorService workers=Executors.newFixedThreadPool(4);
+    private final ConcurrentHashMap<String,HttpsJob> jobs=new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String,File> downloads=new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String,String[]> downloadInfo=new ConcurrentHashMap<>();
+    private File exportFile; private String exportId; private boolean recoveringPicker;
+    private TextToSpeech tts; private volatile boolean ttsReady;
+    private static final class HttpsJob { volatile boolean cancelled; volatile HttpURLConnection connection; }
+    @Override public void onCreate(Bundle state) {
+        super.onCreate(state);
+        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setNavigationBarColor(android.graphics.Color.rgb(242,246,248));
+        web=new WebView(this);setContentView(web);
+        web.setOnApplyWindowInsetsListener((v,insets)->{v.setPadding(0,0,0,insets.getSystemWindowInsetBottom());return insets;});
+        WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);
+        settings.setAllowFileAccess(false);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        settings.setMediaPlaybackRequiresUserGesture(false);settings.setSupportMultipleWindows(false);
+        android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(web,false);
+        web.addJavascriptInterface(new Bridge(),"Android");
+        web.setWebViewClient(new WebViewClient(){
+            @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){
+                Uri uri=request.getUrl();if(!HOST.equals(uri.getHost())||!"https".equals(uri.getScheme()))return null;
+                try {String path=uri.getPath();if(path==null||path.equals("/"))path="/index.html";
+                    if(path.contains(".."))throw new IOException();String mime=URLConnection.guessContentTypeFromName(path);
+                    if(path.endsWith(".js"))mime="application/javascript";if(path.endsWith(".css"))mime="text/css";if(path.endsWith(".woff2"))mime="font/woff2";
+                    Map<String,String> headers=new HashMap<>();headers.put("Cache-Control","no-cache");headers.put("X-Content-Type-Options","nosniff");headers.put("Content-Security-Policy","default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https: blob:; font-src 'self'; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'");
+                    return new WebResourceResponse(mime==null?"application/octet-stream":mime,"UTF-8",200,"OK",headers,getAssets().open("web"+path));
+                } catch(IOException e){return new WebResourceResponse("text/plain","UTF-8",404,"Not Found",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));}
+            }
+            @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){if(HOST.equals(request.getUrl().getHost())&&"https".equals(request.getUrl().getScheme()))return false;openExternal(request.getUrl().toString());return true;}
+        });
+        web.setWebChromeClient(new WebChromeClient(){
+            @Override public boolean onShowFileChooser(WebView view,ValueCallback<Uri[]> callback,FileChooserParams params){
+                if(picker!=null)picker.onReceiveValue(null);picker=callback;
+                Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);intent.addCategory(Intent.CATEGORY_OPENABLE);intent.setType("*/*");
+                List<String> types=new ArrayList<>();for(String type:params.getAcceptTypes())if(type.contains("/"))types.add(type);
+                if(!types.isEmpty())intent.putExtra(Intent.EXTRA_MIME_TYPES,types.toArray(new String[0]));
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,params.getMode()==FileChooserParams.MODE_OPEN_MULTIPLE);
+                try{startActivityForResult(intent,100);}catch(ActivityNotFoundException e){picker.onReceiveValue(null);picker=null;notice("未找到系统文件选择器。");}return true;
+            }
+            @Override public void onPermissionRequest(PermissionRequest request){runOnUiThread(()->{
+                if(!HOST.equals(request.getOrigin().getHost())||!"https".equals(request.getOrigin().getScheme())){request.deny();return;}mediaPermission=request;
+                List<String> missing=new ArrayList<>();for(String resource:request.getResources()){
+                    String permission=PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(resource)?Manifest.permission.RECORD_AUDIO:PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(resource)?Manifest.permission.CAMERA:null;
+                    if(permission==null){request.deny();mediaPermission=null;return;}
+                    if(checkSelfPermission(permission)!=PackageManager.PERMISSION_GRANTED)missing.add(permission);
+                }
+                if(missing.isEmpty()){request.grant(request.getResources());mediaPermission=null;}else requestPermissions(missing.toArray(new String[0]),101);
+            });}
+            @Override public void onPermissionRequestCanceled(PermissionRequest request){if(mediaPermission==request)mediaPermission=null;}
+        });
+        tts=new TextToSpeech(this,status->{ttsReady=status==TextToSpeech.SUCCESS;if(ttsReady)tts.setLanguage(Locale.SIMPLIFIED_CHINESE);});
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){public void onStart(String id){}public void onDone(String id){speechEnd(id,false);}public void onError(String id){notice("设备朗读失败，请安装中文语音或改用云端TTS。");speechEnd(id,true);}});
+        recoveringPicker=state!=null&&state.getBoolean("picker-pending");recoverExport();cleanOldDownloads();web.loadUrl("https://"+HOST+"/");
+        if(state==null&&exportFile!=null)showExportRecovery();
+    }
+    private void speechEnd(String id,boolean failed){js("window.NativeSpeechEnd&&window.NativeSpeechEnd("+JSONObject.quote(id)+","+failed+")");}
+    private void js(String script){runOnUiThread(()->{if(web!=null)web.evaluateJavascript(script,null);});}
+    private void notice(String message){runOnUiThread(()->Toast.makeText(this,message,Toast.LENGTH_LONG).show());}
+    private void openExternal(String value){runOnUiThread(()->{try{
+        Uri uri=Uri.parse(value);String scheme=uri.getScheme();if(!Arrays.asList("https","http","orpheus","qqmusic","kugou","spotify","music","intent").contains(scheme))throw new IllegalArgumentException();
+        Intent intent="intent".equals(scheme)?Intent.parseUri(value,Intent.URI_INTENT_SCHEME):new Intent(Intent.ACTION_VIEW,uri);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);intent.setComponent(null);intent.setSelector(null);startActivity(intent);
+    }catch(Exception e){notice("没有找到能够打开这个链接的应用。");}});}
+    private void callback(String method,String id,String value){js("window.NativeHTTP&&window.NativeHTTP."+method+"("+JSONObject.quote(id)+(value.isEmpty()?"":","+value)+")");}
+    private boolean allowed(URL url) throws Exception {
+        if(!"https".equals(url.getProtocol())||url.getUserInfo()!=null||url.getPort()>0&&url.getPort()!=443)return false;
+        for(InetAddress address:InetAddress.getAllByName(url.getHost()))if(address.isAnyLocalAddress()||address.isLoopbackAddress()||address.isLinkLocalAddress()||address.isSiteLocalAddress()||address.isMulticastAddress())return false;
+        return true;
+    }
+    private final class Bridge {
+        @JavascriptInterface public void request(String id,String target,String method,String headerJSON,String body){
+            HttpsJob job=new HttpsJob();jobs.put(id,job);workers.execute(()->{try{
+                URL url=new URL(target);if(!allowed(url))throw new IOException();
+                HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;
+                if(job.cancelled)return;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(30000);connection.setReadTimeout(120000);connection.setRequestMethod(method);
+                JSONObject headers=new JSONObject(headerJSON);for(Iterator<String> it=headers.keys();it.hasNext();){String key=it.next();if(Arrays.asList("authorization","content-type","accept","x-api-key","anthropic-version","x-goog-api-key").contains(key.toLowerCase(Locale.ROOT)))connection.setRequestProperty(key,headers.getString(key));}
+                if(!body.isEmpty()){byte[] data=body.getBytes(StandardCharsets.UTF_8);connection.setDoOutput(true);connection.setFixedLengthStreamingMode(data.length);try(OutputStream output=connection.getOutputStream()){output.write(data);}}
+                int status=connection.getResponseCode();if(status<100||status>599)throw new IOException();if(job.cancelled)return;
+                JSONObject result=new JSONObject();String type=connection.getContentType();if(type!=null)result.put("content-type",type);
+                result.put("cache-control","no-store");callback("headers",id,status+","+JSONObject.quote(result.toString()));
+                InputStream stream=status>=400?connection.getErrorStream():connection.getInputStream();if(stream!=null)try(InputStream input=stream){byte[] data=new byte[16384];long total=0;int n;while(!job.cancelled&&(n=input.read(data))!=-1){total+=n;if(total>64L*1024*1024)throw new IOException();callback("chunk",id,JSONObject.quote(Base64.encodeToString(data,0,n,Base64.NO_WRAP)));}}
+                if(!job.cancelled)callback("end",id,"");
+            }catch(Exception e){if(!job.cancelled)callback("error",id,"");}finally{jobs.remove(id);if(job.connection!=null)job.connection.disconnect();}});
+        }
+        @JavascriptInterface public void cancel(String id){HttpsJob job=jobs.get(id);if(job!=null){job.cancelled=true;if(job.connection!=null)job.connection.disconnect();}}
+        @JavascriptInterface public void finishAfterSave(){runOnUiThread(()->finish());}
+        @JavascriptInterface public void openUrl(String url){openExternal(url);}
+        @JavascriptInterface public void copyText(String text){runOnUiThread(()->((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("云笺听雨",text)));}
+        @JavascriptInterface public void speak(String text,float rate,String id){runOnUiThread(()->{if(!ttsReady){notice("设备语音尚未就绪，请稍后再试。");speechEnd(id,true);return;}int result=tts.setLanguage(Locale.SIMPLIFIED_CHINESE);if(result<0){notice("设备缺少中文语音，请安装中文音色或选择云端TTS。");speechEnd(id,true);return;}tts.setSpeechRate(rate);if(tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,id)==TextToSpeech.ERROR)speechEnd(id,true);});}
+        @JavascriptInterface public void stopSpeech(){runOnUiThread(()->{if(tts!=null)tts.stop();});}
+        @JavascriptInterface public void startDownload(String id,String name,String mime){try{File file=File.createTempFile("cloudlet-",".download",getCacheDir());downloads.put(id,file);downloadInfo.put(id,new String[]{name,mime});}catch(IOException e){notice("附件导出空间不足。");}}
+        @JavascriptInterface public void downloadChunk(String id,String chunk){File file=downloads.get(id);if(file==null)return;try(OutputStream out=new FileOutputStream(file,true)){out.write(Base64.decode(chunk,Base64.DEFAULT));}catch(IOException e){downloads.remove(id);downloadInfo.remove(id);file.delete();notice("附件导出失败，请检查空间。");}}
+        @JavascriptInterface public void finishDownload(String id){File file=downloads.get(id);if(file==null)return;runOnUiThread(()->{if(exportFile!=null){downloads.remove(id);downloadInfo.remove(id);file.delete();notice("请先完成上一个文件的保存。");return;}exportFile=file;exportId=id;try{journalExport();launchExport();}catch(Exception e){finishExport();notice("文件保存准备失败，请重试。");}});}
+    }
+    private File exportJournal(){return new File(getCacheDir(),"pending-export.json");}
+    private void journalExport() throws Exception {String[] info=downloadInfo.get(exportId);JSONObject row=new JSONObject();row.put("id",exportId);row.put("file",exportFile.getName());row.put("name",info[0]);row.put("mime",info[1]);android.util.AtomicFile journal=new android.util.AtomicFile(exportJournal());FileOutputStream output=journal.startWrite();try{output.write(row.toString().getBytes(StandardCharsets.UTF_8));journal.finishWrite(output);}catch(IOException e){journal.failWrite(output);throw e;}}
+    private void recoverExport(){try{File journal=exportJournal();byte[] bytes;try(DataInputStream input=new DataInputStream(new android.util.AtomicFile(journal).openRead())){if(journal.length()>8192)throw new IOException();bytes=new byte[(int)journal.length()];input.readFully(bytes);}JSONObject row=new JSONObject(new String(bytes,StandardCharsets.UTF_8));File file=new File(getCacheDir(),row.getString("file"));if(!file.getCanonicalFile().getParentFile().equals(getCacheDir().getCanonicalFile())||!file.getName().startsWith("cloudlet-")||!file.exists())throw new IOException();exportFile=file;exportId=row.getString("id");downloads.put(exportId,file);downloadInfo.put(exportId,new String[]{row.getString("name"),row.getString("mime")});}catch(Exception e){new android.util.AtomicFile(exportJournal()).delete();exportFile=null;exportId=null;}}
+    private void cleanOldDownloads(){File[] files=getCacheDir().listFiles();if(files!=null)for(File file:files)if(file.getName().startsWith("cloudlet-")&&file.getName().endsWith(".download")&&!file.equals(exportFile)&&file.lastModified()<System.currentTimeMillis()-86400000L)file.delete();}
+    private void showExportRecovery(){if(exportFile!=null)new android.app.AlertDialog.Builder(this).setTitle("文件还没有保存完").setMessage("原文件仍在，可以重新选择保存位置。").setPositiveButton("继续保存",(dialog,which)->launchExport()).setNegativeButton("取消",(dialog,which)->finishExport()).show();}
+    private void launchExport(){String[] info=downloadInfo.get(exportId);if(exportFile==null||info==null)return;Intent intent=new Intent(Intent.ACTION_CREATE_DOCUMENT);intent.addCategory(Intent.CATEGORY_OPENABLE);intent.setType(info[1]);intent.putExtra(Intent.EXTRA_TITLE,info[0]);try{startActivityForResult(intent,102);}catch(ActivityNotFoundException e){finishExport();notice("未找到系统保存文件窗口。");}}
+    private void finishExport(){if(exportFile!=null)exportFile.delete();if(exportId!=null){downloads.remove(exportId);downloadInfo.remove(exportId);}exportFile=null;exportId=null;new android.util.AtomicFile(exportJournal()).delete();}
+    @Override protected void onSaveInstanceState(Bundle state){state.putBoolean("picker-pending",picker!=null||recoveringPicker);super.onSaveInstanceState(state);}
+    @Override public void onConfigurationChanged(android.content.res.Configuration configuration){super.onConfigurationChanged(configuration);}
+    @Override protected void onActivityResult(int request,int result,Intent data){super.onActivityResult(request,result,data);
+        if(request==100){if(picker!=null){List<Uri> selected=new ArrayList<>();if(result==RESULT_OK&&data!=null){if(data.getClipData()!=null){for(int i=0;i<data.getClipData().getItemCount();i++)selected.add(data.getClipData().getItemAt(i).getUri());}else if(data.getData()!=null)selected.add(data.getData());}picker.onReceiveValue(selected.isEmpty()?null:selected.toArray(new Uri[0]));picker=null;}else if(recoveringPicker&&result==RESULT_OK)notice("系统重新打开了小手机，请再选一次文件；原文件没有被移动或删除。");recoveringPicker=false;}
+        if(request==102&&exportFile!=null){if(result!=RESULT_OK||data==null||data.getData()==null){finishExport();return;}File file=exportFile;String id=exportId;Uri target=data.getData();workers.execute(()->{boolean saved=false;try{try(InputStream input=new FileInputStream(file);OutputStream out=getContentResolver().openOutputStream(target)){if(out==null)throw new IOException();byte[] buffer=new byte[65536];int n;while((n=input.read(buffer))!=-1)out.write(buffer,0,n);out.flush();}saved=true;notice("文件已保存。");}catch(IOException e){notice("文件保存失败，原文件仍在，下次打开可以继续保存。");}finally{if(saved)runOnUiThread(()->{if(id.equals(exportId))finishExport();else{downloads.remove(id);downloadInfo.remove(id);file.delete();}});else runOnUiThread(()->{if(!isFinishing()&&!isDestroyed())showExportRecovery();});}});}
+    }
+
+    @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==101&&mediaPermission!=null){boolean granted=results.length>0;for(int value:results)granted&=value==PackageManager.PERMISSION_GRANTED;if(granted)mediaPermission.grant(mediaPermission.getResources());else mediaPermission.deny();mediaPermission=null;}}
+    @Override public void onBackPressed(){web.evaluateJavascript("(()=>{const b=document.querySelector('.app-header button[aria-label=\"返回桌面\"]');if(b){b.click();return true;}if(window.NativeFlush){window.NativeFlush().then(()=>window.Android.finishAfterSave()).catch(()=>{});return true;}return false;})()",value->{if(!"true".equals(value))finish();});}
+    @Override protected void onPause(){super.onPause();js("window.NativeFlush&&window.NativeFlush().catch(()=>{})");web.onPause();}
+    @Override protected void onResume(){super.onResume();if(web!=null)web.onResume();}
+    @Override protected void onDestroy(){for(HttpsJob job:jobs.values()){job.cancelled=true;if(job.connection!=null)job.connection.disconnect();}workers.shutdownNow();if(picker!=null){picker.onReceiveValue(null);picker=null;}if(tts!=null){tts.stop();tts.shutdown();}if(web!=null){web.removeJavascriptInterface("Android");web.destroy();web=null;}super.onDestroy();}
+}

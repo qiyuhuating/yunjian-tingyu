@@ -1,0 +1,16 @@
+**/node_modules/
+**/.env*
+**/.dev.vars*
+**/.wrangler/
+**/.next/
+**/.vinext/
+**/dist/
+**/*.tsbuildinfo
+**/__pycache__/
+outputs/android/build/
+**/apk-signing/
+**/*.p12
+**/*.jks
+**/*.keystore
+**/signing.json
+**/Android签名备份.zip

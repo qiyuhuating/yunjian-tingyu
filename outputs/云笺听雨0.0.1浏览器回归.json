@@ -1,0 +1,153 @@
+[
+  {
+    "check": "repair-review",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "204/205/304可结算",
+        "非法响应头可拒绝",
+        "Request保留参数",
+        "网络取消",
+        "过期朗读事件隔离",
+        "共享附件及上传保护",
+        "冲突不误删",
+        "ZIP恢复真实字节与旧附件回收",
+        "启动回收孤立文件",
+        "坏备份保留原页面",
+        "真实阅读器卸载隔离",
+        "切换播放器终止旧任务",
+        "关闭前草稿立即保存并恢复"
+      ],
+      "native": {
+        "empty": [
+          {
+            "status": 204,
+            "body": ""
+          },
+          {
+            "status": 205,
+            "body": ""
+          },
+          {
+            "status": 304,
+            "body": ""
+          }
+        ],
+        "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
+        "request": {
+          "id": "6d1ba402-3e0f-4699-bad2-ad1a4b1f25c0",
+          "url": "https://fixture.invalid/post",
+          "method": "POST",
+          "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",
+          "body": "expected-body"
+        },
+        "aborted": "AbortError",
+        "before": {
+          "a": 0,
+          "b": 0
+        },
+        "after": {
+          "a": 0,
+          "b": 1
+        }
+      },
+      "persistence": {
+        "shared": true,
+        "removed": true,
+        "protectedPending": true,
+        "conflict": true,
+        "conflictPreserves": true,
+        "restoredText": "music",
+        "previousRemoved": true,
+        "secondText": "music",
+        "abandonedRemoved": true,
+        "finalVersion": true
+      },
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-summary",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "真实聊天触发独立摘要",
+        "摘要wire只有系统与资料两个消息",
+        "摘要输出和游标真实保存",
+        "截断摘要保留旧游标且聊天不丢",
+        "删除最后群成员清理空群"
+      ],
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-theme",
+    "exitCode": 0,
+    "result": {
+      "checks": [
+        {
+          "selector": ".note-widget>p",
+          "contrast": 11.71
+        },
+        {
+          "selector": ".note-heading",
+          "contrast": 7.13
+        },
+        {
+          "selector": ".date-widget>b",
+          "contrast": 11.71
+        },
+        {
+          "selector": ".note-bottom",
+          "contrast": 7.13
+        },
+        {
+          "selector": ".role-assistant .message-card",
+          "contrast": 11.69
+        },
+        {
+          "selector": ".message-meta",
+          "contrast": 8.57
+        },
+        {
+          "selector": ".composer textarea",
+          "contrast": 13.29
+        },
+        {
+          "selector": ".provider-preview strong",
+          "contrast": 14.08
+        },
+        {
+          "selector": ".provider-preview p",
+          "contrast": 8.57
+        },
+        {
+          "selector": ".field input",
+          "contrast": 13.29
+        }
+      ],
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ],
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-csp",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "无需登录无私人站点请求",
+        "随包3D与浅色界面",
+        "直接调用当前API并真实流式处理",
+        "聊天附件刷新恢复",
+        "原生朗读桥接",
+        "备份导出桥接"
+      ],
+      "pageErrors": []
+    }
+  }
+]

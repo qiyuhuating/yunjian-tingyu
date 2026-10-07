@@ -1,0 +1,26 @@
+name: Verify 0.0.1 delivery
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify file inventory and APK resources
+        run: python3 scripts/verify-delivery.py
+      - name: Install locked dependencies
+        run: |
+          npm ci --prefix outputs/mori-phone
+          npm ci --prefix work/qa
+          cd work/qa && npx playwright install --with-deps chromium
+      - name: Core regression and TypeScript
+        run: python3 work/check-release.py
+      - name: Browser regression
+        run: |
+          node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/mori-phone/android-web/vite.config.ts --host 127.0.0.1 --port 5175 --strictPort > /tmp/cloudlet-preview.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:5175/ >/dev/null && break || sleep 1; done
+          python3 work/check-browser-release.py
