@@ -4,7 +4,7 @@
 
 | 文件 | 用途 | 字节 |
 | --- | --- | ---: |
-| [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 8 |
+| [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | GitHub Actions执行完整性、103项核心检查和六组浏览器回归；路径：.github/workflows/verify.yml | 1081 |
 | [.gitignore](.gitignore) | 工程支持文件：.gitignore | 248 |
 | [README.md](README.md) | 使用或构建指南，适用目录：.；路径：README.md | 6775 |

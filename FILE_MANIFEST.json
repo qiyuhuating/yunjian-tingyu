@@ -2,8 +2,8 @@
   {
     "path": ".gitattributes",
     "description": "禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes",
-    "bytes": 8,
-    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    "bytes": 21,
+    "sha256": "a04c1ecee5f831666e805f64d7ab9b1f22cbb8550d7ca83bdad379e5f9a7439c"
   },
   {
     "path": ".github/workflows/verify.yml",
