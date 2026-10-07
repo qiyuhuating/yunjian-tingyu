@@ -11,7 +11,7 @@
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
 | [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
 | [docs/UI群聊调优计划.md](docs/UI群聊调优计划.md) | 上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md | 2128 |
-| [docs/审计计划落实记录.md](docs/审计计划落实记录.md) | 外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md | 9252 |
+| [docs/审计计划落实记录.md](docs/审计计划落实记录.md) | 外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md | 9555 |
 | [docs/核心提示词隔离说明.md](docs/核心提示词隔离说明.md) | 用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据；路径：docs/核心提示词隔离说明.md | 7151 |
 | [docs/群聊与角色记忆调研.md](docs/群聊与角色记忆调研.md) | Telegram、Hermes、kuihua 与 PDF.js 的一手来源、实施计划和能力边界；路径：docs/群聊与角色记忆调研.md | 4714 |
 | [docs/自然群聊与内置Via说明.md](docs/自然群聊与内置Via说明.md) | 自然群聊、Via二进制来源/合包、参考首页回退、系统栏和实际原生验收；路径：docs/自然群聊与内置Via说明.md | 4326 |
@@ -281,7 +281,7 @@
 | [work/qa/README.md](work/qa/README.md) | 使用或构建指南，适用目录：work/qa；路径：work/qa/README.md | 1316 |
 | [work/qa/android-diagnose.mjs](work/qa/android-diagnose.mjs) | 历史专项浏览器检查或开发工具：android-diagnose；使用时核对对应版本、路径和端口；路径：work/qa/android-diagnose.mjs | 467 |
 | [work/qa/android.mjs](work/qa/android.mjs) | 历史专项浏览器检查或开发工具：android；使用时核对对应版本、路径和端口；路径：work/qa/android.mjs | 4410 |
-| [work/qa/audit-regressions.mjs](work/qa/audit-regressions.mjs) | 七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs | 10956 |
+| [work/qa/audit-regressions.mjs](work/qa/audit-regressions.mjs) | 七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs | 11085 |
 | [work/qa/check.mjs](work/qa/check.mjs) | 历史专项浏览器检查或开发工具：check；使用时核对对应版本、路径和端口；路径：work/qa/check.mjs | 9950 |
 | [work/qa/companion.mjs](work/qa/companion.mjs) | 历史专项浏览器检查或开发工具：companion；使用时核对对应版本、路径和端口；路径：work/qa/companion.mjs | 4883 |
 | [work/qa/continuity.mjs](work/qa/continuity.mjs) | 长期记忆与摘要游标控制；路径：work/qa/continuity.mjs | 3603 |

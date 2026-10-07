@@ -44,8 +44,8 @@
   {
     "path": "docs/审计计划落实记录.md",
     "description": "外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md",
-    "bytes": 9252,
-    "sha256": "4fd89438a33ef99331bbada0fe3e965815a0c90e40491c24e3118969b6936515"
+    "bytes": 9555,
+    "sha256": "15be4710e71b7dbcf59a921d3ce73f7652f238c2ca0620f439f6f620096043ca"
   },
   {
     "path": "docs/核心提示词隔离说明.md",
@@ -1455,7 +1455,7 @@
     "path": "outputs/云笺听雨审计优化回归.json",
     "description": "七组本轮审计浏览器回归结果及50MiB真实数据往返、块大小与编译资源证据；路径：outputs/云笺听雨审计优化回归.json",
     "bytes": 1447,
-    "sha256": "3ad573b6c199f36e4a1e6028d1050d129a0e9675452c16583eb4ee006971c40e"
+    "sha256": "d5cffab1c73a1af7fd7f198e39b37df085d48a1d72f17c3907f1583f5d0c7b67"
   },
   {
     "path": "outputs/云笺听雨构建签名门禁验证.json",
@@ -1479,7 +1479,7 @@
     "path": "outputs/云笺听雨系统隔离浏览器回归.json",
     "description": "七套当前APK编译资源的浏览器回归结果，附本轮时间与JS资源SHA256；路径：outputs/云笺听雨系统隔离浏览器回归.json",
     "bytes": 11524,
-    "sha256": "ef4b7c22f62e7b0b42f45fabd24181f599840df21e259dcfdb74e57391cda65c"
+    "sha256": "c5f91b2fc2e7fe5e66c7f48678743f13894df79ecd379215f338cf697e1d2b33"
   },
   {
     "path": "outputs/云笺听雨系统隔离签名与完整性报告.md",
@@ -1664,8 +1664,8 @@
   {
     "path": "work/qa/audit-regressions.mjs",
     "description": "七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs",
-    "bytes": 10956,
-    "sha256": "21c316c8ae1ba7dc28bf6eae0f2927540140e061fd42ab7f8ce2a0f2b4a66e61"
+    "bytes": 11085,
+    "sha256": "398836316bdea0b87648b161475f7fbefb0bc7de1386ddb0267e3858185996c3"
   },
   {
     "path": "work/qa/check.mjs",

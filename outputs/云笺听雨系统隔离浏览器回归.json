@@ -252,14 +252,14 @@
   {
     "check": "audit-regressions",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:31:56.285990+00:00",
+    "verifiedAt": "2026-10-07T12:56:32.822794+00:00",
     "compiledAssetSha256": {
       "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
       "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
-      "startedAt": "2026-10-07T12:31:55.895Z",
+      "startedAt": "2026-10-07T12:53:41.645Z",
       "passed": [
         "50MB真实ZIP分块导出和恢复，附件SHA256一致",
         "导出桥接块不超过48KB且取消清理临时文件",
