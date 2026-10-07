@@ -1,5 +1,11 @@
 [
   {
+    "path": ".gitattributes",
+    "description": "交付支持文件；路径：.gitattributes",
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  {
     "path": ".github/workflows/verify.yml",
     "description": "GitHub Actions 自动执行文件完整性、核心检查和四组浏览器回归；路径：.github/workflows/verify.yml",
     "bytes": 1054,
@@ -16,6 +22,12 @@
     "description": "使用或构建指南，适用目录：.；路径：README.md",
     "bytes": 3241,
     "sha256": "4164f5e0e4f981b66f4325e27ff55888962a8429e16e612abbe94140a83558a9"
+  },
+  {
+    "path": "docs/0.0.1.md",
+    "description": "交付支持文件；路径：docs/0.0.1.md",
+    "bytes": 1219,
+    "sha256": "f42873681a6e08bca55c5b81360e32cfd9a39b49481f9d952cbc51fd0eca3c24"
   },
   {
     "path": "outputs/0.0.1暗夜聊天预览.png",

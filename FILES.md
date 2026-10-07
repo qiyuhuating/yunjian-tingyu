@@ -4,9 +4,11 @@
 
 | 文件 | 用途 | 字节 |
 | --- | --- | ---: |
+| [.gitattributes](.gitattributes) | 交付支持文件；路径：.gitattributes | 8 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | GitHub Actions 自动执行文件完整性、核心检查和四组浏览器回归；路径：.github/workflows/verify.yml | 1054 |
 | [.gitignore](.gitignore) | 工程支持文件：.gitignore | 248 |
 | [README.md](README.md) | 使用或构建指南，适用目录：.；路径：README.md | 3241 |
+| [docs/0.0.1.md](docs/0.0.1.md) | 交付支持文件；路径：docs/0.0.1.md | 1219 |
 | [outputs/0.0.1暗夜聊天预览.png](outputs/0.0.1暗夜聊天预览.png) | 界面预览或绘图资源：0.0.1暗夜聊天预览.png；目录 outputs；路径：outputs/0.0.1暗夜聊天预览.png | 83201 |
 | [outputs/0.0.1暗夜设置预览.png](outputs/0.0.1暗夜设置预览.png) | 界面预览或绘图资源：0.0.1暗夜设置预览.png；目录 outputs；路径：outputs/0.0.1暗夜设置预览.png | 174224 |
 | [outputs/0.0.1暗夜预览.png](outputs/0.0.1暗夜预览.png) | 界面预览或绘图资源：0.0.1暗夜预览.png；目录 outputs；路径：outputs/0.0.1暗夜预览.png | 522338 |
