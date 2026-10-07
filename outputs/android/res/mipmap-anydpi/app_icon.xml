@@ -1,0 +1,1 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"><item android:width="72dp" android:height="72dp"><shape><solid android:color="#E5EFF6"/><corners android:radius="18dp"/></shape></item><item android:width="64dp" android:height="64dp" android:gravity="center"><bitmap android:src="@drawable/cloud_pet" android:gravity="fill"/></item></layer-list>

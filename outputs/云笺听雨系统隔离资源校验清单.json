@@ -3,7 +3,7 @@
   "package": "chat.cloudlet.phone",
   "version": "0.0.1",
   "versionCode": 5,
-  "apkSha256": "87e8e28ea4efa18aebbbfef8ff5fecae173d95d7062ce706c1d7254dbd4fd108",
+  "apkSha256": "91364bf144ee35bf969f9fb597a6e6a6cdb7dadf411dc468dc21b1d71c1c5b41",
   "signerCertificateSha256": "7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79",
   "sameSignerAsPrevious": true,
   "signatureV2": true,
@@ -16,7 +16,7 @@
     {
       "path": "AndroidManifest.xml",
       "bytes": 21524,
-      "sha256": "8631a6c9dfe4d6ce0947462149747ea09bc31f45a34bb041c6dd2ad473817512"
+      "sha256": "1074882f6b458b766aeba4c7926d939fee0bf1c373cf8f698ab149e53abb3c28"
     },
     {
       "path": "classes.dex",
@@ -244,11 +244,6 @@
       "sha256": "fc23ea54c16a30857eacd2e9fb681d2c5176882436f39827257d8a81e5acc7e5"
     },
     {
-      "path": "res/drawable/app_icon.xml",
-      "bytes": 944,
-      "sha256": "ddc61a612727edab245b0b65e993fc347acc73584bd15418c3de14ba89345d39"
-    },
-    {
       "path": "res/drawable/a_.xml",
       "bytes": 1340,
       "sha256": "4c218f596f02a4bc031dfc4ae82ba2ed7d684e43e4f36974be3a5f45ea322e25"
@@ -265,8 +260,8 @@
     },
     {
       "path": "res/drawable/cloud_pet.png",
-      "bytes": 1212801,
-      "sha256": "3be8ce342d3d1bddfca692ad56a010b7e67b413ce04f95ccb2564f10eb145e39"
+      "bytes": 981905,
+      "sha256": "0e8b64b80e99e91d03276cdfb12fe16a7826c5289b496b583f880cd5dfe015e1"
     },
     {
       "path": "res/drawable/d.xml",
@@ -1354,9 +1349,14 @@
       "sha256": "9127c26342c3a6e7ad9274ca02df4bebb81552066c73f392f205dedf3aad3982"
     },
     {
+      "path": "res/mipmap-anydpi-v21/app_icon.xml",
+      "bytes": 932,
+      "sha256": "ab4942ae974df27b8e4f27a03bc5362a2464b4caf999603bfba64746439dc1ec"
+    },
+    {
       "path": "res/mipmap-anydpi-v26/app_icon.xml",
-      "bytes": 684,
-      "sha256": "7980e03d220a52ee52a498195423db43e251bd45203a90d74638a457a61289a4"
+      "bytes": 1196,
+      "sha256": "a47b552b1c16b3d779dcc51170adbb673f4137d8b8093d32da2aa5c78fc8a9df"
     },
     {
       "path": "res/mipmap-anydpi-v26/ic_launcher.xml",
@@ -1420,8 +1420,8 @@
     },
     {
       "path": "resources.arsc",
-      "bytes": 209680,
-      "sha256": "091c577aa58d63c1d8416e59ceaddec819de42955ed29e81ed9cbb114fadeb27"
+      "bytes": 209736,
+      "sha256": "de8ff719d986658f2518e19632d426bfeefb480837310d6f600cf285bd86a639"
     },
     {
       "path": "assets/dexopt/baseline.prof",
@@ -1885,8 +1885,8 @@
     },
     {
       "path": "classes2.dex",
-      "bytes": 41192,
-      "sha256": "5ea0d028cd0f5be64beb6409914a8a0dcfbaf807a1eec5006e38505521719e73"
+      "bytes": 41180,
+      "sha256": "a7d7838b1b317e59e18ff78ebb5e741f9bb7a27a1d6e64d376311736f72d3a2b"
     }
   ]
 }
