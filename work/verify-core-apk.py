@@ -2,13 +2,13 @@ from pathlib import Path
 import os
 os.chdir(Path(__file__).resolve().parents[1])
 import zipfile,hashlib,json,subprocess,re,collections,copy
-apk=Path('outputs/云笺听雨-0.0.1-系统隔离版.apk');stage=Path('D:/xiaofeng/dev-cache/cloudlet-apk/core001-companion-final8/build/unsigned.apk')
+apk=Path('outputs/云笺听雨-0.0.1-系统隔离版.apk');stage=Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final3/build/unsigned.apk')
 java='D:/bin/java.exe';tools='D:/xiaofeng/dev-cache/cloudlet-apk/sdk/tools'
 r=subprocess.run([java,'-jar',tools+'/lib/apksigner.jar','verify','--verbose','--print-certs',str(apk)],capture_output=True,text=True,encoding='utf-8',errors='replace',check=True)
 assert 'v2): true' in r.stdout and 'v3): true' in r.stdout
 fingerprint=re.search(r'certificate SHA-256 digest: ([a-f0-9]+)',r.stdout)[1];assert fingerprint=='7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79'
 subprocess.run([tools+'/zipalign.exe','-c','4',str(apk)],check=True,capture_output=True)
-assert Path('outputs/android/src/chat/cloudlet/phone/MainActivity.java').read_bytes()==Path('D:/xiaofeng/dev-cache/cloudlet-apk/core001-companion-final8/src/chat/cloudlet/phone/MainActivity.java').read_bytes()
+assert Path('outputs/android/src/chat/cloudlet/phone/MainActivity.java').read_bytes()==Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final3/src/chat/cloudlet/phone/MainActivity.java').read_bytes()
 resources=[]
 with zipfile.ZipFile(apk) as signed,zipfile.ZipFile(stage) as unsigned:
  assert signed.testzip() is None;counts=collections.Counter(signed.namelist());assert all(v==1 for v in counts.values())
@@ -37,20 +37,20 @@ with zipfile.ZipFile(apk) as signed,zipfile.ZipFile(stage) as unsigned:
  assert set(signed.namelist())-set(unsigned.namelist()) <= {'META-INF/CLOUDLET.RSA','META-INF/CLOUDLET.SF','META-INF/MANIFEST.MF'}
 r=subprocess.run([tools+'/aapt2.exe','dump','badging',str(apk)],capture_output=True,text=True,encoding='utf-8',errors='replace',check=True)
 assert "versionName='0.0.1'" in r.stdout
-assert "application-label:'云笺听雨'" in r.stdout and "versionCode='5'" in r.stdout
-report={'name':'云笺听雨','package':'chat.cloudlet.phone','version':'0.0.1','versionCode':5,'apkSha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'signerCertificateSha256':fingerprint,'sameSignerAsPrevious':True,'signatureV2':True,'signatureV3':True,'zipAlignment':True,'crc':True,'matchesUnsignedBuild':True,'matchesBundledAssets':True,'resources':resources}
+assert "application-label:'云笺听雨'" in r.stdout and "versionCode='6'" in r.stdout
+report={'name':'云笺听雨','package':'chat.cloudlet.phone','version':'0.0.1','versionCode':6,'apkSha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'signerCertificateSha256':fingerprint,'sameSignerAsPrevious':True,'signatureV2':True,'signatureV3':True,'zipAlignment':True,'crc':True,'matchesUnsignedBuild':True,'matchesBundledAssets':True,'resources':resources}
 Path('outputs/云笺听雨系统隔离资源校验清单.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 Path('outputs/云笺听雨系统隔离签名与完整性报告.md').write_text(f'''# 云笺听雨 · 签名与资源完整性验证
 
 四字名称：云笺听雨。「云」承接云朵桌宠，「笺」呼应纸条、日记与聊天，「听雨」点出一起听和安静陪伴。
 
-- Android安装名称与应用内品牌已更新，版本0.0.1（versionCode 5）。
+- Android安装名称与应用内品牌已更新，版本0.0.1（versionCode 6）。
 - 包名保持chat.cloudlet.phone，签名与原安装包相同，可覆盖更新，保留原应用数据。
 - 发布签名：RSA 3072，Android APK v2/v3验证通过。
 - ZIP所有条目CRC通过，无重复文件；4字节对齐通过。
 - {len(resources)}个包内文件逐项SHA-256与本轮未签名构建一致。
 - 所有随包界面、字体、插画、3D脚本等资产与源资产逐字节一致。
-- 103 项核心检查、严格类型检查与 6 组浏览器回归通过；覆盖群聊、浅暗主题、本地保存、流式适配、朗读及导出桥接，另在 Android 15 / WebView 124 模拟器完成实际安装、Via 浏览与返回、本地日记持久化验证；未做真机或真实 Key 测试。
+- 103 组具名核心检查、严格类型检查与 7 组浏览器回归通过；覆盖群聊、浅暗主题、本地保存、流式适配、朗读及导出桥接，另在 Android 15 / WebView 124 模拟器完成实际安装、Via 浏览与返回、本地日记持久化验证；未做真机或真实 Key 测试。
 
 APK SHA-256：`{report['apkSha256']}`
 

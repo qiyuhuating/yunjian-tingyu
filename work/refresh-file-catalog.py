@@ -100,6 +100,37 @@ new.update({
 for name in list(new):
  if ('群聊优化' in name or 'UI群聊' in name or name in {'work/verify-ui-apk.py','work/package-ui-sources.py'}):
   new[name]='上一版群聊优化交付；'+new[name].replace('当前','当时').replace('本轮','该轮')
+new.update({
+ 'work/verify-signing-gate.py':'通过真实构建预检验证缺少私钥和替换私钥均被拒绝，临时测试密钥自动销毁',
+ 'outputs/云笺听雨构建签名门禁验证.json':'两组真实签名预检失败场景的结果与临时密钥清理证据',
+ 'docs/审计计划落实记录.md':'外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界',
+ 'outputs/mori-phone/lib/local-backup.ts':'v2 ZIP分块导出和恢复、增量SHA256、清单及附件限制、恢复前校验',
+ 'outputs/mori-phone/lib/file-export.ts':'48KiB原生下载块与取消清理，以及网页版OPFS导出，不聚合完整备份',
+ 'outputs/mori-phone/app/render-recovery.tsx':'渲染异常恢复界面、当前内存记录备份入口与重新打开确认',
+ 'outputs/mori-phone/app/local-media.tsx':'共享本机Blob预览及按重试版本重新获取原件，释放对象URL',
+ 'outputs/mori-phone/app/chat.tsx':'保留导航间会话、多消息排队、逐条重试、未读、聊天菜单返回与完整生成流程',
+ 'outputs/mori-phone/app/phone.tsx':'本机事务保存、跨页面聊天容器、分块备份进度取消和恢复保护',
+ 'outputs/android/src/chat/cloudlet/phone/MainActivity.java':'原生网络错误分类、安全请求头、持久导出队列、文件选择及安全区桥接',
+ 'outputs/android/build-apk.py':'正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥',
+ 'outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt':'增量哈希库@noble/hashes的MIT许可证，随前端源码保留',
+ 'outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt':'APK内增量SHA256库的MIT许可证副本',
+ 'work/qa/audit-regressions.mjs':'七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试',
+ 'work/qa/native/QueueAudit.java':'独立instrumentation源文件，调用产品原生桥接、恢复日志并通过三个真实SAF窗口保存',
+ 'work/verify-native-export.py':'构建并运行同签名临时instrumentation APK，验证导出队列与原生错误分类；不打入产品',
+ 'outputs/云笺听雨审计优化回归.json':'七组本轮审计浏览器回归结果及50MiB真实数据往返、块大小与编译资源证据',
+ 'outputs/云笺听雨原生导出队列验证.json':'实际产品APK的三文件保存、队列日志恢复、字节一致性及DNS/TLS分类验收记录',
+ 'outputs/Android审计验证-logcat.txt':'本轮实际模拟器安装、Via与文件选择验收的AndroidRuntime及Chromium日志',
+ 'outputs/云笺听雨-0.0.1-系统隔离版.apk':'当前同签名独立APK，已落实审计适用修复，0.0.1 / versionCode 6',
+ 'outputs/云笺听雨0.0.1系统隔离版Android源码.zip':'当前完整原生源码、Via、分块导出桥接和全部随包资产，内部版本6',
+ 'outputs/云笺听雨系统隔离资源校验清单.json':'内部版本6安装包、376个资源大小及SHA256与原签名证书的校验记录',
+ 'outputs/云笺听雨系统隔离签名与完整性报告.md':'内部版本6的签名、逐项资源比对、检查口径与验收限制',
+ 'work/check-release.py':'运行103组具名核心检查、严格TypeScript和空白检查，组数不等于断言总数',
+ 'work/check-browser-release.py':'运行七套编译产物浏览器回归，记录退出码、时间和实际JS资源SHA256',
+ '.github/workflows/verify.yml':'GitHub Actions执行文件目录、103组核心检查及七套当前编译资源浏览器回归',
+ 'work/verify-native-via.py':'真实模拟器十五组覆盖安装、Via隔离、文件读取与旧内核提示检查，保存命令退出码及logcat',
+ 'outputs/云笺听雨系统隔离自动检查.json':'103组具名核心检查、严格类型及空白检查结果，非断言总数',
+ 'outputs/云笺听雨系统隔离浏览器回归.json':'七套当前APK编译资源的浏览器回归结果，附本轮时间与JS资源SHA256',
+})
 names = sorted(set(subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z'],cwd=root).decode().split('\0'))-{'','FILES.md','FILE_MANIFEST.json'})
 rows=[]
 for name in names:

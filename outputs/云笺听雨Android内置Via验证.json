@@ -1,5 +1,5 @@
 {
-  "apkSha256": "91364bf144ee35bf969f9fb597a6e6a6cdb7dadf411dc468dc21b1d71c1c5b41",
+  "apkSha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1",
   "device": "emulator-5556",
   "androidSdk": "35",
   "display": "Physical size: 1080x1920\r\nOverride size: 1170x2532",
@@ -8,7 +8,7 @@
   "passed": [
     "Standalone Via and packaged Via install together without provider conflict",
     "Signed APK installs and local home loads",
-    "Real code4-to-code5 signed update preserves existing local IndexedDB diary",
+    "Real prior-version-to-current signed update preserves existing local IndexedDB diary",
     "Original four-tab illustrated dock has fully visible bounds",
     "Home browser enters packaged Via Shell in same application",
     "Via loads actual HTTP document; privileged app bridge is absent",
@@ -24,5 +24,1913 @@
   ],
   "realProviderKeyTested": false,
   "physicalDeviceTested": false,
-  "uiautomatorWarnings": []
+  "uiautomatorWarnings": [],
+  "startedAt": "2026-10-07T12:11:33.069558+00:00",
+  "finishedAt": "2026-10-07T12:14:13.606979+00:00",
+  "commands": [
+    {
+      "at": "2026-10-07T12:11:33.359482+00:00",
+      "command": [
+        "uninstall",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 9,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:34.629677+00:00",
+      "command": [
+        "install",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\云笺听雨-0.0.1-系统隔离版.apk"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 70,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:35.573227+00:00",
+      "command": [
+        "shell",
+        "am",
+        "start",
+        "-W",
+        "-n",
+        "chat.cloudlet.phone/.MainActivity"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 177,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:38.614886+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:40.724072+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 1,
+      "stdoutBytes": 0,
+      "stderr": "cat: /sdcard/cloudlet-verify.xml: No such file or directory\r\n"
+    },
+    {
+      "at": "2026-10-07T12:11:41.263105+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:48.393812+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1761,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:48.949080+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:51.141987+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:51.229479+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "972",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:51.279357+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:54.111672+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 17889,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:54.143634+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:56.167470+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 17889,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:56.214890+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "1021"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:57.422932+00:00",
+      "command": [
+        "shell",
+        "input",
+        "text",
+        "NativeUpgradeDiary"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:57.484847+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:57.546403+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:59.688350+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 18289,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:59.731646+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "1408"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:11:59.794095+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:02.157614+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 21598,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:02.212136+00:00",
+      "command": [
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:03.354679+00:00",
+      "command": [
+        "install",
+        "-r",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\outputs\\android\\vendor\\via-release-cn.apk"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 38,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:04.570865+00:00",
+      "command": [
+        "install",
+        "-r",
+        "C:\\Users\\xiaofeng\\AppData\\Local\\Temp\\cloudlet-native-jw2zsz9e\\云笺听雨-0.0.1-系统隔离版.apk"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 38,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:04.623766+00:00",
+      "command": [
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:04.744151+00:00",
+      "command": [
+        "logcat",
+        "-c"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:05.477314+00:00",
+      "command": [
+        "shell",
+        "am",
+        "start",
+        "-W",
+        "-n",
+        "chat.cloudlet.phone/.MainActivity"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 177,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:08.525395+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:10.646306+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 1,
+      "stdoutBytes": 0,
+      "stderr": "cat: /sdcard/cloudlet-verify.xml: No such file or directory\r\n"
+    },
+    {
+      "at": "2026-10-07T12:12:11.186513+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:18.474001+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1761,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:18.521867+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:20.743901+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:20.783770+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:22.949162+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:22.994995+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:25.284953+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:25.390999+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "972",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:25.433757+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:28.254990+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 20190,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:28.295416+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:28.334690+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:30.488272+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:30.539046+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:32.673916+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:34.099571+00:00",
+      "command": [
+        "shell",
+        "screencap",
+        "-p",
+        "/sdcard/cloudlet-verify.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:34.196333+00:00",
+      "command": [
+        "pull",
+        "/sdcard/cloudlet-verify.png",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\outputs\\Android验证-首页.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": "/sdcard/cloudlet-verify.png: 1 file pulled, 0 skipped. 40.5 MB/s (2579715 bytes in 0.061s)\r\n"
+    },
+    {
+      "at": "2026-10-07T12:12:34.249095+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:36.497726+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:36.635659+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "972",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:36.683479+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:38.906956+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 20190,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:38.938311+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:40.952676+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 20190,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:40.987992+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "1021"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:41.947252+00:00",
+      "command": [
+        "shell",
+        "input",
+        "text",
+        "NativeLocalDiary"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:42.000841+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:42.059690+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:44.186474+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 20195,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:44.222223+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "1408"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:44.258052+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:46.531644+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 24041,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:46.569275+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:46.609843+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:48.750545+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 12863,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:48.797627+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:51.024294+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:51.119840+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "714",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:52.154533+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:54.166835+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 5286,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:54.203853+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "2299"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:56.235840+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:58.320209+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 12365,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:58.352021+00:00",
+      "command": [
+        "shell",
+        "dumpsys",
+        "activity",
+        "activities"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 35434,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:12:58.386421+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:00.388995+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 12365,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:00.426163+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "324"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:00.467144+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keycombination",
+        "113",
+        "29"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:01.442188+00:00",
+      "command": [
+        "shell",
+        "input",
+        "text",
+        "http://10.0.2.2:18743/one"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:01.528568+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "66"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:01.577103+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:04.238425+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10528,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:04.267461+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:06.271248+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10528,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:06.441571+00:00",
+      "command": [
+        "shell",
+        "screencap",
+        "-p",
+        "/sdcard/cloudlet-verify.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:06.471520+00:00",
+      "command": [
+        "pull",
+        "/sdcard/cloudlet-verify.png",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\outputs\\Android验证-Via.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": "/sdcard/cloudlet-verify.png: 1 file pulled, 0 skipped. 21.7 MB/s (90092 bytes in 0.004s)\r\n"
+    },
+    {
+      "at": "2026-10-07T12:13:06.508343+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:08.529906+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10528,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:08.562092+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:10.567934+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10528,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:10.598463+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:12.606744+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10528,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:12.646449+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "216",
+        "819"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:12.697969+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:15.321957+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10526,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:15.359981+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:15.395426+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:17.492486+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10525,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:17.523054+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:19.528282+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 10525,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:19.565565+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "961",
+        "90"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:19.601569+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:21.721442+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 19914,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:21.755016+00:00",
+      "command": [
+        "shell",
+        "dumpsys",
+        "activity",
+        "activities"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 31192,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:21.815968+00:00",
+      "command": [
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:22.646703+00:00",
+      "command": [
+        "shell",
+        "am",
+        "start",
+        "-W",
+        "-n",
+        "chat.cloudlet.phone/.MainActivity"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 177,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:22.712594+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:32.415705+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1761,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:32.968375+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:35.235577+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:35.294845+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:37.587791+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:37.704052+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "972",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:37.753218+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:40.690791+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 23026,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:40.727503+00:00",
+      "command": [
+        "push",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\work\\qa\\fixtures\\reading.pdf",
+        "/sdcard/Download/CloudletReading.pdf"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\work\\qa\\fixtures\\reading.pdf: 1 file pushed, 0 skipped. 2.4 MB/s (1356 bytes in 0.001s)\r\n"
+    },
+    {
+      "at": "2026-10-07T12:13:40.762817+00:00",
+      "command": [
+        "push",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\work\\qa\\fixtures\\unknown.bin",
+        "/sdcard/Download/CloudletUnknown.bin"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\work\\qa\\fixtures\\unknown.bin: 1 file pushed, 0 skipped. 0.0 MB/s (5 bytes in 0.001s)\r\n"
+    },
+    {
+      "at": "2026-10-07T12:13:40.799871+00:00",
+      "command": [
+        "shell",
+        "input",
+        "keyevent",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:40.837632+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:43.036189+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 11848,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:43.106619+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "198",
+        "1764"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:43.152155+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:45.484567+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 22413,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:45.522974+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "585",
+        "1336"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:45.559714+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:47.840821+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 19864,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:47.880356+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "108",
+        "2257"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:48.921836+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:51.206449+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 26338,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:51.236949+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:53.548955+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 26338,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:53.591334+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "904",
+        "1249"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:53.645974+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:56.475871+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 23933,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:56.506104+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:58.526800+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 23933,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:58.563699+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "108",
+        "2257"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:13:59.603379+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:01.900976+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 26338,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:01.934135+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:04.253735+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 26338,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:04.292101+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "379",
+        "1249"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:04.335454+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:06.632434+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 27046,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:06.875168+00:00",
+      "command": [
+        "shell",
+        "screencap",
+        "-p",
+        "/sdcard/cloudlet-verify.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:06.919618+00:00",
+      "command": [
+        "pull",
+        "/sdcard/cloudlet-verify.png",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\outputs\\GitHub上传包\\outputs\\Android验证-文件读取.png"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": "/sdcard/cloudlet-verify.png: 1 file pulled, 0 skipped. 17.0 MB/s (341095 bytes in 0.019s)\r\n"
+    },
+    {
+      "at": "2026-10-07T12:14:06.956540+00:00",
+      "command": [
+        "logcat",
+        "-d",
+        "-s",
+        "AndroidRuntime",
+        "chromium"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 21745,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:08.470571+00:00",
+      "command": [
+        "install",
+        "-r",
+        "C:\\Users\\xiaofeng\\AppData\\Local\\Temp\\cloudlet-native-jw2zsz9e\\云笺听雨-0.0.1-系统隔离版.apk"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 38,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:08.541574+00:00",
+      "command": [
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:08.576944+00:00",
+      "command": [
+        "logcat",
+        "-c"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:09.179087+00:00",
+      "command": [
+        "shell",
+        "am",
+        "start",
+        "-W",
+        "-n",
+        "chat.cloudlet.phone/.MainActivity"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 177,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:09.224359+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:10.832784+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 5485,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:10.864046+00:00",
+      "command": [
+        "shell",
+        "rm",
+        "-f",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:12.422686+00:00",
+      "command": [
+        "shell",
+        "cat",
+        "/sdcard/cloudlet-verify.xml"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 5485,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:12.940207+00:00",
+      "command": [
+        "shell",
+        "input",
+        "tap",
+        "891",
+        "1180"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:13.471161+00:00",
+      "command": [
+        "logcat",
+        "-d",
+        "-s",
+        "AndroidRuntime"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 1429,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:13.508449+00:00",
+      "command": [
+        "shell",
+        "getprop",
+        "ro.build.version.sdk"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 4,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:13.541995+00:00",
+      "command": [
+        "shell",
+        "wm",
+        "size"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 52,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:13.575032+00:00",
+      "command": [
+        "shell",
+        "wm",
+        "density"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 46,
+      "stderr": ""
+    },
+    {
+      "at": "2026-10-07T12:14:13.606945+00:00",
+      "command": [
+        "shell",
+        "dumpsys",
+        "webviewupdate"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 585,
+      "stderr": ""
+    }
+  ]
 }

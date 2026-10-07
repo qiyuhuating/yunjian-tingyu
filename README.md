@@ -6,7 +6,7 @@
 
 [下载 0.0.1 系统隔离 APK](outputs/云笺听雨-0.0.1-系统隔离版.apk) · [安装说明](outputs/APK安装说明.md) · [签名与完整性报告](outputs/云笺听雨系统隔离签名与完整性报告.md)
 
-包名 `chat.cloudlet.phone`，Android 7+，需 WebView 120+，版本号 0.0.1 / versionCode 5。沿用原签名，覆盖安装前先备份；不要卸载旧版。旧 APK 和旧报告保留作历史交付，不作为当前版本下载入口。
+包名 `chat.cloudlet.phone`，Android 7+，需 WebView 120+，版本号 0.0.1 / versionCode 6。沿用原签名，覆盖安装前先备份；不要卸载旧版。旧 APK 和旧报告保留作历史交付，不作为当前版本下载入口。
 
 ## 固定核心与角色资料
 
@@ -57,7 +57,7 @@ node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/m
 
 重新生成前端资源：`cd outputs/mori-phone` 后执行 `node node_modules/vite/bin/vite.js build --config android-web/vite.config.ts`。Android 构建按 [原生构建说明](outputs/android/README.md) 执行；Windows 请在 ASCII 路径下构建。APK 完整性验证脚本保留了原构建环境路径，迁移时需替换 SDK、JDK、未签名 APK 和证书记录路径。仓库不含私有签名备份，签名文件仍由机主在本机保管。
 
-当前证据包括 103 项核心检查、TypeScript 检查和 6 组浏览器回归。模型调用使用测试响应；另在 Android 15 / WebView 124 模拟器完成实际安装、内置 Via 浏览/返回与本地日记重启持久化、真实系统文件选择器和离线 PDF 读取验证。未完成真机、真实模型、真实通话与低内存回收的验收。不能将这些检查解释为绝对无缺陷。
+当前证据包括 103 组具名核心检查、TypeScript 检查和 7 组浏览器回归。模型调用使用测试响应；另在 Android 15 / WebView 124 模拟器完成实际安装、内置 Via 浏览/返回与本地日记重启持久化、真实系统文件选择器和离线 PDF 读取验证。未完成真机、真实模型、真实通话与低内存回收的验收。不能将这些检查解释为绝对无缺陷。
 
 ## 内置 Via 与首页回退
 
@@ -66,3 +66,5 @@ node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/m
 ## 文件范围与隐私
 
 仓库应保持 private。包含源码、APK、源码归档、测试、报告、截图、字体许可和其他已交付文件。排除了签名私钥与密码、真实 API Key、个人聊天备份、依赖安装目录和临时编译缓存。网页托管配置仅为原网页工程元数据，APK 不依赖托管页面或登录。
+
+本轮按外部 APK 审计计划核实修复：详见 [审计计划落实记录](docs/审计计划落实记录.md)。当前仍为 0.0.1，内部版本递增至 6；适用项已修复并验证，未证实项及延期项分别记录。

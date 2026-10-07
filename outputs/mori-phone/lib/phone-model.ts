@@ -36,8 +36,8 @@ export const stateSchema=z.object({
 });
 export type PhoneState=z.infer<typeof stateSchema>;
 export const uid=()=>crypto.randomUUID();
-export const localDate=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Singapore'});
-export const timeLabel=()=>new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Singapore'});
+export const localDate=()=>new Date().toLocaleDateString('sv-SE');
+export const timeLabel=()=>new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
 const roster=[
  ['云汐','温柔但有自己的想法，记得小事，尊重彼此的生活。喜欢云朵、植物和一起听歌。','☁️','blue','窗边的云又变了形状。今天想和我一起做些什么？'],
  ['林晚晴','温柔安静的自由职业者。喜欢月亮、夜晚、散步。','🌙','purple','今晚如果有月亮，我们一起看看吧。'],

@@ -2,8 +2,8 @@
   "name": "云笺听雨",
   "package": "chat.cloudlet.phone",
   "version": "0.0.1",
-  "versionCode": 5,
-  "apkSha256": "91364bf144ee35bf969f9fb597a6e6a6cdb7dadf411dc468dc21b1d71c1c5b41",
+  "versionCode": 6,
+  "apkSha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1",
   "signerCertificateSha256": "7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79",
   "sameSignerAsPrevious": true,
   "signatureV2": true,
@@ -16,7 +16,7 @@
     {
       "path": "AndroidManifest.xml",
       "bytes": 21524,
-      "sha256": "1074882f6b458b766aeba4c7926d939fee0bf1c373cf8f698ab149e53abb3c28"
+      "sha256": "9eba4c74ed69cf0c2ffb15233caec819ca2e2c10920bfdc458b73ef1757df01c"
     },
     {
       "path": "classes.dex",
@@ -1464,19 +1464,19 @@
       "sha256": "f207a2500fc5b182b62edcb3cfcc6a7a3e7204421d9ff8922f99a620f0ba8f56"
     },
     {
-      "path": "assets/web/assets/index-Bt4QJ_c-.css",
-      "bytes": 100523,
-      "sha256": "d3705f733edaa8b86b8162cde68ad90f64ec43577bf2895c80947c04a516141e"
+      "path": "assets/web/assets/index-ChJf0pBh.css",
+      "bytes": 97389,
+      "sha256": "68d9cf7f2aa0d4389dd9ac72dd92026ec3aca36c1ee380c640d8c0f7e20e1c54"
     },
     {
-      "path": "assets/web/assets/index-DID22ISN.js",
-      "bytes": 508075,
-      "sha256": "a09f3131e4b5d9521a1113bc58dad6366269015c145887d09c6cbcdf949e4ce6"
+      "path": "assets/web/assets/index-DhSJatON.js",
+      "bytes": 517680,
+      "sha256": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2"
     },
     {
-      "path": "assets/web/assets/pdf-reading-BzkUohMm.js",
+      "path": "assets/web/assets/pdf-reading-Cup3BkMF.js",
       "bytes": 452388,
-      "sha256": "85d9e2f2d00c83894310a7882af1625ebbb34077ef735f146c3c6fb3426c305f"
+      "sha256": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff"
     },
     {
       "path": "assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs",
@@ -1536,7 +1536,12 @@
     {
       "path": "assets/web/index.html",
       "bytes": 377,
-      "sha256": "6cebc18402bac810129a4c371529159d931f573d5bc799d9e6e88f84b8109c05"
+      "sha256": "050b17f901e1fc82d046abd9529a5ee4e19fa041e35d11dd350dbe38a19a8f10"
+    },
+    {
+      "path": "assets/web/licenses/noble-hashes-LICENSE.txt",
+      "bytes": 1109,
+      "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
     },
     {
       "path": "assets/web/licenses/PDFjs-LICENSE.txt",
@@ -1885,8 +1890,8 @@
     },
     {
       "path": "classes2.dex",
-      "bytes": 41180,
-      "sha256": "a7d7838b1b317e59e18ff78ebb5e741f9bb7a27a1d6e64d376311736f72d3a2b"
+      "bytes": 44816,
+      "sha256": "a32ee84bac127310122402dd157b10430798ddcb0d441afa957b1e24b85f531a"
     }
   ]
 }

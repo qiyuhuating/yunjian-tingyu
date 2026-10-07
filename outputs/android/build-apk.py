@@ -1,10 +1,15 @@
-import argparse,pathlib,subprocess,os,zipfile,secrets,json,hashlib
+import argparse,pathlib,subprocess,os,zipfile,json,hashlib
 parser=argparse.ArgumentParser();parser.add_argument('--sdk',required=True);parser.add_argument('--java',required=True);parser.add_argument('--signing',required=True);parser.add_argument('--output',required=True);parser.add_argument('--apktool');args=parser.parse_args()
-project=pathlib.Path(__file__).resolve().parent;sdk=pathlib.Path(args.sdk);java=pathlib.Path(args.java);build=project/'build';build.mkdir(exist_ok=True);signing=pathlib.Path(args.signing);signing.mkdir(parents=True,exist_ok=True)
+project=pathlib.Path(__file__).resolve().parent;sdk=pathlib.Path(args.sdk);java=pathlib.Path(args.java);build=project/'build';build.mkdir(exist_ok=True);signing=pathlib.Path(args.signing)
 tools=next(sdk.rglob('aapt2.exe')).parent;android=next(sdk.rglob('android.jar'));env=os.environ.copy();env['JAVA_HOME']=str(java);env['PATH']=str(java/'bin')+os.pathsep+env.get('PATH','')
 def run(cmd):
  result=subprocess.run([str(x) for x in cmd],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace')
  if result.returncode:print(result.stdout);raise SystemExit(result.returncode)
+metadata=signing/'signing.json';keystore=signing/'cloudlet-release.p12'
+if not metadata.is_file() or not keystore.is_file():raise SystemExit('Release signing files are missing; refusing to create a replacement key.')
+info=json.loads(metadata.read_text(encoding='utf-8'));env['CLOUDLET_SIGN_PASSWORD']=info['password']
+certificate=subprocess.run([str(java/'bin/keytool.exe'),'-exportcert','-keystore',str(keystore),'-alias',info['alias'],'-storepass:env','CLOUDLET_SIGN_PASSWORD'],env=env,capture_output=True,check=True).stdout
+if hashlib.sha256(certificate).hexdigest()!='7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79':raise SystemExit('Release signing certificate does not match the existing application.')
 base=build/'java-base'
 if not (base/'classes/java/lang/Object.class').exists():run([java/'bin/jmod.exe','extract','--dir',base,java/'jmods/java.base.jmod'])
 run([tools/'aapt2.exe','compile','--dir',project/'res','-o',build/'resources.zip'])
@@ -22,10 +27,6 @@ if via.exists():
  spec=spec_from_file_location('merge_via',project/'merge-via.py');module=module_from_spec(spec);spec.loader.exec_module(module)
  module.merge_via(project,build,via,pathlib.Path(args.apktool),java/'bin/java.exe',tools/'aapt2.exe',env)
 run([tools/'zipalign.exe','-f','4',build/'unsigned.apk',build/'aligned.apk'])
-metadata=signing/'signing.json';keystore=signing/'cloudlet-release.p12'
-if not metadata.exists():metadata.write_text(json.dumps({'alias':'cloudlet','password':secrets.token_urlsafe(32)}),encoding='utf-8')
-info=json.loads(metadata.read_text(encoding='utf-8'));env['CLOUDLET_SIGN_PASSWORD']=info['password']
-if not keystore.exists():run([java/'bin/keytool.exe','-genkeypair','-keystore',keystore,'-storetype','PKCS12','-alias',info['alias'],'-keyalg','RSA','-keysize','3072','-validity','10000','-dname','CN=Cloudlet Personal Android,OU=Personal,O=Cloudlet,C=CN','-storepass:env','CLOUDLET_SIGN_PASSWORD','-keypass:env','CLOUDLET_SIGN_PASSWORD'])
 output=pathlib.Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
 run([java/'bin/java.exe','-jar',tools/'lib/apksigner.jar','sign','--ks',keystore,'--ks-key-alias',info['alias'],'--ks-pass','env:CLOUDLET_SIGN_PASSWORD','--key-pass','env:CLOUDLET_SIGN_PASSWORD','--out',output,build/'aligned.apk'])
 run([java/'bin/java.exe','-jar',tools/'lib/apksigner.jar','verify','--verbose',output]);run([tools/'zipalign.exe','-c','4',output])

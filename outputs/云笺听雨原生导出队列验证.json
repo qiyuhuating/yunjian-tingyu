@@ -1,0 +1,123 @@
+{
+  "verifiedAt": "2026-10-07T12:14:48.760785+00:00",
+  "apkSha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1",
+  "serial": "emulator-5556",
+  "result": "INSTRUMENTATION_RESULT: checks=[\"Three real bridge exports retain all original bytes while first SAF picker is open\",\"Actual startup recovery reads all queued files from durable journal\",\"Three real system Save operations produce exact files in Downloads and drain queue\",\"Native DNS and TLS classification excludes sensitive exception text\"]\r\nINSTRUMENTATION_RESULT: result=passed\r\nINSTRUMENTATION_CODE: -1\r\n",
+  "commands": [
+    {
+      "command": [
+        "D:\\bin\\javac.exe",
+        "-encoding",
+        "UTF-8",
+        "-source",
+        "8",
+        "-target",
+        "8",
+        "-bootclasspath",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit001-final3\\build\\java-base\\classes",
+        "-classpath",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar",
+        "-d",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\classes",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\QueueAudit.java"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\bin\\java.exe",
+        "-cp",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\lib\\d8.jar",
+        "com.android.tools.r8.D8",
+        "--lib",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar",
+        "--min-api",
+        "24",
+        "--output",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\dex",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\classes\\chat\\cloudlet\\audit\\QueueAudit.class"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\aapt2.exe",
+        "link",
+        "-o",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\unsigned.apk",
+        "--manifest",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\AndroidManifest.xml",
+        "-I",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\zipalign.exe",
+        "-f",
+        "4",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\unsigned.apk",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\aligned.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\bin\\java.exe",
+        "-jar",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\lib\\apksigner.jar",
+        "sign",
+        "--ks",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\work\\apk-signing\\cloudlet-release.p12",
+        "--ks-key-alias",
+        "cloudlet",
+        "--ks-pass",
+        "env:CLOUDLET_SIGN_PASSWORD",
+        "--key-pass",
+        "env:CLOUDLET_SIGN_PASSWORD",
+        "--out",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\test.apk",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\aligned.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit-instrumentation\\test.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "chat.cloudlet.audit/.QueueAudit"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "testApkIncludedInProduct": false
+}

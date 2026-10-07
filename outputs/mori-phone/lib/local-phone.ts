@@ -32,14 +32,14 @@ export async function writeLocal(owner:string,state:PhoneState,version:number,le
 export async function getAsset(owner:string,ref:string){const id=ref.replace(/^local:|^\/api\/assets\//,'');const d=await db();return await result(d.transaction('assets').objectStore('assets').get([owner,id])) as LocalAsset|undefined;}
 export async function putAsset(owner:string,id:string,blob:Blob,name:string,mime:string){
  // Untrusted backups may declare active HTML/SVG. Preserve bytes but never give a local preview executable content types.
- mime=/^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(mime)?mime:'application/octet-stream';blob=blob.slice(0,blob.size,mime);
+ mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(mime)?mime:'application/octet-stream';blob=blob.slice(0,blob.size,mime);
  const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);const asset={owner,id,blob,name:name.slice(0,160),mime,size:blob.size,createdAt:Date.now()};tx.objectStore('assets').put(asset);await done;return {url:'local:'+id,id,mime,size:blob.size,name:asset.name};
 }
 export async function removeAssets(owner:string,ids:string[]){const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);for(const id of ids)tx.objectStore('assets').delete([owner,id]);await done;}
 export async function uploadLocal(owner:string,file:File){
  if(file.size>200*1024*1024)throw new Error('单个附件请控制在 200 MB 以内。');
  const b=new Uint8Array(await file.slice(0,16).arrayBuffer());let mime='application/octet-stream';
- if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';else if(file.type.startsWith('audio/'))mime=file.type;
+ if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';else if(String.fromCharCode(...b.slice(0,5))==='%PDF-')mime='application/pdf';else if(file.type==='video/mp4'&&String.fromCharCode(...b.slice(4,8))==='ftyp')mime='video/mp4';else if(file.type==='video/webm'&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)mime='video/webm';else if(file.type.startsWith('audio/'))mime=file.type;
  return putAsset(owner,crypto.randomUUID(),file.slice(0,file.size,mime),file.name,mime);
 }
 export function assetReferences(state:PhoneState){const refs=new Set<string>();for(const c of state.characters)if(c.avatar)refs.add(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)refs.add(m.asset);for(const a of [...state.gallery,...state.music])refs.add(a.url);return [...refs];}

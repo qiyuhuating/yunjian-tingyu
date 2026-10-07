@@ -1,6 +1,6 @@
 """Exercise a signed APK on a disposable emulator, using its real native UI."""
 from pathlib import Path
-import argparse, hashlib, http.server, json, re, subprocess, threading, time
+import tempfile,shutil,datetime, argparse, hashlib, http.server, json, re, subprocess, threading, time
 import xml.etree.ElementTree as ET
 
 parser=argparse.ArgumentParser()
@@ -12,10 +12,13 @@ parser.add_argument('--attachments',action='store_true')
 args=parser.parse_args()
 assert args.serial.startswith('emulator-'), 'This test changes disposable emulator data only.'
 root=Path(__file__).resolve().parents[1]
-apk=root/'outputs/云笺听雨-0.0.1-系统隔离版.apk'
-checks=[];dump_warnings=[]
+artifact=root/'outputs/云笺听雨-0.0.1-系统隔离版.apk'
+fixture_dir=tempfile.TemporaryDirectory(prefix='cloudlet-native-')
+apk=Path(fixture_dir.name)/artifact.name;shutil.copy2(artifact,apk)
+checks=[];dump_warnings=[];command_log=[];started=datetime.datetime.now(datetime.timezone.utc).isoformat()
 def adb(*command):
     result=subprocess.run([args.adb,'-s',args.serial,*command],capture_output=True,timeout=45)
+    command_log.append({'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'command':list(command),'exitCode':result.returncode,'stdoutBytes':len(result.stdout),'stderr':result.stderr.decode(errors='replace')[:1000]})
     assert result.returncode==0,(result.stdout+result.stderr).decode(errors='replace')
     return result.stdout
 def shell(*command): return adb('shell',*command).decode('utf-8',errors='replace')
@@ -95,7 +98,7 @@ try:
     if immersive is not None:tap(immersive)
     find('浏览器');find('设置');checks.append('Signed APK installs and local home loads')
     if args.upgrade_from:
-        click('日记');find('NativeUpgradeDiary');shell('input','keyevent','4');find('浏览器');checks.append('Real code4-to-code5 signed update preserves existing local IndexedDB diary')
+        click('日记');find('NativeUpgradeDiary');shell('input','keyevent','4');find('浏览器');checks.append('Real prior-version-to-current signed update preserves existing local IndexedDB diary')
     # Native navigation controls must be outside the app dock, not painted over it.
     home_nodes=nodes();web=next(n for n in home_nodes if n.get('class')=='android.webkit.WebView')
     web_bounds=list(map(int,re.findall(r'\d+',web.get('bounds'))))
@@ -139,6 +142,7 @@ try:
         capture('Android验证-文件读取.png')
     log=adb('logcat','-d','-s','AndroidRuntime','chromium').decode('utf-8',errors='replace')
     assert 'FATAL EXCEPTION' not in log and 'Uncaught ' not in log,log
+    (root/'outputs/Android审计验证-logcat.txt').write_bytes(log.replace('\r\n','\n').replace('\r','').encode('utf-8'))
     checks.append('No native crash or uncaught WebView script error')
     if args.legacy_serial:
         assert args.legacy_serial.startswith('emulator-')
@@ -151,7 +155,8 @@ try:
         args.serial=modern
     report={'apkSha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'device':args.serial,'androidSdk':shell('getprop','ro.build.version.sdk').strip(),'display':shell('wm','size').strip(),'density':shell('wm','density').strip(),'webView':shell('dumpsys','webviewupdate').split('Current WebView package (name, version): ')[1].splitlines()[0],'passed':checks,'realProviderKeyTested':False,'physicalDeviceTested':False}
     report['uiautomatorWarnings']=dump_warnings
+    report['startedAt']=started;report['finishedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();report['commands']=command_log
     (root/'outputs/云笺听雨Android内置Via验证.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps(report,ensure_ascii=False,indent=2))
+    print(json.dumps({k:report[k] for k in ['apkSha256','device','passed','startedAt','finishedAt']},ensure_ascii=False))
 finally:
     server.shutdown()

@@ -2,6 +2,12 @@
   {
     "check": "repair-review",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:10:13.598307+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "passed": [
         "204/205/304可结算",
@@ -35,7 +41,7 @@
         ],
         "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
         "request": {
-          "id": "543a59c7-ebe8-4025-baf7-4b365764a9b6",
+          "id": "82a4fe99-a795-4178-ac85-e892fe4b17ee",
           "url": "https://fixture.invalid/post",
           "method": "POST",
           "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",
@@ -69,6 +75,12 @@
   {
     "check": "repair-summary",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:10:18.979338+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "passed": [
         "真实聊天触发独立摘要",
@@ -83,6 +95,12 @@
   {
     "check": "repair-theme",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:10:23.012918+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "checks": [
         {
@@ -141,6 +159,12 @@
   {
     "check": "repair-csp",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:10:27.734944+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "passed": [
         "无需登录无私人站点请求",
@@ -156,6 +180,12 @@
   {
     "check": "ui-group",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:10:44.636502+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "passed": [
         "多个角色独立请求、分泡、上下文接话、纯文本与短回复",
@@ -191,6 +221,12 @@
   {
     "check": "repair-companion",
     "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:11:13.781375+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
     "result": {
       "passed": [
         "源代码实际按文字读取",
@@ -211,6 +247,69 @@
         "停止同时取消等待和排队，未发送请求不会偷跑"
       ],
       "pageErrors": []
+    }
+  },
+  {
+    "check": "audit-regressions",
+    "exitCode": 0,
+    "verifiedAt": "2026-10-07T12:11:24.944327+00:00",
+    "compiledAssetSha256": {
+      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
+      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
+    "result": {
+      "startedAt": "2026-10-07T12:11:24.626Z",
+      "passed": [
+        "50MB真实ZIP分块导出和恢复，附件SHA256一致",
+        "导出桥接块不超过48KB且取消清理临时文件",
+        "旧聚合入口32MB上限与PDF/HTML安全类型",
+        "三条消息逐条处理，离开聊天不中断，后台回复保持未读",
+        "系统返回先收起聊天菜单再离开会话",
+        "真实渲染异常被恢复界面捕获且备份入口可调用",
+        "损坏图片显示可重试入口，修复原件后实际重新读取并显示"
+      ],
+      "backup": {
+        "sourceBytes": 52428800,
+        "zipBytes": 52446841,
+        "maxChunk": 65536,
+        "chunks": 806,
+        "same": true,
+        "legacyBound": true,
+        "cancel": "AbortError",
+        "cancelled": {
+          "name": "cancel.zip",
+          "mime": "application/zip",
+          "bytes": 131145,
+          "maxChunk": 49152,
+          "cancelled": true
+        },
+        "sink": {
+          "name": "stream.zip",
+          "mime": "application/zip",
+          "bytes": 52446841,
+          "maxChunk": 49152,
+          "finished": true
+        },
+        "pdf": "application/pdf",
+        "html": "application/octet-stream"
+      },
+      "pageErrors": [],
+      "compiledAssets": [
+        {
+          "name": "index-DhSJatON.js",
+          "bytes": 517680
+        },
+        {
+          "name": "pdf-reading-Cup3BkMF.js",
+          "bytes": 452388
+        },
+        {
+          "name": "three.module-DZ7jnTks.js",
+          "bytes": 537050
+        }
+      ],
+      "realProviderKeyTested": false
     }
   }
 ]

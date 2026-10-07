@@ -1,0 +1,53 @@
+{
+  "startedAt": "2026-10-07T12:11:24.626Z",
+  "passed": [
+    "50MB真实ZIP分块导出和恢复，附件SHA256一致",
+    "导出桥接块不超过48KB且取消清理临时文件",
+    "旧聚合入口32MB上限与PDF/HTML安全类型",
+    "三条消息逐条处理，离开聊天不中断，后台回复保持未读",
+    "系统返回先收起聊天菜单再离开会话",
+    "真实渲染异常被恢复界面捕获且备份入口可调用",
+    "损坏图片显示可重试入口，修复原件后实际重新读取并显示"
+  ],
+  "backup": {
+    "sourceBytes": 52428800,
+    "zipBytes": 52446841,
+    "maxChunk": 65536,
+    "chunks": 806,
+    "same": true,
+    "legacyBound": true,
+    "cancel": "AbortError",
+    "cancelled": {
+      "name": "cancel.zip",
+      "mime": "application/zip",
+      "bytes": 131145,
+      "maxChunk": 49152,
+      "cancelled": true
+    },
+    "sink": {
+      "name": "stream.zip",
+      "mime": "application/zip",
+      "bytes": 52446841,
+      "maxChunk": 49152,
+      "finished": true
+    },
+    "pdf": "application/pdf",
+    "html": "application/octet-stream"
+  },
+  "pageErrors": [],
+  "compiledAssets": [
+    {
+      "name": "index-DhSJatON.js",
+      "bytes": 517680
+    },
+    {
+      "name": "pdf-reading-Cup3BkMF.js",
+      "bytes": 452388
+    },
+    {
+      "name": "three.module-DZ7jnTks.js",
+      "bytes": 537050
+    }
+  ],
+  "realProviderKeyTested": false
+}
