@@ -35,7 +35,7 @@
         ],
         "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
         "request": {
-          "id": "0a7d664c-a392-403d-8dd4-092c30b55dae",
+          "id": "543a59c7-ebe8-4025-baf7-4b365764a9b6",
           "url": "https://fixture.invalid/post",
           "method": "POST",
           "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",

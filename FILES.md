@@ -7,7 +7,7 @@
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | GitHub Actions执行完整性、103项核心检查和六组浏览器回归；路径：.github/workflows/verify.yml | 1081 |
 | [.gitignore](.gitignore) | 工程支持文件：.gitignore | 248 |
-| [README.md](README.md) | 使用或构建指南，适用目录：.；路径：README.md | 6775 |
+| [README.md](README.md) | 使用或构建指南，适用目录：.；路径：README.md | 6898 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
 | [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
 | [docs/UI群聊调优计划.md](docs/UI群聊调优计划.md) | 上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md | 2128 |
@@ -19,24 +19,24 @@
 | [outputs/0.0.1暗夜预览.png](outputs/0.0.1暗夜预览.png) | 界面预览或绘图资源：0.0.1暗夜预览.png；目录 outputs；路径：outputs/0.0.1暗夜预览.png | 522338 |
 | [outputs/APK安装说明.md](outputs/APK安装说明.md) | 项目说明、调研或验证文档：APK安装说明.md；路径：outputs/APK安装说明.md | 3257 |
 | [outputs/Android源码.zip](outputs/Android源码.zip) | 源码归档：Android源码.zip；可直接下载解压，当前推荐带 0.0.1 的归档；路径：outputs/Android源码.zip | 9300566 |
-| [outputs/Android验证-Via.png](outputs/Android验证-Via.png) | 内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图；路径：outputs/Android验证-Via.png | 90135 |
-| [outputs/Android验证-文件读取.png](outputs/Android验证-文件读取.png) | Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图；路径：outputs/Android验证-文件读取.png | 341266 |
-| [outputs/Android验证-首页.png](outputs/Android验证-首页.png) | 恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图；路径：outputs/Android验证-首页.png | 2584447 |
+| [outputs/Android验证-Via.png](outputs/Android验证-Via.png) | 内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图；路径：outputs/Android验证-Via.png | 90049 |
+| [outputs/Android验证-文件读取.png](outputs/Android验证-文件读取.png) | Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图；路径：outputs/Android验证-文件读取.png | 341363 |
+| [outputs/Android验证-首页.png](outputs/Android验证-首页.png) | 恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图；路径：outputs/Android验证-首页.png | 2580571 |
 | [outputs/UI暗夜-私聊.png](outputs/UI暗夜-私聊.png) | 当前暗夜单人聊天与主要触控操作验收截图；路径：outputs/UI暗夜-私聊.png | 84564 |
 | [outputs/UI暗夜-设置.png](outputs/UI暗夜-设置.png) | 当前暗夜服务商设置和可读性验收截图；路径：outputs/UI暗夜-设置.png | 177462 |
 | [outputs/UI暗夜-首页.png](outputs/UI暗夜-首页.png) | 当前暗夜首页、留白、插画和卡片层次验收截图；路径：outputs/UI暗夜-首页.png | 522479 |
-| [outputs/UI系统隔离-暗夜.png](outputs/UI系统隔离-暗夜.png) | 当前暗夜群聊、输入操作与消息层次的验收截图；路径：outputs/UI系统隔离-暗夜.png | 53963 |
-| [outputs/UI系统隔离-浅色.png](outputs/UI系统隔离-浅色.png) | 当前浅色群聊、短消息与文件预览功能的验收截图；路径：outputs/UI系统隔离-浅色.png | 69682 |
+| [outputs/UI系统隔离-暗夜.png](outputs/UI系统隔离-暗夜.png) | 当前暗夜群聊、输入操作与消息层次的验收截图；路径：outputs/UI系统隔离-暗夜.png | 53935 |
+| [outputs/UI系统隔离-浅色.png](outputs/UI系统隔离-浅色.png) | 当前浅色群聊、短消息与文件预览功能的验收截图；路径：outputs/UI系统隔离-浅色.png | 69511 |
 | [outputs/UI群聊-暗夜.png](outputs/UI群聊-暗夜.png) | 上一版群聊优化交付；当时暗夜群聊的短消息、成员头像和输入区验收截图；路径：outputs/UI群聊-暗夜.png | 51693 |
 | [outputs/UI群聊-浅色.png](outputs/UI群聊-浅色.png) | 上一版群聊优化交付；当时浅色群聊消息、附件与输入区的浏览器验收截图；路径：outputs/UI群聊-浅色.png | 71157 |
-| [outputs/UI角色记忆与文件.png](outputs/UI角色记忆与文件.png) | 角色群聊、真实读取状态与新能力的浏览器验收截图；路径：outputs/UI角色记忆与文件.png | 47102 |
+| [outputs/UI角色记忆与文件.png](outputs/UI角色记忆与文件.png) | 角色群聊、真实读取状态与新能力的浏览器验收截图；路径：outputs/UI角色记忆与文件.png | 47114 |
 | [outputs/android/AndroidManifest.xml](outputs/android/AndroidManifest.xml) | Android 包名、0.0.1 版本、组件及系统权限声明；路径：outputs/android/AndroidManifest.xml | 1526 |
 | [outputs/android/README.md](outputs/android/README.md) | 使用或构建指南，适用目录：outputs/android；路径：outputs/android/README.md | 3569 |
 | [outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf](outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf) | 随包 Source Serif 4 字体资源：SourceSerif4Variable-Roman.ttf；路径：outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf | 1204208 |
 | [outputs/android/assets/licenses/Source-Serif-OFL.txt](outputs/android/assets/licenses/Source-Serif-OFL.txt) | 第三方资源许可与归属声明：outputs/android/assets/licenses/Source-Serif-OFL.txt | 4491 |
-| [outputs/android/assets/web/assets/index-COloE0Y-.js](outputs/android/assets/web/assets/index-COloE0Y-.js) | 当前 APK 的完整业务脚本，含群聊、预览及系统返回；路径：outputs/android/assets/web/assets/index-COloE0Y-.js | 507699 |
-| [outputs/android/assets/web/assets/index-Cs8j21Kv.css](outputs/android/assets/web/assets/index-Cs8j21Kv.css) | 当前 APK 的随包界面样式，含主题、触控及响应式；路径：outputs/android/assets/web/assets/index-Cs8j21Kv.css | 97365 |
-| [outputs/android/assets/web/assets/pdf-reading-m37U7EfC.js](outputs/android/assets/web/assets/pdf-reading-m37U7EfC.js) | 当前 APK 按需加载的 PDF 读取组件和 PDF.js 主库；路径：outputs/android/assets/web/assets/pdf-reading-m37U7EfC.js | 452388 |
+| [outputs/android/assets/web/assets/index-Bt4QJ_c-.css](outputs/android/assets/web/assets/index-Bt4QJ_c-.css) | 当前 APK 的随包界面样式，含主题、触控及响应式；路径：outputs/android/assets/web/assets/index-Bt4QJ_c-.css | 100523 |
+| [outputs/android/assets/web/assets/index-DID22ISN.js](outputs/android/assets/web/assets/index-DID22ISN.js) | 当前 APK 的完整业务脚本，含群聊、预览及系统返回；路径：outputs/android/assets/web/assets/index-DID22ISN.js | 508075 |
+| [outputs/android/assets/web/assets/pdf-reading-BzkUohMm.js](outputs/android/assets/web/assets/pdf-reading-BzkUohMm.js) | 当前 APK 按需加载的 PDF 读取组件和 PDF.js 主库；路径：outputs/android/assets/web/assets/pdf-reading-BzkUohMm.js | 452388 |
 | [outputs/android/assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs](outputs/android/assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs) | 当前 APK 随包的 PDF.js 解析 worker，离线加载且不依赖 CDN；路径：outputs/android/assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs | 1128591 |
 | [outputs/android/assets/web/assets/three.module-DZ7jnTks.js](outputs/android/assets/web/assets/three.module-DZ7jnTks.js) | 当前 APK 按需加载的 Three.js 运行库，为云朵桌宠提供真实三维渲染；路径：outputs/android/assets/web/assets/three.module-DZ7jnTks.js | 537050 |
 | [outputs/android/assets/web/button-sprite.png](outputs/android/assets/web/button-sprite.png) | 桌面应用绘制图标拼图；路径：outputs/android/assets/web/button-sprite.png | 1313405 |
@@ -52,6 +52,7 @@
 | [outputs/android/assets/web/licenses/PDFjs-LICENSE.txt](outputs/android/assets/web/licenses/PDFjs-LICENSE.txt) | APK 内保留的 PDF.js Apache 2.0 许可副本；路径：outputs/android/assets/web/licenses/PDFjs-LICENSE.txt | 10174 |
 | [outputs/android/assets/web/manifest.webmanifest](outputs/android/assets/web/manifest.webmanifest) | 工程支持文件：outputs/android/assets/web/manifest.webmanifest | 359 |
 | [outputs/android/assets/web/music-listen.png](outputs/android/assets/web/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/android/assets/web/music-listen.png | 1200508 |
+| [outputs/android/assets/web/via-browser.png](outputs/android/assets/web/via-browser.png) | 随 APK 打包的 Via 入口笑脸云朵原图，离线显示；路径：outputs/android/assets/web/via-browser.png | 985903 |
 | [outputs/android/assets/web/wallpaper.png](outputs/android/assets/web/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/android/assets/web/wallpaper.png | 1822518 |
 | [outputs/android/build-apk.py](outputs/android/build-apk.py) | 编译 Java、生成 DEX、打包并签名 APK；路径：outputs/android/build-apk.py | 4025 |
 | [outputs/android/merge-via.py](outputs/android/merge-via.py) | 保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py | 6447 |
@@ -107,7 +108,7 @@
 | [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1622 |
 | [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 连接、模型和个人设置界面；路径：outputs/mori-phone/app/settings.tsx | 14108 |
 | [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1846 |
-| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx | 8154 |
+| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx | 8479 |
 | [outputs/mori-phone/app/use-voice.ts](outputs/mori-phone/app/use-voice.ts) | 朗读任务所有权和播放停止控制；路径：outputs/mori-phone/app/use-voice.ts | 3181 |
 | [outputs/mori-phone/build/connector-preview-plugin.mjs](outputs/mori-phone/build/connector-preview-plugin.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-plugin.mjs | 7211 |
 | [outputs/mori-phone/build/connector-preview-worker.mjs](outputs/mori-phone/build/connector-preview-worker.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-worker.mjs | 594 |
@@ -178,6 +179,7 @@
 | [outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt](outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt) | 随包 PDF.js 的 Apache 2.0 许可证；路径：outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt | 10174 |
 | [outputs/mori-phone/public/manifest.webmanifest](outputs/mori-phone/public/manifest.webmanifest) | 工程支持文件：outputs/mori-phone/public/manifest.webmanifest | 359 |
 | [outputs/mori-phone/public/music-listen.png](outputs/mori-phone/public/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/mori-phone/public/music-listen.png | 1200508 |
+| [outputs/mori-phone/public/via-browser.png](outputs/mori-phone/public/via-browser.png) | 用户提供的透明笑脸耳机云朵原图，用作内置 Via 浏览器入口；路径：outputs/mori-phone/public/via-browser.png | 985903 |
 | [outputs/mori-phone/public/wallpaper.png](outputs/mori-phone/public/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/mori-phone/public/wallpaper.png | 1822518 |
 | [outputs/mori-phone/scripts/build-verified.sh](outputs/mori-phone/scripts/build-verified.sh) | 工程支持文件：outputs/mori-phone/scripts/build-verified.sh | 661 |
 | [outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs](outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs) | 工程支持文件：outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs | 6842 |
@@ -208,8 +210,8 @@
 | [outputs/云朵小手机.apk](outputs/云朵小手机.apk) | 历史版本安装包，保留交付记录：云朵小手机.apk；路径：outputs/云朵小手机.apk | 9357498 |
 | [outputs/云朵小手机.apk.idsig](outputs/云朵小手机.apk.idsig) | APK 的附属增量签名文件：云朵小手机.apk.idsig；路径：outputs/云朵小手机.apk.idsig | 79859 |
 | [outputs/云朵小手机源码.zip](outputs/云朵小手机源码.zip) | 源码归档：云朵小手机源码.zip；可直接下载解压，当前推荐带 0.0.1 的归档；路径：outputs/云朵小手机源码.zip | 7568148 |
-| [outputs/云笺听雨-0.0.1-系统隔离版.apk](outputs/云笺听雨-0.0.1-系统隔离版.apk) | 当前签名独立 APK，含核心编辑和模型最长上下文，0.0.1 / versionCode 5；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk | 12545249 |
-| [outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig](outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig) | 当前系统隔离 APK 的增量安装签名元数据，普通安装无需使用；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig | 104435 |
+| [outputs/云笺听雨-0.0.1-系统隔离版.apk](outputs/云笺听雨-0.0.1-系统隔离版.apk) | 当前签名独立 APK，含核心编辑和模型最长上下文，0.0.1 / versionCode 5；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk | 13532457 |
+| [outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig](outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig) | 当前系统隔离 APK 的增量安装签名元数据，普通安装无需使用；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig | 112627 |
 | [outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256](outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256) | 当前系统隔离签名 APK 的 SHA-256 校验摘要；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256 | 106 |
 | [outputs/云笺听雨-0.0.1-群聊优化.apk](outputs/云笺听雨-0.0.1-群聊优化.apk) | 上一版群聊优化交付；当时可覆盖安装的独立签名 APK，0.0.1 / versionCode 4；路径：outputs/云笺听雨-0.0.1-群聊优化.apk | 9353204 |
 | [outputs/云笺听雨-0.0.1-群聊优化.apk.idsig](outputs/云笺听雨-0.0.1-群聊优化.apk.idsig) | 上一版群聊优化交付；构建工具生成的增量安装签名元数据，普通安装只需 APK；路径：outputs/云笺听雨-0.0.1-群聊优化.apk.idsig | 79859 |
@@ -225,8 +227,8 @@
 | [outputs/云笺听雨0.0.1浏览器回归.json](outputs/云笺听雨0.0.1浏览器回归.json) | 配置或机器可读验证记录：outputs/云笺听雨0.0.1浏览器回归.json | 3772 |
 | [outputs/云笺听雨0.0.1源码.zip](outputs/云笺听雨0.0.1源码.zip) | 源码归档：云笺听雨0.0.1源码.zip；可直接下载解压，当前推荐带 0.0.1 的归档；路径：outputs/云笺听雨0.0.1源码.zip | 7484074 |
 | [outputs/云笺听雨0.0.1签名与完整性报告.md](outputs/云笺听雨0.0.1签名与完整性报告.md) | 项目说明、调研或验证文档：云笺听雨0.0.1签名与完整性报告.md；路径：outputs/云笺听雨0.0.1签名与完整性报告.md | 1204 |
-| [outputs/云笺听雨0.0.1系统隔离版Android源码.zip](outputs/云笺听雨0.0.1系统隔离版Android源码.zip) | 当前完整原生壳与随包资源归档，包含版本5清单和系统桥接；路径：outputs/云笺听雨0.0.1系统隔离版Android源码.zip | 12173899 |
-| [outputs/云笺听雨0.0.1系统隔离版源码.zip](outputs/云笺听雨0.0.1系统隔离版源码.zip) | 当前完整前端源码归档，包含核心编辑、模型预算及所有核心测试；路径：outputs/云笺听雨0.0.1系统隔离版源码.zip | 7522428 |
+| [outputs/云笺听雨0.0.1系统隔离版Android源码.zip](outputs/云笺听雨0.0.1系统隔离版Android源码.zip) | 当前完整原生壳与随包资源归档，包含版本5清单和系统桥接；路径：outputs/云笺听雨0.0.1系统隔离版Android源码.zip | 13158125 |
+| [outputs/云笺听雨0.0.1系统隔离版源码.zip](outputs/云笺听雨0.0.1系统隔离版源码.zip) | 当前完整前端源码归档，包含核心编辑、模型预算及所有核心测试；路径：outputs/云笺听雨0.0.1系统隔离版源码.zip | 8506011 |
 | [outputs/云笺听雨0.0.1群聊优化Android源码.zip](outputs/云笺听雨0.0.1群聊优化Android源码.zip) | 上一版群聊优化交付；当时原生壳、清单、系统桥接、构建脚本与全部随包资源归档；路径：outputs/云笺听雨0.0.1群聊优化Android源码.zip | 9293534 |
 | [outputs/云笺听雨0.0.1群聊优化源码.zip](outputs/云笺听雨0.0.1群聊优化源码.zip) | 上一版群聊优化交付；当时完整前端源码归档，含群聊、样式、角色卡、API 和核心测试；路径：outputs/云笺听雨0.0.1群聊优化源码.zip | 7491780 |
 | [outputs/云笺听雨0.0.1自动检查.json](outputs/云笺听雨0.0.1自动检查.json) | 配置或机器可读验证记录：outputs/云笺听雨0.0.1自动检查.json | 4432 |
@@ -241,7 +243,7 @@
 | [outputs/云笺听雨系统隔离浏览器回归.json](outputs/云笺听雨系统隔离浏览器回归.json) | 当前五组浏览器回归，含25类群聊/系统编辑/语音/导航流程；路径：outputs/云笺听雨系统隔离浏览器回归.json | 6984 |
 | [outputs/云笺听雨系统隔离签名与完整性报告.md](outputs/云笺听雨系统隔离签名与完整性报告.md) | 版本5的APK签名、源资源一致性、通过检查及真实设备验收边界；路径：outputs/云笺听雨系统隔离签名与完整性报告.md | 1380 |
 | [outputs/云笺听雨系统隔离自动检查.json](outputs/云笺听雨系统隔离自动检查.json) | 87项核心、严格类型、空白检查的当前结构化通过结果；路径：outputs/云笺听雨系统隔离自动检查.json | 8032 |
-| [outputs/云笺听雨系统隔离资源校验清单.json](outputs/云笺听雨系统隔离资源校验清单.json) | 版本5安装包与371个资源的大小和SHA-256及证书校验结果；路径：outputs/云笺听雨系统隔离资源校验清单.json | 63000 |
+| [outputs/云笺听雨系统隔离资源校验清单.json](outputs/云笺听雨系统隔离资源校验清单.json) | 版本5安装包与371个资源的大小和SHA-256及证书校验结果；路径：outputs/云笺听雨系统隔离资源校验清单.json | 63169 |
 | [outputs/云笺听雨资源校验清单.json](outputs/云笺听雨资源校验清单.json) | 配置或机器可读验证记录：outputs/云笺听雨资源校验清单.json | 5080 |
 | [outputs/优化计划与验收.md](outputs/优化计划与验收.md) | 项目说明、调研或验证文档：优化计划与验收.md；路径：outputs/优化计划与验收.md | 1949 |
 | [outputs/使用说明.md](outputs/使用说明.md) | 项目说明、调研或验证文档：使用说明.md；路径：outputs/使用说明.md | 11096 |
@@ -290,7 +292,7 @@
 | [work/qa/package.json](work/qa/package.json) | 依赖与运行命令配置：work/qa；路径：work/qa/package.json | 56 |
 | [work/qa/preview.mjs](work/qa/preview.mjs) | 历史专项浏览器检查或开发工具：preview；使用时核对对应版本、路径和端口；路径：work/qa/preview.mjs | 2794 |
 | [work/qa/probe-local.mjs](work/qa/probe-local.mjs) | 历史专项浏览器检查或开发工具：probe-local；使用时核对对应版本、路径和端口；路径：work/qa/probe-local.mjs | 1559 |
-| [work/qa/repair-companion.mjs](work/qa/repair-companion.mjs) | 16 类文档解析、真实界面记忆编辑、长代码下载、接话排队与取消回归；路径：work/qa/repair-companion.mjs | 13209 |
+| [work/qa/repair-companion.mjs](work/qa/repair-companion.mjs) | 16 类文档解析、真实界面记忆编辑、长代码下载、接话排队与取消回归；路径：work/qa/repair-companion.mjs | 13481 |
 | [work/qa/repair-csp.mjs](work/qa/repair-csp.mjs) | 实际原生 CSP 下 APK 页面和桥接功能验证；路径：work/qa/repair-csp.mjs | 4963 |
 | [work/qa/repair-library.ts](work/qa/repair-library.ts) | 浏览器回归使用的真实业务模块与组件测试入口；路径：work/qa/repair-library.ts | 1447 |
 | [work/qa/repair-review.mjs](work/qa/repair-review.mjs) | 13 类存储、网络和朗读浏览器回归；路径：work/qa/repair-review.mjs | 10123 |
@@ -298,14 +300,14 @@
 | [work/qa/repair-theme.mjs](work/qa/repair-theme.mjs) | 当前浅暗主题、字体、十处对比度与响应式检查；保留旧截图文件；路径：work/qa/repair-theme.mjs | 3994 |
 | [work/qa/review-native.mjs](work/qa/review-native.mjs) | 历史专项浏览器检查或开发工具：review-native；使用时核对对应版本、路径和端口；路径：work/qa/review-native.mjs | 1681 |
 | [work/qa/review-restore.mjs](work/qa/review-restore.mjs) | 历史专项浏览器检查或开发工具：review-restore；使用时核对对应版本、路径和端口；路径：work/qa/review-restore.mjs | 1421 |
-| [work/qa/ui-group.mjs](work/qa/ui-group.mjs) | 25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口；路径：work/qa/ui-group.mjs | 23881 |
+| [work/qa/ui-group.mjs](work/qa/ui-group.mjs) | 25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口；路径：work/qa/ui-group.mjs | 23991 |
 | [work/qa/update-csp.py](work/qa/update-csp.py) | 历史测试维护脚本：update-csp；记录当时测试代码的调整；路径：work/qa/update-csp.py | 671 |
 | [work/qa/update-repair-tests.py](work/qa/update-repair-tests.py) | 历史测试维护脚本：update-repair-tests；记录当时测试代码的调整；路径：work/qa/update-repair-tests.py | 2256 |
 | [work/qa/update-theme.py](work/qa/update-theme.py) | 历史测试维护脚本：update-theme；记录当时测试代码的调整；路径：work/qa/update-theme.py | 294 |
 | [work/qa/visual-v2.mjs](work/qa/visual-v2.mjs) | 历史专项浏览器检查或开发工具：visual-v2；使用时核对对应版本、路径和端口；路径：work/qa/visual-v2.mjs | 1170 |
-| [work/refresh-file-catalog.py](work/refresh-file-catalog.py) | 更新逐文件说明与 SHA-256，扫描源码和归档内的签名凭据或密钥；路径：work/refresh-file-catalog.py | 13253 |
+| [work/refresh-file-catalog.py](work/refresh-file-catalog.py) | 更新逐文件说明与 SHA-256，扫描源码和归档内的签名凭据或密钥；路径：work/refresh-file-catalog.py | 13495 |
 | [work/review-core.mjs](work/review-core.mjs) | 工程支持文件：work/review-core.mjs | 2493 |
-| [work/verify-core-apk.py](work/verify-core-apk.py) | 系统隔离版 APK 的 v2/v3 同证书、对齐、CRC 和源资产逐字节核对；路径：work/verify-core-apk.py | 5422 |
+| [work/verify-core-apk.py](work/verify-core-apk.py) | 系统隔离版 APK 的 v2/v3 同证书、对齐、CRC 和源资产逐字节核对；路径：work/verify-core-apk.py | 5420 |
 | [work/verify-native-via.py](work/verify-native-via.py) | 真实模拟器的12项安装、Via浏览/隔离/返回、原四栏和本地持久化检查；路径：work/verify-native-via.py | 11386 |
 | [work/verify-release-apk.py](work/verify-release-apk.py) | 0.0.1 签名、CRC、资源集合和字节一致性检查；路径：work/verify-release-apk.py | 4535 |
 | [work/verify-renamed-apk.py](work/verify-renamed-apk.py) | 历史更名版本的签名与资源验证；路径：work/verify-renamed-apk.py | 4291 |

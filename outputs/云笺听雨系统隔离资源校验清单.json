@@ -3,7 +3,7 @@
   "package": "chat.cloudlet.phone",
   "version": "0.0.1",
   "versionCode": 5,
-  "apkSha256": "cbe4947e6cf10d07f582df645698f84e63c6edb7b2024b6153e005a2286327bc",
+  "apkSha256": "87e8e28ea4efa18aebbbfef8ff5fecae173d95d7062ce706c1d7254dbd4fd108",
   "signerCertificateSha256": "7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79",
   "sameSignerAsPrevious": true,
   "signatureV2": true,
@@ -1464,19 +1464,19 @@
       "sha256": "f207a2500fc5b182b62edcb3cfcc6a7a3e7204421d9ff8922f99a620f0ba8f56"
     },
     {
-      "path": "assets/web/assets/index-COloE0Y-.js",
-      "bytes": 507699,
-      "sha256": "34087031bfe64e3c14d769f2f1a18c11922e4575945e6026a7b5df26fa56a399"
+      "path": "assets/web/assets/index-Bt4QJ_c-.css",
+      "bytes": 100523,
+      "sha256": "d3705f733edaa8b86b8162cde68ad90f64ec43577bf2895c80947c04a516141e"
     },
     {
-      "path": "assets/web/assets/index-Cs8j21Kv.css",
-      "bytes": 97365,
-      "sha256": "5b1f64a07c1b0cb2e92361d5e87da6a38a3f0c9d6d8f24f52917252ed1d018f4"
+      "path": "assets/web/assets/index-DID22ISN.js",
+      "bytes": 508075,
+      "sha256": "a09f3131e4b5d9521a1113bc58dad6366269015c145887d09c6cbcdf949e4ce6"
     },
     {
-      "path": "assets/web/assets/pdf-reading-m37U7EfC.js",
+      "path": "assets/web/assets/pdf-reading-BzkUohMm.js",
       "bytes": 452388,
-      "sha256": "78d3e91acbff19262e962dcdef74d2529fab04c755b82df3c410364aeb344b20"
+      "sha256": "85d9e2f2d00c83894310a7882af1625ebbb34077ef735f146c3c6fb3426c305f"
     },
     {
       "path": "assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs",
@@ -1536,7 +1536,7 @@
     {
       "path": "assets/web/index.html",
       "bytes": 377,
-      "sha256": "eee1297cd43a3bdcfc7e6486c3c3d4ea7912582ae73b95cda0b17be7832d0ee8"
+      "sha256": "6cebc18402bac810129a4c371529159d931f573d5bc799d9e6e88f84b8109c05"
     },
     {
       "path": "assets/web/licenses/PDFjs-LICENSE.txt",
@@ -1552,6 +1552,11 @@
       "path": "assets/web/music-listen.png",
       "bytes": 1200508,
       "sha256": "51a4b8499d0cdfcf51ff78de8512044d074cfdf3d90af4d6a8d25329838a5876"
+    },
+    {
+      "path": "assets/web/via-browser.png",
+      "bytes": 985903,
+      "sha256": "63fa62ea3231b4e71bc4e8435c56e70f158b41271a33bbeaa8ffaf9a3e3de65d"
     },
     {
       "path": "assets/web/wallpaper.png",

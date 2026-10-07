@@ -81,6 +81,8 @@ new.update({
  'outputs/mori-phone/vite-assets.d.ts':'PDF worker URL 资源的严格 TypeScript 声明',
  'outputs/mori-phone/scripts/verify-companion.mjs':'16 项独立角色记忆、权限、时间、防漂移、群聊取消与技术内容回归',
  'outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt':'随包 PDF.js 的 Apache 2.0 许可证',
+ 'outputs/mori-phone/public/via-browser.png':'用户提供的透明笑脸耳机云朵原图，用作内置 Via 浏览器入口',
+ 'outputs/android/assets/web/via-browser.png':'随 APK 打包的 Via 入口笑脸云朵原图，离线显示',
  'work/qa/repair-companion.mjs':'16 类文档解析、真实界面记忆编辑、长代码下载、接话排队与取消回归',
  'work/qa/make-pdf-fixtures.py':'用 ReportLab 4.4.9 重建可重复的明文及加密 PDF 测试资料',
  'work/qa/fixtures/reading.pdf':'自行生成的一页明文 PDF，验证实际文字读取与 Android 文件选择器',
