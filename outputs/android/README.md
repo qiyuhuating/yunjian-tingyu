@@ -14,7 +14,7 @@ node node_modules/vite/bin/vite.js build --config android-web/vite.config.ts
 
 python build-apk.py --sdk <SDK目录> --java <完整JDK目录> --signing <签名目录> --output <输出.apk> --apktool <apktool_3.0.3.jar>
 
-首次自动生成私有签名。后续更新应复用Android签名备份中的cloudlet-release.p12和signing.json，不能换签名。versionCode需在AndroidManifest.xml增加。
+正式构建必须提供既有私有签名；缺失或证书不匹配时立即拒绝构建。后续更新应复用Android签名备份中的cloudlet-release.p12和signing.json，不能换签名。versionCode需在AndroidManifest.xml增加。
 
 APK使用WebView承载全部本地资源；原生HTTPS桥接跨域调用，流式返回字节，支持中止和错误状态。上传使用Storage Access Framework；Blob导出分块写到临时文件，再由系统选定位置保存。设备朗读接Android TTS，麦克风与相机按需要授权，应用不请求管理全部文件权限。浏览器入口与书签调用 APK 内置的 Via Shell；一起听选择的外部音乐软件仍按用户选择打开。Via 网页与具有 JavaScript 桥接的本地主界面分开。
 
@@ -22,7 +22,7 @@ SDK来自Google官方下载并与官方仓库的SHA-1一致；字体来自Adobe�
 
 ## 0.0.1 生命周期修复
 
-常见配置变化保留 WebView。导出文件在系统保存窗口打开前写入 AtomicFile 日志，可在重建后恢复；保存失败保留原临时文件并提供重试。系统回收进程后的文件导入会明确提示重新选择，不会移动或删除来源文件。原生朗读结束带独立 ID，WebView 使用 CSP 禁止 frame 与活动对象。版本 0.0.1，versionCode 5。没有真机或真实 Key 时，不把浏览器桥接模拟视为设备验收。
+常见配置变化保留 WebView。导出文件在系统保存窗口打开前写入 AtomicFile 日志，可在重建后恢复；保存失败保留原临时文件并提供重试。系统回收进程后的文件导入会明确提示重新选择，不会移动或删除来源文件。原生朗读结束带独立 ID，WebView 使用 CSP 禁止 frame 与活动对象。版本 0.0.1，versionCode 7。没有真机或真实 Key 时，不把浏览器桥接模拟视为设备验收。
 
 
 本轮系统返回优先交由界面处理：关闭图片预览/通话面板、返回聊天列表或首页；首页退出前仍等待 NativeFlush 保存完成。签名和资源核对见 `work/verify-ui-apk.py`（本机 SDK/JDK 路径需按环境调整）。

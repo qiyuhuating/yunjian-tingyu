@@ -1,4 +1,5 @@
-import {unzipSync} from 'fflate';
+import {Unzip} from 'fflate';
+import {BoundedZipInflate,verifyZipContainer} from './bounded-zip';
 export type AttachmentReading={text:string;status:string};
 const MAX_TEXT=18000,MAX_FILE=20*1024*1024,MAX_EXPANDED=8*1024*1024;
 const textExtension=/\.(txt|md|csv|tsv|json|jsonl|log|xml|html?|css|scss|js|jsx|ts|tsx|py|java|c|cpp|h|rs|go|sh|sql|ya?ml|toml|ini|conf|lrc|svg)$/i;
@@ -23,8 +24,13 @@ export async function readAttachment(file:File,detectedType=file.type):Promise<A
    const {readPDF}=await import('./pdf-reading');return await readPDF(new Uint8Array(await file.arrayBuffer()));
   }
   if(/\.(docx|pptx|xlsx|odt|zip)$/i.test(file.name)){
+   await verifyZipContainer(file);
    const office=!/\.zip$/i.test(file.name);let total=0,count=0,skipped=0;
-   const archive=unzipSync(new Uint8Array(await file.arrayBuffer()),{filter:entry=>{const wanted=office?/^(?:word\/document\.xml|ppt\/slides\/slide\d+\.xml|xl\/(?:sharedStrings\.xml|worksheets\/sheet\d+\.xml)|content\.xml)$/.test(entry.name):textExtension.test(entry.name);if(!wanted||entry.originalSize>1024*1024||total+entry.originalSize>MAX_EXPANDED||count>=40){if(entry.originalSize)skipped++;return false;}total+=entry.originalSize;count++;return true;}});
+   const archive:Record<string,Uint8Array>=Object.create(null),names=new Set<string>();let failure:Error|undefined;
+   const unzip=new Unzip(entry=>{const wanted=office?/^(?:word\/document\.xml|ppt\/slides\/slide\d+\.xml|xl\/(?:sharedStrings\.xml|worksheets\/sheet\d+\.xml)|content\.xml)$/.test(entry.name):textExtension.test(entry.name);if(!wanted||(entry.originalSize??0)>1024*1024||count>=40){skipped++;return;}if(names.has(entry.name))throw new Error('压缩包包含重复文件');names.add(entry.name);count++;let size=0;const chunks:Uint8Array[]=[];
+    entry.ondata=(error,chunk,final)=>{if(error){failure=error;return;}size+=chunk.length;total+=chunk.length;if(size>1024*1024||total>MAX_EXPANDED)throw new Error('压缩包实际解压大小超出限制');chunks.push(new Uint8Array(chunk));if(final){if(entry.originalSize!==undefined&&entry.originalSize!==size)throw new Error('压缩包尺寸校验失败');const bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.length;}archive[entry.name]=bytes;chunks.length=0;}};entry.start();});unzip.register(BoundedZipInflate);
+   for(let offset=0;offset<file.size;offset+=65536){unzip.push(new Uint8Array(await file.slice(offset,offset+65536).arrayBuffer()),offset+65536>=file.size);if(failure)throw failure;}
+   if(Object.keys(archive).length!==names.size)throw new Error('压缩包不完整');
    const text=/\.xlsx$/i.test(file.name)?spreadsheetText(archive):Object.entries(archive).sort(([a],[b])=>a.localeCompare(b,undefined,{numeric:true})).map(([name,bytes])=>`【${name}】\n${office?xmlText(bytes):decodeText(bytes)}`).join('\n\n');
    return reading(text,skipped?`；${skipped} 项未解析（非文字或超出限制）`:'');
   }

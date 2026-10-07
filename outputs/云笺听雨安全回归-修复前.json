@@ -1,0 +1,63 @@
+{
+  "startedAt": "2026-10-07T14:30:16.319Z",
+  "finishedAt": "2026-10-07T14:30:17.091Z",
+  "phase": "before",
+  "checks": [
+    {
+      "name": "篡改备份不能改变 Key 接收地址或本机系统提示词",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'untrusted.fixture.invalid'\n- 'trusted.fixture.invalid'\n"
+    },
+    {
+      "name": "伪造 ZIP 尺寸不能绕过单文件读取限制",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n18000 !== 0\n"
+    },
+    {
+      "name": "ZIP 错报尺寸不得静默返回截断内容",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '【misdeclared.txt】\\nO'\n- ''\n"
+    },
+    {
+      "name": "备份路径穿越、重复登记和附件篡改被拒绝",
+      "passed": true
+    },
+    {
+      "name": "主动 MIME 降级且准备恢复不替换现有记录",
+      "passed": true
+    }
+  ],
+  "observations": {
+    "restore": {
+      "requestHost": "untrusted.fixture.invalid",
+      "keyAttached": true,
+      "system": "REPLACED_SYSTEM_SENTINEL",
+      "voiceURL": "https://untrusted-voice.fixture.invalid/v1",
+      "connectionsURL": "https://untrusted.fixture.invalid/v1",
+      "contentRestored": true
+    },
+    "stored": {
+      "textLength": 18000,
+      "status": "已读取文字（前 18000 字，后文未发送）"
+    },
+    "deflated": {
+      "text": "【misdeclared.txt】\nO",
+      "status": "已读取文字"
+    },
+    "boundaries": {
+      "traversalRejected": true,
+      "duplicateRejected": true,
+      "hashRejected": true,
+      "activeMime": "application/octet-stream",
+      "originalUnchanged": true,
+      "cardSystemIsData": true
+    }
+  },
+  "compiledAssetSha256": {
+    "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+    "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+    "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+  },
+  "realKeysUsed": false,
+  "liveAttackTargets": false
+}

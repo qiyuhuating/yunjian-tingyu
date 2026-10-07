@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-10-07T12:53:41.645Z",
+  "startedAt": "2026-10-07T15:35:03.604Z",
   "passed": [
     "50MB真实ZIP分块导出和恢复，附件SHA256一致",
     "导出桥接块不超过48KB且取消清理临时文件",
@@ -37,11 +37,11 @@
   "pageErrors": [],
   "compiledAssets": [
     {
-      "name": "index-C2zzt0sk.js",
-      "bytes": 517751
+      "name": "index-DLNndW-a.js",
+      "bytes": 518643
     },
     {
-      "name": "pdf-reading-BjKVP7Gc.js",
+      "name": "pdf-reading-CDTX2G17.js",
       "bytes": 452388
     },
     {

@@ -1,6 +1,6 @@
 {
-  "verifiedAt": "2026-10-07T12:47:20.141684+00:00",
-  "apkSha256": "0c4b20edae7b7a9e8ba64cd87f1cdc76bea177f3f063a605ee2093cbec86fbc1",
+  "verifiedAt": "2026-10-07T15:39:01.107452+00:00",
+  "apkSha256": "7ad3c624cac6dcbf7119ec8ce07eb3176a97a8bdc1feeaafe1d7509ff1dd8221",
   "serial": "emulator-5556",
   "result": "INSTRUMENTATION_RESULT: checks=[\"Three real bridge exports retain all original bytes while first SAF picker is open\",\"Actual startup recovery reads all queued files from durable journal\",\"Three real system Save operations produce exact files in Downloads and drain queue\",\"Native DNS and TLS classification excludes sensitive exception text\"]\r\nINSTRUMENTATION_RESULT: result=passed\r\nINSTRUMENTATION_CODE: -1\r\n",
   "commands": [

@@ -1,6 +1,6 @@
 import subprocess,pathlib,json,hashlib,datetime
 results=[]
-for script in ['repair-review','repair-summary','repair-theme','repair-csp','ui-group','repair-companion','audit-regressions']:
+for script in ['repair-review','repair-summary','repair-theme','repair-csp','ui-group','repair-companion','audit-regressions','security-regressions']:
  r=subprocess.run(['node','work/qa/'+script+'.mjs'],capture_output=True,text=True,encoding='utf-8',errors='replace');row={'check':script,'exitCode':r.returncode,'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'compiledAssetSha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in pathlib.Path('outputs/android/assets/web/assets').glob('*.js')}}
  if r.stdout.strip():
   try:row['result']=json.loads(r.stdout[r.stdout.find('{'):])

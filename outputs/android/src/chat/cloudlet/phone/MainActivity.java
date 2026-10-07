@@ -38,13 +38,13 @@ public final class MainActivity extends Activity {
         web=new WebView(this);android.widget.FrameLayout frame=new android.widget.FrameLayout(this);frame.addView(web,new android.widget.FrameLayout.LayoutParams(-1,-1));setContentView(frame);
         frame.setOnApplyWindowInsetsListener((v,insets)->{int bottom=Build.VERSION.SDK_INT>=30?Math.max(insets.getInsets(android.view.WindowInsets.Type.navigationBars()).bottom,insets.getInsets(android.view.WindowInsets.Type.ime()).bottom):insets.getSystemWindowInsetBottom();int left=0,top=0,right=0;if(Build.VERSION.SDK_INT>=28&&insets.getDisplayCutout()!=null){android.view.DisplayCutout cutout=insets.getDisplayCutout();left=cutout.getSafeInsetLeft();top=cutout.getSafeInsetTop();right=cutout.getSafeInsetRight();}v.setPadding(left,top,right,bottom);return insets;});
         WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(false);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        settings.setAllowFileAccess(false);settings.setAllowFileAccessFromFileURLs(false);settings.setAllowUniversalAccessFromFileURLs(false);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setMediaPlaybackRequiresUserGesture(false);settings.setSupportMultipleWindows(false);
         android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(web,false);
         web.addJavascriptInterface(new Bridge(),"Android");
         web.setWebViewClient(new WebViewClient(){
             @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){
-                Uri uri=request.getUrl();if(!HOST.equals(uri.getHost())||!"https".equals(uri.getScheme()))return null;
+                Uri uri=request.getUrl();if(!HOST.equals(uri.getHost()))return null;if(!trustedOrigin(uri))return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));
                 try {String path=uri.getPath();if(path==null||path.equals("/"))path="/index.html";
                     if(path.contains(".."))throw new IOException();String mime=URLConnection.guessContentTypeFromName(path);
                     if(path.endsWith(".js")||path.endsWith(".mjs"))mime="application/javascript";if(path.endsWith(".css"))mime="text/css";if(path.endsWith(".woff2"))mime="font/woff2";
@@ -52,7 +52,7 @@ public final class MainActivity extends Activity {
                     return new WebResourceResponse(mime==null?"application/octet-stream":mime,(mime!=null&&(mime.startsWith("text/")||mime.contains("javascript")||mime.contains("json")||mime.contains("svg")))?"UTF-8":null,200,"OK",headers,getAssets().open("web"+path));
                 } catch(IOException e){return new WebResourceResponse("text/plain","UTF-8",404,"Not Found",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));}
             }
-            @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){if(HOST.equals(request.getUrl().getHost())&&"https".equals(request.getUrl().getScheme()))return false;openExternal(request.getUrl().toString());return true;}
+            @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){if(trustedOrigin(request.getUrl()))return false;openExternal(request.getUrl().toString());return true;}
         });
         web.setWebChromeClient(new WebChromeClient(){
             @Override public boolean onShowFileChooser(WebView view,ValueCallback<Uri[]> callback,FileChooserParams params){
@@ -64,7 +64,7 @@ public final class MainActivity extends Activity {
                 try{startActivityForResult(intent,100);}catch(ActivityNotFoundException e){picker.onReceiveValue(null);picker=null;notice("未找到系统文件选择器。");}return true;
             }
             @Override public void onPermissionRequest(PermissionRequest request){runOnUiThread(()->{
-                if(!HOST.equals(request.getOrigin().getHost())||!"https".equals(request.getOrigin().getScheme())){request.deny();return;}mediaPermission=request;
+                if(!trustedOrigin(request.getOrigin())){request.deny();return;}mediaPermission=request;
                 List<String> missing=new ArrayList<>();for(String resource:request.getResources()){
                     String permission=PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(resource)?Manifest.permission.RECORD_AUDIO:PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(resource)?Manifest.permission.CAMERA:null;
                     if(permission==null){request.deny();mediaPermission=null;return;}
@@ -92,16 +92,29 @@ public final class MainActivity extends Activity {
     private void speechEnd(String id,boolean failed){js("window.NativeSpeechEnd&&window.NativeSpeechEnd("+JSONObject.quote(id)+","+failed+")");}
     private void js(String script){runOnUiThread(()->{if(web!=null)web.evaluateJavascript(script,null);});}
     private void notice(String message){runOnUiThread(()->Toast.makeText(this,message,Toast.LENGTH_LONG).show());}
-    private void openExternal(String value){runOnUiThread(()->{try{
-        Uri uri=Uri.parse(value);String scheme=uri.getScheme();if(!Arrays.asList("https","http","orpheus","qqmusic","kugou","spotify","music","intent").contains(scheme))throw new IllegalArgumentException();
-        Intent intent="intent".equals(scheme)?Intent.parseUri(value,Intent.URI_INTENT_SCHEME):new Intent(Intent.ACTION_VIEW,uri);
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);intent.setComponent(null);intent.setSelector(null);startActivity(intent);
-    }catch(Exception e){notice("没有找到能够打开这个链接的应用。");}});}
+    private boolean trustedOrigin(Uri uri){return "https".equals(uri.getScheme())&&HOST.equals(uri.getHost())&&uri.getUserInfo()==null&&(uri.getPort()==-1||uri.getPort()==443);}
+    private Intent externalIntent(String value) throws Exception {
+        if(value==null||value.length()>8192)throw new IllegalArgumentException();
+        Uri uri=Uri.parse(value);String targetPackage=null;
+        if("intent".equals(uri.getScheme())){Intent parsed=Intent.parseUri(value,Intent.URI_INTENT_SCHEME);uri=parsed.getData();targetPackage=parsed.getPackage();}
+        if(uri==null||!Arrays.asList("https","http","orpheus","qqmusic","kugou","spotify","music").contains(uri.getScheme())||uri.getUserInfo()!=null)throw new IllegalArgumentException();
+        if(Arrays.asList("https","http").contains(uri.getScheme())&&(uri.getHost()==null||HOST.equals(uri.getHost())))throw new IllegalArgumentException();
+        Intent intent=new Intent(Intent.ACTION_VIEW,uri);intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        if(targetPackage!=null&&targetPackage.matches("[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)+"))intent.setPackage(targetPackage);
+        return intent;
+    }
+    private void openExternal(String value){runOnUiThread(()->{try{startActivity(externalIntent(value));}catch(Exception e){notice("没有找到能够打开这个链接的应用。");}});}
     private void callback(String method,String id,String value){js("window.NativeHTTP&&window.NativeHTTP."+method+"("+JSONObject.quote(id)+(value.isEmpty()?"":","+value)+")");}
     private boolean allowed(URL url) throws Exception {
-        if(!"https".equals(url.getProtocol())||url.getUserInfo()!=null||url.getPort()>0&&url.getPort()!=443)return false;
-        for(InetAddress address:InetAddress.getAllByName(url.getHost()))if(address.isAnyLocalAddress()||address.isLoopbackAddress()||address.isLinkLocalAddress()||address.isSiteLocalAddress()||address.isMulticastAddress())return false;
+        if(!"https".equals(url.getProtocol())||url.getUserInfo()!=null||url.getPort()!=-1&&url.getPort()!=443)return false;
+        for(InetAddress address:InetAddress.getAllByName(url.getHost()))if(!publicAddress(address))return false;
         return true;
+    }
+    private boolean publicAddress(InetAddress address){
+        if(address.isAnyLocalAddress()||address.isLoopbackAddress()||address.isLinkLocalAddress()||address.isSiteLocalAddress()||address.isMulticastAddress())return false;
+        byte[] bytes=address.getAddress();int first=bytes[0]&255,second=bytes[1]&255;
+        if(bytes.length==4)return first!=0&&first<224&&!(first==100&&second>=64&&second<=127)&&!(first==198&&(second==18||second==19));
+        return bytes.length==16&&(first&0xe0)==0x20&&!(first==0x20&&second==0x01&&(bytes[2]&255)==0x0d&&(bytes[3]&255)==0xb8);
     }
     private final class Bridge {
         @JavascriptInterface public void request(String id,String target,String method,String headerJSON,String body){

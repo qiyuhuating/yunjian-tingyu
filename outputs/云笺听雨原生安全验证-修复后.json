@@ -1,0 +1,154 @@
+{
+  "verifiedAt": "2026-10-07T15:38:51.188374+00:00",
+  "apkSha256": "7ad3c624cac6dcbf7119ec8ce07eb3176a97a8bdc1feeaafe1d7509ff1dd8221",
+  "serial": "emulator-5556",
+  "result": "INSTRUMENTATION_RESULT: observations={\"uniqueLocalIPv6Allowed\":false,\"publicIPv4Allowed\":true,\"publicIPv6Allowed\":true,\"loopbackAllowed\":false,\"cgnatAllowed\":false,\"normalOriginStatus\":200,\"explicit443Status\":200,\"wrongPortStatus\":403,\"userinfoStatus\":403,\"fileAccess\":false,\"fileCrossOrigin\":false,\"universalFileAccess\":false,\"externalAction\":\"android.intent.action.VIEW\",\"musicScheme\":\"orpheus\",\"httpsScheme\":\"https\",\"externalGrantFlags\":0,\"contentIntentBlocked\":true}\r\nINSTRUMENTATION_RESULT: result=completed\r\nINSTRUMENTATION_CODE: -1\r\n",
+  "observations": {
+    "uniqueLocalIPv6Allowed": false,
+    "publicIPv4Allowed": true,
+    "publicIPv6Allowed": true,
+    "loopbackAllowed": false,
+    "cgnatAllowed": false,
+    "normalOriginStatus": 200,
+    "explicit443Status": 200,
+    "wrongPortStatus": 403,
+    "userinfoStatus": 403,
+    "fileAccess": false,
+    "fileCrossOrigin": false,
+    "universalFileAccess": false,
+    "externalAction": "android.intent.action.VIEW",
+    "musicScheme": "orpheus",
+    "httpsScheme": "https",
+    "externalGrantFlags": 0,
+    "contentIntentBlocked": true
+  },
+  "checks": {
+    "ULA denied": true,
+    "CGNAT denied": true,
+    "loopback denied": true,
+    "exact asset origin": true,
+    "file origin isolation": true,
+    "normal public addresses retained": true,
+    "normal origins retained": true,
+    "normal external links retained": true,
+    "external intent constrained": true
+  },
+  "commands": [
+    {
+      "command": [
+        "D:\\bin\\javac.exe",
+        "-encoding",
+        "UTF-8",
+        "-source",
+        "8",
+        "-target",
+        "8",
+        "-bootclasspath",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit001-final4\\build\\java-base\\classes",
+        "-classpath",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar",
+        "-d",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\classes",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\SecurityAudit.java"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\bin\\java.exe",
+        "-cp",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\lib\\d8.jar",
+        "com.android.tools.r8.D8",
+        "--lib",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar",
+        "--min-api",
+        "24",
+        "--output",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\dex",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\classes\\chat\\cloudlet\\securityaudit\\SecurityAudit$1.class",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\classes\\chat\\cloudlet\\securityaudit\\SecurityAudit.class"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\aapt2.exe",
+        "link",
+        "-o",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\unsigned.apk",
+        "--manifest",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\AndroidManifest.xml",
+        "-I",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\zipalign.exe",
+        "-f",
+        "4",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\unsigned.apk",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\aligned.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:\\bin\\java.exe",
+        "-jar",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\tools\\lib\\apksigner.jar",
+        "sign",
+        "--ks",
+        "D:\\Codex存储文件夹\\2026-10-06\\c\\work\\apk-signing\\cloudlet-release.p12",
+        "--ks-key-alias",
+        "cloudlet",
+        "--ks-pass",
+        "env:CLOUDLET_SIGN_PASSWORD",
+        "--key-pass",
+        "env:CLOUDLET_SIGN_PASSWORD",
+        "--out",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\test.apk",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\aligned.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\security-instrumentation\\test.apk"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "am",
+        "force-stop",
+        "chat.cloudlet.phone"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "D:/xiaofeng/dev-cache/cloudlet-apk/android-test/platform-tools/adb.exe",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "chat.cloudlet.securityaudit/.SecurityAudit"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "testApkIncludedInProduct": false
+}

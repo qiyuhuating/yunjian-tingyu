@@ -2,10 +2,10 @@
   {
     "check": "repair-review",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:30:28.190183+00:00",
+    "verifiedAt": "2026-10-07T15:33:48.344741+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -41,7 +41,7 @@
         ],
         "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
         "request": {
-          "id": "e65c737a-5fe4-4c63-8315-ad32863f5b82",
+          "id": "13f4cd71-8008-442d-b1e7-ef07b867aca7",
           "url": "https://fixture.invalid/post",
           "method": "POST",
           "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",
@@ -75,10 +75,10 @@
   {
     "check": "repair-summary",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:30:33.913205+00:00",
+    "verifiedAt": "2026-10-07T15:33:53.318086+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -95,10 +95,10 @@
   {
     "check": "repair-theme",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:30:38.579118+00:00",
+    "verifiedAt": "2026-10-07T15:33:57.142276+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -159,10 +159,10 @@
   {
     "check": "repair-csp",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:30:43.970702+00:00",
+    "verifiedAt": "2026-10-07T15:34:01.637214+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -180,10 +180,10 @@
   {
     "check": "ui-group",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:31:04.870239+00:00",
+    "verifiedAt": "2026-10-07T15:34:17.570075+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -221,10 +221,10 @@
   {
     "check": "repair-companion",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:31:35.691388+00:00",
+    "verifiedAt": "2026-10-07T15:34:45.409143+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -252,14 +252,14 @@
   {
     "check": "audit-regressions",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:56:32.822794+00:00",
+    "verifiedAt": "2026-10-07T15:35:03.868475+00:00",
     "compiledAssetSha256": {
-      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
-      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
-      "startedAt": "2026-10-07T12:53:41.645Z",
+      "startedAt": "2026-10-07T15:35:03.604Z",
       "passed": [
         "50MB真实ZIP分块导出和恢复，附件SHA256一致",
         "导出桥接块不超过48KB且取消清理临时文件",
@@ -297,11 +297,11 @@
       "pageErrors": [],
       "compiledAssets": [
         {
-          "name": "index-C2zzt0sk.js",
-          "bytes": 517751
+          "name": "index-DLNndW-a.js",
+          "bytes": 518643
         },
         {
-          "name": "pdf-reading-BjKVP7Gc.js",
+          "name": "pdf-reading-CDTX2G17.js",
           "bytes": 452388
         },
         {
@@ -310,6 +310,88 @@
         }
       ],
       "realProviderKeyTested": false
+    }
+  },
+  {
+    "check": "security-regressions",
+    "exitCode": 0,
+    "verifiedAt": "2026-10-07T15:35:05.720675+00:00",
+    "compiledAssetSha256": {
+      "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+      "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
+      "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
+    "result": {
+      "startedAt": "2026-10-07T15:35:04.717Z",
+      "finishedAt": "2026-10-07T15:35:05.453Z",
+      "phase": "after",
+      "checks": [
+        {
+          "name": "篡改备份不能改变 Key 接收地址或本机系统提示词",
+          "passed": true
+        },
+        {
+          "name": "伪造 ZIP 尺寸不能绕过单文件读取限制",
+          "passed": true
+        },
+        {
+          "name": "ZIP 错报尺寸不得静默返回截断内容",
+          "passed": true
+        },
+        {
+          "name": "正常压缩文字完整读取且本地文件头错报被拒绝",
+          "passed": true
+        },
+        {
+          "name": "备份路径穿越、重复登记和附件篡改被拒绝",
+          "passed": true
+        },
+        {
+          "name": "主动 MIME 降级且准备恢复不替换现有记录",
+          "passed": true
+        }
+      ],
+      "observations": {
+        "restore": {
+          "requestHost": "trusted.fixture.invalid",
+          "keyAttached": true,
+          "system": "LOCAL_SYSTEM_SENTINEL",
+          "voiceURL": "https://trusted-voice.fixture.invalid/v1",
+          "connectionsURL": "https://trusted.fixture.invalid/v1",
+          "contentRestored": true
+        },
+        "normalZip": "【hello.txt】\n正常文字与压缩读取",
+        "localMismatch": "",
+        "stored": {
+          "textLength": 0,
+          "status": "没有提取到文字；原文件已保存，不能声称读过内容"
+        },
+        "deflated": {
+          "text": "【misdeclared.txt】\nOriginal text must not be silently truncated",
+          "status": "已读取文字"
+        },
+        "boundaries": {
+          "traversalRejected": true,
+          "duplicateRejected": true,
+          "hashRejected": true,
+          "activeMime": "application/octet-stream",
+          "originalUnchanged": true,
+          "cardSystemIsData": true
+        }
+      },
+      "compiledAssetSha256": {
+        "index-DLNndW-a.js": "a517abf0d28b922ab8837991d61058c20a38eb91790feac86d24b6371af3421b",
+        "pdf-reading-CDTX2G17.js": "2d0101d7be222dd7fed7ff54f12af80f184be4c7deef60290b0ccc57a7301086",
+        "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+      },
+      "sourceHelperSha256": {
+        "local-backup.ts": "662fb6ccb94817c53db09b7b3409192ed3a8da1aaa088a7da9f310c42e7f1e85",
+        "attachment-text.ts": "2afa8c2331a0b0afb8c5aadb7893799e0d2c645a37d0db464135597463d62fb5",
+        "bounded-zip.ts": "d0a5758810d4fa5a6066ec6c62d5d30a4700e063f6310647fcdd648d48b4c5be"
+      },
+      "sourceHelpersInjected": true,
+      "realKeysUsed": false,
+      "liveAttackTargets": false
     }
   }
 ]
