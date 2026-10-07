@@ -8,7 +8,7 @@ def run(args):
 (stage/'AndroidManifest.xml').write_text('<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="chat.cloudlet.audit"><uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35"/><instrumentation android:name="chat.cloudlet.audit.QueueAudit" android:targetPackage="chat.cloudlet.phone"/><application android:label="Cloudlet disposable QA"/></manifest>')
 for name in ['classes','dex']:(stage/name).mkdir(exist_ok=True)
 source=stage/'QueueAudit.java';source.write_bytes((root/'work/qa/native/QueueAudit.java').read_bytes().removeprefix(b'\xef\xbb\xbf'))
-base=Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final3/build/java-base/classes');assert base.exists()
+base=Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final4/build/java-base/classes');assert base.exists()
 run([java/'bin/javac.exe','-encoding','UTF-8','-source','8','-target','8','-bootclasspath',base,'-classpath',android,'-d',stage/'classes',source]);run([java/'bin/java.exe','-cp',tools/'lib/d8.jar','com.android.tools.r8.D8','--lib',android,'--min-api','24','--output',stage/'dex',*stage.glob('classes/**/*.class')]);run([tools/'aapt2.exe','link','-o',stage/'unsigned.apk','--manifest',stage/'AndroidManifest.xml','-I',android])
 import zipfile
 with zipfile.ZipFile(stage/'unsigned.apk','a') as z:z.write(stage/'dex/classes.dex','classes.dex')

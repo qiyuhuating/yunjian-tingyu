@@ -2,10 +2,10 @@
   {
     "check": "repair-review",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:10:13.598307+00:00",
+    "verifiedAt": "2026-10-07T12:30:28.190183+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -41,7 +41,7 @@
         ],
         "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
         "request": {
-          "id": "82a4fe99-a795-4178-ac85-e892fe4b17ee",
+          "id": "e65c737a-5fe4-4c63-8315-ad32863f5b82",
           "url": "https://fixture.invalid/post",
           "method": "POST",
           "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",
@@ -75,10 +75,10 @@
   {
     "check": "repair-summary",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:10:18.979338+00:00",
+    "verifiedAt": "2026-10-07T12:30:33.913205+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -95,10 +95,10 @@
   {
     "check": "repair-theme",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:10:23.012918+00:00",
+    "verifiedAt": "2026-10-07T12:30:38.579118+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -159,10 +159,10 @@
   {
     "check": "repair-csp",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:10:27.734944+00:00",
+    "verifiedAt": "2026-10-07T12:30:43.970702+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -180,10 +180,10 @@
   {
     "check": "ui-group",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:10:44.636502+00:00",
+    "verifiedAt": "2026-10-07T12:31:04.870239+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -221,10 +221,10 @@
   {
     "check": "repair-companion",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:11:13.781375+00:00",
+    "verifiedAt": "2026-10-07T12:31:35.691388+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
@@ -252,19 +252,19 @@
   {
     "check": "audit-regressions",
     "exitCode": 0,
-    "verifiedAt": "2026-10-07T12:11:24.944327+00:00",
+    "verifiedAt": "2026-10-07T12:31:56.285990+00:00",
     "compiledAssetSha256": {
-      "index-DhSJatON.js": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2",
-      "pdf-reading-Cup3BkMF.js": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff",
+      "index-C2zzt0sk.js": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e",
+      "pdf-reading-BjKVP7Gc.js": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679",
       "three.module-DZ7jnTks.js": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
     },
     "result": {
-      "startedAt": "2026-10-07T12:11:24.626Z",
+      "startedAt": "2026-10-07T12:31:55.895Z",
       "passed": [
         "50MB真实ZIP分块导出和恢复，附件SHA256一致",
         "导出桥接块不超过48KB且取消清理临时文件",
         "旧聚合入口32MB上限与PDF/HTML安全类型",
-        "三条消息逐条处理，离开聊天不中断，后台回复保持未读",
+        "三条消息逐条处理，离开聊天不中断，后台回复保持未读；延迟写盘不抹除新草稿",
         "系统返回先收起聊天菜单再离开会话",
         "真实渲染异常被恢复界面捕获且备份入口可调用",
         "损坏图片显示可重试入口，修复原件后实际重新读取并显示"
@@ -297,11 +297,11 @@
       "pageErrors": [],
       "compiledAssets": [
         {
-          "name": "index-DhSJatON.js",
-          "bytes": 517680
+          "name": "index-C2zzt0sk.js",
+          "bytes": 517751
         },
         {
-          "name": "pdf-reading-Cup3BkMF.js",
+          "name": "pdf-reading-BjKVP7Gc.js",
           "bytes": 452388
         },
         {

@@ -1,232 +1,270 @@
 --------- beginning of main
-10-07 12:12:03.648  4104  4127 E chromium: [1007/121203.648079:ERROR:variations_seed_loader.cc(37)] Seed missing signature.
-10-07 12:12:03.650  4104  4127 I chromium: [1007/121203.650505:INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
-10-07 12:12:03.862  4130  4157 W chromium: [WARNING:runtime_features.cc(694)] SharedStorage for M118+ cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI,SharedStorageAPIM118 in addition.
-10-07 12:12:03.974  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:12:04.203  4130  4157 I chromium: [INFO:viewport_data.cc(133)] E2E_Used ViewportFitCover
-10-07 12:12:04.662  4130  4157 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:12:07.255  4193  4193 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:07.259  4193  4193 I AndroidRuntime: Using default boot image
-10-07 12:12:07.259  4193  4193 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:07.366  4193  4193 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:08.421  4193  4193 D AndroidRuntime: Shutting down VM
-10-07 12:12:09.923  4211  4211 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:09.927  4211  4211 I AndroidRuntime: Using default boot image
-10-07 12:12:09.928  4211  4211 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:10.028  4211  4211 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:11.250  4211  4211 D AndroidRuntime: Shutting down VM
-10-07 12:12:17.266  4235  4235 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:17.269  4235  4235 I AndroidRuntime: Using default boot image
-10-07 12:12:17.269  4235  4235 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:17.360  4235  4235 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:18.519  4235  4235 D AndroidRuntime: Shutting down VM
-10-07 12:12:19.519  4252  4252 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:19.522  4252  4252 I AndroidRuntime: Using default boot image
-10-07 12:12:19.522  4252  4252 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:19.610  4252  4252 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:20.731  4252  4252 D AndroidRuntime: Shutting down VM
-10-07 12:12:21.759  4269  4269 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:21.765  4269  4269 I AndroidRuntime: Using default boot image
-10-07 12:12:21.765  4269  4269 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:21.866  4269  4269 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:23.063  4269  4269 D AndroidRuntime: Shutting down VM
-10-07 12:12:24.180  4295  4295 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:24.185  4295  4295 I AndroidRuntime: Using default boot image
-10-07 12:12:24.185  4295  4295 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:24.276  4295  4295 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:26.050  4295  4295 D AndroidRuntime: Shutting down VM
-10-07 12:12:27.064  4321  4321 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:27.068  4321  4321 I AndroidRuntime: Using default boot image
-10-07 12:12:27.068  4321  4321 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:27.162  4321  4321 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:28.249  4321  4321 D AndroidRuntime: Shutting down VM
-10-07 12:12:29.277  4339  4339 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:29.282  4339  4339 I AndroidRuntime: Using default boot image
-10-07 12:12:29.283  4339  4339 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:29.378  4339  4339 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:30.445  4339  4339 D AndroidRuntime: Shutting down VM
-10-07 12:12:32.983  4368  4368 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:32.988  4368  4368 I AndroidRuntime: Using default boot image
-10-07 12:12:32.988  4368  4368 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:33.079  4368  4368 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:34.269  4368  4368 D AndroidRuntime: Shutting down VM
-10-07 12:12:35.424  4390  4390 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:35.427  4390  4390 I AndroidRuntime: Using default boot image
-10-07 12:12:35.428  4390  4390 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:35.514  4390  4390 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:36.703  4390  4390 D AndroidRuntime: Shutting down VM
-10-07 12:12:37.645  4411  4411 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:37.648  4411  4411 I AndroidRuntime: Using default boot image
-10-07 12:12:37.648  4411  4411 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:37.716  4411  4411 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:38.747  4411  4411 D AndroidRuntime: Shutting down VM
-10-07 12:12:39.956  4130  4157 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:12:40.662  4130  4157 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:12:40.823  4448  4448 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:40.827  4448  4448 I AndroidRuntime: Using default boot image
-10-07 12:12:40.828  4448  4448 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:40.927  4448  4448 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:41.985  4448  4448 D AndroidRuntime: Shutting down VM
-10-07 12:12:42.955  4130  4157 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:12:42.956  4130  4157 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:12:42.990  4478  4478 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:42.993  4478  4478 I AndroidRuntime: Using default boot image
-10-07 12:12:42.993  4478  4478 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:43.075  4478  4478 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:44.328  4478  4478 D AndroidRuntime: Shutting down VM
-10-07 12:12:45.350  4501  4501 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:45.354  4501  4501 I AndroidRuntime: Using default boot image
-10-07 12:12:45.355  4501  4501 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:45.452  4501  4501 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:46.527  4501  4501 D AndroidRuntime: Shutting down VM
-10-07 12:12:47.535  4522  4522 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:47.538  4522  4522 I AndroidRuntime: Using default boot image
-10-07 12:12:47.538  4522  4522 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:47.631  4522  4522 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:48.792  4522  4522 D AndroidRuntime: Shutting down VM
-10-07 12:12:50.870  4547  4547 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:50.873  4547  4547 I AndroidRuntime: Using default boot image
-10-07 12:12:50.873  4547  4547 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:50.935  4547  4547 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:51.964  4547  4547 D AndroidRuntime: Shutting down VM
-10-07 12:12:53.314  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:12:54.961  4589  4589 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:54.965  4589  4589 I AndroidRuntime: Using default boot image
-10-07 12:12:54.965  4589  4589 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:55.047  4589  4589 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:56.116  4589  4589 D AndroidRuntime: Shutting down VM
-10-07 12:12:57.091  4609  4609 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:12:57.093  4609  4609 I AndroidRuntime: Using default boot image
-10-07 12:12:57.094  4609  4609 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:12:57.154  4609  4609 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:12:58.184  4609  4609 D AndroidRuntime: Shutting down VM
-10-07 12:13:00.211  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:13:00.348  4653  4653 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:00.352  4653  4653 I AndroidRuntime: Using default boot image
-10-07 12:13:00.352  4653  4653 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:00.455  4653  4653 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:02.031  4653  4653 D AndroidRuntime: Shutting down VM
-10-07 12:13:02.972  4671  4671 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:02.975  4671  4671 I AndroidRuntime: Using default boot image
-10-07 12:13:02.975  4671  4671 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:03.036  4671  4671 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:04.065  4671  4671 D AndroidRuntime: Shutting down VM
-10-07 12:13:05.217  4697  4697 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:05.220  4697  4697 I AndroidRuntime: Using default boot image
-10-07 12:13:05.220  4697  4697 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:05.297  4697  4697 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:06.325  4697  4697 D AndroidRuntime: Shutting down VM
-10-07 12:13:07.267  4717  4717 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:07.269  4717  4717 I AndroidRuntime: Using default boot image
-10-07 12:13:07.269  4717  4717 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:07.332  4717  4717 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:08.366  4717  4717 D AndroidRuntime: Shutting down VM
-10-07 12:13:09.305  4735  4735 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:09.307  4735  4735 I AndroidRuntime: Using default boot image
-10-07 12:13:09.308  4735  4735 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:09.370  4735  4735 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:10.403  4735  4735 D AndroidRuntime: Shutting down VM
-10-07 12:13:11.361  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:13:11.423  4757  4757 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:11.427  4757  4757 I AndroidRuntime: Using default boot image
-10-07 12:13:11.427  4757  4757 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:11.514  4757  4757 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:13.117  4757  4757 D AndroidRuntime: Shutting down VM
-10-07 12:13:14.031  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:13:14.114  4779  4779 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:14.117  4779  4779 I AndroidRuntime: Using default boot image
-10-07 12:13:14.117  4779  4779 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:14.201  4779  4779 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:15.289  4779  4779 D AndroidRuntime: Shutting down VM
-10-07 12:13:16.228  4796  4796 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:16.230  4796  4796 I AndroidRuntime: Using default boot image
-10-07 12:13:16.230  4796  4796 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:16.297  4796  4796 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:17.324  4796  4796 D AndroidRuntime: Shutting down VM
-10-07 12:13:18.254  4104  4158 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:13:18.357  4824  4824 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:18.363  4824  4824 I AndroidRuntime: Using default boot image
-10-07 12:13:18.366  4824  4824 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:18.476  4824  4824 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:19.515  4824  4824 D AndroidRuntime: Shutting down VM
-10-07 12:13:20.436  4130  4130 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
-10-07 12:13:20.848  4858  4878 E chromium: [1007/121320.848102:ERROR:variations_seed_loader.cc(37)] Seed missing signature.
-10-07 12:13:20.848  4858  4878 I chromium: [1007/121320.848700:INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
-10-07 12:13:21.049  4884  4906 W chromium: [WARNING:runtime_features.cc(694)] SharedStorage for M118+ cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI,SharedStorageAPIM118 in addition.
-10-07 12:13:21.170  4858  4911 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
-10-07 12:13:21.350  4884  4906 I chromium: [INFO:viewport_data.cc(133)] E2E_Used ViewportFitCover
-10-07 12:13:21.499  4937  4937 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:21.504  4937  4937 I AndroidRuntime: Using default boot image
-10-07 12:13:21.504  4937  4937 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:21.612  4937  4937 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:21.838  4884  4906 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:13:25.184  4937  4937 D AndroidRuntime: Shutting down VM
-10-07 12:13:31.722  4967  4967 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:31.725  4967  4967 I AndroidRuntime: Using default boot image
-10-07 12:13:31.725  4967  4967 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:31.836  4967  4967 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:33.003  4967  4967 D AndroidRuntime: Shutting down VM
-10-07 12:13:34.039  4984  4984 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:34.044  4984  4984 I AndroidRuntime: Using default boot image
-10-07 12:13:34.044  4984  4984 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:34.151  4984  4984 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:35.367  4984  4984 D AndroidRuntime: Shutting down VM
-10-07 12:13:36.503  5006  5006 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:36.507  5006  5006 I AndroidRuntime: Using default boot image
-10-07 12:13:36.508  5006  5006 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:36.594  5006  5006 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:38.484  5006  5006 D AndroidRuntime: Shutting down VM
-10-07 12:13:39.572  5035  5035 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:39.576  5035  5035 I AndroidRuntime: Using default boot image
-10-07 12:13:39.576  5035  5035 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:39.669  5035  5035 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:40.815  5035  5035 D AndroidRuntime: Shutting down VM
-10-07 12:13:41.892  5058  5058 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:41.897  5058  5058 I AndroidRuntime: Using default boot image
-10-07 12:13:41.898  5058  5058 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:41.986  5058  5058 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:43.280  5058  5058 D AndroidRuntime: Shutting down VM
-10-07 12:13:44.185  4884  4906 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:13:44.278  5085  5085 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:44.281  5085  5085 I AndroidRuntime: Using default boot image
-10-07 12:13:44.281  5085  5085 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:44.356  5085  5085 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:45.639  5085  5085 D AndroidRuntime: Shutting down VM
-10-07 12:13:47.653  5148  5148 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:47.656  5148  5148 I AndroidRuntime: Using default boot image
-10-07 12:13:47.656  5148  5148 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:47.751  5148  5148 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:49.003  5148  5148 D AndroidRuntime: Shutting down VM
-10-07 12:13:49.955  5184  5184 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:49.957  5184  5184 I AndroidRuntime: Using default boot image
-10-07 12:13:49.957  5184  5184 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:50.042  5184  5184 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:51.342  5184  5184 D AndroidRuntime: Shutting down VM
-10-07 12:13:52.407  5218  5218 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:52.413  5218  5218 I AndroidRuntime: Using default boot image
-10-07 12:13:52.414  5218  5218 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:52.615  5218  5218 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:53.400  4884  4906 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:13:53.400  4884  4906 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:13:54.271  5218  5218 D AndroidRuntime: Shutting down VM
-10-07 12:13:55.213  5246  5246 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:55.215  5246  5246 I AndroidRuntime: Using default boot image
-10-07 12:13:55.215  5246  5246 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:55.287  5246  5246 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:56.322  5246  5246 D AndroidRuntime: Shutting down VM
-10-07 12:13:58.316  5287  5287 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:13:58.318  5287  5287 I AndroidRuntime: Using default boot image
-10-07 12:13:58.318  5287  5287 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:13:58.394  5287  5287 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:13:59.691  5287  5287 D AndroidRuntime: Shutting down VM
-10-07 12:14:00.654  5311  5311 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:14:00.656  5311  5311 I AndroidRuntime: Using default boot image
-10-07 12:14:00.657  5311  5311 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:14:00.735  5311  5311 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:14:02.050  5311  5311 D AndroidRuntime: Shutting down VM
-10-07 12:14:03.095  5338  5338 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-07 12:14:03.100  5338  5338 I AndroidRuntime: Using default boot image
-10-07 12:14:03.101  5338  5338 I AndroidRuntime: Leaving lock profiling enabled
-10-07 12:14:03.234  5338  5338 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-10-07 12:14:03.516  4884  4906 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
-10-07 12:14:04.421  5338  5338 D AndroidRuntime: Shutting down VM
+10-07 12:41:19.113  5612  5634 E chromium: [1007/124119.112065:ERROR:variations_seed_loader.cc(37)] Seed missing signature.
+10-07 12:41:19.122  5612  5634 I chromium: [INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
+10-07 12:41:19.488  5637  5662 W chromium: [WARNING:runtime_features.cc(694)] SharedStorage for M118+ cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI,SharedStorageAPIM118 in addition.
+10-07 12:41:19.649  5637  5662 I chromium: [INFO:viewport_data.cc(133)] E2E_Used ViewportFitCover
+10-07 12:41:19.675  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:41:20.446  5637  5662 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:41:21.574  5612  5646 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/chat.cloudlet.phone/cache/WebView/Default/HTTP Cache/Cache_Data/468e834131256002_0
+10-07 12:41:22.969  5704  5704 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:22.972  5704  5704 I AndroidRuntime: Using default boot image
+10-07 12:41:22.973  5704  5704 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:23.074  5704  5704 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:24.123  5704  5704 D AndroidRuntime: Shutting down VM
+10-07 12:41:25.655  5722  5722 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:25.659  5722  5722 I AndroidRuntime: Using default boot image
+10-07 12:41:25.659  5722  5722 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:25.758  5722  5722 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:26.858  5722  5722 D AndroidRuntime: Shutting down VM
+10-07 12:41:27.959  5740  5740 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:27.964  5740  5740 I AndroidRuntime: Using default boot image
+10-07 12:41:27.964  5740  5740 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:28.115  5740  5740 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:29.456  5740  5740 D AndroidRuntime: Shutting down VM
+10-07 12:41:30.549  5757  5757 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:30.556  5757  5757 I AndroidRuntime: Using default boot image
+10-07 12:41:30.557  5757  5757 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:30.702  5757  5757 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:31.941  5757  5757 D AndroidRuntime: Shutting down VM
+10-07 12:41:33.022  5774  5774 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:33.028  5774  5774 I AndroidRuntime: Using default boot image
+10-07 12:41:33.029  5774  5774 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:33.169  5774  5774 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:34.460  5774  5774 D AndroidRuntime: Shutting down VM
+10-07 12:41:35.682  5796  5796 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:35.686  5796  5796 I AndroidRuntime: Using default boot image
+10-07 12:41:35.686  5796  5796 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:35.809  5796  5796 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:36.864  5796  5796 D AndroidRuntime: Shutting down VM
+10-07 12:41:38.362  5813  5813 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:38.365  5813  5813 I AndroidRuntime: Using default boot image
+10-07 12:41:38.365  5813  5813 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:38.456  5813  5813 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:39.505  5813  5813 D AndroidRuntime: Shutting down VM
+10-07 12:41:40.598  5835  5835 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:40.603  5835  5835 I AndroidRuntime: Using default boot image
+10-07 12:41:40.603  5835  5835 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:40.743  5835  5835 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:41.959  5835  5835 D AndroidRuntime: Shutting down VM
+10-07 12:41:43.058  5852  5852 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:43.064  5852  5852 I AndroidRuntime: Using default boot image
+10-07 12:41:43.064  5852  5852 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:43.193  5852  5852 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:44.355  5852  5852 D AndroidRuntime: Shutting down VM
+10-07 12:41:47.527  5877  5877 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:47.538  5877  5877 I AndroidRuntime: Using default boot image
+10-07 12:41:47.538  5877  5877 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:47.675  5877  5877 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:48.942  5877  5877 D AndroidRuntime: Shutting down VM
+10-07 12:41:50.082  5900  5900 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:50.088  5900  5900 I AndroidRuntime: Using default boot image
+10-07 12:41:50.088  5900  5900 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:50.215  5900  5900 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:51.504  5900  5900 D AndroidRuntime: Shutting down VM
+10-07 12:41:52.505  5918  5918 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:52.510  5918  5918 I AndroidRuntime: Using default boot image
+10-07 12:41:52.510  5918  5918 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:52.596  5918  5918 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:53.650  5918  5918 D AndroidRuntime: Shutting down VM
+10-07 12:41:55.175  5637  5662 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:41:56.211  5637  5662 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:41:56.411  5954  5954 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:56.418  5954  5954 I AndroidRuntime: Using default boot image
+10-07 12:41:56.418  5954  5954 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:56.568  5954  5954 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:41:57.937  5954  5954 D AndroidRuntime: Shutting down VM
+10-07 12:41:58.974  5637  5662 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:41:58.974  5637  5662 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:41:59.024  5980  5980 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:41:59.029  5980  5980 I AndroidRuntime: Using default boot image
+10-07 12:41:59.029  5980  5980 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:41:59.170  5980  5980 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:00.506  5980  5980 D AndroidRuntime: Shutting down VM
+10-07 12:42:01.593  6003  6003 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:01.600  6003  6003 I AndroidRuntime: Using default boot image
+10-07 12:42:01.600  6003  6003 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:01.733  6003  6003 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:02.972  6003  6003 D AndroidRuntime: Shutting down VM
+10-07 12:42:04.055  6020  6020 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:04.060  6020  6020 I AndroidRuntime: Using default boot image
+10-07 12:42:04.060  6020  6020 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:04.192  6020  6020 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:05.363  6020  6020 D AndroidRuntime: Shutting down VM
+10-07 12:42:07.631  6046  6046 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:07.637  6046  6046 I AndroidRuntime: Using default boot image
+10-07 12:42:07.638  6046  6046 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:07.753  6046  6046 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:08.806  6046  6046 D AndroidRuntime: Shutting down VM
+10-07 12:42:10.498  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:11.858  6088  6088 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:11.861  6088  6088 I AndroidRuntime: Using default boot image
+10-07 12:42:11.861  6088  6088 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:11.947  6088  6088 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:12.996  6088  6088 D AndroidRuntime: Shutting down VM
+10-07 12:42:14.027  6108  6108 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:14.030  6108  6108 I AndroidRuntime: Using default boot image
+10-07 12:42:14.030  6108  6108 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:14.116  6108  6108 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:15.155  6108  6108 D AndroidRuntime: Shutting down VM
+10-07 12:42:17.806  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:17.950  6148  6148 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:17.958  6148  6148 I AndroidRuntime: Using default boot image
+10-07 12:42:17.961  6148  6148 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:18.119  6148  6148 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:19.766  6148  6148 D AndroidRuntime: Shutting down VM
+10-07 12:42:20.765  6166  6166 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:20.768  6166  6166 I AndroidRuntime: Using default boot image
+10-07 12:42:20.768  6166  6166 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:20.852  6166  6166 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:21.894  6166  6166 D AndroidRuntime: Shutting down VM
+10-07 12:42:23.164  6192  6192 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:23.167  6192  6192 I AndroidRuntime: Using default boot image
+10-07 12:42:23.168  6192  6192 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:23.258  6192  6192 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:24.300  6192  6192 D AndroidRuntime: Shutting down VM
+10-07 12:42:25.296  6210  6210 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:25.299  6210  6210 I AndroidRuntime: Using default boot image
+10-07 12:42:25.299  6210  6210 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:25.382  6210  6210 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:26.438  6210  6210 D AndroidRuntime: Shutting down VM
+10-07 12:42:27.439  6228  6228 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:27.443  6228  6228 I AndroidRuntime: Using default boot image
+10-07 12:42:27.443  6228  6228 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:27.535  6228  6228 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:28.587  6228  6228 D AndroidRuntime: Shutting down VM
+10-07 12:42:29.620  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:29.692  6254  6254 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:29.696  6254  6254 I AndroidRuntime: Using default boot image
+10-07 12:42:29.696  6254  6254 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:29.846  6254  6254 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:31.440  6254  6254 D AndroidRuntime: Shutting down VM
+10-07 12:42:32.377  5637  5679 E chromium: [ERROR:tile_manager.cc(982)] WARNING: tile memory limits exceeded, some content may not draw
+10-07 12:42:32.378  5637  5679 E chromium: [ERROR:tile_manager.cc(982)] WARNING: tile memory limits exceeded, some content may not draw
+10-07 12:42:32.379  5637  5679 E chromium: [ERROR:tile_manager.cc(982)] WARNING: tile memory limits exceeded, some content may not draw
+10-07 12:42:32.381  5637  5679 E chromium: [ERROR:tile_manager.cc(982)] WARNING: tile memory limits exceeded, some content may not draw
+10-07 12:42:32.403  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:32.544  6276  6276 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:32.549  6276  6276 I AndroidRuntime: Using default boot image
+10-07 12:42:32.549  6276  6276 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:32.678  6276  6276 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:33.734  6276  6276 D AndroidRuntime: Shutting down VM
+10-07 12:42:34.725  6294  6294 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:34.729  6294  6294 I AndroidRuntime: Using default boot image
+10-07 12:42:34.729  6294  6294 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:34.812  6294  6294 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:35.876  6294  6294 D AndroidRuntime: Shutting down VM
+10-07 12:42:36.869  5612  5666 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:37.011  6319  6319 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:37.019  6319  6319 I AndroidRuntime: Using default boot image
+10-07 12:42:37.019  6319  6319 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:37.183  6319  6319 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:38.919  6319  6319 D AndroidRuntime: Shutting down VM
+10-07 12:42:39.888  5637  5637 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-07 12:42:40.274  6352  6372 E chromium: [1007/124240.274685:ERROR:variations_seed_loader.cc(37)] Seed missing signature.
+10-07 12:42:40.275  6352  6372 I chromium: [1007/124240.275087:INFO:variations_seed_loader.cc(66)] Failed to open file for reading.: No such file or directory (2)
+10-07 12:42:40.376  6352  6389 E chromium: [ERROR:simple_file_enumerator.cc(21)] opendir /data/user/0/chat.cloudlet.phone/cache/WebView/Default/HTTP Cache/Code Cache/webui_js: No such file or directory (2)
+10-07 12:42:40.376  6352  6389 E chromium: [ERROR:simple_index_file.cc(614)] Could not reconstruct index from disk
+10-07 12:42:40.584  6377  6402 W chromium: [WARNING:runtime_features.cc(694)] SharedStorage for M118+ cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI,SharedStorageAPIM118 in addition.
+10-07 12:42:40.798  6352  6403 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:42:41.159  6377  6402 I chromium: [INFO:viewport_data.cc(133)] E2E_Used ViewportFitCover
+10-07 12:42:41.305  6429  6429 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:41.314  6429  6429 I AndroidRuntime: Using default boot image
+10-07 12:42:41.314  6429  6429 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:41.536  6429  6429 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:41.700  6377  6402 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:42:42.583  6429  6429 D AndroidRuntime: Shutting down VM
+10-07 12:42:44.101  6454  6454 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:44.106  6454  6454 I AndroidRuntime: Using default boot image
+10-07 12:42:44.107  6454  6454 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:44.219  6454  6454 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:45.269  6454  6454 D AndroidRuntime: Shutting down VM
+10-07 12:42:46.799  6471  6471 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:46.804  6471  6471 I AndroidRuntime: Using default boot image
+10-07 12:42:46.805  6471  6471 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:46.933  6471  6471 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:48.901  6471  6471 D AndroidRuntime: Shutting down VM
+10-07 12:42:50.500  6505  6505 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:50.508  6505  6505 I AndroidRuntime: Using default boot image
+10-07 12:42:50.508  6505  6505 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:50.653  6505  6505 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:51.978  6505  6505 D AndroidRuntime: Shutting down VM
+10-07 12:42:53.092  6525  6525 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:53.096  6525  6525 I AndroidRuntime: Using default boot image
+10-07 12:42:53.096  6525  6525 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:53.241  6525  6525 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:54.551  6525  6525 D AndroidRuntime: Shutting down VM
+10-07 12:42:55.835  6547  6547 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:55.840  6547  6547 I AndroidRuntime: Using default boot image
+10-07 12:42:55.840  6547  6547 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:55.965  6547  6547 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:57.014  6547  6547 D AndroidRuntime: Shutting down VM
+10-07 12:42:58.534  6565  6565 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:42:58.538  6565  6565 I AndroidRuntime: Using default boot image
+10-07 12:42:58.538  6565  6565 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:42:58.630  6565  6565 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:42:59.692  6565  6565 D AndroidRuntime: Shutting down VM
+10-07 12:43:00.908  6590  6590 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:00.915  6590  6590 I AndroidRuntime: Using default boot image
+10-07 12:43:00.915  6590  6590 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:01.057  6590  6590 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:02.316  6590  6590 D AndroidRuntime: Shutting down VM
+10-07 12:43:03.542  6613  6613 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:03.547  6613  6613 I AndroidRuntime: Using default boot image
+10-07 12:43:03.548  6613  6613 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:03.675  6613  6613 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:05.145  6613  6613 D AndroidRuntime: Shutting down VM
+10-07 12:43:06.117  6377  6402 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:43:06.275  6636  6636 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:06.281  6636  6636 I AndroidRuntime: Using default boot image
+10-07 12:43:06.282  6636  6636 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:06.395  6636  6636 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:07.861  6636  6636 D AndroidRuntime: Shutting down VM
+10-07 12:43:09.999  6693  6693 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:10.003  6693  6693 I AndroidRuntime: Using default boot image
+10-07 12:43:10.003  6693  6693 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:10.193  6693  6693 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:12.199  6693  6693 D AndroidRuntime: Shutting down VM
+10-07 12:43:13.285  6730  6730 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:13.293  6730  6730 I AndroidRuntime: Using default boot image
+10-07 12:43:13.293  6730  6730 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:13.440  6730  6730 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:14.816  6730  6730 D AndroidRuntime: Shutting down VM
+10-07 12:43:16.428  6771  6771 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:16.436  6771  6771 I AndroidRuntime: Using default boot image
+10-07 12:43:16.437  6771  6771 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:16.535  6771  6771 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:17.617  6771  6771 D AndroidRuntime: Shutting down VM
+10-07 12:43:19.663  6804  6804 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:19.671  6804  6804 I AndroidRuntime: Using default boot image
+10-07 12:43:19.672  6804  6804 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:19.776  6804  6804 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:20.844  6804  6804 D AndroidRuntime: Shutting down VM
+10-07 12:43:22.001  6352  6403 W chromium: [WARNING:display_webview.cc(32)] WebView overlays are enabled!
+10-07 12:43:22.024  6834  6834 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:22.027  6834  6834 I AndroidRuntime: Using default boot image
+10-07 12:43:22.028  6834  6834 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:22.194  6834  6834 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:23.843  6377  6402 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:43:23.847  6377  6402 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:43:24.286  6834  6834 D AndroidRuntime: Shutting down VM
+10-07 12:43:25.310  6861  6861 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:25.313  6861  6861 I AndroidRuntime: Using default boot image
+10-07 12:43:25.313  6861  6861 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:25.407  6861  6861 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:26.480  6861  6861 D AndroidRuntime: Shutting down VM
+10-07 12:43:28.617  6894  6894 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:28.629  6894  6894 I AndroidRuntime: Using default boot image
+10-07 12:43:28.629  6894  6894 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:28.810  6894  6894 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:30.409  6894  6894 D AndroidRuntime: Shutting down VM
+10-07 12:43:31.444  6922  6922 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:31.450  6922  6922 I AndroidRuntime: Using default boot image
+10-07 12:43:31.450  6922  6922 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:31.576  6922  6922 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:32.893  6922  6922 D AndroidRuntime: Shutting down VM
+10-07 12:43:34.041  6950  6950 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-07 12:43:34.048  6950  6950 I AndroidRuntime: Using default boot image
+10-07 12:43:34.049  6950  6950 I AndroidRuntime: Leaving lock profiling enabled
+10-07 12:43:34.239  6950  6950 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-07 12:43:35.012  6377  6402 I chromium: [INFO:document_style_environment_variables.cc(104)] E2E_Used SafeAreaInsetBottom
+10-07 12:43:35.468  6950  6950 D AndroidRuntime: Shutting down VM

@@ -63,9 +63,10 @@ def pick_download(name):
     click('发送文件、图片或表情包');time.sleep(1)
     current=nodes()
     if not any(n.get('text')==name for n in current):
-        roots=next(n for n in current if n.get('content-desc') in {'Show roots','显示根目录','显示位置'})
-        tap(roots);click('Downloads')
-    click(name)
+        click('Search');time.sleep(.5)
+        editor=next(n for n in nodes() if n.get('resource-id','').endswith('/search_src_text'))
+        tap(editor);shell('input','text',name);shell('input','keyevent','66')
+    tap(find(name,class_name='android.widget.TextView'))
 
 class Fixture(http.server.BaseHTTPRequestHandler):
     def do_GET(self):

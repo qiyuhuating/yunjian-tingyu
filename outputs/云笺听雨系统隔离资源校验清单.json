@@ -3,7 +3,7 @@
   "package": "chat.cloudlet.phone",
   "version": "0.0.1",
   "versionCode": 6,
-  "apkSha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1",
+  "apkSha256": "0c4b20edae7b7a9e8ba64cd87f1cdc76bea177f3f063a605ee2093cbec86fbc1",
   "signerCertificateSha256": "7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79",
   "sameSignerAsPrevious": true,
   "signatureV2": true,
@@ -1464,19 +1464,19 @@
       "sha256": "f207a2500fc5b182b62edcb3cfcc6a7a3e7204421d9ff8922f99a620f0ba8f56"
     },
     {
+      "path": "assets/web/assets/index-C2zzt0sk.js",
+      "bytes": 517751,
+      "sha256": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e"
+    },
+    {
       "path": "assets/web/assets/index-ChJf0pBh.css",
       "bytes": 97389,
       "sha256": "68d9cf7f2aa0d4389dd9ac72dd92026ec3aca36c1ee380c640d8c0f7e20e1c54"
     },
     {
-      "path": "assets/web/assets/index-DhSJatON.js",
-      "bytes": 517680,
-      "sha256": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2"
-    },
-    {
-      "path": "assets/web/assets/pdf-reading-Cup3BkMF.js",
+      "path": "assets/web/assets/pdf-reading-BjKVP7Gc.js",
       "bytes": 452388,
-      "sha256": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff"
+      "sha256": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679"
     },
     {
       "path": "assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs",
@@ -1536,7 +1536,7 @@
     {
       "path": "assets/web/index.html",
       "bytes": 377,
-      "sha256": "050b17f901e1fc82d046abd9529a5ee4e19fa041e35d11dd350dbe38a19a8f10"
+      "sha256": "f355bec3ae79c6d0e40457c5c13f16e5d3fd099f87bca485515d1956c03f77b6"
     },
     {
       "path": "assets/web/licenses/noble-hashes-LICENSE.txt",

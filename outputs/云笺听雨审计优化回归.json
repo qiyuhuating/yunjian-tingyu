@@ -1,10 +1,10 @@
 {
-  "startedAt": "2026-10-07T12:11:24.626Z",
+  "startedAt": "2026-10-07T12:31:55.895Z",
   "passed": [
     "50MB真实ZIP分块导出和恢复，附件SHA256一致",
     "导出桥接块不超过48KB且取消清理临时文件",
     "旧聚合入口32MB上限与PDF/HTML安全类型",
-    "三条消息逐条处理，离开聊天不中断，后台回复保持未读",
+    "三条消息逐条处理，离开聊天不中断，后台回复保持未读；延迟写盘不抹除新草稿",
     "系统返回先收起聊天菜单再离开会话",
     "真实渲染异常被恢复界面捕获且备份入口可调用",
     "损坏图片显示可重试入口，修复原件后实际重新读取并显示"
@@ -37,11 +37,11 @@
   "pageErrors": [],
   "compiledAssets": [
     {
-      "name": "index-DhSJatON.js",
-      "bytes": 517680
+      "name": "index-C2zzt0sk.js",
+      "bytes": 517751
     },
     {
-      "name": "pdf-reading-Cup3BkMF.js",
+      "name": "pdf-reading-BjKVP7Gc.js",
       "bytes": 452388
     },
     {

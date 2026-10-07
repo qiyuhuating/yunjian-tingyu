@@ -2,13 +2,13 @@ from pathlib import Path
 import os
 os.chdir(Path(__file__).resolve().parents[1])
 import zipfile,hashlib,json,subprocess,re,collections,copy
-apk=Path('outputs/云笺听雨-0.0.1-系统隔离版.apk');stage=Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final3/build/unsigned.apk')
+apk=Path('outputs/云笺听雨-0.0.1-系统隔离版.apk');stage=Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final4/build/unsigned.apk')
 java='D:/bin/java.exe';tools='D:/xiaofeng/dev-cache/cloudlet-apk/sdk/tools'
 r=subprocess.run([java,'-jar',tools+'/lib/apksigner.jar','verify','--verbose','--print-certs',str(apk)],capture_output=True,text=True,encoding='utf-8',errors='replace',check=True)
 assert 'v2): true' in r.stdout and 'v3): true' in r.stdout
 fingerprint=re.search(r'certificate SHA-256 digest: ([a-f0-9]+)',r.stdout)[1];assert fingerprint=='7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79'
 subprocess.run([tools+'/zipalign.exe','-c','4',str(apk)],check=True,capture_output=True)
-assert Path('outputs/android/src/chat/cloudlet/phone/MainActivity.java').read_bytes()==Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final3/src/chat/cloudlet/phone/MainActivity.java').read_bytes()
+assert Path('outputs/android/src/chat/cloudlet/phone/MainActivity.java').read_bytes()==Path('D:/xiaofeng/dev-cache/cloudlet-apk/audit001-final4/src/chat/cloudlet/phone/MainActivity.java').read_bytes()
 resources=[]
 with zipfile.ZipFile(apk) as signed,zipfile.ZipFile(stage) as unsigned:
  assert signed.testzip() is None;counts=collections.Counter(signed.namelist());assert all(v==1 for v in counts.values())

@@ -1,6 +1,6 @@
 {
-  "verifiedAt": "2026-10-07T12:14:48.760785+00:00",
-  "apkSha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1",
+  "verifiedAt": "2026-10-07T12:47:20.141684+00:00",
+  "apkSha256": "0c4b20edae7b7a9e8ba64cd87f1cdc76bea177f3f063a605ee2093cbec86fbc1",
   "serial": "emulator-5556",
   "result": "INSTRUMENTATION_RESULT: checks=[\"Three real bridge exports retain all original bytes while first SAF picker is open\",\"Actual startup recovery reads all queued files from durable journal\",\"Three real system Save operations produce exact files in Downloads and drain queue\",\"Native DNS and TLS classification excludes sensitive exception text\"]\r\nINSTRUMENTATION_RESULT: result=passed\r\nINSTRUMENTATION_CODE: -1\r\n",
   "commands": [
@@ -14,7 +14,7 @@
         "-target",
         "8",
         "-bootclasspath",
-        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit001-final3\\build\\java-base\\classes",
+        "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\audit001-final4\\build\\java-base\\classes",
         "-classpath",
         "D:\\xiaofeng\\dev-cache\\cloudlet-apk\\sdk\\platform\\android.jar",
         "-d",

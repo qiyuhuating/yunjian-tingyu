@@ -44,8 +44,8 @@
   {
     "path": "docs/审计计划落实记录.md",
     "description": "外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md",
-    "bytes": 8218,
-    "sha256": "1ec4efe193aa050c7d9336b2e71e4c07789e12cf51d194ea586416db5d231b43"
+    "bytes": 9252,
+    "sha256": "4fd89438a33ef99331bbada0fe3e965815a0c90e40491c24e3118969b6936515"
   },
   {
     "path": "docs/核心提示词隔离说明.md",
@@ -87,13 +87,13 @@
     "path": "outputs/APK安装说明.md",
     "description": "项目说明、调研或验证文档：APK安装说明.md；路径：outputs/APK安装说明.md",
     "bytes": 3570,
-    "sha256": "7dc2e5ae96e1cc8a14722e1e9a419e32159858c62b0886d15b37b5d3b087e820"
+    "sha256": "825b1e8bef573ca27cc18fc792fe9bdd13a27c975caacb4d9861b84032a5992f"
   },
   {
     "path": "outputs/Android审计验证-logcat.txt",
     "description": "本轮实际模拟器安装、Via与文件选择验收的AndroidRuntime及Chromium日志；路径：outputs/Android审计验证-logcat.txt",
-    "bytes": 21513,
-    "sha256": "2473925b4c4563e5a21ac70ffeca808ccb821fb16040c08f79d6435182faa64b"
+    "bytes": 25334,
+    "sha256": "e3e4299398e53bb22d4c28f2b2b42e02fe09e91b167ed913e9fb11cd9a541633"
   },
   {
     "path": "outputs/Android源码.zip",
@@ -104,14 +104,14 @@
   {
     "path": "outputs/Android验证-Via.png",
     "description": "内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图；路径：outputs/Android验证-Via.png",
-    "bytes": 90092,
-    "sha256": "54a4a1a946dd2ad013d75188e6a15c4d3b000cf2cf9c3d057805dba32188ae74"
+    "bytes": 89980,
+    "sha256": "e4479a05758e92a89e470a9877943c4161d075fc678333bdaba2155e7d911f83"
   },
   {
     "path": "outputs/Android验证-文件读取.png",
     "description": "Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图；路径：outputs/Android验证-文件读取.png",
-    "bytes": 341095,
-    "sha256": "fa375df38fdebd4a8ba2eb1756b19504ee3173865957b65229d8c2b1373d9f1a"
+    "bytes": 341579,
+    "sha256": "57bcab0605d9ee8a213e2be6da3b16c4d4c1a442b5444b6bbb23356f62b64ab8"
   },
   {
     "path": "outputs/Android验证-桌面图标.png",
@@ -122,8 +122,8 @@
   {
     "path": "outputs/Android验证-首页.png",
     "description": "恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图；路径：outputs/Android验证-首页.png",
-    "bytes": 2579715,
-    "sha256": "3a076ca1034b09cfae6c8d601b4cac3e83573c0820c0b6432efd89734c3c62ea"
+    "bytes": 2579664,
+    "sha256": "46b240d2adf64c28949a37dd05f05cce473884091f9c0d4c2d49c97c9fa99082"
   },
   {
     "path": "outputs/UI暗夜-私聊.png",
@@ -146,14 +146,14 @@
   {
     "path": "outputs/UI系统隔离-暗夜.png",
     "description": "当前暗夜群聊、输入操作与消息层次的验收截图；路径：outputs/UI系统隔离-暗夜.png",
-    "bytes": 53949,
-    "sha256": "175665e9e0c32dbf99c34fca11b27f5a38d1a6147b6070b978d3dce4e4382875"
+    "bytes": 54320,
+    "sha256": "fdb5f8790394a5650847b6744775eae3a7676a895480ed59fad0ad41f1f0e023"
   },
   {
     "path": "outputs/UI系统隔离-浅色.png",
     "description": "当前浅色群聊、短消息与文件预览功能的验收截图；路径：outputs/UI系统隔离-浅色.png",
-    "bytes": 71855,
-    "sha256": "9198e19d6838b32ac85e4a8ed9ed233ef9a57daed49b7714da5e224b502a7b23"
+    "bytes": 70485,
+    "sha256": "bf4f9fd60687db50cf8afb289b80704bc5602a45c815616a023cb35dddfaeadf"
   },
   {
     "path": "outputs/UI群聊-暗夜.png",
@@ -170,8 +170,8 @@
   {
     "path": "outputs/UI角色记忆与文件.png",
     "description": "角色群聊、真实读取状态与新能力的浏览器验收截图；路径：outputs/UI角色记忆与文件.png",
-    "bytes": 51166,
-    "sha256": "6bbf6b352b732119d60120c30790aaf9e53ec45d1da30a31993d75676857a378"
+    "bytes": 51232,
+    "sha256": "5ba7263e15991a8d732b40c941d13ff8628e7614b02b367f9dbf2111723a05b1"
   },
   {
     "path": "outputs/android/AndroidManifest.xml",
@@ -198,22 +198,22 @@
     "sha256": "c21d7293d87b6d7ab1d0229a2f55b77f33a7613a6a4e66f6693d68d7d8d09464"
   },
   {
+    "path": "outputs/android/assets/web/assets/index-C2zzt0sk.js",
+    "description": "当前 APK 的完整业务脚本，含群聊、预览及系统返回；路径：outputs/android/assets/web/assets/index-C2zzt0sk.js",
+    "bytes": 517751,
+    "sha256": "763e5d34f24e23de1f689cce61aeb28c103d4dca678497c180337f0b0a8c316e"
+  },
+  {
     "path": "outputs/android/assets/web/assets/index-ChJf0pBh.css",
     "description": "当前 APK 的随包界面样式，含主题、触控及响应式；路径：outputs/android/assets/web/assets/index-ChJf0pBh.css",
     "bytes": 97389,
     "sha256": "68d9cf7f2aa0d4389dd9ac72dd92026ec3aca36c1ee380c640d8c0f7e20e1c54"
   },
   {
-    "path": "outputs/android/assets/web/assets/index-DhSJatON.js",
-    "description": "当前 APK 的完整业务脚本，含群聊、预览及系统返回；路径：outputs/android/assets/web/assets/index-DhSJatON.js",
-    "bytes": 517680,
-    "sha256": "a6b95e4bb2de763502c49ccabefb1db78bef3c38b9be8df3c626270b2af7a7e2"
-  },
-  {
-    "path": "outputs/android/assets/web/assets/pdf-reading-Cup3BkMF.js",
-    "description": "当前 APK 按需加载的 PDF 读取组件和 PDF.js 主库；路径：outputs/android/assets/web/assets/pdf-reading-Cup3BkMF.js",
+    "path": "outputs/android/assets/web/assets/pdf-reading-BjKVP7Gc.js",
+    "description": "当前 APK 按需加载的 PDF 读取组件和 PDF.js 主库；路径：outputs/android/assets/web/assets/pdf-reading-BjKVP7Gc.js",
     "bytes": 452388,
-    "sha256": "2f0d2221b8ee5d2e3a61d55feb327f123cda4071fe035f543fedd619527ddcff"
+    "sha256": "ac6ebd1ed0412bc33cd3647039c3e6e3b28a43e7f73dae72f6df26600efca679"
   },
   {
     "path": "outputs/android/assets/web/assets/pdf.worker.min-Cr_QfRGn.mjs",
@@ -285,7 +285,7 @@
     "path": "outputs/android/assets/web/index.html",
     "description": "工程支持文件：outputs/android/assets/web/index.html",
     "bytes": 377,
-    "sha256": "050b17f901e1fc82d046abd9529a5ee4e19fa041e35d11dd350dbe38a19a8f10"
+    "sha256": "f355bec3ae79c6d0e40457c5c13f16e5d3fd099f87bca485515d1956c03f77b6"
   },
   {
     "path": "outputs/android/assets/web/licenses/PDFjs-LICENSE.txt",
@@ -518,8 +518,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "保留导航间会话、多消息排队、逐条重试、未读、聊天菜单返回与完整生成流程；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 25806,
-    "sha256": "03440bcf69edf3cb8e74703c294ed4b345bc1200c749fac1a9b6b04fad1d461d"
+    "bytes": 26010,
+    "sha256": "c3f3973755133b85f79dc64f9cacbef5a2029a428e9d7a4a141903d8638e1fcb"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1281,19 +1281,19 @@
     "path": "outputs/云笺听雨-0.0.1-系统隔离版.apk",
     "description": "当前同签名独立APK，已落实审计适用修复，0.0.1 / versionCode 6；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk",
     "bytes": 13307276,
-    "sha256": "059cca2e6e342f79d407758df3e76e9693cf2bd0c79aa9bb3d4e9926098689f1"
+    "sha256": "0c4b20edae7b7a9e8ba64cd87f1cdc76bea177f3f063a605ee2093cbec86fbc1"
   },
   {
     "path": "outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig",
     "description": "当前系统隔离 APK 的增量安装签名元数据，普通安装无需使用；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig",
     "bytes": 112627,
-    "sha256": "8a8bf4a7058126fb06b63856840d9f79878a966773ad5514ade8396f734d6f8a"
+    "sha256": "c80734e556d78fcbb77cdcd200d734430f5443da7477162e5445a000bec64b25"
   },
   {
     "path": "outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256",
     "description": "当前系统隔离签名 APK 的 SHA-256 校验摘要；路径：outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256",
     "bytes": 106,
-    "sha256": "8fe84451e88052d6d2c7f8a741608be2aa9877b88c1dd26f8ed9f39a9cad03d0"
+    "sha256": "90220de0cce3a13e74ebed737f3f169e0d4028d47b1d3aa6d7f16aad4be8845b"
   },
   {
     "path": "outputs/云笺听雨-0.0.1-群聊优化.apk",
@@ -1382,14 +1382,14 @@
   {
     "path": "outputs/云笺听雨0.0.1系统隔离版Android源码.zip",
     "description": "当前完整原生源码、Via、分块导出桥接和全部随包资产，内部版本6；路径：outputs/云笺听雨0.0.1系统隔离版Android源码.zip",
-    "bytes": 12913987,
-    "sha256": "123977a2544354fe1e4d8069afefadb33c42b603e8ba5c8d6d107b8d055f9027"
+    "bytes": 12914007,
+    "sha256": "21ef3a3b3d061b042cc2ef08109f31e9e20722d7fb2e438f0ceefbfb5e41b583"
   },
   {
     "path": "outputs/云笺听雨0.0.1系统隔离版源码.zip",
     "description": "当前完整前端源码归档，包含核心编辑、模型预算及所有核心测试；路径：outputs/云笺听雨0.0.1系统隔离版源码.zip",
-    "bytes": 8510602,
-    "sha256": "d1c49e5ce2b5d5f57d8275f3c6ce3e620469d5abc1d18918466b976cbdc3a282"
+    "bytes": 8510694,
+    "sha256": "01032505d63e166a1ff49994f68583dc3528c7203f5eeef78523a4d1eb9abaa5"
   },
   {
     "path": "outputs/云笺听雨0.0.1群聊优化Android源码.zip",
@@ -1418,8 +1418,8 @@
   {
     "path": "outputs/云笺听雨Android内置Via验证.json",
     "description": "本轮APK实际Android15/WebView124与旧内核模拟器通过结果；路径：outputs/云笺听雨Android内置Via验证.json",
-    "bytes": 42487,
-    "sha256": "2eb8f33a18e4785dbeeae127b14fb9051bc73bd9073e4291796cc1b78e16642c"
+    "bytes": 47150,
+    "sha256": "3f49cd070874332788f0f6c3b57c5d9e481b7d6d8a85891e603286c455912b8f"
   },
   {
     "path": "outputs/云笺听雨UI群聊浏览器回归.json",
@@ -1449,13 +1449,13 @@
     "path": "outputs/云笺听雨原生导出队列验证.json",
     "description": "实际产品APK的三文件保存、队列日志恢复、字节一致性及DNS/TLS分类验收记录；路径：outputs/云笺听雨原生导出队列验证.json",
     "bytes": 4237,
-    "sha256": "077edcd2f45891e7777756d0a613e76fa920eef8b840684361e0e56fa6be5f37"
+    "sha256": "d11ea052481fff39a0896fd67ecdb17b55d1dfa8d422083f7d886857cfab0f3d"
   },
   {
     "path": "outputs/云笺听雨审计优化回归.json",
     "description": "七组本轮审计浏览器回归结果及50MiB真实数据往返、块大小与编译资源证据；路径：outputs/云笺听雨审计优化回归.json",
-    "bytes": 1414,
-    "sha256": "886817b2a8f7353359fb8eb6ee9b7ad39f6274ad3b45799c4c46e869a57afd90"
+    "bytes": 1447,
+    "sha256": "3ad573b6c199f36e4a1e6028d1050d129a0e9675452c16583eb4ee006971c40e"
   },
   {
     "path": "outputs/云笺听雨构建签名门禁验证.json",
@@ -1478,14 +1478,14 @@
   {
     "path": "outputs/云笺听雨系统隔离浏览器回归.json",
     "description": "七套当前APK编译资源的浏览器回归结果，附本轮时间与JS资源SHA256；路径：outputs/云笺听雨系统隔离浏览器回归.json",
-    "bytes": 11491,
-    "sha256": "300040558c2f932978d42589ac07796baf6a1eab3b457d00b744fdef25035a8e"
+    "bytes": 11524,
+    "sha256": "ef4b7c22f62e7b0b42f45fabd24181f599840df21e259dcfdb74e57391cda65c"
   },
   {
     "path": "outputs/云笺听雨系统隔离签名与完整性报告.md",
     "description": "内部版本6的签名、逐项资源比对、检查口径与验收限制；路径：outputs/云笺听雨系统隔离签名与完整性报告.md",
     "bytes": 1386,
-    "sha256": "aa1b15bc0802605f99e3ee2500324b3a76522ee3ab670807f18f9376f71236af"
+    "sha256": "74c77d52b31f05e6679d0a46f80c4b0eb487d67e5e666a0a89931bde6b71ab75"
   },
   {
     "path": "outputs/云笺听雨系统隔离自动检查.json",
@@ -1497,7 +1497,7 @@
     "path": "outputs/云笺听雨系统隔离资源校验清单.json",
     "description": "内部版本6安装包、376个资源大小及SHA256与原签名证书的校验记录；路径：outputs/云笺听雨系统隔离资源校验清单.json",
     "bytes": 63361,
-    "sha256": "62ccf224273d10517c3876eb76df44297c21a6bc827f579d970255a1a7d60218"
+    "sha256": "e2a6c9d2dd27049e8647e374ad35d67c2997158b51cc830adf2e64d1d493eacc"
   },
   {
     "path": "outputs/云笺听雨资源校验清单.json",
@@ -1664,8 +1664,8 @@
   {
     "path": "work/qa/audit-regressions.mjs",
     "description": "七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs",
-    "bytes": 10040,
-    "sha256": "23f9c519bb0dba4aee766985c11d392dea964a6bc031eaa64ca21757794eab32"
+    "bytes": 10956,
+    "sha256": "21c316c8ae1ba7dc28bf6eae0f2927540140e061fd42ab7f8ce2a0f2b4a66e61"
   },
   {
     "path": "work/qa/check.mjs",
@@ -1760,8 +1760,8 @@
   {
     "path": "work/qa/native/QueueAudit.java",
     "description": "独立instrumentation源文件，调用产品原生桥接、恢复日志并通过三个真实SAF窗口保存；路径：work/qa/native/QueueAudit.java",
-    "bytes": 6108,
-    "sha256": "c1f69d7fab865d7bcb005f8f41ecc31020084fae7d292522085b1fef2d76ab85"
+    "bytes": 6764,
+    "sha256": "d146998f182244e49a581687efebe974e827af63e225409212b20749f8e1c7e4"
   },
   {
     "path": "work/qa/night-theme.mjs",
@@ -1893,19 +1893,19 @@
     "path": "work/verify-core-apk.py",
     "description": "系统隔离版 APK 的 v2/v3 同证书、对齐、CRC 和源资产逐字节核对；路径：work/verify-core-apk.py",
     "bytes": 5408,
-    "sha256": "57ed7e57c2c68c5f53060c44d14e96ec50fa9a06ada6f5d41ca616c0a3235023"
+    "sha256": "f4818ba394cea852c45bdeb275a35b91b2b7dc577cc134460f1e2aa00580c092"
   },
   {
     "path": "work/verify-native-export.py",
     "description": "构建并运行同签名临时instrumentation APK，验证导出队列与原生错误分类；不打入产品；路径：work/verify-native-export.py",
     "bytes": 3468,
-    "sha256": "67f3d4dfdabd40494aea7f0841e899cdfbaedc720747b154f9a4d21d3dd6c5bc"
+    "sha256": "70be2878c379e347234148a4819ed6dbaded0565db1f0d9f9e7a9142d968af7a"
   },
   {
     "path": "work/verify-native-via.py",
     "description": "真实模拟器十五组覆盖安装、Via隔离、文件读取与旧内核提示检查，保存命令退出码及logcat；路径：work/verify-native-via.py",
-    "bytes": 12199,
-    "sha256": "4bb8d8e313ec730357994f898aae7211adc64866ad8c27e930f9ea28902af23b"
+    "bytes": 12299,
+    "sha256": "c1566169fe1e3b5d9dab1b74e123efa0be34a643db0c6dd8ffc2d8624248e786"
   },
   {
     "path": "work/verify-release-apk.py",
