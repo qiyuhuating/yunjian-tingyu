@@ -1,0 +1,28 @@
+{
+  "apkSha256": "cbe4947e6cf10d07f582df645698f84e63c6edb7b2024b6153e005a2286327bc",
+  "device": "emulator-5556",
+  "androidSdk": "35",
+  "display": "Physical size: 1080x1920\r\nOverride size: 1170x2532",
+  "density": "Physical density: 420\r\nOverride density: 480",
+  "webView": "(com.android.webview, 124.0.6367.219)",
+  "passed": [
+    "Standalone Via and packaged Via install together without provider conflict",
+    "Signed APK installs and local home loads",
+    "Real code4-to-code5 signed update preserves existing local IndexedDB diary",
+    "Original four-tab illustrated dock has fully visible bounds",
+    "Home browser enters packaged Via Shell in same application",
+    "Via loads actual HTTP document; privileged app bridge is absent",
+    "Return control has reserved space and does not cover address bar",
+    "Native Via link navigation and Back history work",
+    "Return control opens local home without external application",
+    "Local diary persists across browser use and process restart",
+    "Actual Android file picker and bundled PDF module worker extract PDF text offline",
+    "Actual Android file picker accepts unknown binary; local message exposes honest reading status",
+    "No native crash or uncaught WebView script error",
+    "WebView 83 displays explicit update requirement instead of blank home",
+    "Legacy compatibility dialog closes without null-WebView lifecycle crash"
+  ],
+  "realProviderKeyTested": false,
+  "physicalDeviceTested": false,
+  "uiautomatorWarnings": []
+}

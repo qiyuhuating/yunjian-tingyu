@@ -14,10 +14,10 @@ new.update({
  'docs/UI与群聊审视报告.md':'UI 发现与修复、功能真实性边界、群聊规则与完整验收证据',
  'outputs/mori-phone/app/comfort.css':'聊天导航、群头像、短消息、触控、图片对话框和横屏布局样式',
  'outputs/mori-phone/lib/group-chat.ts':'群成员轮换、@指定、角色身份和短消息格式校验',
- 'outputs/mori-phone/scripts/verify-group.mjs':'16 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者',
- 'work/qa/ui-group.mjs':'21 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口',
+ 'outputs/mori-phone/scripts/verify-group.mjs':'20 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者',
+ 'work/qa/ui-group.mjs':'25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口',
  'work/qa/repair-theme.mjs':'当前浅暗主题、字体、十处对比度与响应式检查；保留旧截图文件',
- 'work/check-release.py':'运行 72 项核心回归、严格 TypeScript 和空白检查',
+ 'work/check-release.py':'运行 87 项核心回归、严格 TypeScript 和空白检查',
  'work/check-browser-release.py':'运行五组当前浏览器回归并收集结构化结果',
  'work/verify-ui-apk.py':'当前群聊版的签名、同证书、对齐、CRC 和源资源一致性检查',
  'work/package-ui-sources.py':'打包当前完整前端及原生源码、CRC 检查与安装说明，保留历史归档',
@@ -39,6 +39,62 @@ new.update({
  'outputs/android/assets/web/assets/index-BwpkiV8B.js':'当前 APK 随包业务脚本，包含群聊调度、预览与系统返回',
  'outputs/android/assets/web/assets/index-ni2Vbena.css':'当前 APK 随包样式，含群聊、触控与横屏布局',
 })
+new.update({
+ 'docs/核心提示词隔离说明.md':'用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据',
+ 'outputs/mori-phone/lib/system-prompt.ts':'保持原始核心常量与独立事实摘要规则，不插入角色或个人资料',
+ 'outputs/mori-phone/lib/context-window.ts':'服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算',
+ 'outputs/mori-phone/app/system-prompt-editor.tsx':'核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口',
+ 'outputs/mori-phone/scripts/verify-context.mjs':'11 项最大上下文和系统编辑回归，含600条大请求与旧备份迁移',
+ 'work/verify-core-apk.py':'系统隔离版 APK 的 v2/v3 同证书、对齐、CRC 和源资产逐字节核对',
+ 'work/package-core-sources.py':'生成系统隔离版前端与原生完整源码归档、摘要及安装说明',
+ 'outputs/云笺听雨-0.0.1-系统隔离版.apk':'当前签名独立 APK，含核心编辑和模型最长上下文，0.0.1 / versionCode 5',
+ 'outputs/云笺听雨-0.0.1-系统隔离版.apk.idsig':'当前系统隔离 APK 的增量安装签名元数据，普通安装无需使用',
+ 'outputs/云笺听雨-0.0.1-系统隔离版.apk.sha256':'当前系统隔离签名 APK 的 SHA-256 校验摘要',
+ 'outputs/云笺听雨0.0.1系统隔离版源码.zip':'当前完整前端源码归档，包含核心编辑、模型预算及所有核心测试',
+ 'outputs/云笺听雨0.0.1系统隔离版Android源码.zip':'当前完整原生壳与随包资源归档，包含版本5清单和系统桥接',
+ 'outputs/云笺听雨系统隔离自动检查.json':'87项核心、严格类型、空白检查的当前结构化通过结果',
+ 'outputs/云笺听雨系统隔离浏览器回归.json':'当前五组浏览器回归，含25类群聊/系统编辑/语音/导航流程',
+ 'outputs/云笺听雨系统隔离资源校验清单.json':'版本5安装包与371个资源的大小和SHA-256及证书校验结果',
+ 'outputs/云笺听雨系统隔离签名与完整性报告.md':'版本5的APK签名、源资源一致性、通过检查及真实设备验收边界',
+ 'outputs/UI系统隔离-浅色.png':'当前浅色群聊、短消息与文件预览功能的验收截图',
+ 'outputs/UI系统隔离-暗夜.png':'当前暗夜群聊、输入操作与消息层次的验收截图',
+})
+new.update({
+ 'docs/自然群聊与内置Via说明.md':'自然群聊、Via二进制来源/合包、参考首页回退、系统栏和实际原生验收',
+ 'outputs/android/vendor/via-release-cn.apk':'机主提供的Via7.3.3原始二进制，固定SHA-256，原件未修改',
+ 'outputs/android/merge-via.py':'保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序',
+ 'outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java':'内置Via字体、独立返回位置、状态栏/系统导航隐藏与生命周期接入',
+ 'work/verify-native-via.py':'真实模拟器的12项安装、Via浏览/隔离/返回、原四栏和本地持久化检查',
+ 'outputs/云笺听雨Android内置Via验证.json':'本轮APK实际Android15/WebView124与旧内核模拟器通过结果',
+ 'outputs/Android验证-首页.png':'恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图',
+ 'outputs/Android验证-Via.png':'内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图',
+})
+new.update({
+ 'docs/群聊与角色记忆调研.md':'Telegram、Hermes、kuihua 与 PDF.js 的一手来源、实施计划和能力边界',
+ 'outputs/mori-phone/lib/character-memory.ts':'每位角色独立的自动记忆任务、原话证据校验、时间防回退与编辑保护',
+ 'outputs/mori-phone/lib/group-cadence.ts':'自然打字与分泡的等待范围、快速模式和 AbortSignal 清理',
+ 'outputs/mori-phone/lib/companion-capabilities.ts':'中文与语言切换、角色偏好和编程数学美术教学的质量预设',
+ 'outputs/mori-phone/lib/pdf-reading.ts':'随包 PDF.js worker 读取 PDF 文字，提示页数、截断、扫描件及加密失败',
+ 'outputs/mori-phone/lib/attachment-text.ts':'文本编码、Office共享字符串、ZIP限额、未知格式与读取状态',
+ 'outputs/mori-phone/app/memory-drawer.tsx':'本地记忆编辑、锁定保护、来源证据、修改历史和按角色筛选',
+ 'outputs/mori-phone/app/message-text.tsx':'代码文字安全展示和完整文件下载，不执行模型代码',
+ 'outputs/mori-phone/vite-assets.d.ts':'PDF worker URL 资源的严格 TypeScript 声明',
+ 'outputs/mori-phone/scripts/verify-companion.mjs':'16 项独立角色记忆、权限、时间、防漂移、群聊取消与技术内容回归',
+ 'outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt':'随包 PDF.js 的 Apache 2.0 许可证',
+ 'work/qa/repair-companion.mjs':'16 类文档解析、真实界面记忆编辑、长代码下载、接话排队与取消回归',
+ 'work/qa/make-pdf-fixtures.py':'用 ReportLab 4.4.9 重建可重复的明文及加密 PDF 测试资料',
+ 'work/qa/fixtures/reading.pdf':'自行生成的一页明文 PDF，验证实际文字读取与 Android 文件选择器',
+ 'work/qa/fixtures/encrypted.pdf':'自行生成的密码保护 PDF，验证解析失败结算而非悬挂',
+ 'work/qa/fixtures/unknown.bin':'五字节未知格式资料，验证任何扩展名的本地附件保存及诚实状态',
+ 'outputs/UI角色记忆与文件.png':'角色群聊、真实读取状态与新能力的浏览器验收截图',
+ 'outputs/Android验证-文件读取.png':'Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图',
+ 'work/check-release.py':'运行103项核心回归、严格TypeScript和空白检查',
+ 'work/check-browser-release.py':'运行六组当前浏览器回归并收集结构化结果',
+ '.github/workflows/verify.yml':'GitHub Actions执行完整性、103项核心检查和六组浏览器回归',
+})
+for name in list(new):
+ if ('群聊优化' in name or 'UI群聊' in name or name in {'work/verify-ui-apk.py','work/package-ui-sources.py'}):
+  new[name]='上一版群聊优化交付；'+new[name].replace('当前','当时').replace('本轮','该轮')
 names = sorted(set(subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z'],cwd=root).decode().split('\0'))-{'','FILES.md','FILE_MANIFEST.json'})
 rows=[]
 for name in names:
@@ -55,6 +111,10 @@ for name in names:
     description=new.get(name,old.get(name,'交付支持文件'))
     if name.startswith('outputs/android/assets/web/assets/index-'):
         description='当前 APK 的完整业务脚本，含群聊、预览及系统返回' if p.suffix=='.js' else '当前 APK 的随包界面样式，含主题、触控及响应式' if p.suffix=='.css' else description
+    if name.startswith('outputs/android/assets/web/assets/pdf-reading-'):description='当前 APK 按需加载的 PDF 读取组件和 PDF.js 主库'
+    if name.startswith('outputs/android/assets/web/assets/pdf.worker.'):description='当前 APK 随包的 PDF.js 解析 worker，离线加载且不依赖 CDN'
+    if name.startswith('outputs/android/assets/web/assets/three.module-'):description='当前 APK 按需加载的 Three.js 运行库，为云朵桌宠提供真实三维渲染'
+    if name=='outputs/android/assets/web/licenses/PDFjs-LICENSE.txt':description='APK 内保留的 PDF.js Apache 2.0 许可副本'
     if name not in description: description+='；路径：'+name
     rows.append({'path':name,'description':description,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()})
 assert len({r['description'] for r in rows})==len(rows)

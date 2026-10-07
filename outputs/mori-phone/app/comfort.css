@@ -65,3 +65,7 @@ button:active:not(:disabled),a.soft-button:active{filter:brightness(.94)}
 @media(prefers-reduced-motion:reduce){button:active:not(:disabled),a.soft-button:active{filter:none}}
 
 .message-failure{grid-column:1/-1;font-size:.75rem;line-height:1.6;color:var(--ink);padding:5px 2px}
+
+.quoted-message{border-left:3px solid var(--blue);padding:8px 12px;margin:4px 0;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}.reply-draft{display:flex;align-items:center;gap:12px}.reply-draft span{flex:1}.reply-draft button{min-width:44px;min-height:44px}
+
+.code-message{max-width:100%;min-width:0}.code-message header{display:flex;align-items:center;justify-content:space-between;gap:12px}.code-message pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0;line-height:1.65}.code-message code{font-family:inherit;font-size:inherit}.code-message .text-button{min-height:44px}

@@ -5,9 +5,9 @@ import {capabilities,getProvider,providerBase,providerSchema} from './providers'
 import {reasoningPlan} from './reasoning';
 const image=z.object({type:z.literal('image_url'),image_url:z.object({url:z.string().max(5700000).regex(/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const text=z.object({type:z.literal('text'),text:z.string().max(200000)}).strict();
-export const chatInput=z.object({provider:providerSchema,model:z.string().min(1).max(160),apiKey:z.string().min(8).max(2048),baseURL:z.string().max(1500).default(''),sampling:samplingSchema,messages:z.array(z.object({role:z.enum(['system','user','assistant']),content:z.union([z.string().max(200000),z.array(z.union([image,text])).max(3)])}).strict()).min(2).max(100)}).strict().superRefine((data,ctx)=>{
+export const chatInput=z.object({provider:providerSchema,model:z.string().min(1).max(160),apiKey:z.string().min(8).max(2048),baseURL:z.string().max(1500).default(''),sampling:samplingSchema,messages:z.array(z.object({role:z.enum(['system','user','assistant']),content:z.union([z.string().max(200000),z.array(z.union([image,text])).max(3)])}).strict()).min(2).max(100010)}).strict().superRefine((data,ctx)=>{
  let images=0,chars=0;for(const m of data.messages){if(typeof m.content==='string')chars+=m.content.length;else for(const p of m.content){if(p.type==='image_url')images++;else chars+=p.text.length;}if(m.role==='system'&&typeof m.content!=='string')ctx.addIssue({code:'custom',message:'系统背景只能包含文字'});}
- if(images>2||chars>400000||data.messages[0].role!=='system'||data.messages.slice(1).some(m=>m.role==='system'))ctx.addIssue({code:'custom',message:'对话上下文格式不正确或过大'});
+ if(images>2||chars>16777216||data.messages[0].role!=='system'||data.messages.slice(1).some(m=>m.role==='system'))ctx.addIssue({code:'custom',message:'对话上下文格式不正确或过大'});
 });
 export type ChatInput=z.infer<typeof chatInput>;
 export function wireRequest(data:ChatInput){

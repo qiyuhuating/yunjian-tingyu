@@ -6,7 +6,7 @@ export const roleplayPresets=[
 ] as const;
 export function roleplayInstructions(state:PhoneState){
  const p=state.roleplay,preset=roleplayPresets.find(v=>v.id===p.preset)!;
- return `角色扮演预设：${preset.name}。${preset.prompt}\n保持角色卡的人设、口吻、场景和示例风格；不照抄示例或上一轮的措辞。只写当前角色的台词与动作，不代写用户的台词、想法、情绪或选择，不替用户决定关系和剧情。\n每轮只回应一个当前话题、推进一个小动作；信息不足时最多问一个问题。不要列举大量建议、复盘背景、重复总结或一口气交代所有信息。${p.length==='short'?'正文优先 60–160 个汉字，最多两小段。':'正文优先 160–280 个汉字，最多三小段。'}除非用户明确要求详细解释，否则保持此节奏；思考强度不改变回复长度。`;
+ return `角色扮演预设：${preset.name}。${preset.prompt}\n保持角色卡的人设、口吻、场景和示例风格；不照抄示例或上一轮的措辞。只写当前角色的台词与动作，不代写用户的台词、想法、情绪或选择，不替用户决定关系和剧情。\n闲聊每轮只接住当前话题，信息不足时最多问一个问题，不机械复盘背景或总结。编程、数学、绘画、分析和教学按任务需要完整作答，不套用闲聊字数或段数限制；保持角色口吻，但不能省掉必要步骤、代码与结果。${p.length==='short'?'普通闲聊优先 60–160 个汉字，两小段以内。':'普通闲聊优先 160–280 个汉字，三小段以内。'}除非用户明确要求详细解释，否则保持此节奏；思考强度不改变回复长度。`;
 }
 export function choiceInstructions(enabled:boolean){return enabled?'若当前话题有自然的分支，正文后另起一行，附最多两个适合用户说出或做出的简短接话选项，每项不超过 22 个汉字。不要替用户作决定，不要重复正文问题，也不强行在告别或无需回复时加选项。格式严格为 <cloudlet-choices>["选项一","选项二"]</cloudlet-choices>；只输出 JSON 字符串数组，不输出说明。用户仍可以自由输入。':'只输出角色正文，不附接话选项或格式标签。';}
 // The trailer is presentation metadata; it never becomes chat history or user input by itself.

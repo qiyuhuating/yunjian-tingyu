@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';
 import {Sparkles} from 'lucide-react';
 import {samplingSchema} from '../lib/phone-model';
+import {contextPlan,MAX_CONTEXT_TOKENS} from '../lib/context-window';
 import {capabilities,type ProviderId} from '../lib/providers';
 import {reasoningLevels,reasoningPlan} from '../lib/reasoning';
 import {FormField,usePhone} from './ui';
@@ -9,15 +10,16 @@ export default function AIControls({provider}:{provider:ProviderId}){
  const {state,commit,toast,aiStats,busy}=usePhone(),[params,setParams]=useState(state.sampling),[saving,setSaving]=useState(false);
  useEffect(()=>setParams(p=>({...p,thinking:state.sampling.thinking,reasoningEffort:state.sampling.reasoningEffort})),[state.sampling.thinking,state.sampling.reasoningEffort]);
  const deepseek=provider==='deepseek',c=capabilities(provider,state.model),reasoning=reasoningPlan(provider,state.model,params.thinking,params.reasoningEffort),last=aiStats.last,total=last&&last.hit!==null&&last.miss!==null?last.hit+last.miss:0;
+ const context=contextPlan({...state,sampling:params});
  const setThinking=(thinking:boolean,reasoningEffort=params.reasoningEffort)=>{setParams(p=>({...p,thinking,reasoningEffort}));void commit(s=>{s.sampling.thinking=thinking;s.sampling.reasoningEffort=reasoningEffort;}).catch(()=>{});};
  const number=(key:keyof typeof params,label:string,min:number,max:number,step:number,disabled=false)=>{const value=Math.max(min,Math.min(max,Number(params[key])));return <FormField label={label}><div className={`range-control ${disabled?'parameter-disabled':''}`}><input aria-label={label} type="range" min={min} max={max} step={step} disabled={disabled} value={value} onChange={e=>setParams({...params,[key]:Number(e.target.value)})}/><output>{value.toFixed(step>=1?0:2)}</output></div></FormField>;};
  const save=async()=>{const parsed=samplingSchema.safeParse(params);if(!parsed.success){toast('请检查参数范围。');return;}setSaving(true);try{await commit(s=>{s.sampling=parsed.data;});toast('对话参数已保存在本机。');}catch{}finally{setSaving(false);}};
  return <><section className="settings-section thinking-section"><div className="setting-heading"><span className="eyebrow">A LITTLE MORE THOUGHT</span><h3>思考强度</h3></div><label className="check-label"><input type="checkbox" aria-label="开启深度思考" checked={params.thinking||reasoning.required} disabled={busy||!reasoning.supported||reasoning.required} onChange={e=>setThinking(e.target.checked)}/>{reasoning.required?'这个模型保留基础思考':'开启深度思考'}</label><div className="effort-picker" role="radiogroup" aria-label="思考强度">{reasoningLevels.map(v=><button key={v.id} type="button" role="radio" aria-checked={params.reasoningEffort===v.id} disabled={busy} onClick={()=>setThinking(reasoning.supported?true:params.thinking,v.id)}>{v.name}</button>)}</div><p className="helper">{reasoning.note} 四档选择自动保存；高强度可能增加等待与用量，正文依旧按上方节奏回复。</p></section><details className="settings-section disclosure"><summary><Sparkles size={17}/>对话手感与高级参数</summary><p className="helper">数值会保留，切换服务商也不会丢失。灰色参数在当前接口不发送；推荐从默认值开始调整。</p>
   {number('temperature','表达变化 · Temperature',0,c.temperatureMax,.05,!c.temperature||deepseek&&params.thinking||provider==='anthropic'&&reasoning.budget>0)}
   {number('topP','词汇采样 · Top P',deepseek&&params.thinking?.95:.01,1,.01,!c.topP||deepseek&&!params.thinking)}
-  {number('maxTokens','正文 Token 预算',128,4096,128)}{number('contextChars','历史文字预算 · 字符',8000,64000,1000)}
+  {number('maxTokens','正文 Token 预算',128,4096,128)}<FormField label="上下文窗口"><select aria-label="上下文窗口" value={params.contextMode} onChange={e=>setParams({...params,contextMode:e.target.value as 'max'|'manual'})}><option value="max">默认 · 模型最长可用上下文</option><option value="manual">手动设置 Token 预算</option></select></FormField><p className="helper">当前已保存模型：{state.model} · {context.window.toLocaleString()} tokens · {context.source}。已为回复和思考预留 {context.outputReserve.toLocaleString()} tokens。</p>{params.contextMode==='manual'&&<FormField label="上下文 Token 上限"><input aria-label="上下文 Token 上限" type="number" min={1024} max={MAX_CONTEXT_TOKENS} step={1} value={params.contextTokens} onChange={e=>setParams({...params,contextTokens:Number(e.target.value)})}/></FormField>}{!context.known&&<p className="helper">{params.contextMode==='manual'?'接口没有披露上限，手动值请以服务商实际限制为准。':'接口没有披露该模型上限，暂用 32K 保守预算。可读取模型列表，或手动填入服务商实际值；不会把未知模型标为 1M。'}</p>}
   <p className="helper">这不是目标回复长度。思考开启时，网关另为推理预留预算，避免用完额度后没有正文；实际用量由服务商计费。</p>
-  <p className="helper">历史按分段窗口组织，固定人设放在前面，动态记忆与世界书放在后面。实际前缀缓存由服务商管理；增加预算也会增加输入成本。</p>
+  <p className="helper">历史按模型预算保留，不再固定只取最近几十条。固定核心与人设放在前面，动态记忆与世界书放在后面。文本按 UTF-8 字节保守估算 Token，图片另留额度；实际用量以服务商返回为准。实际前缀缓存由服务商管理；增加预算也会增加输入成本。</p>
   <label className="check-label"><input type="checkbox" disabled={!c.frequency&&!c.presence} checked={params.penalties} onChange={e=>setParams({...params,penalties:e.target.checked})}/>启用频率 / 存在惩罚</label>
   {number('frequencyPenalty','频率惩罚 · 减少反复用词',-2,2,.1,!c.frequency||!params.penalties)}{number('presencePenalty','存在惩罚 · 鼓励新内容',-2,2,.1,!c.presence||!params.penalties)}
   <label className="check-label"><input type="checkbox" disabled={!c.repetition} checked={params.sendRepetition} onChange={e=>setParams({...params,sendRepetition:e.target.checked})}/>启用重复惩罚 · Repetition Penalty</label>

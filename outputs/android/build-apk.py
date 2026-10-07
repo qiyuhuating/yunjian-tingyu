@@ -1,5 +1,5 @@
 import argparse,pathlib,subprocess,os,zipfile,secrets,json,hashlib
-parser=argparse.ArgumentParser();parser.add_argument('--sdk',required=True);parser.add_argument('--java',required=True);parser.add_argument('--signing',required=True);parser.add_argument('--output',required=True);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--sdk',required=True);parser.add_argument('--java',required=True);parser.add_argument('--signing',required=True);parser.add_argument('--output',required=True);parser.add_argument('--apktool');args=parser.parse_args()
 project=pathlib.Path(__file__).resolve().parent;sdk=pathlib.Path(args.sdk);java=pathlib.Path(args.java);build=project/'build';build.mkdir(exist_ok=True);signing=pathlib.Path(args.signing);signing.mkdir(parents=True,exist_ok=True)
 tools=next(sdk.rglob('aapt2.exe')).parent;android=next(sdk.rglob('android.jar'));env=os.environ.copy();env['JAVA_HOME']=str(java);env['PATH']=str(java/'bin')+os.pathsep+env.get('PATH','')
 def run(cmd):
@@ -15,6 +15,12 @@ run([java/'bin/javac.exe','-encoding','UTF-8','-source','8','-target','8','-boot
 run([java/'bin/java.exe','-cp',tools/'lib/d8.jar','com.android.tools.r8.D8','--lib',android,'--min-api','24','--output',build/'dex',*build.glob('classes/**/*.class')])
 with zipfile.ZipFile(build/'unsigned.apk','a',compression=zipfile.ZIP_DEFLATED) as archive:
  for dex in (build/'dex').glob('*.dex'):archive.write(dex,dex.name)
+via=project/'vendor/via-release-cn.apk'
+if via.exists():
+ if not args.apktool:raise SystemExit('Bundled Via requires --apktool <apktool 3.0.3 jar>')
+ from importlib.util import spec_from_file_location,module_from_spec
+ spec=spec_from_file_location('merge_via',project/'merge-via.py');module=module_from_spec(spec);spec.loader.exec_module(module)
+ module.merge_via(project,build,via,pathlib.Path(args.apktool),java/'bin/java.exe',tools/'aapt2.exe',env)
 run([tools/'zipalign.exe','-f','4',build/'unsigned.apk',build/'aligned.apk'])
 metadata=signing/'signing.json';keystore=signing/'cloudlet-release.p12'
 if not metadata.exists():metadata.write_text(json.dumps({'alias':'cloudlet','password':secrets.token_urlsafe(32)}),encoding='utf-8')

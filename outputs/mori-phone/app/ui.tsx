@@ -6,6 +6,7 @@ import type {ProviderId} from '../lib/providers';
 import type {PreparedBackup} from '../lib/local-backup';
 import {useLocalMedia} from './local-media';
 import {useVoice} from './use-voice';
+import MessageText from './message-text';
 export type AIStats={last:AIUsage|null;requests:number;prompt:number;completion:number;firstTokenMs:number|null;durationMs:number|null;finishReason:string};
 import type {PhoneState,Character,Message} from '../lib/phone-model';
 export type Commit=(change:(s:PhoneState)=>void)=>Promise<void>;
@@ -35,7 +36,7 @@ export function MessageCard({message,onFavorite}:{message:Message;onFavorite?:()
  const {ownerId}=usePhone(),assetURL=useLocalMedia(ownerId,message.asset),voice=useVoice();
  const special=['packet','transfer','kinship'].includes(message.kind);
  return <div className={`message-card ${special?'money-card '+message.kind:''}`}>
-  {special?<><Wallet size={25}/><strong>{message.kind==='packet'?'心意红包':message.kind==='kinship'?'亲属卡':'云币转账'}</strong><b>{message.amount} 云币</b><p>{message.text}</p><small>虚拟心意 · 已记录</small></>:message.kind==='image'?<><ImagePreview url={assetURL} name={message.fileName||'图片'}><img className="message-image" src={assetURL||undefined} alt={message.fileName||'图片'}/></ImagePreview><p>{message.text}</p></>:message.kind==='file'?<><a className="file-bubble" href={assetURL||undefined} download={message.fileName}><BookOpen size={25}/><span><strong>{message.fileName}</strong><small>{formatSize(message.fileSize)} · 点击下载</small></span></a>{message.extracted&&<small>已提取文字供 AI 阅读</small>}<p>{message.text}</p></>:message.kind==='voice'?<button className="voice-bubble" onClick={()=>void voice.read(message.text)} aria-label="播放语音" aria-pressed={voice.playing}><Radio size={20}/><span>{voice.playing?'正在朗读…':'听这条消息'}</span><small>朗读</small></button>:<p>{message.text}</p>}
+  {special?<><Wallet size={25}/><strong>{message.kind==='packet'?'心意红包':message.kind==='kinship'?'亲属卡':'云币转账'}</strong><b>{message.amount} 云币</b><p>{message.text}</p><small>虚拟心意 · 已记录</small></>:message.kind==='image'?<><ImagePreview url={assetURL} name={message.fileName||'图片'}><img className="message-image" src={assetURL||undefined} alt={message.fileName||'图片'}/></ImagePreview><p>{message.text}</p><small>{message.attachmentStatus}</small></>:message.kind==='file'?<><a className="file-bubble" href={assetURL||undefined} download={message.fileName}><BookOpen size={25}/><span><strong>{message.fileName}</strong><small>{formatSize(message.fileSize)} · 点击下载</small></span></a><small>{message.attachmentStatus||(message.extracted?'已提取文字供 AI 阅读':'原文件已保存，暂未解析内容')}</small><p>{message.text}</p></>:message.kind==='voice'?<button className="voice-bubble" onClick={()=>void voice.read(message.text)} aria-label="播放语音" aria-pressed={voice.playing}><Radio size={20}/><span>{voice.playing?'正在朗读…':'听这条消息'}</span><small>朗读</small></button>:<MessageText text={message.text}/>}
   {onFavorite&&<div className="message-card-footer"><button className={`favorite-message ${message.favorite?'active':''}`} onClick={onFavorite} aria-label={message.favorite?'取消收藏':'收藏消息'}><Heart size={13} fill={message.favorite?'currentColor':'none'}/>{message.favorite?'取消收藏':'收藏消息'}</button></div>}
  </div>;
 }
