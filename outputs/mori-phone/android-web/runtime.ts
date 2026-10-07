@@ -1,7 +1,7 @@
 import {chatInput,wireRequest,normalizeStream,modelsRequest,extractModels} from '../lib/provider-adapter';
 import {providerBase,providerSchema} from '../lib/providers';
 type Bridge={request:(id:string,url:string,method:string,headers:string,body:string)=>void;cancel:(id:string)=>void;openUrl:(url:string)=>void;startDownload:(id:string,name:string,mime:string)=>void;downloadChunk:(id:string,base64:string)=>void;finishDownload:(id:string)=>void;speak:(text:string,rate:number,id:string)=>void;stopSpeech:()=>void;copyText:(text:string)=>void};
-declare global{interface Window{NativeFlush?:()=>Promise<void>;Android?:Bridge;NativeHTTP?:{headers:(id:string,status:number,headers:string)=>void;chunk:(id:string,b64:string)=>void;end:(id:string)=>void;error:(id:string)=>void};NativeSpeechEnd?:(id:string,failed?:boolean)=>void;}}
+declare global{interface Window{NativeFlush?:()=>Promise<void>;NativeBack?:()=>boolean;Android?:Bridge;NativeHTTP?:{headers:(id:string,status:number,headers:string)=>void;chunk:(id:string,b64:string)=>void;end:(id:string)=>void;error:(id:string)=>void};NativeSpeechEnd?:(id:string,failed?:boolean)=>void;}}
 export function installAndroidRuntime(){const native=window.fetch.bind(window),bridge=window.Android;
  const pending=new Map<string,{resolve:(r:Response)=>void;reject:(e:Error)=>void;controller:ReadableStreamDefaultController<Uint8Array>;stream:ReadableStream<Uint8Array>;remove:()=>void}>();
  const bytes=(value:string)=>Uint8Array.from(atob(value),c=>c.charCodeAt(0));

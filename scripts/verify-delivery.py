@@ -13,8 +13,8 @@ for row in manifest:
     assert p.stat().st_size == row['bytes'], row['path']
     assert hashlib.sha256(p.read_bytes()).hexdigest() == row['sha256'], row['path']
     assert p.suffix not in {'.p12', '.jks', '.keystore'} and p.name not in {'signing.json', 'Android签名备份.zip'}
-apk = root / 'outputs/云笺听雨-0.0.1.apk'
-expected = json.loads((root / 'outputs/云笺听雨0.0.1资源校验清单.json').read_text(encoding='utf-8'))
+apk = root / 'outputs/云笺听雨-0.0.1-群聊优化.apk'
+expected = json.loads((root / 'outputs/云笺听雨UI群聊资源校验清单.json').read_text(encoding='utf-8'))
 assert hashlib.sha256(apk.read_bytes()).hexdigest() == expected['apkSha256']
 with zipfile.ZipFile(apk) as z:
     assert z.testzip() is None

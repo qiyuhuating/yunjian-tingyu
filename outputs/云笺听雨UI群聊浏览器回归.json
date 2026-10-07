@@ -1,0 +1,184 @@
+[
+  {
+    "check": "repair-review",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "204/205/304可结算",
+        "非法响应头可拒绝",
+        "Request保留参数",
+        "网络取消",
+        "过期朗读事件隔离",
+        "共享附件及上传保护",
+        "冲突不误删",
+        "ZIP恢复真实字节与旧附件回收",
+        "启动回收孤立文件",
+        "坏备份保留原页面",
+        "真实阅读器卸载隔离",
+        "切换播放器终止旧任务",
+        "关闭前草稿立即保存并恢复"
+      ],
+      "native": {
+        "empty": [
+          {
+            "status": 204,
+            "body": ""
+          },
+          {
+            "status": 205,
+            "body": ""
+          },
+          {
+            "status": 304,
+            "body": ""
+          }
+        ],
+        "bad": "Unexpected token 'b', \"bad-json\" is not valid JSON",
+        "request": {
+          "id": "788f72b7-4277-464d-ade6-6deb55949b76",
+          "url": "https://fixture.invalid/post",
+          "method": "POST",
+          "headers": "{\"authorization\":\"Bearer fixture-only\",\"content-type\":\"text/plain;charset=UTF-8\"}",
+          "body": "expected-body"
+        },
+        "aborted": "AbortError",
+        "before": {
+          "a": 0,
+          "b": 0
+        },
+        "after": {
+          "a": 0,
+          "b": 1
+        }
+      },
+      "persistence": {
+        "shared": true,
+        "removed": true,
+        "protectedPending": true,
+        "conflict": true,
+        "conflictPreserves": true,
+        "restoredText": "music",
+        "previousRemoved": true,
+        "secondText": "music",
+        "abandonedRemoved": true,
+        "finalVersion": true
+      },
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-summary",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "真实聊天触发独立摘要",
+        "摘要wire只有系统与资料两个消息",
+        "摘要输出和游标真实保存",
+        "截断摘要保留旧游标且聊天不丢",
+        "删除最后群成员清理空群"
+      ],
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-theme",
+    "exitCode": 0,
+    "result": {
+      "checks": [
+        {
+          "selector": ".note-widget>p",
+          "contrast": 11.71
+        },
+        {
+          "selector": ".note-heading",
+          "contrast": 7.13
+        },
+        {
+          "selector": ".date-widget>b",
+          "contrast": 11.71
+        },
+        {
+          "selector": ".note-bottom",
+          "contrast": 7.13
+        },
+        {
+          "selector": ".role-assistant .message-card",
+          "contrast": 11.69
+        },
+        {
+          "selector": ".message-meta",
+          "contrast": 8.57
+        },
+        {
+          "selector": ".composer textarea",
+          "contrast": 13.29
+        },
+        {
+          "selector": ".provider-preview strong",
+          "contrast": 14.08
+        },
+        {
+          "selector": ".provider-preview p",
+          "contrast": 8.57
+        },
+        {
+          "selector": ".field input",
+          "contrast": 13.29
+        }
+      ],
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ],
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "repair-csp",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "无需登录无私人站点请求",
+        "随包3D与浅色界面",
+        "直接调用当前API并真实流式处理",
+        "聊天附件刷新恢复",
+        "原生朗读桥接",
+        "备份导出桥接"
+      ],
+      "pageErrors": []
+    }
+  },
+  {
+    "check": "ui-group",
+    "exitCode": 0,
+    "result": {
+      "passed": [
+        "多个角色独立请求、分泡、上下文接话、纯文本与短回复",
+        "轮换覆盖第四位成员",
+        "@点名准确，不强迫全员回答",
+        "常见旁白输出重写，不落入聊天记录",
+        "取消和重试保留已有消息，不泄露格式标签",
+        "群名、成员管理和点头像@有真实效果",
+        "群消息记忆归属正确",
+        "消息收藏操作持久化",
+        "图片真实预览、保存、Esc关闭及焦点恢复",
+        "主要聊天触控48px、六档视口与键盘高度布局",
+        "放大字体与减少动画",
+        "群聊、成员、附件与主题刷新恢复",
+        "通话入口进入真实Realtime流程，不打开计时朗读假通话",
+        "全部应用导航无空页面及横向溢出",
+        "纸条真实AI生成并保存，不混入聊天选项标签",
+        "私人动态发布与点赞确实修改持久化数据",
+        "虚拟商品扣款、礼物袋和赠送有真实本地账目",
+        "天气按钮调用外部接口并展示响应，不用虚构默认数据",
+        "收藏网址实际交给外部浏览器桥接",
+        "本地音频真实播放、LRC原歌词跟随进度、桌宠打断情绪",
+        "系统返回优先关闭预览、再返回主页，主页才退出"
+      ],
+      "apps": 24,
+      "pageErrors": []
+    }
+  }
+]

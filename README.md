@@ -4,18 +4,24 @@
 
 ## 下载与安装
 
-[下载 0.0.1 APK](outputs/云笺听雨-0.0.1.apk) · [安装说明](outputs/APK安装说明.md) · [签名与完整性报告](outputs/云笺听雨0.0.1签名与完整性报告.md)
+[下载 0.0.1 群聊优化 APK](outputs/云笺听雨-0.0.1-群聊优化.apk) · [安装说明](outputs/APK安装说明.md) · [签名与完整性报告](outputs/云笺听雨UI群聊签名与完整性报告.md)
 
-包名 `chat.cloudlet.phone`，Android 7+，版本号 0.0.1 / versionCode 3。沿用原签名，覆盖安装前先备份；不要卸载旧版。旧 APK 和旧报告保留作历史交付，不作为当前版本下载入口。
+包名 `chat.cloudlet.phone`，Android 7+，版本号 0.0.1 / versionCode 4。沿用原签名，覆盖安装前先备份；不要卸载旧版。旧 APK 和旧报告保留作历史交付，不作为当前版本下载入口。
+
+## 本轮群聊与界面
+
+多个角色独立接话，消息以日常手机聊天的短句分泡，保留人设口吻，不写旁白、动作或环境。默认两位成员轮流回复，支持 @、群名与成员管理、收藏和群记忆；单人剧情预设保留。
+
+聊天使用一层标题与明确返回路径，主要操作 48px、图片预览再保存、错误状态可见；横屏输入栏和暗夜层次已验证。通话入口进入真实 Realtime，文字朗读另行提供。私人社区与云币仍是有明确标识的本地虚构互动；日历关闭应用后无系统闹钟。
 
 ## 源码与测试
 
 - `outputs/mori-phone/`：完整界面、模型适配、角色卡、长期记忆、本地存储与可选网页服务源码。
 - `outputs/android/`：Android 原生桥接、系统文件选择与导出、TTS、清单、构建脚本和随包资源。
-- `work/qa/`：完整浏览器测试与历史调试脚本；本版验收入口为四个 `repair-*.mjs`。
+- `work/qa/`：完整浏览器测试与历史调试脚本；本版验收入口为四个 `repair-*.mjs` 和 `ui-group.mjs`。
 - `outputs/code-review-validation/`：修复前问题复现，不是现版通过标准。
 - [逐文件介绍](FILES.md)：每个交付文件的用途及校验值。
-- [修复与验证报告](outputs/云笺听雨0.0.1修复与验证报告.md)：已完成检查及尚未覆盖的验证。
+- [本轮 UI 与群聊审视报告](docs/UI与群聊审视报告.md)：已完成检查及尚未覆盖的验证。
 
 ## 复现检查
 
@@ -29,11 +35,11 @@ python work/check-release.py
 node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/mori-phone/android-web/vite.config.ts --host 127.0.0.1 --port 5175 --strictPort
 ```
 
-在另一个终端执行 `python work/check-browser-release.py`。四组当前浏览器检查可使用 Playwright 安装的 Chromium；已有浏览器可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`。历史 QA 脚本保留了当时的路径、端口和页面结构，只作开发记录，需按对应版本调整后运行。
+在另一个终端执行 `python work/check-browser-release.py`。五组当前浏览器检查可使用 Playwright 安装的 Chromium；已有浏览器可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`。历史 QA 脚本保留了当时的路径、端口和页面结构，只作开发记录，需按对应版本调整后运行。
 
 重新生成前端资源：`node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts`。Android 构建按 [原生构建说明](outputs/android/README.md) 执行；Windows 请在 ASCII 路径下构建。APK 完整性验证脚本保留了原构建环境路径，迁移时需替换 SDK、JDK、未签名 APK 和证书记录路径。仓库不含私有签名备份，签名文件仍由机主在本机保管。
 
-当前证据包括 56 项核心检查、TypeScript 检查和 4 组浏览器回归。浏览器桥接使用测试模型响应；未完成真机安装、真实模型、真实通话和系统回收进程的设备验收。不能将这些检查解释为绝对无缺陷。
+当前证据包括 72 项核心检查、TypeScript 检查和 5 组浏览器回归。浏览器桥接使用测试模型响应；未完成真机安装、真实模型、真实通话和系统回收进程的设备验收。不能将这些检查解释为绝对无缺陷。
 
 ## 文件范围与隐私
 

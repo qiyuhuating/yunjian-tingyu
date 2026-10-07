@@ -1,0 +1,137 @@
+{
+  "name": "云笺听雨",
+  "package": "chat.cloudlet.phone",
+  "version": "0.0.1",
+  "versionCode": 4,
+  "apkSha256": "d60bdd0bfba7653c38e7410207b7e9e48fdba98418d4eb37a18f329f5cdcdde5",
+  "signerCertificateSha256": "7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79",
+  "sameSignerAsPrevious": true,
+  "signatureV2": true,
+  "signatureV3": true,
+  "zipAlignment": true,
+  "crc": true,
+  "matchesUnsignedBuild": true,
+  "matchesBundledAssets": true,
+  "resources": [
+    {
+      "path": "AndroidManifest.xml",
+      "bytes": 4164,
+      "sha256": "c746a234454ac8560bb71a2cb84a2e59d2a36eeb0399c260e1e7564f3e959fce"
+    },
+    {
+      "path": "res/drawable/app_icon.xml",
+      "bytes": 944,
+      "sha256": "788186f27e39301564227454de4304e49c43dca3ef7c2d687fdf39a82dee9e31"
+    },
+    {
+      "path": "res/drawable/cloud_pet.png",
+      "bytes": 1212801,
+      "sha256": "3be8ce342d3d1bddfca692ad56a010b7e67b413ce04f95ccb2564f10eb145e39"
+    },
+    {
+      "path": "res/mipmap-anydpi-v26/app_icon.xml",
+      "bytes": 684,
+      "sha256": "9daafe4ca9c3046f5d85d8e677e4185cff25561fc9b086f12e77d7cad86a214b"
+    },
+    {
+      "path": "resources.arsc",
+      "bytes": 1088,
+      "sha256": "900567ab8f4a2d697ff57e109da9a40071e046321e5607c21fcdcc4314060a78"
+    },
+    {
+      "path": "assets/fonts/SourceSerif4Variable-Roman.ttf",
+      "bytes": 1204208,
+      "sha256": "14d360ee1b76655da9276628b229e11671bc1f5d1083636144db6677d452cf55"
+    },
+    {
+      "path": "assets/licenses/Source-Serif-OFL.txt",
+      "bytes": 4491,
+      "sha256": "c21d7293d87b6d7ab1d0229a2f55b77f33a7613a6a4e66f6693d68d7d8d09464"
+    },
+    {
+      "path": "assets/web/assets/index-DCMO8IR7.js",
+      "bytes": 481698,
+      "sha256": "66d78a5f1f4d45400ddbf8f97cfd93a90c9cfc09298cebb63d7836ec2668e166"
+    },
+    {
+      "path": "assets/web/assets/index-ni2Vbena.css",
+      "bytes": 96767,
+      "sha256": "6a0a4c17910818925bcc3758e64863e304b10a9c000a6ec1fc68ffb80e7d46ec"
+    },
+    {
+      "path": "assets/web/assets/three.module-K64BOjC1.js",
+      "bytes": 537050,
+      "sha256": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
+    {
+      "path": "assets/web/button-sprite.png",
+      "bytes": 1313405,
+      "sha256": "1686d2750c714ad45e79ff05854cf473d1cfd0b0385f8d1826a1b6b26363d6f1"
+    },
+    {
+      "path": "assets/web/cloud-pet.png",
+      "bytes": 1248793,
+      "sha256": "6b6a2d5e6d05aba5bd948b0097b9de4169110bd66a01825249ab0941138f2d3d"
+    },
+    {
+      "path": "assets/web/dock-sprite.png",
+      "bytes": 1571700,
+      "sha256": "ad9d96f2b1fb5a272c8938fc0aa05da34d14eef5252ce5f1ae7a799b0165d390"
+    },
+    {
+      "path": "assets/web/favicon.svg",
+      "bytes": 302,
+      "sha256": "a96654deee10d5bfc6ef4ed170d4472e25cbadfd3053e32088bd136efbcbb3aa"
+    },
+    {
+      "path": "assets/web/fonts/source-serif-4-latin-400.woff2",
+      "bytes": 20088,
+      "sha256": "02194deb92d3975dd30e11a3824a1f1db32b48c93654e60560cb81ce8e7b5f95"
+    },
+    {
+      "path": "assets/web/fonts/source-serif-4-latin-600.woff2",
+      "bytes": 21532,
+      "sha256": "f2b7e1cf1d277b7608231868135648f8ad8e2b58d8e97ca088bee15dc357bee7"
+    },
+    {
+      "path": "assets/web/fonts/source-serif-4-latin-700.woff2",
+      "bytes": 21716,
+      "sha256": "7691c51bc286a9014db0048277d2c3f2ad0a90b533dc8adfb16cb22a95390d39"
+    },
+    {
+      "path": "assets/web/icon-192.png",
+      "bytes": 5393,
+      "sha256": "1771c21023a941a19de7e3b858bd9e7065a508da8e4de96974f7b050acdff52e"
+    },
+    {
+      "path": "assets/web/icon-512.png",
+      "bytes": 18315,
+      "sha256": "eba0bd6e7db94067ac1033c6752154ec40b0a27a3828a118f856064550e1e1c6"
+    },
+    {
+      "path": "assets/web/index.html",
+      "bytes": 377,
+      "sha256": "7ccc0c5d17fc90f283ada63bc187a90deffe7684b8bc888926a7725fcc88d1c8"
+    },
+    {
+      "path": "assets/web/manifest.webmanifest",
+      "bytes": 359,
+      "sha256": "68991857fd3eb756ab22f5c623bccf2f30602a607174a215e3bddd2aaf0ff1c0"
+    },
+    {
+      "path": "assets/web/music-listen.png",
+      "bytes": 1200508,
+      "sha256": "51a4b8499d0cdfcf51ff78de8512044d074cfdf3d90af4d6a8d25329838a5876"
+    },
+    {
+      "path": "assets/web/wallpaper.png",
+      "bytes": 1822518,
+      "sha256": "a9a0e92cb72ad5dd57294ecfe42e9fffd4adcd56d5717a2200c91c6c51ecf87b"
+    },
+    {
+      "path": "classes.dex",
+      "bytes": 32792,
+      "sha256": "36a3045312d6ebe6a025adb9ee047c0b134d4ac5ec11de4ec12a8c306d20229a"
+    }
+  ]
+}

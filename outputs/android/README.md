@@ -6,7 +6,7 @@
 
 需完整JDK与Android SDK平台35、Build Tools35。使用ASCII目录构建，规避Windows aapt2对中文路径的问题。
 
-前端源码在云笺听雨0.0.1源码.zip的android-web目录。解压整个网页工程，npm ci后运行：
+前端源码在云笺听雨0.0.1群聊优化源码.zip的android-web目录。解压整个网页工程，npm ci后运行：
 
 node node_modules/vite/bin/vite.js build --config android-web/vite.config.ts
 
@@ -22,4 +22,7 @@ SDK来自Google官方下载并与官方仓库的SHA-1一致；字体来自Adobe�
 
 ## 0.0.1 生命周期修复
 
-常见配置变化保留 WebView。导出文件在系统保存窗口打开前写入 AtomicFile 日志，可在重建后恢复；保存失败保留原临时文件并提供重试。系统回收进程后的文件导入会明确提示重新选择，不会移动或删除来源文件。原生朗读结束带独立 ID，WebView 使用 CSP 禁止 frame 与活动对象。版本 0.0.1，versionCode 3。没有真机或真实 Key 时，不把浏览器桥接模拟视为设备验收。
+常见配置变化保留 WebView。导出文件在系统保存窗口打开前写入 AtomicFile 日志，可在重建后恢复；保存失败保留原临时文件并提供重试。系统回收进程后的文件导入会明确提示重新选择，不会移动或删除来源文件。原生朗读结束带独立 ID，WebView 使用 CSP 禁止 frame 与活动对象。版本 0.0.1，versionCode 4。没有真机或真实 Key 时，不把浏览器桥接模拟视为设备验收。
+
+
+本轮系统返回优先交由界面处理：关闭图片预览/通话面板、返回聊天列表或首页；首页退出前仍等待 NativeFlush 保存完成。签名和资源核对见 `work/verify-ui-apk.py`（本机 SDK/JDK 路径需按环境调整）。
