@@ -138,6 +138,12 @@
     "sha256": "8c3929857b8e64a3cfadec2706c3fa9862f979f650a079e0f10bb8117070c7c8"
   },
   {
+    "path": "docs/角色独立AI模型路由.md",
+    "description": "角色独立服务商、专属密钥和群聊路由的产品说明、手工配置流程与验收标准；路径：docs/角色独立AI模型路由.md",
+    "bytes": 3892,
+    "sha256": "ec14e4032cc807a84bdd80a34c77ebeb309c476b4b8439652a41c516fac674a3"
+  },
+  {
     "path": "outputs/0.0.1暗夜聊天预览.png",
     "description": "界面预览或绘图资源：0.0.1暗夜聊天预览.png；目录 outputs；路径：outputs/0.0.1暗夜聊天预览.png",
     "bytes": 83201,
@@ -588,16 +594,22 @@
     "sha256": "97b05caa441d0c1248f02e4429b94c79dc60ea6fa92663cee1aeac6f91350a30"
   },
   {
+    "path": "outputs/mori-phone/app/character-ai-settings.tsx",
+    "description": "角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx",
+    "bytes": 5155,
+    "sha256": "97bfaa4c898f6a4495a6911196e0cc4ad7ed1252503aa2c048b058244cb15768"
+  },
+  {
     "path": "outputs/mori-phone/app/characters.tsx",
-    "description": "角色卡管理界面；路径：outputs/mori-phone/app/characters.tsx",
-    "bytes": 11101,
-    "sha256": "02c33fcb626c9759b42dbd8c02fba72c397e112f197c6b1de96a981b68e81194"
+    "description": "角色卡管理与单角色 AI 连接编辑；导入覆盖保留已有连接、删除角色清理专属 Key；路径：outputs/mori-phone/app/characters.tsx",
+    "bytes": 11735,
+    "sha256": "5091855f77d892bd2661e1f367f5bdc78733e08c51813fa3e7532d59e9b68478"
   },
   {
     "path": "outputs/mori-phone/app/chat.tsx",
-    "description": "真实录音、附件、授权表情与生成媒体，历史定位、短消息和后台记忆的对话界面；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 32930,
-    "sha256": "9183c3a9415fb92850a06c5c39cf17c88f09e8f8dee17f829c41b4ed5f523be0"
+    "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
+    "bytes": 33068,
+    "sha256": "ab933045fc91819687828be739b83b9f48f1a25529b092507ac26648f7314d81"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -697,9 +709,9 @@
   },
   {
     "path": "outputs/mori-phone/app/phone.tsx",
-    "description": "Immer 状态与版本持久化、延迟模块、壁纸、原生媒体输入输出和导航录音保护；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 28179,
-    "sha256": "126176356497ef7020acf1b4fcf188adb5194a4983249638a89a21fdbc7caeaa"
+    "description": "角色级聊天请求路由与凭据加载、上下文预算、多模态能力及本机状态持久化；路径：outputs/mori-phone/app/phone.tsx",
+    "bytes": 28884,
+    "sha256": "1b6393be255cf332f98884ee07d60e2ace5884c9f6ed7cabb763d640b5444184"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -733,9 +745,9 @@
   },
   {
     "path": "outputs/mori-phone/app/settings.tsx",
-    "description": "连接、模型和个人设置界面；路径：outputs/mori-phone/app/settings.tsx",
-    "bytes": 14751,
-    "sha256": "e279d29ac8f1d1bfab4adc291be4d4df90df70811e2a46abd440726d800c32cb"
+    "description": "全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx",
+    "bytes": 14793,
+    "sha256": "058340170b9aacb0f3af1abd0e7cd2554c717687a281e3f1bc38fb98f72a5ec9"
   },
   {
     "path": "outputs/mori-phone/app/system-prompt-editor.tsx",
@@ -745,9 +757,9 @@
   },
   {
     "path": "outputs/mori-phone/app/ui.tsx",
-    "description": "React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx",
-    "bytes": 9149,
-    "sha256": "3756eca0d965ff1d32c349b73b3d1bbb0961a79226eedb842f8046b68d4c071c"
+    "description": "聊天与角色编辑共享的上下文接口；增加显式测试默认连接参数；路径：outputs/mori-phone/app/ui.tsx",
+    "bytes": 9179,
+    "sha256": "71c41141a7a357da845bb275beb0801fa15ce6a1dd62124c07715d40dae4bb8b"
   },
   {
     "path": "outputs/mori-phone/app/use-editor-draft.ts",
@@ -954,6 +966,12 @@
     "sha256": "d0a5758810d4fa5a6066ec6c62d5d30a4700e063f6310647fcdd648d48b4c5be"
   },
   {
+    "path": "outputs/mori-phone/lib/character-ai.ts",
+    "description": "角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts",
+    "bytes": 1304,
+    "sha256": "f8e79760e61dafd096d4b6b1663dfeb8d84e4d7991e9abb1831169528872028a"
+  },
+  {
     "path": "outputs/mori-phone/lib/character-import.ts",
     "description": "TXT/JSON/PNG 角色卡解析与无损导出；路径：outputs/mori-phone/lib/character-import.ts",
     "bytes": 11273,
@@ -1099,9 +1117,9 @@
   },
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
-    "description": "状态与角色的数据结构、默认值及输入约束；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 13602,
-    "sha256": "9c17027952e1e00f242df1970fb273a0c042e6007f5021096cfa1eb5c3c676be"
+    "description": "角色级服务商、模型、视觉开关和 Key 范围的兼容状态结构与严格校验；路径：outputs/mori-phone/lib/phone-model.ts",
+    "bytes": 13918,
+    "sha256": "616500a7a7958b3f2081e7d4930bb9fb6af756dc8643ea2ebdb955ec5f5f189b"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -1339,9 +1357,9 @@
   },
   {
     "path": "outputs/mori-phone/scripts/verify-companion.mjs",
-    "description": "16 项独立角色记忆、权限、时间、防漂移、群聊取消与技术内容回归；路径：outputs/mori-phone/scripts/verify-companion.mjs",
-    "bytes": 8296,
-    "sha256": "63a7136f76922591959659cc89cd9ae2b7d2e9e796b942907c8240e4b7081367"
+    "description": "角色记忆、群聊、AI 连接独立性及自定义端点密钥隔离的核心回归测试；路径：outputs/mori-phone/scripts/verify-companion.mjs",
+    "bytes": 11548,
+    "sha256": "aa3e8a16a734c03a0a6a4784aba2a5cdf0fb32de1b8cdbc7935188697bafe1e1"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-context.mjs",
@@ -1891,9 +1909,9 @@
   },
   {
     "path": "work/qa/features.mjs",
-    "description": "可复现当前源码构建的 16 项真实页面流程，服务使用 fixture 并保存验收截图；路径：work/qa/features.mjs",
-    "bytes": 21940,
-    "sha256": "157703a87b29d9c0aa4291d8aefea98535c90be829f7dca4bdf6e59117987812"
+    "description": "真实页面交互下角色 AI 设置与独立路由到指定服务商的浏览器回归；路径：work/qa/features.mjs",
+    "bytes": 23264,
+    "sha256": "d9bb8773a5cde8cc2853378d9661bdfacf811d7e699570dbc63a96f7e07d7f18"
   },
   {
     "path": "work/qa/fixtures/encrypted.pdf",
