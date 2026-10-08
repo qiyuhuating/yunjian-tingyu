@@ -1892,8 +1892,8 @@
   {
     "path": "work/qa/features.mjs",
     "description": "可复现当前源码构建的 16 项真实页面流程，服务使用 fixture 并保存验收截图；路径：work/qa/features.mjs",
-    "bytes": 21941,
-    "sha256": "e19da9dd342ef02516eb9b3e14922d0345f7323785772bcce71a1c2ea558666e"
+    "bytes": 21940,
+    "sha256": "157703a87b29d9c0aa4291d8aefea98535c90be829f7dca4bdf6e59117987812"
   },
   {
     "path": "work/qa/fixtures/encrypted.pdf",
