@@ -23,15 +23,9 @@ export async function readLocal(owner:string){
  const [row,threads]=await Promise.all([result(tx.objectStore('states').get(owner)) as Promise<Snapshot|undefined>,result(tx.objectStore('threads').index('owner').getAll(owner))]);await done;if(!row)return null;
  const state=stateSchema.parse({...row.state,threads:row.threadStorage?Object.fromEntries(threads.map(t=>[t.id,t.messages])):row.state.threads,groups:row.state.groups.filter(g=>g.members.length>0)});persisted.set(owner,{version:row.version,state});return {...row,state};
 }
-function pruneAssets(tx:IDBTransaction,owner:string,state:PhoneState,previous?:PhoneState){
- const refs=new Set(assetReferences(state).map(ref=>ref.replace(/^local:|^\/api\/assets\//,''))),old=new Set(previous?assetReferences(previous).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')):[]),cursor=previous?null:tx.objectStore('assets').openCursor();
- if(previous){for(const id of old)if(!refs.has(id))tx.objectStore('assets').delete([owner,id]);return;}if(!cursor)return;
- cursor.onsuccess=()=>{const entry=cursor.result;if(!entry)return;const asset=entry.value as LocalAsset;if(asset.owner===owner&&!refs.has(asset.id)&&(old.has(asset.id)||(asset.createdAt??0)<Date.now()-10*60*1000))entry.delete();entry.continue();};
-}
-async function collectUnusedAssets(owner:string){const d=await db(),tx=d.transaction(['states','assets'],'readwrite'),done=complete(tx),request=tx.objectStore('states').get(owner);request.onsuccess=()=>{if(request.result){const row=request.result;pruneAssets(tx,owner,row.threadStorage?{...row.state,threads:Object.fromEntries((row.assetIds||[]).map((id:string)=>[id,[{asset:'local:'+id}]]))}:row.state);}};await done;}
 export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false){
  const parsed=validated?state:stateSchema.parse(state),refs=assetReferences(parsed).map(ref=>ref.replace(/^local:|^\/api\/assets\//,''));
- const d=await db(),tx=d.transaction(['states','assets','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
+ const d=await db(),tx=d.transaction(['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
  const request=store.get(owner);request.onsuccess=()=>{
   const old=request.result as Snapshot|undefined;if((old?.version??0)!==version){conflict=true;tx.abort();return;}
   const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null,threads=tx.objectStore('threads');
@@ -40,7 +34,6 @@ export async function writeLocal(owner:string,state:PhoneState,version:number,le
   const cursor=threads.index('owner').openCursor(IDBKeyRange.only(owner));cursor.onsuccess=()=>{const entry=cursor.result;if(!entry)return;if(!Object.hasOwn(parsed.threads,entry.value.id))entry.delete();entry.continue();};
   for(const id of ids)if(parsed.threads[id]&&(!previous||previous.threads[id]!==parsed.threads[id]))threads.put({owner,id,messages:parsed.threads[id]});
   store.put({owner,state:{...parsed,threads:{}},version:version+1,updatedAt:Date.now(),legacyArchive:legacyArchive??old?.legacyArchive??false,threadStorage:1,assetIds:refs});
-  const retained=new Set(refs),oldRefs=old?.assetIds|| (old?assetReferences(old.state).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')):[]);for(const id of oldRefs)if(!retained.has(id))tx.objectStore('assets').delete([owner,id]);
  };
  try{await done;}catch(e){if(conflict)throw new LocalConflict();throw e;}persisted.set(owner,{version:version+1,state:parsed});return version+1;
 }
@@ -76,7 +69,7 @@ export async function migrateAssets(owner:string,state:PhoneState,extra: {id:str
  const local=structuredClone(state);local.wallpaper.asset=rewrite(local.wallpaper.asset);for(const [key,draft] of Object.entries(local.drafts)){if(key.startsWith('editor:characters:'))try{const c=JSON.parse(draft);if(c?.avatar){c.avatar=rewrite(c.avatar);local.drafts[key]=JSON.stringify(c);}}catch{}}for(const c of local.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(local.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...local.gallery,...local.music])a.url=rewrite(a.url);return local;
 }
 export async function initializeLocal(owner:string,progress?:(text:string)=>void){
- const stored=await readLocal(owner);if(stored){await collectUnusedAssets(owner);return stored;}
+ const stored=await readLocal(owner);if(stored)return stored;
  progress?.('正在检查旧版记录…');const response=await fetch('/api/state',{cache:'no-store'});const body=await response.json() as {state?:unknown;assets?:{id:string;name:string;mime:string;size:number}[];hasLegacyKey?:boolean;legacyBaseURL?:string;error?:string};if(!response.ok)throw new Error(body.error||'旧记录检查失败，请重试。');
  const state=body.state?stateSchema.parse(body.state):freshState();if(state.provider==='compatible'&&!state.baseURL&&body.legacyBaseURL)state.baseURL=body.legacyBaseURL;
  const initial=await migrateAssets(owner,state,body.assets||[],progress);

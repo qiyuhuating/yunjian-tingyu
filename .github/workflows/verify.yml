@@ -22,9 +22,12 @@ jobs:
       - name: Media adapters and current source browser regression
         run: |
           node outputs/mori-phone/scripts/verify-media.mjs
+          node outputs/mori-phone/scripts/verify-p0.mjs
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
           node work/qa/features.mjs
+          node work/qa/p0-reliability.mjs
           node work/qa/storage.mjs
+          node work/qa/p0-storage-scale.mjs
       - name: Compile Android source without signing or modifying bundled assets
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"

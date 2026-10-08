@@ -19,3 +19,5 @@ outputs/android/build/
 work/feature-build/
 work/storage-build/
 work/feature-test-failure.png
+
+work/live-card-build/

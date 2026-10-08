@@ -1,0 +1,46 @@
+{
+  "providers": [
+    {
+      "provider": "openrouter",
+      "status": "failed",
+      "requests": 1,
+      "model": "liquid/lfm-2.5-2.6b:free",
+      "parameterNames": [
+        "stream",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "stream_options",
+        "provider"
+      ],
+      "probes": [
+        {
+          "phase": "first",
+          "role": "author",
+          "http": 400,
+          "reservedTokenUpperBound": 18079,
+          "status": "failed",
+          "failure": "chat_http_400",
+          "detail": "Provider returned error"
+        }
+      ],
+      "failure": "chat_http_400"
+    },
+    {
+      "provider": "deepseek",
+      "status": "blocked",
+      "reason": "Temporary API credential not provided",
+      "requests": 0
+    }
+  ],
+  "passed": 0,
+  "blocked": 1,
+  "failed": 1,
+  "tokenLimit": 20000000,
+  "reservedUpperBound": 18079,
+  "reportedTotalTokens": 0,
+  "scope": "Actual source provider adapter; first/repeat and three concurrent roles. API throughput only, not app UI/FPS/Android or Hermes collaboration acceptance. Cache rate=sum reported cache-hit prompt tokens / sum prompts with reported cache fields; absent fields remain unknown. No credentials, headers or response bodies recorded."
+}

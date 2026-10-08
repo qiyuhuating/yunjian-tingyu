@@ -1,0 +1,74 @@
+[
+  {
+    "name": "button-sprite",
+    "size": [
+      1774,
+      887
+    ],
+    "pngBytes": 1313405,
+    "webpBytes": 920416,
+    "rgbaExact": true,
+    "pngSha256": "1686d2750c714ad45e79ff05854cf473d1cfd0b0385f8d1826a1b6b26363d6f1",
+    "webpSha256": "766286cdf50432ed74b2f639761cd11e4210196360613d52f6aefbb4e36a333b"
+  },
+  {
+    "name": "dock-sprite",
+    "size": [
+      2172,
+      724
+    ],
+    "pngBytes": 1571700,
+    "webpBytes": 1064052,
+    "rgbaExact": true,
+    "pngSha256": "ad9d96f2b1fb5a272c8938fc0aa05da34d14eef5252ce5f1ae7a799b0165d390",
+    "webpSha256": "994c1397976924fab619169638b44980ce6d40c0eb692e4073afc6a7a6bcbc0d"
+  },
+  {
+    "name": "cloud-pet",
+    "size": [
+      1374,
+      1145
+    ],
+    "pngBytes": 1248793,
+    "webpBytes": 846276,
+    "rgbaExact": true,
+    "pngSha256": "6b6a2d5e6d05aba5bd948b0097b9de4169110bd66a01825249ab0941138f2d3d",
+    "webpSha256": "177fdd21d4e948a388c8556e10dc1fbeb24fa6b71f697bab882c77fed40d5bce"
+  },
+  {
+    "name": "music-listen",
+    "size": [
+      1254,
+      1254
+    ],
+    "pngBytes": 1200508,
+    "webpBytes": 706036,
+    "rgbaExact": true,
+    "pngSha256": "51a4b8499d0cdfcf51ff78de8512044d074cfdf3d90af4d6a8d25329838a5876",
+    "webpSha256": "3a52665bdf875cecc6c28fc35c0cf78d1c1caaae27d6148385c2db87183995f3"
+  },
+  {
+    "name": "via-browser",
+    "size": [
+      1254,
+      1254
+    ],
+    "pngBytes": 985903,
+    "webpBytes": 706622,
+    "rgbaExact": true,
+    "pngSha256": "63fa62ea3231b4e71bc4e8435c56e70f158b41271a33bbeaa8ffaf9a3e3de65d",
+    "webpSha256": "fa60b910e839422f3e9b7d3e30041566cccf710a8787695a97991e14747392ad"
+  },
+  {
+    "name": "wallpaper",
+    "size": [
+      941,
+      1672
+    ],
+    "pngBytes": 1822518,
+    "webpBytes": 1396454,
+    "rgbaExact": true,
+    "pngSha256": "a9a0e92cb72ad5dd57294ecfe42e9fffd4adcd56d5717a2200c91c6c51ecf87b",
+    "webpSha256": "2cc22b27b1b12c8e2b6c57aa31707ce235fcb01bf1f25cb823a7d1ff32a97533"
+  }
+]

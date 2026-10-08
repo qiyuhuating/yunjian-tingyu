@@ -9,5 +9,5 @@ for name,cmd in checks:
   except ValueError:row['stdout']=r.stdout
  if r.returncode:row['stderr']=r.stderr
  results.append(row);print(json.dumps({'check':name,'exitCode':r.returncode,'passed':row.get('result',{}).get('passed')},ensure_ascii=False))
-pathlib.Path('outputs/云笺听雨系统隔离自动检查.json').write_text(json.dumps(results,ensure_ascii=False,indent=2),encoding='utf-8')
+pathlib.Path('outputs/云笺听雨系统隔离自动检查.json').write_text(json.dumps(results,ensure_ascii=False,indent=2),encoding='utf-8',newline='\n')
 assert all(r['exitCode']==0 for r in results),results

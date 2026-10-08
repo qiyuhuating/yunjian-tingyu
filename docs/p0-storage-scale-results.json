@@ -1,0 +1,84 @@
+{
+  "passed": 5,
+  "checks": [
+    "v1 → v3：5000 条原文、ID、附件摘要、记忆来源与修订及备份一致",
+    "v2 → v3：5000 条原文、ID、附件摘要、记忆来源与修订及备份一致",
+    "1000 条长历史读写与备份完整保留",
+    "5000 条长历史读写与备份完整保留",
+    "20000 条长历史读写与备份完整保留"
+  ],
+  "migrations": [
+    {
+      "fromVersion": 1,
+      "toVersion": 3,
+      "messages": 5000,
+      "messageIdsExact": true,
+      "attachmentSHA256": "07d8ca9b2d76d7b7caff0063f35d90078e510ca0701db6268c1734309d3629f8",
+      "memorySourcesAndRevisionsExact": true,
+      "backupRestoreExact": true
+    },
+    {
+      "fromVersion": 2,
+      "toVersion": 3,
+      "messages": 5000,
+      "messageIdsExact": true,
+      "attachmentSHA256": "07d8ca9b2d76d7b7caff0063f35d90078e510ca0701db6268c1734309d3629f8",
+      "memorySourcesAndRevisionsExact": true,
+      "backupRestoreExact": true
+    }
+  ],
+  "scales": [
+    {
+      "messages": 1000,
+      "messageIdsExact": true,
+      "latencyMs": {
+        "write": 9.900000000372529,
+        "read": 4.200000001117587,
+        "settingsWrite": 1.8999999985098839,
+        "append": 2.300000000745058,
+        "backup": 12,
+        "decodeBackup": 18.90000000037253
+      },
+      "backupBytes": 18280,
+      "originalTextBytes": 347722,
+      "mainThreadTaskMs": 59.992,
+      "jsHeapAfterBytes": 11958700
+    },
+    {
+      "messages": 5000,
+      "messageIdsExact": true,
+      "latencyMs": {
+        "write": 24.399999998509884,
+        "read": 15.100000001490116,
+        "settingsWrite": 8,
+        "append": 6.699999999254942,
+        "backup": 29.40000000037253,
+        "decodeBackup": 72.80000000074506
+      },
+      "backupBytes": 62212,
+      "originalTextBytes": 1809722,
+      "mainThreadTaskMs": 173.53199999999998,
+      "jsHeapAfterBytes": 39696488
+    },
+    {
+      "messages": 20000,
+      "messageIdsExact": true,
+      "latencyMs": {
+        "write": 73,
+        "read": 54.399999998509884,
+        "settingsWrite": 14.900000000372529,
+        "append": 25,
+        "backup": 103.20000000111759,
+        "decodeBackup": 242.7999999988824
+      },
+      "backupBytes": 233425,
+      "originalTextBytes": 7472223,
+      "mainThreadTaskMs": 570.572,
+      "jsHeapAfterBytes": 99293108
+    }
+  ],
+  "browser": "153.0.8010.12",
+  "platform": "win32",
+  "pageErrors": [],
+  "scope": "Desktop Chromium IndexedDB, one synthetic dataset per scale; heap is sampled after operations, not peak/RSS/Android performance; no DB version change"
+}

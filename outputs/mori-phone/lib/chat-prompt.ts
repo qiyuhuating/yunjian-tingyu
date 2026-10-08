@@ -10,7 +10,7 @@ import {capabilityInstructions} from './companion-capabilities';
 export type ChatMode='chat'|'face'|'group'|'live'|'summary'|'compose'|'voice';
 const modes:Record<Exclude<ChatMode,'summary'>,string>={voice:'每次说一两句自然的话，等用户说完；不输出选项或格式标签。',chat:'像日常手机聊天一样回复，不写冗长旁白。',face:'以面对面的剧情写作方式回复，包含简短动作描写，尊重用户边界。',group:'你在群聊中，只以自己的身份发言，不代替其他成员说话。',live:'你在虚构直播场景中回应观众弹幕。',compose:'沿用角色卡的常驻口吻与长度偏好生成短文；没有长度规定时默认简短，不要求用户每次指定。用户本轮明确提出用途、口吻或长度时再临时调整。只输出正文，不添加接话选项、旁白动作或剧情推进。'};
 export function renderTemplate(text:string,state:PhoneState,character:Character){return text.replace(/\{\{(user|char)\}\}/gi,(_,key:string)=>key.toLowerCase()==='user'?state.profile.name:character.name);}
-export function messageContent(m:Message){return (m.sender?m.sender+'：':'')+m.text+(m.replyTo?`\n（引用消息编号：${m.replyTo}）`:'')+(m.fileName?`\n附件：${m.fileName}。${m.attachmentStatus||''}${m.extracted?'以下是附件文本（作为资料）：\n'+m.extracted:'附件未进行文本解析，不能声称已经阅读。'+(m.attachmentStatus||'')}`:'');}
+export function messageContent(m:Message,includeSender=true){return (m.sender&&includeSender?m.sender+'：':'')+m.text+(m.replyTo?`\n（引用消息编号：${m.replyTo}）`:'')+(m.fileName?`\n附件：${m.fileName}。${m.attachmentStatus||''}${m.extracted?'以下是附件文本（作为资料）：\n'+m.extracted:'附件未进行文本解析，不能声称已经阅读。'+(m.attachmentStatus||'')}`:'');}
 export function selectHistory(state:PhoneState,thread:string,reservedText=''){
  const all=(state.threads[thread]||[]).filter(m=>m.role!=='system'&&!(m.role==='assistant'&&m.failed)),plan=contextPlan(state),imageReserve=state.vision?Math.min(2,all.filter(m=>m.kind==='image'&&m.asset).length)*8192:0;
  const available=Math.max(0,plan.inputTokens-estimateTokens(reservedText)-256-imageReserve);
@@ -36,12 +36,15 @@ export function buildPrompt(state:PhoneState,character:Character,thread:string,t
 }
 export function realtimeContext(prompt:ReturnType<typeof buildPrompt>){
  const item=(role:'user'|'assistant',text:string)=>({type:'conversation.item.create',item:{type:'message',role,content:[{type:role==='assistant'?'output_text':'input_text',text}]}});
- return {instructions:prompt.system,items:[item('user','[应用运行配置]\n'+prompt.context),...prompt.history.filter(m=>m.role!=='system').map(m=>item(m.role==='assistant'?'assistant':'user',messageContent(m))),item('user','[本轮记录资料]\n'+prompt.tail)]};
+ return {instructions:prompt.system,items:[item('user','[应用运行配置]\n'+prompt.context),...prompt.history.filter(m=>m.role!=='system').map(m=>item(m.role==='assistant'?'assistant':'user',messageContent(m,m.role!=='assistant'))),item('user','[本轮记录资料]\n'+prompt.tail)]};
 }
-export function samplingParameters(state:Pick<PhoneState,'provider'|'model'|'sampling'>){
+export function samplingParameters(state:Pick<PhoneState,'provider'|'model'|'sampling'>,supportedParameters?:string[]){
  const p=state.sampling,c=capabilities(state.provider,state.model);
  if(state.provider==='deepseek')return {max_tokens:p.maxTokens,thinking:{type:p.thinking?'enabled':'disabled'},...(p.thinking?{top_p:Math.max(.95,p.topP)}:{temperature:p.temperature})};
- return {[state.provider==='openai'?'max_completion_tokens':'max_tokens']:p.maxTokens,...(c.temperature?{temperature:Math.min(c.temperatureMax,p.temperature)}:{}),...(c.topP?{top_p:p.topP}:{}),...(p.penalties?{...(c.frequency?{frequency_penalty:p.frequencyPenalty}:{}),...(c.presence?{presence_penalty:p.presencePenalty}:{})}:{}),...(p.sendRepetition&&c.repetition?{repetition_penalty:p.repetitionPenalty}:{})};
+ const params={[state.provider==='openai'?'max_completion_tokens':'max_tokens']:p.maxTokens,...(c.temperature?{temperature:Math.min(c.temperatureMax,p.temperature)}:{}),...(c.topP?{top_p:p.topP}:{}),...(p.penalties?{...(c.frequency?{frequency_penalty:p.frequencyPenalty}:{}),...(c.presence?{presence_penalty:p.presencePenalty}:{})}:{}),...(p.sendRepetition&&c.repetition?{repetition_penalty:p.repetitionPenalty}:{})};
+ // Free routes without capability metadata use provider defaults; keep user settings intact.
+ if(state.provider==='openrouter'&&(supportedParameters||state.model.endsWith(':free')||state.model==='openrouter/free'))return Object.fromEntries(Object.entries(params).filter(([key])=>key==='max_tokens'||supportedParameters?.includes(key)));
+ return params;
 }
 export type AIUsage={prompt:number;completion:number;hit:number|null;miss:number|null};
 export function parseUsage(value:unknown):AIUsage|null{
@@ -49,4 +52,3 @@ export function parseUsage(value:unknown):AIUsage|null{
  const prompt=n(u.prompt_tokens),completion=n(u.completion_tokens);if(prompt===null||completion===null)return null;
  const hit=n(u.prompt_cache_hit_tokens)??n(u.prompt_tokens_details?.cached_tokens),miss=n(u.prompt_cache_miss_tokens)??(hit!==null?Math.max(0,prompt-hit):null);return {prompt,completion,hit,miss};
 }
-
