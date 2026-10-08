@@ -1910,8 +1910,8 @@
   {
     "path": "work/qa/features.mjs",
     "description": "真实页面交互下角色 AI 设置与独立路由到指定服务商的浏览器回归；路径：work/qa/features.mjs",
-    "bytes": 23264,
-    "sha256": "d9bb8773a5cde8cc2853378d9661bdfacf811d7e699570dbc63a96f7e07d7f18"
+    "bytes": 23319,
+    "sha256": "d6708a3c5c84ad5f124ba232da7b8335c0b450dab4f60ef33b4702eacec18af4"
   },
   {
     "path": "work/qa/fixtures/encrypted.pdf",
