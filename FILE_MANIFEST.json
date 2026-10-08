@@ -30,6 +30,12 @@
     "sha256": "f42873681a6e08bca55c5b81360e32cfd9a39b49481f9d952cbc51fd0eca3c24"
   },
   {
+    "path": "docs/UI-UX与图片优化计划-2026-10-08.md",
+    "description": "当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md",
+    "bytes": 17812,
+    "sha256": "16dbe7e3bb0742fd03928d43fcd0e62c00da9ce6ca06f4e9332201e8fd8abe56"
+  },
+  {
     "path": "docs/UI与群聊审视报告.md",
     "description": "UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md",
     "bytes": 7638,
@@ -40,6 +46,30 @@
     "description": "上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md",
     "bytes": 2128,
     "sha256": "7ae6e7334c3e341432c34c04dbf8d46ea9f7506f965b7597421b00900b3099e5"
+  },
+  {
+    "path": "docs/image-optimization-browser-audit.json",
+    "description": "PNG 与 WebP 两套构建页面的图片自然尺寸、五宽度布局、设置问题与聊天草稿实测；路径：docs/image-optimization-browser-audit.json",
+    "bytes": 4290,
+    "sha256": "5c82217fbab083fe5a22b95585f609bbc80d722a66de74136deb6d661ba23481"
+  },
+  {
+    "path": "docs/image-optimization-browser-pixels.json",
+    "description": "Chromium 153 比较半透明合成：alpha和不透明像素一致，三底色最多一个色阶差异；路径：docs/image-optimization-browser-pixels.json",
+    "bytes": 3497,
+    "sha256": "80224cf786704436cb8a9e84bf356e8d375915f347e10bb8cf0b6df919287f3a"
+  },
+  {
+    "path": "docs/image-optimization-draft-audit.json",
+    "description": "实际导航复现日记未保存内容及角色未保存修改丢失的两条证据；路径：docs/image-optimization-draft-audit.json",
+    "bytes": 134,
+    "sha256": "78d661475324f053e5ccdf0e1e015c9ee83fd94705939000d70a564accf59620"
+  },
+  {
+    "path": "docs/image-optimization-results.json",
+    "description": "六张原图和输出的尺寸、精确字节数、SHA-256 与完整 RGBA 一致性结果；路径：docs/image-optimization-results.json",
+    "bytes": 2587,
+    "sha256": "6adac09ad922e7069d47a4b990a9cdbcd2a220b192de5042da817c6509a5a3a5"
   },
   {
     "path": "docs/审计计划落实记录.md",
@@ -554,8 +584,8 @@
   {
     "path": "outputs/mori-phone/app/globals.css",
     "description": "全局字体、布局和浅暗主题样式；路径：outputs/mori-phone/app/globals.css",
-    "bytes": 54002,
-    "sha256": "e6db18831aa4466e099f39d1bef191e2fa6afd78c72755e8f8432179be3d77ee"
+    "bytes": 54005,
+    "sha256": "f58db70807a86877bca7bd42d2bde0998c70f6ff30ee23dcacd3de651a4b8a6e"
   },
   {
     "path": "outputs/mori-phone/app/layout.tsx",
@@ -608,8 +638,8 @@
   {
     "path": "outputs/mori-phone/app/pet-3d.tsx",
     "description": "Three.js 桌宠几何、表情与动作渲染；路径：outputs/mori-phone/app/pet-3d.tsx",
-    "bytes": 5701,
-    "sha256": "238c7f4839468bea249f27c6ec27cf8fb77f4d533a2e680a554849e85bfb0ec2"
+    "bytes": 5702,
+    "sha256": "6402e2c562e27d72c30582e58c462d8f2f7e44172acf9e15b2697ab626993fe2"
   },
   {
     "path": "outputs/mori-phone/app/pet.tsx",
@@ -620,8 +650,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "本机事务保存、跨页面聊天容器、分块备份进度取消和恢复保护；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 26428,
-    "sha256": "1412fb4f40f6ba8b0382ca86d2f90a4b77febdc24a4a604ac9ea479e79191896"
+    "bytes": 26429,
+    "sha256": "c811a4953936c8c38cb861a6cf58cce43701c120a0efe289d2a275f88b22eed4"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -632,8 +662,8 @@
   {
     "path": "outputs/mori-phone/app/refinement.css",
     "description": "精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css",
-    "bytes": 31304,
-    "sha256": "9d543fc87d5493595d8f10d1e9e9a020b9d8bc8e2a083935f4516cdb9f0c6b49"
+    "bytes": 31305,
+    "sha256": "147455e20fb81f0c4f79d7a4441eeabf98e45beb83ccba0193dbf794446b800b"
   },
   {
     "path": "outputs/mori-phone/app/render-recovery.tsx",
@@ -662,8 +692,8 @@
   {
     "path": "outputs/mori-phone/app/ui.tsx",
     "description": "React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx",
-    "bytes": 8778,
-    "sha256": "2ca9caaf06224e4f986fae020b44d242d448511ecfcdc010ea0eb9314933c754"
+    "bytes": 8781,
+    "sha256": "29f63ee5f24ad0d1323d8cd891092d34123f2d711d2434e8e6f01ec3672d7fa8"
   },
   {
     "path": "outputs/mori-phone/app/use-voice.ts",
@@ -1026,22 +1056,22 @@
     "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
   },
   {
-    "path": "outputs/mori-phone/public/button-sprite.png",
-    "description": "桌面应用绘制图标拼图；路径：outputs/mori-phone/public/button-sprite.png",
-    "bytes": 1313405,
-    "sha256": "1686d2750c714ad45e79ff05854cf473d1cfd0b0385f8d1826a1b6b26363d6f1"
+    "path": "outputs/mori-phone/public/button-sprite.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：button-sprite；路径：outputs/mori-phone/public/button-sprite.webp",
+    "bytes": 920416,
+    "sha256": "766286cdf50432ed74b2f639761cd11e4210196360613d52f6aefbb4e36a333b"
   },
   {
-    "path": "outputs/mori-phone/public/cloud-pet.png",
-    "description": "桌宠云朵备用绘图；路径：outputs/mori-phone/public/cloud-pet.png",
-    "bytes": 1248793,
-    "sha256": "6b6a2d5e6d05aba5bd948b0097b9de4169110bd66a01825249ab0941138f2d3d"
+    "path": "outputs/mori-phone/public/cloud-pet.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：cloud-pet；路径：outputs/mori-phone/public/cloud-pet.webp",
+    "bytes": 846276,
+    "sha256": "177fdd21d4e948a388c8556e10dc1fbeb24fa6b71f697bab882c77fed40d5bce"
   },
   {
-    "path": "outputs/mori-phone/public/dock-sprite.png",
-    "description": "底部导航绘制图标拼图；路径：outputs/mori-phone/public/dock-sprite.png",
-    "bytes": 1571700,
-    "sha256": "ad9d96f2b1fb5a272c8938fc0aa05da34d14eef5252ce5f1ae7a799b0165d390"
+    "path": "outputs/mori-phone/public/dock-sprite.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：dock-sprite；路径：outputs/mori-phone/public/dock-sprite.webp",
+    "bytes": 1064052,
+    "sha256": "994c1397976924fab619169638b44980ce6d40c0eb692e4073afc6a7a6bcbc0d"
   },
   {
     "path": "outputs/mori-phone/public/favicon.svg",
@@ -1098,22 +1128,22 @@
     "sha256": "68991857fd3eb756ab22f5c623bccf2f30602a607174a215e3bddd2aaf0ff1c0"
   },
   {
-    "path": "outputs/mori-phone/public/music-listen.png",
-    "description": "一起听笑脸云朵耳机插画；路径：outputs/mori-phone/public/music-listen.png",
-    "bytes": 1200508,
-    "sha256": "51a4b8499d0cdfcf51ff78de8512044d074cfdf3d90af4d6a8d25329838a5876"
+    "path": "outputs/mori-phone/public/music-listen.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：music-listen；路径：outputs/mori-phone/public/music-listen.webp",
+    "bytes": 706036,
+    "sha256": "3a52665bdf875cecc6c28fc35c0cf78d1c1caaae27d6148385c2db87183995f3"
   },
   {
-    "path": "outputs/mori-phone/public/via-browser.png",
-    "description": "用户提供的透明笑脸耳机云朵原图，用作内置 Via 浏览器入口；路径：outputs/mori-phone/public/via-browser.png",
-    "bytes": 985903,
-    "sha256": "63fa62ea3231b4e71bc4e8435c56e70f158b41271a33bbeaa8ffaf9a3e3de65d"
+    "path": "outputs/mori-phone/public/via-browser.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：via-browser；路径：outputs/mori-phone/public/via-browser.webp",
+    "bytes": 706622,
+    "sha256": "fa60b910e839422f3e9b7d3e30041566cccf710a8787695a97991e14747392ad"
   },
   {
-    "path": "outputs/mori-phone/public/wallpaper.png",
-    "description": "天空小屋桌面壁纸；路径：outputs/mori-phone/public/wallpaper.png",
-    "bytes": 1822518,
-    "sha256": "a9a0e92cb72ad5dd57294ecfe42e9fffd4adcd56d5717a2200c91c6c51ecf87b"
+    "path": "outputs/mori-phone/public/wallpaper.webp",
+    "description": "保持原分辨率与原完整 RGBA 的无损 UI 插画：wallpaper；路径：outputs/mori-phone/public/wallpaper.webp",
+    "bytes": 1396454,
+    "sha256": "2cc22b27b1b12c8e2b6c57aa31707ce235fcb01bf1f25cb823a7d1ff32a97533"
   },
   {
     "path": "outputs/mori-phone/scripts/build-verified.sh",
@@ -1644,6 +1674,12 @@
     "sha256": "266972bab4d368e388b89952e67de2e0842771ea5a8610372d76425da048bf59"
   },
   {
+    "path": "scripts/optimize-ui-images.py",
+    "description": "六张插画白名单无损转码，逐字节校验完整 RGBA 并输出哈希；不处理用户附件或角色卡；路径：scripts/optimize-ui-images.py",
+    "bytes": 3647,
+    "sha256": "62fb5213e0c6043292238df178f6d6cd81a79b53a00ef86bac8fa9d3ba3e04b5"
+  },
+  {
     "path": "scripts/verify-delivery.py",
     "description": "验证全仓库文件覆盖、独立说明、SHA-256、APK CRC 和随包资源字节；路径：scripts/verify-delivery.py",
     "bytes": 2407,
@@ -1762,6 +1798,12 @@
     "description": "历史专项浏览器检查或开发工具：group-v2；使用时核对对应版本、路径和端口；路径：work/qa/group-v2.mjs",
     "bytes": 1223,
     "sha256": "4881f8b8dc75bb25251f5755c407e4c706d459b66fe63fdb0240abf5897ab3e7"
+  },
+  {
+    "path": "work/qa/image-pixels.mjs",
+    "description": "在真实浏览器比较基线 PNG 与 WebP，检查尺寸、alpha、不透明像素和三个背景上的合成差异；路径：work/qa/image-pixels.mjs",
+    "bytes": 3954,
+    "sha256": "2ba7ee788ded04d04d238b31ad6e052a7678eddbac2f0110b2e9db15b6c5b517"
   },
   {
     "path": "work/qa/legacy-live.mjs",

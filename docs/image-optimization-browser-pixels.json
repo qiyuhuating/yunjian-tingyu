@@ -1,0 +1,167 @@
+{
+  "browser": "153.0.8010.0",
+  "images": [
+    {
+      "name": "button-sprite",
+      "width": 1774,
+      "height": 887,
+      "sizeMatches": true,
+      "differences": 423827,
+      "maxDelta": 128,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 423827,
+          "maxDelta": 1
+        },
+        {
+          "background": "#191b1e",
+          "changed": 423827,
+          "maxDelta": 1
+        },
+        {
+          "background": "#000000",
+          "changed": 423827,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "dock-sprite",
+      "width": 2172,
+      "height": 724,
+      "sizeMatches": true,
+      "differences": 737963,
+      "maxDelta": 128,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 737963,
+          "maxDelta": 1
+        },
+        {
+          "background": "#191b1e",
+          "changed": 737963,
+          "maxDelta": 1
+        },
+        {
+          "background": "#000000",
+          "changed": 737963,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "cloud-pet",
+      "width": 1374,
+      "height": 1145,
+      "sizeMatches": true,
+      "differences": 214310,
+      "maxDelta": 128,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 214310,
+          "maxDelta": 1
+        },
+        {
+          "background": "#191b1e",
+          "changed": 214310,
+          "maxDelta": 1
+        },
+        {
+          "background": "#000000",
+          "changed": 214310,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "music-listen",
+      "width": 1254,
+      "height": 1254,
+      "sizeMatches": true,
+      "differences": 230453,
+      "maxDelta": 63,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 230453,
+          "maxDelta": 1
+        },
+        {
+          "background": "#191b1e",
+          "changed": 230453,
+          "maxDelta": 1
+        },
+        {
+          "background": "#000000",
+          "changed": 230453,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "via-browser",
+      "width": 1254,
+      "height": 1254,
+      "sizeMatches": true,
+      "differences": 239823,
+      "maxDelta": 128,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 239823,
+          "maxDelta": 1
+        },
+        {
+          "background": "#191b1e",
+          "changed": 239823,
+          "maxDelta": 1
+        },
+        {
+          "background": "#000000",
+          "changed": 239823,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "wallpaper",
+      "width": 941,
+      "height": 1672,
+      "sizeMatches": true,
+      "differences": 0,
+      "maxDelta": 0,
+      "alphaDifferences": 0,
+      "opaqueDifferences": 0,
+      "composites": [
+        {
+          "background": "#ffffff",
+          "changed": 0,
+          "maxDelta": 0
+        },
+        {
+          "background": "#191b1e",
+          "changed": 0,
+          "maxDelta": 0
+        },
+        {
+          "background": "#000000",
+          "changed": 0,
+          "maxDelta": 0
+        }
+      ]
+    }
+  ]
+}

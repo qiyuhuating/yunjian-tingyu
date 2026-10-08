@@ -1,0 +1,202 @@
+[
+  {
+    "port": 5175,
+    "home": {
+      "images": [
+        {
+          "src": "/music-listen.png",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "src": "/button-sprite.png",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/button-sprite.png",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/via-browser.png",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "src": "/button-sprite.png",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/cloud-pet.png",
+          "width": 1374,
+          "height": 1145
+        },
+        {
+          "src": "/dock-sprite.png",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.png",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.png",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.png",
+          "width": 2172,
+          "height": 724
+        }
+      ],
+      "horizontalOverflow": false
+    },
+    "settings": {
+      "persistButtons": [
+        "申请持久存储保护",
+        "申请持久存储"
+      ],
+      "customModelValue": "__custom",
+      "advancedOpen": true
+    },
+    "sizes": [
+      {
+        "viewport": 320,
+        "titleWidth": 118,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 375,
+        "titleWidth": 147,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 390,
+        "titleWidth": 162,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 768,
+        "titleWidth": 182,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 1440,
+        "titleWidth": 192,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      }
+    ],
+    "draftPersistence": true,
+    "pageErrors": []
+  },
+  {
+    "port": 5176,
+    "home": {
+      "images": [
+        {
+          "src": "/music-listen.webp",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "src": "/button-sprite.webp",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/button-sprite.webp",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/via-browser.webp",
+          "width": 1254,
+          "height": 1254
+        },
+        {
+          "src": "/button-sprite.webp",
+          "width": 1774,
+          "height": 887
+        },
+        {
+          "src": "/cloud-pet.webp",
+          "width": 1374,
+          "height": 1145
+        },
+        {
+          "src": "/dock-sprite.webp",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.webp",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.webp",
+          "width": 2172,
+          "height": 724
+        },
+        {
+          "src": "/dock-sprite.webp",
+          "width": 2172,
+          "height": 724
+        }
+      ],
+      "horizontalOverflow": false
+    },
+    "settings": {
+      "persistButtons": [
+        "申请持久存储保护",
+        "申请持久存储"
+      ],
+      "customModelValue": "__custom",
+      "advancedOpen": true
+    },
+    "sizes": [
+      {
+        "viewport": 320,
+        "titleWidth": 118,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 375,
+        "titleWidth": 147,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 390,
+        "titleWidth": 162,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 768,
+        "titleWidth": 182,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      },
+      {
+        "viewport": 1440,
+        "titleWidth": 192,
+        "horizontalOverflow": false,
+        "composerVisible": true
+      }
+    ],
+    "draftPersistence": true,
+    "pageErrors": []
+  }
+]

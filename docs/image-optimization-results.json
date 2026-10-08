@@ -1,0 +1,79 @@
+{
+  "codec": "WebP lossless, exact=True, method=6, quality=100",
+  "images": [
+    {
+      "source": "button-sprite.png",
+      "output": "button-sprite.webp",
+      "width": 1774,
+      "height": 887,
+      "before": 1313405,
+      "after": 920416,
+      "saved_bytes": 392989,
+      "rgba_exact": true,
+      "source_sha256": "1686d2750c714ad45e79ff05854cf473d1cfd0b0385f8d1826a1b6b26363d6f1",
+      "output_sha256": "766286cdf50432ed74b2f639761cd11e4210196360613d52f6aefbb4e36a333b"
+    },
+    {
+      "source": "dock-sprite.png",
+      "output": "dock-sprite.webp",
+      "width": 2172,
+      "height": 724,
+      "before": 1571700,
+      "after": 1064052,
+      "saved_bytes": 507648,
+      "rgba_exact": true,
+      "source_sha256": "ad9d96f2b1fb5a272c8938fc0aa05da34d14eef5252ce5f1ae7a799b0165d390",
+      "output_sha256": "994c1397976924fab619169638b44980ce6d40c0eb692e4073afc6a7a6bcbc0d"
+    },
+    {
+      "source": "cloud-pet.png",
+      "output": "cloud-pet.webp",
+      "width": 1374,
+      "height": 1145,
+      "before": 1248793,
+      "after": 846276,
+      "saved_bytes": 402517,
+      "rgba_exact": true,
+      "source_sha256": "6b6a2d5e6d05aba5bd948b0097b9de4169110bd66a01825249ab0941138f2d3d",
+      "output_sha256": "177fdd21d4e948a388c8556e10dc1fbeb24fa6b71f697bab882c77fed40d5bce"
+    },
+    {
+      "source": "music-listen.png",
+      "output": "music-listen.webp",
+      "width": 1254,
+      "height": 1254,
+      "before": 1200508,
+      "after": 706036,
+      "saved_bytes": 494472,
+      "rgba_exact": true,
+      "source_sha256": "51a4b8499d0cdfcf51ff78de8512044d074cfdf3d90af4d6a8d25329838a5876",
+      "output_sha256": "3a52665bdf875cecc6c28fc35c0cf78d1c1caaae27d6148385c2db87183995f3"
+    },
+    {
+      "source": "via-browser.png",
+      "output": "via-browser.webp",
+      "width": 1254,
+      "height": 1254,
+      "before": 985903,
+      "after": 706622,
+      "saved_bytes": 279281,
+      "rgba_exact": true,
+      "source_sha256": "63fa62ea3231b4e71bc4e8435c56e70f158b41271a33bbeaa8ffaf9a3e3de65d",
+      "output_sha256": "fa60b910e839422f3e9b7d3e30041566cccf710a8787695a97991e14747392ad"
+    },
+    {
+      "source": "wallpaper.png",
+      "output": "wallpaper.webp",
+      "width": 941,
+      "height": 1672,
+      "before": 1822518,
+      "after": 1396454,
+      "saved_bytes": 426064,
+      "rgba_exact": true,
+      "source_sha256": "a9a0e92cb72ad5dd57294ecfe42e9fffd4adcd56d5717a2200c91c6c51ecf87b",
+      "output_sha256": "2cc22b27b1b12c8e2b6c57aa31707ce235fcb01bf1f25cb823a7d1ff32a97533"
+    }
+  ],
+  "before": 8142827,
+  "after": 5639856
+}

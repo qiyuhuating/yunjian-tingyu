@@ -2,6 +2,8 @@
 
 每个交付文件单独列出用途。完整哈希见 `FILE_MANIFEST.json`；旧版本和历史测试有明确标注。签名私钥、密码及真实个人数据不在仓库。
 
+本次仅优化前端源码插画；Android 随包资源与已签名 APK 保留既有交付，优化安装包需重新构建和签名。
+
 | 文件 | 用途 | 字节 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
@@ -9,8 +11,13 @@
 | [.gitignore](.gitignore) | 工程支持文件：.gitignore | 248 |
 | [README.md](README.md) | 使用或构建指南，适用目录：.；路径：README.md | 7162 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
+| [docs/UI-UX与图片优化计划-2026-10-08.md](docs/UI-UX与图片优化计划-2026-10-08.md) | 当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md | 17812 |
 | [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
 | [docs/UI群聊调优计划.md](docs/UI群聊调优计划.md) | 上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md | 2128 |
+| [docs/image-optimization-browser-audit.json](docs/image-optimization-browser-audit.json) | PNG 与 WebP 两套构建页面的图片自然尺寸、五宽度布局、设置问题与聊天草稿实测；路径：docs/image-optimization-browser-audit.json | 4290 |
+| [docs/image-optimization-browser-pixels.json](docs/image-optimization-browser-pixels.json) | Chromium 153 比较半透明合成：alpha和不透明像素一致，三底色最多一个色阶差异；路径：docs/image-optimization-browser-pixels.json | 3497 |
+| [docs/image-optimization-draft-audit.json](docs/image-optimization-draft-audit.json) | 实际导航复现日记未保存内容及角色未保存修改丢失的两条证据；路径：docs/image-optimization-draft-audit.json | 134 |
+| [docs/image-optimization-results.json](docs/image-optimization-results.json) | 六张原图和输出的尺寸、精确字节数、SHA-256 与完整 RGBA 一致性结果；路径：docs/image-optimization-results.json | 2587 |
 | [docs/审计计划落实记录.md](docs/审计计划落实记录.md) | 外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md | 9555 |
 | [docs/本机记录与接口边界修复.md](docs/本机记录与接口边界修复.md) | 本轮问题证据、修复计划、停止红队后的功能验收与未覆盖边界；路径：docs/本机记录与接口边界修复.md | 6620 |
 | [docs/核心提示词隔离说明.md](docs/核心提示词隔离说明.md) | 用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据；路径：docs/核心提示词隔离说明.md | 7151 |
@@ -96,7 +103,7 @@
 | [outputs/mori-phone/app/comfort.css](outputs/mori-phone/app/comfort.css) | 聊天导航、群头像、短消息、触控、图片对话框和横屏布局样式；路径：outputs/mori-phone/app/comfort.css | 8584 |
 | [outputs/mori-phone/app/companion-settings.tsx](outputs/mori-phone/app/companion-settings.tsx) | React 界面模块：companion-settings；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/companion-settings.tsx | 7480 |
 | [outputs/mori-phone/app/focus-timer.tsx](outputs/mori-phone/app/focus-timer.tsx) | React 界面模块：focus-timer；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/focus-timer.tsx | 2709 |
-| [outputs/mori-phone/app/globals.css](outputs/mori-phone/app/globals.css) | 全局字体、布局和浅暗主题样式；路径：outputs/mori-phone/app/globals.css | 54002 |
+| [outputs/mori-phone/app/globals.css](outputs/mori-phone/app/globals.css) | 全局字体、布局和浅暗主题样式；路径：outputs/mori-phone/app/globals.css | 54005 |
 | [outputs/mori-phone/app/layout.tsx](outputs/mori-phone/app/layout.tsx) | React 界面模块：layout；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/layout.tsx | 762 |
 | [outputs/mori-phone/app/local-media.tsx](outputs/mori-phone/app/local-media.tsx) | 共享本机Blob预览及按重试版本重新获取原件，释放对象URL；路径：outputs/mori-phone/app/local-media.tsx | 1155 |
 | [outputs/mori-phone/app/lore.tsx](outputs/mori-phone/app/lore.tsx) | React 界面模块：lore；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/lore.tsx | 5082 |
@@ -105,16 +112,16 @@
 | [outputs/mori-phone/app/modules.tsx](outputs/mori-phone/app/modules.tsx) | React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx | 24401 |
 | [outputs/mori-phone/app/music.tsx](outputs/mori-phone/app/music.tsx) | 一起听、本地音乐、歌词及外部音乐链接；路径：outputs/mori-phone/app/music.tsx | 5235 |
 | [outputs/mori-phone/app/page.tsx](outputs/mori-phone/app/page.tsx) | React 界面模块：page；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/page.tsx | 255 |
-| [outputs/mori-phone/app/pet-3d.tsx](outputs/mori-phone/app/pet-3d.tsx) | Three.js 桌宠几何、表情与动作渲染；路径：outputs/mori-phone/app/pet-3d.tsx | 5701 |
+| [outputs/mori-phone/app/pet-3d.tsx](outputs/mori-phone/app/pet-3d.tsx) | Three.js 桌宠几何、表情与动作渲染；路径：outputs/mori-phone/app/pet-3d.tsx | 5702 |
 | [outputs/mori-phone/app/pet.tsx](outputs/mori-phone/app/pet.tsx) | 桌宠互动、情绪与对话栏状态；路径：outputs/mori-phone/app/pet.tsx | 4746 |
-| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 本机事务保存、跨页面聊天容器、分块备份进度取消和恢复保护；路径：outputs/mori-phone/app/phone.tsx | 26428 |
+| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 本机事务保存、跨页面聊天容器、分块备份进度取消和恢复保护；路径：outputs/mori-phone/app/phone.tsx | 26429 |
 | [outputs/mori-phone/app/realtime-call.tsx](outputs/mori-phone/app/realtime-call.tsx) | React 界面模块：realtime-call；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/realtime-call.tsx | 6236 |
-| [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31304 |
+| [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31305 |
 | [outputs/mori-phone/app/render-recovery.tsx](outputs/mori-phone/app/render-recovery.tsx) | 渲染异常恢复界面、当前内存记录备份入口与重新打开确认；路径：outputs/mori-phone/app/render-recovery.tsx | 716 |
 | [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1622 |
 | [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 连接、模型和个人设置界面；路径：outputs/mori-phone/app/settings.tsx | 14740 |
 | [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1846 |
-| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx | 8778 |
+| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | React 界面模块：ui；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/ui.tsx | 8781 |
 | [outputs/mori-phone/app/use-voice.ts](outputs/mori-phone/app/use-voice.ts) | 朗读任务所有权和播放停止控制；路径：outputs/mori-phone/app/use-voice.ts | 3181 |
 | [outputs/mori-phone/build/connector-preview-plugin.mjs](outputs/mori-phone/build/connector-preview-plugin.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-plugin.mjs | 7211 |
 | [outputs/mori-phone/build/connector-preview-worker.mjs](outputs/mori-phone/build/connector-preview-worker.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-worker.mjs | 594 |
@@ -175,9 +182,9 @@
 | [outputs/mori-phone/package-lock.json](outputs/mori-phone/package-lock.json) | 可重复安装依赖的版本锁定清单：outputs/mori-phone；路径：outputs/mori-phone/package-lock.json | 409512 |
 | [outputs/mori-phone/package.json](outputs/mori-phone/package.json) | 依赖与运行命令配置：outputs/mori-phone；路径：outputs/mori-phone/package.json | 1760 |
 | [outputs/mori-phone/postcss.config.mjs](outputs/mori-phone/postcss.config.mjs) | 工程支持文件：outputs/mori-phone/postcss.config.mjs | 94 |
-| [outputs/mori-phone/public/button-sprite.png](outputs/mori-phone/public/button-sprite.png) | 桌面应用绘制图标拼图；路径：outputs/mori-phone/public/button-sprite.png | 1313405 |
-| [outputs/mori-phone/public/cloud-pet.png](outputs/mori-phone/public/cloud-pet.png) | 桌宠云朵备用绘图；路径：outputs/mori-phone/public/cloud-pet.png | 1248793 |
-| [outputs/mori-phone/public/dock-sprite.png](outputs/mori-phone/public/dock-sprite.png) | 底部导航绘制图标拼图；路径：outputs/mori-phone/public/dock-sprite.png | 1571700 |
+| [outputs/mori-phone/public/button-sprite.webp](outputs/mori-phone/public/button-sprite.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：button-sprite；路径：outputs/mori-phone/public/button-sprite.webp | 920416 |
+| [outputs/mori-phone/public/cloud-pet.webp](outputs/mori-phone/public/cloud-pet.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：cloud-pet；路径：outputs/mori-phone/public/cloud-pet.webp | 846276 |
+| [outputs/mori-phone/public/dock-sprite.webp](outputs/mori-phone/public/dock-sprite.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：dock-sprite；路径：outputs/mori-phone/public/dock-sprite.webp | 1064052 |
 | [outputs/mori-phone/public/favicon.svg](outputs/mori-phone/public/favicon.svg) | 工程支持文件：outputs/mori-phone/public/favicon.svg | 302 |
 | [outputs/mori-phone/public/fonts/source-serif-4-latin-400.woff2](outputs/mori-phone/public/fonts/source-serif-4-latin-400.woff2) | 随包 Source Serif 4 字体资源：source-serif-4-latin-400.woff2；路径：outputs/mori-phone/public/fonts/source-serif-4-latin-400.woff2 | 20088 |
 | [outputs/mori-phone/public/fonts/source-serif-4-latin-600.woff2](outputs/mori-phone/public/fonts/source-serif-4-latin-600.woff2) | 随包 Source Serif 4 字体资源：source-serif-4-latin-600.woff2；路径：outputs/mori-phone/public/fonts/source-serif-4-latin-600.woff2 | 21532 |
@@ -187,9 +194,9 @@
 | [outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt](outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt) | 随包 PDF.js 的 Apache 2.0 许可证；路径：outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt | 10174 |
 | [outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt](outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt) | 增量哈希库@noble/hashes的MIT许可证，随前端源码保留；路径：outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt | 1109 |
 | [outputs/mori-phone/public/manifest.webmanifest](outputs/mori-phone/public/manifest.webmanifest) | 工程支持文件：outputs/mori-phone/public/manifest.webmanifest | 359 |
-| [outputs/mori-phone/public/music-listen.png](outputs/mori-phone/public/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/mori-phone/public/music-listen.png | 1200508 |
-| [outputs/mori-phone/public/via-browser.png](outputs/mori-phone/public/via-browser.png) | 用户提供的透明笑脸耳机云朵原图，用作内置 Via 浏览器入口；路径：outputs/mori-phone/public/via-browser.png | 985903 |
-| [outputs/mori-phone/public/wallpaper.png](outputs/mori-phone/public/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/mori-phone/public/wallpaper.png | 1822518 |
+| [outputs/mori-phone/public/music-listen.webp](outputs/mori-phone/public/music-listen.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：music-listen；路径：outputs/mori-phone/public/music-listen.webp | 706036 |
+| [outputs/mori-phone/public/via-browser.webp](outputs/mori-phone/public/via-browser.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：via-browser；路径：outputs/mori-phone/public/via-browser.webp | 706622 |
+| [outputs/mori-phone/public/wallpaper.webp](outputs/mori-phone/public/wallpaper.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：wallpaper；路径：outputs/mori-phone/public/wallpaper.webp | 1396454 |
 | [outputs/mori-phone/scripts/build-verified.sh](outputs/mori-phone/scripts/build-verified.sh) | 工程支持文件：outputs/mori-phone/scripts/build-verified.sh | 661 |
 | [outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs](outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs) | 工程支持文件：outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs | 6842 |
 | [outputs/mori-phone/scripts/connector-preview/host-binding.mjs](outputs/mori-phone/scripts/connector-preview/host-binding.mjs) | 工程支持文件：outputs/mori-phone/scripts/connector-preview/host-binding.mjs | 7793 |
@@ -278,6 +285,7 @@
 | [outputs/设置预览.png](outputs/设置预览.png) | 界面预览或绘图资源：设置预览.png；目录 outputs；路径：outputs/设置预览.png | 204931 |
 | [outputs/调研与功能设计.md](outputs/调研与功能设计.md) | 项目说明、调研或验证文档：调研与功能设计.md；路径：outputs/调研与功能设计.md | 3978 |
 | [outputs/验收记录.md](outputs/验收记录.md) | 项目说明、调研或验证文档：验收记录.md；路径：outputs/验收记录.md | 2613 |
+| [scripts/optimize-ui-images.py](scripts/optimize-ui-images.py) | 六张插画白名单无损转码，逐字节校验完整 RGBA 并输出哈希；不处理用户附件或角色卡；路径：scripts/optimize-ui-images.py | 3647 |
 | [scripts/verify-delivery.py](scripts/verify-delivery.py) | 验证全仓库文件覆盖、独立说明、SHA-256、APK CRC 和随包资源字节；路径：scripts/verify-delivery.py | 2407 |
 | [work/check-browser-release.py](work/check-browser-release.py) | 运行八套编译产物浏览器回归，覆盖既有业务和新增本机恢复/ZIP边界；路径：work/check-browser-release.py | 1076 |
 | [work/check-release.py](work/check-release.py) | 运行103组具名核心检查、严格TypeScript和空白检查，组数不等于断言总数；路径：work/check-release.py | 1320 |
@@ -298,6 +306,7 @@
 | [work/qa/fixtures/unknown.bin](work/qa/fixtures/unknown.bin) | 五字节未知格式资料，验证任何扩展名的本地附件保存及诚实状态；路径：work/qa/fixtures/unknown.bin | 5 |
 | [work/qa/focus.mjs](work/qa/focus.mjs) | 历史专项浏览器检查或开发工具：focus；使用时核对对应版本、路径和端口；路径：work/qa/focus.mjs | 1600 |
 | [work/qa/group-v2.mjs](work/qa/group-v2.mjs) | 历史专项浏览器检查或开发工具：group-v2；使用时核对对应版本、路径和端口；路径：work/qa/group-v2.mjs | 1223 |
+| [work/qa/image-pixels.mjs](work/qa/image-pixels.mjs) | 在真实浏览器比较基线 PNG 与 WebP，检查尺寸、alpha、不透明像素和三个背景上的合成差异；路径：work/qa/image-pixels.mjs | 3954 |
 | [work/qa/legacy-live.mjs](work/qa/legacy-live.mjs) | 历史专项浏览器检查或开发工具：legacy-live；使用时核对对应版本、路径和端口；路径：work/qa/legacy-live.mjs | 1804 |
 | [work/qa/local-providers.mjs](work/qa/local-providers.mjs) | 历史专项浏览器检查或开发工具：local-providers；使用时核对对应版本、路径和端口；路径：work/qa/local-providers.mjs | 18592 |
 | [work/qa/local-recovery.mjs](work/qa/local-recovery.mjs) | 历史专项浏览器检查或开发工具：local-recovery；使用时核对对应版本、路径和端口；路径：work/qa/local-recovery.mjs | 4140 |
@@ -337,5 +346,3 @@
 | [work/verify-signing-gate.py](work/verify-signing-gate.py) | 通过真实构建预检验证缺少私钥和替换私钥均被拒绝，临时测试密钥自动销毁；路径：work/verify-signing-gate.py | 2029 |
 | [work/verify-ui-apk.py](work/verify-ui-apk.py) | 上一版群聊优化交付；当时群聊版的签名、同证书、对齐、CRC 和源资源一致性检查；路径：work/verify-ui-apk.py | 4652 |
 | [work/write-release-report.py](work/write-release-report.py) | 汇总发布检查结果与安装信息；路径：work/write-release-report.py | 5889 |
-| [FILES.md](FILES.md) | 全仓库逐文件用途索引（本文件） | — |
-| [FILE_MANIFEST.json](FILE_MANIFEST.json) | 文件大小、SHA-256 及用途的机器可读清单；索引与清单自身不纳入哈希 | — |
