@@ -1,4 +1,4 @@
-import {Zip,ZipPassThrough,Unzip,strToU8} from 'fflate';
+import {Zip,ZipPassThrough,ZipDeflate,Unzip,strToU8} from 'fflate';
 import {sha256} from '@noble/hashes/sha2.js';
 import {freshState,stateSchema,type PhoneState} from './phone-model';
 import {assetReferences,getAsset,readLocal,migrateAssets,putAsset,removeAssets,type LocalAsset} from './local-phone';
@@ -13,12 +13,12 @@ export async function* backupChunks(owner:string,state:PhoneState,progress?:(don
  let chunks:Uint8Array[]=[],failure:Error|undefined;const archive=new Zip((error,chunk)=>{if(error)failure=error;else chunks.push(chunk);});
  const check=()=>{signal?.throwIfAborted();if(failure)throw failure;};progress?.(0,total);
  try{
-  for(const asset of assets){check();const entry=new ZipPassThrough('assets/'+asset.id),hash=sha256.create();archive.add(entry);check();yield* chunks;chunks=[];
+  for(const asset of assets){check();const entry=/\.(txt|md|json|csv|ts|tsx|js|css|html|xml|svg|log)$/i.test(asset.name)?new ZipDeflate('assets/'+asset.id,{level:6}):new ZipPassThrough('assets/'+asset.id),hash=sha256.create();archive.add(entry);check();yield* chunks;chunks=[];
    for(let offset=0;offset<asset.size||offset===0;offset+=65536){check();const bytes=new Uint8Array(await asset.blob.slice(offset,offset+65536).arrayBuffer());hash.update(bytes);entry.push(bytes,offset+bytes.length>=asset.size);check();yield* chunks;chunks=[];done+=bytes.length;progress?.(done,total);}
    manifest.assets.push({id:asset.id,name:asset.name,mime:asset.mime,size:asset.size,sha256:hex(hash.digest().buffer as ArrayBuffer)});
   }
   const bytes=strToU8(JSON.stringify(manifest));if(bytes.length>20*1024*1024)throw new Error('记录清单超过 20 MB，请先分批导出聊天。');
-  const entry=new ZipPassThrough('manifest.json');archive.add(entry);check();yield* chunks;chunks=[];
+  const entry=new ZipDeflate('manifest.json',{level:6});archive.add(entry);check();yield* chunks;chunks=[];
   for(let offset=0;offset<bytes.length;offset+=65536){check();entry.push(bytes.subarray(offset,offset+65536),offset+65536>=bytes.length);check();yield* chunks;chunks=[];}
   archive.end();check();yield* chunks;
  }finally{archive.terminate();}
@@ -53,10 +53,11 @@ export async function readBackup(file:File):Promise<PreparedBackup>{
 export async function stageBackup(owner:string,prepared:PreparedBackup,current?:PhoneState){
  const local=current??(await readLocal(owner))?.state??freshState();
  // Restoring untrusted records must not retarget locally stored keys or replace core rules.
- const restored=stateSchema.parse({...prepared.state,provider:local.provider,model:local.model,baseURL:local.baseURL,vision:local.vision,connections:local.connections,voiceSettings:local.voiceSettings,coreSystemPrompt:local.coreSystemPrompt});
+ const restored=stateSchema.parse({...prepared.state,provider:local.provider,model:local.model,baseURL:local.baseURL,vision:local.vision,connections:local.connections,voiceSettings:local.voiceSettings,mediaSettings:{...local.mediaSettings,stickers:prepared.state.mediaSettings.stickers},coreSystemPrompt:local.coreSystemPrompt});
  if(prepared.legacy){for(const ref of assetReferences(restored))if(ref.startsWith('local:')&&!await getAsset(owner,ref))throw new Error('旧 JSON 只有附件引用，缺少原文件。请使用原设备的完整 ZIP 备份。');return await migrateAssets(owner,restored);}
  // New identifiers prevent a failed restore from replacing files belonging to the current snapshot.
  const replacements=new Map<string,string>();try{for(const a of prepared.assets){const id=crypto.randomUUID();await putAsset(owner,id,a.blob,a.name,a.mime);replacements.set(a.id,id);}}catch(e){await removeAssets(owner,[...replacements.values()]);throw e;}
  const state=structuredClone(restored),rewrite=(ref:string)=>{const id=ref.replace(/^local:|^\/api\/assets\//,'');return replacements.has(id)?'local:'+replacements.get(id):ref;};
- for(const c of state.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...state.gallery,...state.music])a.url=rewrite(a.url);return state;
+ state.wallpaper.asset=rewrite(state.wallpaper.asset);for(const [key,draft] of Object.entries(state.drafts)){if(key.startsWith('editor:characters:'))try{const c=JSON.parse(draft);if(c?.avatar){c.avatar=rewrite(c.avatar);state.drafts[key]=JSON.stringify(c);}}catch{}}for(const c of state.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...state.gallery,...state.music])a.url=rewrite(a.url);return state;
 }
+

@@ -1,5 +1,5 @@
-name: Verify 0.0.1 delivery
-on: [push, workflow_dispatch]
+name: Verify source and signed delivery
+on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify file inventory and APK resources
+      - name: Verify file inventory and immutable APK resources
         run: python3 scripts/verify-delivery.py
       - name: Install locked dependencies
         run: |
@@ -19,8 +19,14 @@ jobs:
           cd work/qa && npx playwright install --with-deps chromium
       - name: Core, character memory, cadence and TypeScript
         run: python3 work/check-release.py
-      - name: Eight browser regression suites including restore and ZIP boundaries
+      - name: Media adapters and current source browser regression
         run: |
-          node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/mori-phone/android-web/vite.config.ts --host 127.0.0.1 --port 5175 --strictPort > /tmp/cloudlet-preview.log 2>&1 &
-          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:5175/ >/dev/null && break || sleep 1; done
-          python3 work/check-browser-release.py
+          node outputs/mori-phone/scripts/verify-media.mjs
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+          node work/qa/features.mjs
+          node work/qa/storage.mjs
+      - name: Compile Android source without signing or modifying bundled assets
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"
+          mkdir -p /tmp/cloudlet-native-classes
+          javac --release 8 -classpath "$ANDROID_HOME/platforms/android-35/android.jar" -d /tmp/cloudlet-native-classes outputs/android/src/chat/cloudlet/phone/*.java

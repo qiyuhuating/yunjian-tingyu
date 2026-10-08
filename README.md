@@ -8,6 +8,12 @@
 
 包名 `chat.cloudlet.phone`，Android 7+，需 WebView 120+，版本号 0.0.1 / versionCode 6。沿用原签名，覆盖安装前先备份；不要卸载旧版。旧 APK 和旧报告保留作历史交付，不作为当前版本下载入口。
 
+## 2026-10-08 源码升级（尚未发布新 APK）
+
+本轮源码加入原录音、AI 图片/表情包/语音文件、Gemini 原生音视频输入及原生媒体输出、壁纸切换和草稿恢复。聊天与附件改为分离存储，附件按内容摘要去重，文本备份启用压缩。六张插画保留尺寸与解码 RGBA，合计减少 30.74%。完整执行顺序、能力矩阵、画质检验、回归和发布限制见 [优化实施与验收](docs/优化实施与验收-2026-10-08.md)。
+
+上述变化在草稿 PR 的源码中；下方 0.0.1 下载仍是既有签名 APK。新功能需使用原签名重新构建发布，不能把历史 APK 的设备验证当成本轮验收。数据库升级到 v3，更新前导出完整备份；升级后不要直接用旧版源码访问同一数据库。
+
 ## 固定核心与角色资料
 
 所有角色聊天模式共享固定的核心 system；核心可在设置中明确编辑、保存或载入原始版本；角色卡、世界书、个人资料、历史、摘要和实时通话上下文单独发送。用户最新明确要求优先于可编辑预设，角色资料不能改写实际系统字段。支持成年人自主、同意的性相关讨论与正当创作及政治、社会争议讨论；未成年角色互动保持非性化。事实摘要使用原有独立整理器提示词，不承担角色聊天。实现与验证见 [核心提示词隔离说明](docs/核心提示词隔离说明.md)。
@@ -36,7 +42,7 @@
 
 - `outputs/mori-phone/`：完整界面、模型适配、角色卡、长期记忆、本地存储与可选网页服务源码。
 - `outputs/android/`：Android 原生桥接、系统文件选择与导出、TTS、清单、构建脚本和随包资源。
-- `work/qa/`：完整浏览器测试与历史调试脚本；本版验收入口为五个 `repair-*.mjs` 和 `ui-group.mjs`。
+- `work/qa/`：完整浏览器测试与历史调试脚本；本轮源码验收入口为 `features.mjs` 与 `storage.mjs`；历史 APK 专项脚本保留。
 - `outputs/code-review-validation/`：修复前问题复现，不是现版通过标准。
 - [逐文件介绍](FILES.md)：每个交付文件的用途及校验值。
 - [本轮 UI 与群聊审视报告](docs/UI与群聊审视报告.md)：已完成检查及尚未覆盖的验证。
@@ -48,16 +54,20 @@
 ```sh
 npm ci --prefix outputs/mori-phone
 npm ci --prefix work/qa
-npx --prefix work/qa playwright install chromium
-python work/check-release.py
-node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/mori-phone/android-web/vite.config.ts --host 127.0.0.1 --port 5175 --strictPort
+cd work/qa && npx playwright install chromium && cd ../..
+python3 scripts/verify-delivery.py
+python3 work/check-release.py
+node outputs/mori-phone/scripts/verify-media.mjs
+node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+node work/qa/features.mjs
+node work/qa/storage.mjs
 ```
 
-在另一个终端执行 `python work/check-browser-release.py`。六组当前浏览器检查可使用 Playwright 安装的 Chromium；已有浏览器可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`。历史 QA 脚本保留了当时的路径、端口和页面结构，只作开发记录，需按对应版本调整后运行。
+已有浏览器可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`；其他构建目录可设置 `FEATURE_BUILD_DIR`。新的浏览器检查从当前源码构建，不混用会升级数据库的新版存储和历史 APK 页面。`scripts/verify-delivery.py` 继续校验原签名 APK 与随包资源；历史测试可按对应版本运行，不代表新源码通过。
 
-重新生成前端资源：`cd outputs/mori-phone` 后执行 `node node_modules/vite/bin/vite.js build --config android-web/vite.config.ts`。Android 构建按 [原生构建说明](outputs/android/README.md) 执行；Windows 请在 ASCII 路径下构建。APK 完整性验证脚本保留了原构建环境路径，迁移时需替换 SDK、JDK、未签名 APK 和证书记录路径。仓库不含私有签名备份，签名文件仍由机主在本机保管。
+本轮包含 103 项原核心回归、11 项新增媒体协议与后台记忆检查、16 项浏览器流程、9 项存储回归、严格 TypeScript、生产构建及 Android Java 编译。接口使用本地 fixture；录音使用 Chromium 模拟麦克风并产生真实 MediaRecorder Blob。未使用真实服务商 Key，未完成本轮真机、真实通话或低内存回收测试。历史 Android 15 / WebView 124 模拟器证据属于旧 APK。
 
-当前证据包括 103 组具名核心检查、TypeScript 检查和 7 组浏览器回归。模型调用使用测试响应；另在 Android 15 / WebView 124 模拟器完成实际安装、内置 Via 浏览/返回与本地日记重启持久化、真实系统文件选择器和离线 PDF 读取验证。未完成真机、真实模型、真实通话与低内存回收的验收。不能将这些检查解释为绝对无缺陷。
+重新生成安装包资源会覆盖 `outputs/android/assets/web`，必须在发布分支按 [原生构建说明](outputs/android/README.md) 操作，随后用原签名签署并重新生成 APK 校验清单。Windows 请使用 ASCII 构建路径。私有签名文件由机主保管，本轮未改签名或签名 APK。
 
 ## 内置 Via 与首页回退
 
@@ -68,3 +78,4 @@ node outputs/mori-phone/node_modules/vite/bin/vite.js preview --config outputs/m
 仓库应保持 private。包含源码、APK、源码归档、测试、报告、截图、字体许可和其他已交付文件。排除了签名私钥与密码、真实 API Key、个人聊天备份、依赖安装目录和临时编译缓存。网页托管配置仅为原网页工程元数据，APK 不依赖托管页面或登录。
 
 本轮按外部 APK 审计计划核实修复：详见 [审计计划落实记录](docs/审计计划落实记录.md)。当前仍为 0.0.1，内部版本递增至 6；适用项已修复并验证，未证实项及延期项分别记录。
+

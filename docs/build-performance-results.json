@@ -1,0 +1,109 @@
+{
+  "baseline": "original PNG source build",
+  "current": "final source production build including Immer license",
+  "baselineInitialJSBytes": 518643,
+  "currentInitialJSBytes": 457499,
+  "initialJSReductionPercent": 11.79,
+  "baselineBuildBytes": 10976232,
+  "currentBuildBytes": 8521626,
+  "buildReductionPercent": 22.36,
+  "toolchain": "Node 24.19.0, Vite 8.0.13",
+  "measurement": "uncompressed files; independent clean build directories",
+  "apkSizeMeasured": false,
+  "startupLatencyMeasured": false,
+  "frameRateMeasured": false,
+  "files": {
+    "dock-sprite.webp": {
+      "bytes": 1064052,
+      "sha256": "994c1397976924fab619169638b44980ce6d40c0eb692e4073afc6a7a6bcbc0d"
+    },
+    "via-browser.webp": {
+      "bytes": 706622,
+      "sha256": "fa60b910e839422f3e9b7d3e30041566cccf710a8787695a97991e14747392ad"
+    },
+    "index.html": {
+      "bytes": 377,
+      "sha256": "d6cf4ee7b5190480d68457969853f59703084a374dde096210a44c5cb41a449f"
+    },
+    "favicon.svg": {
+      "bytes": 302,
+      "sha256": "a96654deee10d5bfc6ef4ed170d4472e25cbadfd3053e32088bd136efbcbb3aa"
+    },
+    "music-listen.webp": {
+      "bytes": 706036,
+      "sha256": "3a52665bdf875cecc6c28fc35c0cf78d1c1caaae27d6148385c2db87183995f3"
+    },
+    "cloud-pet.webp": {
+      "bytes": 846276,
+      "sha256": "177fdd21d4e948a388c8556e10dc1fbeb24fa6b71f697bab882c77fed40d5bce"
+    },
+    "icon-192.png": {
+      "bytes": 5393,
+      "sha256": "1771c21023a941a19de7e3b858bd9e7065a508da8e4de96974f7b050acdff52e"
+    },
+    "wallpaper.webp": {
+      "bytes": 1396454,
+      "sha256": "2cc22b27b1b12c8e2b6c57aa31707ce235fcb01bf1f25cb823a7d1ff32a97533"
+    },
+    "icon-512.png": {
+      "bytes": 18315,
+      "sha256": "eba0bd6e7db94067ac1033c6752154ec40b0a27a3828a118f856064550e1e1c6"
+    },
+    "button-sprite.webp": {
+      "bytes": 920416,
+      "sha256": "766286cdf50432ed74b2f639761cd11e4210196360613d52f6aefbb4e36a333b"
+    },
+    "manifest.webmanifest": {
+      "bytes": 359,
+      "sha256": "68991857fd3eb756ab22f5c623bccf2f30602a607174a215e3bddd2aaf0ff1c0"
+    },
+    "assets/modules-Z70P2HNW.js": {
+      "bytes": 107160,
+      "sha256": "dc3d059026ee648d14de9464e096dc131ab453134f1267aa33b19179a9e615e7"
+    },
+    "assets/index-CUQFRTbj.css": {
+      "bytes": 98643,
+      "sha256": "e9d6be1847ae4d2b24939369474e4ad452b77ba1f799ca388f7e75a6d62251d1"
+    },
+    "assets/three.module-DEame29i.js": {
+      "bytes": 537050,
+      "sha256": "4d146f37f45b42f5a3d3d24ade77ece87d0113a6d5781776d59dc3c6fdaa0ab7"
+    },
+    "assets/index-VcPxbVZE.js": {
+      "bytes": 457499,
+      "sha256": "8baa5ebf768b5baa2b8f9959321d033fb2c78e47945ee65cc14dbaa3277f118b"
+    },
+    "assets/pdf.worker.min-Cr_QfRGn.mjs": {
+      "bytes": 1128591,
+      "sha256": "88b29a656ecf0b104c2ef1b620be099c523be2a57f27fbb8a42bdac6b8c9a4c0"
+    },
+    "assets/pdf-reading-BkoGf3xI.js": {
+      "bytes": 452388,
+      "sha256": "d807695092f79f5662554d8f1aa394ab46dbc56e42f02178febe2d146e935338"
+    },
+    "fonts/source-serif-4-latin-600.woff2": {
+      "bytes": 21532,
+      "sha256": "f2b7e1cf1d277b7608231868135648f8ad8e2b58d8e97ca088bee15dc357bee7"
+    },
+    "fonts/source-serif-4-latin-700.woff2": {
+      "bytes": 21716,
+      "sha256": "7691c51bc286a9014db0048277d2c3f2ad0a90b533dc8adfb16cb22a95390d39"
+    },
+    "fonts/source-serif-4-latin-400.woff2": {
+      "bytes": 20088,
+      "sha256": "02194deb92d3975dd30e11a3824a1f1db32b48c93654e60560cb81ce8e7b5f95"
+    },
+    "licenses/PDFjs-LICENSE.txt": {
+      "bytes": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    "licenses/noble-hashes-LICENSE.txt": {
+      "bytes": 1109,
+      "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
+    },
+    "licenses/immer-LICENSE.txt": {
+      "bytes": 1074,
+      "sha256": "99cf22f6960a6fe228ec84ea9aefb0d75b27999ece83a3a9801e1c2081fa270b"
+    }
+  }
+}

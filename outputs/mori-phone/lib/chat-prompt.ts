@@ -1,3 +1,4 @@
+import {mediaInstructions} from './media-contract';
 import type {Character,Message,PhoneState} from './phone-model';
 import {capabilities} from './providers';
 import {choiceInstructions,roleplayInstructions} from './roleplay';
@@ -23,7 +24,7 @@ export function buildPrompt(state:PhoneState,character:Character,thread:string,t
  const fill=(s:string)=>renderTemplate(s,state,character),history=selectHistory(state,thread);
  const roster=mode==='group'?state.groups.find(g=>g.id===thread)?.members.map(id=>state.characters.find(c=>c.id===id)?.name).filter(Boolean):undefined;
  const instructions=mode==='group'?groupInstructions:mode==='compose'||mode==='voice'?modes[mode]:roleplayInstructions(state)+'\n'+choiceInstructions(state.roleplay.choices&&(mode==='chat'||mode==='face'));
- const context=JSON.stringify({mode,profile:{name:state.profile.name,address:state.profile.address},character:{id:character.id,name:character.name,description:fill(character.description),personality:fill(character.personality),scenario:fill(character.scenario),examples:fill(character.examples),supplement:fill(character.systemPrompt),postHistory:fill(character.postHistory).replace(/\{\{original\}\}/gi,modes[mode])},groupMembers:roster,choices:state.roleplay.choices&&(mode==='chat'||mode==='face'),defaultLength:state.roleplay.length,instructions,capabilities:capabilityInstructions(state)},null,2);
+ const context=JSON.stringify({mode,profile:{name:state.profile.name,address:state.profile.address},character:{id:character.id,name:character.name,description:fill(character.description),personality:fill(character.personality),scenario:fill(character.scenario),examples:fill(character.examples),supplement:fill(character.systemPrompt),postHistory:fill(character.postHistory).replace(/\{\{original\}\}/gi,modes[mode])},groupMembers:roster,choices:state.roleplay.choices&&(mode==='chat'||mode==='face'),defaultLength:state.roleplay.length,instructions:instructions+((mode==='chat'||mode==='group')?'\n'+mediaInstructions(state):''),capabilities:capabilityInstructions(state)},null,2);
  const query=[text,...history.slice(-4).map(m=>m.text)].join('\n');
  const lore=state.lore.filter(l=>{if(!l.enabled||!(l.scope==='global'||l.scope===character.id))return false;if(l.constant)return true;const hay=l.caseSensitive?query:query.toLocaleLowerCase();const matches=(keys:string)=>keys.split(/[,，]/).map(k=>k.trim()).filter(Boolean).some(k=>hay.includes(l.caseSensitive?k:k.toLocaleLowerCase()));return matches(l.keys)&&(!l.selective||matches(l.secondaryKeys));}).sort((a,b)=>a.order-b.order||a.id.localeCompare(b.id)).slice(0,12).map(l=>l.title+'：'+fill(l.text)).join('\n').slice(0,8000);
  const memory=recallMemories(state,character.id,query,mode==='group'?thread:undefined),summary=state.continuity[thread]?.text||'',recalled=recalledHistory(state,thread,text,history);
@@ -48,3 +49,4 @@ export function parseUsage(value:unknown):AIUsage|null{
  const prompt=n(u.prompt_tokens),completion=n(u.completion_tokens);if(prompt===null||completion===null)return null;
  const hit=n(u.prompt_cache_hit_tokens)??n(u.prompt_tokens_details?.cached_tokens),miss=n(u.prompt_cache_miss_tokens)??(hit!==null?Math.max(0,prompt-hit):null);return {prompt,completion,hit,miss};
 }
+

@@ -14,3 +14,8 @@ outputs/android/build/
 **/*.keystore
 **/signing.json
 **/Android签名备份.zip
+
+
+work/feature-build/
+work/storage-build/
+work/feature-test-failure.png
