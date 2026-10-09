@@ -6,14 +6,15 @@ VIA_SHA256 = 'c64c71458df03ef98bac3acdecafcab6bf9fd930a53fca5d72b284383ed03985'
 ANDROID = 'http://schemas.android.com/apk/res/android'
 ET.register_namespace('android', ANDROID)
 
-def merge_via(project, build, via, apktool, java, aapt, env):
+def merge_via(project, build, via, apktool, java, aapt, env, manifest_path=None):
     assert hashlib.sha256(via.read_bytes()).hexdigest() == VIA_SHA256, 'Unexpected Via binary'
     decoded = build / 'via'
     subprocess.run([str(java), '-jar', str(apktool), 'd', '-s', '-f', str(via), '-o', str(decoded)], env=env, check=True)
     attribute = lambda name: '{' + ANDROID + '}' + name
     original = ET.parse(decoded / 'AndroidManifest.xml')
     manifest = original.getroot()
-    own = ET.parse(project / 'AndroidManifest.xml').getroot()
+    own = ET.parse(manifest_path or project / 'AndroidManifest.xml').getroot()
+    provider_authority = 'mark.via.phonev02' if own.get('package') == 'chat.cloudlet.phone.v002' else 'mark.via.phoneapi'
     manifest.set('package', own.get('package'))
     app = manifest.find('application')
     own_app = own.find('application')
@@ -25,7 +26,7 @@ def merge_via(project, build, via, apktool, java, aapt, env):
     for component in app:
         authority = component.get(attribute('authorities'))
         if authority:
-            component.set(attribute('authorities'), 'mark.via.phoneapi' if authority == 'mark.via.provider' else authority.replace('mark.via', own.get('package')))
+            component.set(attribute('authorities'), provider_authority if authority == 'mark.via.provider' else authority.replace('mark.via', own.get('package')))
         if component.tag == 'activity':
             component.set(attribute('exported'), 'false')
             for child in list(component):
@@ -74,7 +75,7 @@ def merge_via(project, build, via, apktool, java, aapt, env):
     # every DEX offset unchanged, and update only that authority plus DEX checksums.
     dex_path = decoded / 'classes.dex'
     dex = bytearray(dex_path.read_bytes())
-    before, after = b'mark.via.provider\0', b'mark.via.phoneapi\0'
+    before, after = b'mark.via.provider\0', provider_authority.encode('ascii') + b'\0'
     assert len(before) == len(after) and dex.count(before) == 1
     # A DEX string table is sorted. Verify the replacement stays between neighbors.
     count, offset = struct.unpack_from('<II', dex, 56)

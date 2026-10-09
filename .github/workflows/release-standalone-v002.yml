@@ -1,0 +1,147 @@
+name: Publish standalone v0.0.2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/release-standalone-v002.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: standalone-v002-one-time-release
+  cancel-in-progress: false
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run complete source and browser regressions
+        run: |
+          python3 scripts/verify-delivery.py
+          npm ci --prefix outputs/mori-phone
+          npm ci --prefix work/qa
+          cd work/qa && npx playwright install --with-deps chromium
+          cd ../..
+          python3 work/check-release.py
+          node outputs/mori-phone/scripts/verify-media.mjs
+          node outputs/mori-phone/scripts/verify-p0.mjs
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+          node work/qa/features.mjs
+          node work/qa/roleplay.mjs
+          node work/qa/card-library.mjs
+          node work/qa/p0-reliability.mjs
+          node work/qa/storage.mjs
+          node work/qa/p0-storage-scale.mjs
+  release:
+    needs: regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Refuse to replace an existing release signing key
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v0.0.2-standalone >/dev/null 2>&1; then
+            echo "Already released: refusing to generate a different key"
+            exit 1
+          fi
+      - name: Install pinned Android toolchain
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          npm ci --prefix outputs/mori-phone
+          mkdir -p work/apk-candidate
+          curl --fail --location --retry 2 https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar -o work/apk-candidate/apktool.jar
+          echo 'dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423  work/apk-candidate/apktool.jar' | sha256sum -c -
+      - name: Create independent RSA-3072 signing key without logging credentials
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import secrets,subprocess,json,os
+          d=Path('work/apk-candidate/signing')
+          d.mkdir(parents=True,exist_ok=True)
+          os.chmod(d,0o700)
+          password=secrets.token_urlsafe(48)
+          args=['keytool','-genkeypair','-noprompt','-alias','yunjian-v002',
+                '-keyalg','RSA','-keysize','3072','-validity','10000',
+                '-dname','CN=Yunjian Tingyu Standalone 0.0.2,O=Personal',
+                '-storetype','PKCS12','-keystore',str(d/'cloudlet-release.p12'),
+                '-storepass',password,'-keypass',password]
+          subprocess.run(args,check=True,capture_output=True)
+          (d/'signing.json').write_text(json.dumps({'alias':'yunjian-v002','password':password}),encoding='utf-8')
+          os.chmod(d/'signing.json',0o600)
+          print('Independent signing certificate generated; secrets withheld.')
+          PY
+      - name: Build, sign, and audit new standalone application
+        run: |
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --signing work/apk-candidate/signing --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk | tee work/apk-candidate/build-report.log
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk > work/apk-candidate/package-info.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk AndroidManifest.xml > work/apk-candidate/manifest-tree.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk > work/apk-candidate/certificate-check.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          d=Path('work/apk-candidate')
+          p=(d/'package-info.txt').read_text()
+          assert "name='chat.cloudlet.phone.v002'" in p,p
+          assert "versionCode='8'" in p and "versionName='0.0.2'" in p,p
+          assert 'mark.via.phonev02' in (d/'manifest-tree.txt').read_text()
+          cert=(d/'certificate-check.txt').read_text()
+          m=re.search(r'certificate SHA-256 digest: ([a-f0-9]+)',cert)
+          assert m and m.group(1) != '7637f3313e8b45650d714347b2b477fd7d3fb4c9d3c69c6a9a2f5c5a16f50a79'
+          assert 'Verified using v2 scheme (APK Signature Scheme v2): true' in cert
+          print('Standalone package, unique provider, new signer and APK v2 verified:',m.group(1))
+          PY
+          cd work/apk-candidate && sha256sum yunjian-tingyu-v0.0.2-standalone.apk > SHA256SUMS
+      - name: Encrypt signing backup and verify recovery
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import secrets,subprocess,tarfile,os
+          d=Path('work/apk-candidate')
+          archive=d/'yunjian-v002-signing-backup.tar.gz'
+          with tarfile.open(archive,'w:gz') as z:
+              z.add(d/'signing'/'cloudlet-release.p12',arcname='cloudlet-release.p12')
+              z.add(d/'signing'/'signing.json',arcname='signing.json')
+          code=d/'standalone-signing-recovery.txt'
+          code.write_text(secrets.token_urlsafe(48),encoding='ascii')
+          os.chmod(code,0o600)
+          ciphertext=d/'yunjian-v002-signing-backup.tar.gz.enc'
+          params=['-aes-256-cbc','-pbkdf2','-iter','250000']
+          subprocess.run(['openssl','enc',*params,'-salt','-in',str(archive),'-out',str(ciphertext),'-pass','file:'+str(code)],check=True,capture_output=True)
+          verify=d/'recovered.tar.gz'
+          subprocess.run(['openssl','enc','-d',*params,'-in',str(ciphertext),'-out',str(verify),'-pass','file:'+str(code)],check=True,capture_output=True)
+          assert archive.read_bytes()==verify.read_bytes()
+          archive.unlink()
+          verify.unlink()
+          print('Verified encrypted backup; recovery code excluded from Release.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: standalone-v002-signing-recovery-code-KEEP-SAFE
+          path: work/apk-candidate/standalone-signing-recovery.txt
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish verified signed release and encrypted signing archive
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v0.0.2-standalone \
+            --target "$GITHUB_SHA" \
+            --title "云笺听雨 0.0.2 · 独立安装版" \
+            --notes "全新签名的独立安装版，包名 chat.cloudlet.phone.v002；可与旧版 0.0.1 共存，聊天和 API Key 不会自动迁移，可在旧版导出 ZIP 并于新版手动导入。通过源码回归、Android APK 编译及签名检查。尚未完成真机和真实付费模型验收。Release 包含 AES-256 加密签名备份，恢复口令仅保留在此 Actions 运行的私有 artifact 中 90 天；务必立即离线保存两者，否则不能继续同签名升级。" \
+            work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk \
+            work/apk-candidate/SHA256SUMS \
+            work/apk-candidate/yunjian-v002-signing-backup.tar.gz.enc \
+            work/apk-candidate/build-report.log \
+            work/apk-candidate/package-info.txt \
+            work/apk-candidate/certificate-check.txt
