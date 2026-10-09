@@ -1,0 +1,50 @@
+name: Export frontend source archives
+on:
+  push:
+    branches:
+      - review/ui-ux-frontend-export-20261009
+    paths:
+      - work/export-frontend-audit.py
+      - docs/UI-UX严格审查与前端提取-2026-10-09.md
+      - .github/workflows/export-frontend.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch commit
+        uses: actions/checkout@v4
+      - name: Export frontend and full mori-phone archives
+        run: python3 work/export-frontend-audit.py
+      - name: Verify source archives and SHA-256
+        run: |
+          cd work/frontend-export
+          sha256sum -c SHA256SUMS
+          python3 - <<'PY'
+          import json
+          import zipfile
+          from pathlib import Path
+          root=Path('.')
+          m=json.loads((root/'frontend-export-manifest.json').read_text())
+          for a in m['archives']:
+              with zipfile.ZipFile(root/a['name']) as z:
+                  assert z.testzip() is None
+                  assert len(z.namelist()) == a['fileCount'] + 1
+                  assert 'android-web/main.tsx' in z.namelist()
+                  assert 'app/phone.tsx' in z.namelist()
+                  assert 'public/fonts/source-serif-4-latin-400.woff2' in z.namelist()
+          print('Source export archives verified:', [(a['name'],a['fileCount']) for a in m['archives']])
+          PY
+      - name: Upload two frontend source archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: yunjian-0.0.2-frontend-source-export
+          path: |
+            work/frontend-export/yunjian-0.0.2-frontend-only.zip
+            work/frontend-export/yunjian-0.0.2-mori-phone-complete.zip
+            work/frontend-export/frontend-export-manifest.json
+            work/frontend-export/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30

@@ -6,6 +6,12 @@
     "sha256": "a04c1ecee5f831666e805f64d7ab9b1f22cbb8550d7ca83bdad379e5f9a7439c"
   },
   {
+    "path": ".github/workflows/export-frontend.yml",
+    "description": "审查分支专用：产出前端单独源码与完整 mori-phone ZIP，并校验源文件与字体、附件 SHA-256；路径：.github/workflows/export-frontend.yml",
+    "bytes": 1908,
+    "sha256": "25dcb9ff3fa34301082c924b67bc8e0dbe02998fa7faff15d9824be24e15bf0f"
+  },
+  {
     "path": ".github/workflows/verify.yml",
     "description": "持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml",
     "bytes": 3947,
@@ -52,6 +58,12 @@
     "description": "当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md",
     "bytes": 17812,
     "sha256": "16dbe7e3bb0742fd03928d43fcd0e62c00da9ce6ca06f4e9332201e8fd8abe56"
+  },
+  {
+    "path": "docs/UI-UX严格审查与前端提取-2026-10-09.md",
+    "description": "0.0.2 UI/UX 静态审查、证据等级、字体锁定、优先级和验收计划；路径：docs/UI-UX严格审查与前端提取-2026-10-09.md",
+    "bytes": 16935,
+    "sha256": "2783911f3b9c11a89d72807be4527fe5c2f9c63997304f4a539448231aebdf2e"
   },
   {
     "path": "docs/UI与群聊审视报告.md",
@@ -2026,6 +2038,12 @@
     "description": "聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py",
     "bytes": 1501,
     "sha256": "8fa93fb65169773f004cc9677f68992a2e1160b4b5b8631db9d9eb2c8701d932"
+  },
+  {
+    "path": "work/export-frontend-audit.py",
+    "description": "从 Git 跟踪文件提取当前 0.0.2 前端及完整 mori-phone 源码，生成可验证 ZIP、逐文件哈希清单；路径：work/export-frontend-audit.py",
+    "bytes": 3589,
+    "sha256": "8b818816e6c05804a54f74fb2df380b89b8a132f0341d74da3e7f26f2199da16"
   },
   {
     "path": "work/package-core-sources.py",

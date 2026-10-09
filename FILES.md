@@ -5,8 +5,10 @@
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
+| [.github/workflows/export-frontend.yml](.github/workflows/export-frontend.yml) | 审查分支专用：产出前端单独源码与完整 mori-phone ZIP，并校验源文件与字体、附件 SHA-256；路径：.github/workflows/export-frontend.yml | 1908 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 3947 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 436 |
+| [docs/UI-UX严格审查与前端提取-2026-10-09.md](docs/UI-UX严格审查与前端提取-2026-10-09.md) | 0.0.2 UI/UX 静态审查、证据等级、字体锁定、优先级和验收计划；路径：docs/UI-UX严格审查与前端提取-2026-10-09.md | 16935 |
 | [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 9284 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
 | [docs/0.0.2-integration-results.json](docs/0.0.2-integration-results.json) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2-integration-results.json | 23214 |
@@ -342,6 +344,7 @@
 | [scripts/verify-delivery.py](scripts/verify-delivery.py) | 验证全仓库文件覆盖、独立说明、SHA-256、APK CRC 和随包资源字节；路径：scripts/verify-delivery.py | 2407 |
 | [work/check-browser-release.py](work/check-browser-release.py) | 运行八套编译产物浏览器回归，覆盖既有业务和新增本机恢复/ZIP边界；路径：work/check-browser-release.py | 1076 |
 | [work/check-release.py](work/check-release.py) | 聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py | 1501 |
+| [work/export-frontend-audit.py](work/export-frontend-audit.py) | 从 Git 跟踪文件提取当前 0.0.2 前端及完整 mori-phone 源码，生成可验证 ZIP、逐文件哈希清单；路径：work/export-frontend-audit.py | 3589 |
 | [work/package-core-sources.py](work/package-core-sources.py) | 生成系统隔离版前端与原生完整源码归档、摘要及安装说明；路径：work/package-core-sources.py | 5587 |
 | [work/package-release-sources.py](work/package-release-sources.py) | 生成发布源码压缩包并检查文件范围；路径：work/package-release-sources.py | 3225 |
 | [work/package-ui-sources.py](work/package-ui-sources.py) | 上一版群聊优化交付；打包当时完整前端及原生源码、CRC 检查与安装说明，保留历史归档；路径：work/package-ui-sources.py | 3861 |
