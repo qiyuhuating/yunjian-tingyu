@@ -101,7 +101,7 @@
 | [outputs/android/res/mipmap-anydpi/app_icon.xml](outputs/android/res/mipmap-anydpi/app_icon.xml) | Android 7 的固定尺寸笑脸云朵图标，避免原图分辨率导致过度缩小；路径：outputs/android/res/mipmap-anydpi/app_icon.xml | 367 |
 | [outputs/android/res/values/styles.xml](outputs/android/res/values/styles.xml) | 工程支持文件：outputs/android/res/values/styles.xml | 415 |
 | [outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java](outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java) | 内置Via字体、独立返回位置、状态栏/系统导航隐藏与生命周期接入；路径：outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java | 4488 |
-| [outputs/android/src/chat/cloudlet/phone/MainActivity.java](outputs/android/src/chat/cloudlet/phone/MainActivity.java) | 保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java | 26858 |
+| [outputs/android/src/chat/cloudlet/phone/MainActivity.java](outputs/android/src/chat/cloudlet/phone/MainActivity.java) | 保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java | 27795 |
 | [outputs/android/vendor/via-release-cn.apk](outputs/android/vendor/via-release-cn.apk) | 机主提供的Via7.3.3原始二进制，固定SHA-256，原件未修改；路径：outputs/android/vendor/via-release-cn.apk | 2628334 |
 | [outputs/code-review-validation/README.txt](outputs/code-review-validation/README.txt) | 修复前代码审查的缺陷复现材料：README.txt；路径：outputs/code-review-validation/README.txt | 644 |
 | [outputs/code-review-validation/review-core.mjs](outputs/code-review-validation/review-core.mjs) | 修复前代码审查的缺陷复现材料：review-core.mjs；路径：outputs/code-review-validation/review-core.mjs | 2493 |
@@ -417,7 +417,7 @@
 
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
-| [docs/Android-API-连接可靠性修复.md](docs/Android-API-连接可靠性修复.md) | 本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md | 3278 |
+| [docs/Android-API-连接可靠性修复.md](docs/Android-API-连接可靠性修复.md) | 本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md | 3826 |
 | [outputs/mori-phone/lib/connection-reliability.ts](outputs/mori-phone/lib/connection-reliability.ts) | 连接故障码、超时阈值和可操作的提示映射（不记录密钥）；路径：outputs/mori-phone/lib/connection-reliability.ts | 2181 |
 
 ## 连接测试独立化

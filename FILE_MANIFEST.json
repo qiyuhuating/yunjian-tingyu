@@ -44,8 +44,8 @@
   {
     "path": "docs/Android-API-连接可靠性修复.md",
     "description": "本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md",
-    "bytes": 3278,
-    "sha256": "c937d4b71adf68e83dba993eca6294b9e5fb202414f9bd780d9fc1256a0c666c"
+    "bytes": 3826,
+    "sha256": "595fcec31ab289324b5eb04213607143662206f7025f72828f78538828c03cb0"
   },
   {
     "path": "docs/build-performance-results.json",
@@ -494,8 +494,8 @@
   {
     "path": "outputs/android/src/chat/cloudlet/phone/MainActivity.java",
     "description": "保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java",
-    "bytes": 26858,
-    "sha256": "77ebd63890de37927e3b2a0f550684ffd588e0b6c32a753a3782691f4c83b884"
+    "bytes": 27795,
+    "sha256": "5511c7f78881efed3d2f80eadf6c79af6f4c25f8363d7dacc162ac3efcc3514c"
   },
   {
     "path": "outputs/android/vendor/via-release-cn.apk",

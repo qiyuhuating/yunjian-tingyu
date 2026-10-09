@@ -114,8 +114,21 @@ public final class MainActivity extends Activity {
     }
     private void openExternal(String value){runOnUiThread(()->{try{startActivity(externalIntent(value));}catch(Exception e){notice("没有找到能够打开这个链接的应用。");}});}
     private void callback(String method,String id,String value){js("window.NativeHTTP&&window.NativeHTTP."+method+"("+JSONObject.quote(id)+(value.isEmpty()?"":","+value)+")");}
+    // Certain device VPNs resolve HTTPS API hosts to 198.18/15 Fake-IP addresses.
+    // They are intentionally not public DNS addresses. For exact built-in provider
+    // hosts only, allow DNS proxying; HttpURLConnection still validates the exact
+    // host's TLS certificate and never follows a redirect.
+    private static final Set<String> OFFICIAL_API_HOSTS=Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        "api.deepseek.com","api.openai.com","api.anthropic.com","generativelanguage.googleapis.com",
+        "openrouter.ai","api.siliconflow.cn","dashscope.aliyuncs.com","api.moonshot.cn",
+        "open.bigmodel.cn","api.x.ai")));
+    private boolean trustedProviderHost(String hostname){
+        return OFFICIAL_API_HOSTS.contains(hostname.toLowerCase(Locale.ROOT));
+    }
     private boolean allowed(URL url) throws Exception {
         if(!"https".equals(url.getProtocol())||url.getUserInfo()!=null||url.getPort()!=-1&&url.getPort()!=443)return false;
+        if(trustedProviderHost(url.getHost()))return true;
+        // Custom endpoints retain the original DNS/private-network SSRF guard.
         for(InetAddress address:InetAddress.getAllByName(url.getHost()))if(!publicAddress(address))return false;
         return true;
     }
