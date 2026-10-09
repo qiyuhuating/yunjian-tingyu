@@ -536,8 +536,8 @@
   {
     "path": "outputs/android/build-apk.py",
     "description": "正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py",
-    "bytes": 5547,
-    "sha256": "4ef9faa15a7fdce88303f691d88c00ae3194499f22a6f15061ee109fceb737c4"
+    "bytes": 5868,
+    "sha256": "b0e40239ac5c65452bd71835a75284b7d5011fc9f03064a836e0ce64df8200f3"
   },
   {
     "path": "outputs/android/merge-via.py",

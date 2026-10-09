@@ -64,7 +64,13 @@ run([jdk('java'), '-cp', tools / 'lib/d8.jar', 'com.android.tools.r8.D8', '--lib
 spec = spec_from_file_location('merge_via', project / 'merge-via.py')
 module = module_from_spec(spec)
 spec.loader.exec_module(module)
-module.merge_via(project, build, via, apktool, jdk('java'), tool('aapt2'), env)
+# Apktool attempts to chmod --aapt. Android SDK binaries may be owned by root on CI.
+# Use an identical byte-for-byte private copy to avoid touching the installed SDK.
+local_aapt = build / ('aapt2' + suffix)
+shutil.copy2(tool('aapt2'), local_aapt)
+if os.name != 'nt':
+    local_aapt.chmod(local_aapt.stat().st_mode | 0o111)
+module.merge_via(project, build, via, apktool, jdk('java'), local_aapt, env)
 run([tool('zipalign'), '-f', '4', build / 'unsigned.apk', build / 'aligned.apk'])
 output = pathlib.Path(args.output).resolve()
 output.parent.mkdir(parents=True, exist_ok=True)
