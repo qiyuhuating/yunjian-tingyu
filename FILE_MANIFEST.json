@@ -488,8 +488,8 @@
   {
     "path": "outputs/android/src/chat/cloudlet/phone/MainActivity.java",
     "description": "保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java",
-    "bytes": 26291,
-    "sha256": "d0b6da4e8b2b063e592dd37a75d4429a6a2780a7d8a7063605d322c8423e8ebb"
+    "bytes": 26858,
+    "sha256": "77ebd63890de37927e3b2a0f550684ffd588e0b6c32a753a3782691f4c83b884"
   },
   {
     "path": "outputs/android/vendor/via-release-cn.apk",
