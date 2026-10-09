@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import type {PhoneState} from './phone-model';
-import {getProvider,type ProviderId} from './providers';
+import {getProvider,providerBase,type ProviderId} from './providers';
 import {reasoningPlan} from './reasoning';
 
 export const MAX_CONTEXT_TOKENS=16777216;
@@ -10,7 +10,7 @@ export type ModelLimit=z.infer<typeof modelLimitSchema>&{supportedParameters?:st
 const routerParameters=new Map<string,string[]>();
 export const routerModelParameters=(model:string)=>routerParameters.get(model);
 export function rememberRouterParameters(model:string,parameters:string[]){routerParameters.set(model,parameters);}
-export function modelLimitKey(provider:ProviderId,baseURL:string,model:string){return provider+'|'+(provider==='compatible'?baseURL.trim().replace(/\/$/,''):getProvider(provider).baseURL)+'|'+model;}
+export function modelLimitKey(provider:ProviderId,baseURL:string,model:string){let base=baseURL.trim().replace(/\/+$/,'');try{base=providerBase(provider,baseURL);}catch{}return provider+'|'+base+'|'+model;}
 export function extractModelLimits(provider:ProviderId,body:any){
  const rows=getProvider(provider).protocol==='gemini'?body.models:body.data,result:Record<string,ModelLimit>={};
  if(!Array.isArray(rows))return result;

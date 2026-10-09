@@ -4,6 +4,7 @@ import {samplingSchema} from './phone-model';
 import {samplingParameters} from './chat-prompt';
 import {capabilities,getProvider,providerBase,providerSchema} from './providers';
 import {reasoningPlan} from './reasoning';
+import {ProviderError,upstreamFailure} from './provider-errors';
 const image=z.object({type:z.literal('image_url'),image_url:z.object({url:z.string().max(5700000).regex(/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const nativeMedia=z.object({type:z.literal('native_media'),native_media:z.object({mimeType:z.enum(['audio/webm','audio/mp4','audio/mpeg','audio/wav','audio/x-wav','audio/ogg','audio/flac','audio/aac','video/mp4','video/webm']),data:z.string().max(11200000).regex(/^[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const text=z.object({type:z.literal('text'),text:z.string().max(200000)}).strict();
@@ -32,7 +33,7 @@ export function wireRequest(data:ChatInput){
  }else{
   headers.Authorization='Bearer '+data.apiKey;url=base+'/chat/completions';
   const params=samplingParameters(data,data.supportedParameters);
-  body={model:data.model,messages:data.messages,stream:true,...params,[data.provider==='openai'?'max_completion_tokens':'max_tokens']:maxTokens,...reasoning.params,...(data.provider==='openai'?{store:false}:{}),...(!['deepseek','zhipu'].includes(data.provider)?{stream_options:{include_usage:true}}:{}),...(data.provider==='openrouter'&&(['frequency_penalty','presence_penalty','repetition_penalty'].some(key=>key in params)||reasoning.supported)?{provider:{require_parameters:true}}:{})};
+  body={model:data.model,messages:data.messages,stream:true,...params,[data.provider==='openai'?'max_completion_tokens':'max_tokens']:maxTokens,...reasoning.params,...(data.provider==='openai'?{store:false}:{}),...(!['deepseek','zhipu','compatible'].includes(data.provider)?{stream_options:{include_usage:true}}:{}),...(data.provider==='openrouter'&&(['frequency_penalty','presence_penalty','repetition_penalty'].some(key=>key in params)||reasoning.supported)?{provider:{require_parameters:true}}:{})};
  }
  return {url,headers,body,protocol:preset.protocol};
 }
@@ -50,7 +51,7 @@ export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'open
  const delta=(s:string)=>{if(s)emit({choices:[{delta:{content:s},finish_reason:null}]});};
  const finish=()=>{if(finished)return;finished=true;if(usage)emit({choices:[],usage});if(finishReason)emit({choices:[{delta:{},finish_reason:finishReason}]});emit('[DONE]');};
  const event=(raw:string)=>{
-  const lines=raw.split('\n'),data=lines.filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n');if(!data)return;if(data==='[DONE]'){finish();return;}const obj=JSON.parse(data);if(obj.error||obj.type==='error')throw new Error('upstream_error');
+  const lines=raw.split('\n'),data=lines.filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n');if(!data)return;if(data==='[DONE]'){finish();return;}const obj=JSON.parse(data);if(obj.error||obj.type==='error'||obj.choices?.[0]?.error||obj.choices?.[0]?.finish_reason==='error'){const error=obj.error||obj.choices?.[0]?.error||obj;throw upstreamFailure(Number(error.code)||502,error);}
   if(protocol==='openai'){if(obj.usage)usage=obj.usage;if(obj.choices?.[0]?.finish_reason)finishReason=obj.choices[0].finish_reason;emit(obj);}
   else if(protocol==='anthropic'){
    if(obj.type==='message_start'){const u=obj.message?.usage;if(u&&typeof u.input_tokens==='number'&&typeof u.output_tokens==='number')usage={prompt_tokens:u.input_tokens+(u.cache_creation_input_tokens||0)+(u.cache_read_input_tokens||0),completion_tokens:u.output_tokens,...(typeof u.cache_read_input_tokens==='number'?{prompt_cache_hit_tokens:u.cache_read_input_tokens}:{})};}
@@ -66,6 +67,6 @@ export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'open
  return new ReadableStream<Uint8Array>({async pull(controller){
   try{while(!parts.length&&!ended){const {value,done}=await reader.read();pending+=done?decoder.decode():decoder.decode(value,{stream:true});if(pending.length>24*1024*1024)throw new Error('oversized_event');pending=pending.replace(/\r\n/g,'\n');let split:number;while((split=pending.indexOf('\n\n'))!==-1){const raw=pending.slice(0,split);pending=pending.slice(split+2);event(raw);}if(finished){ended=true;await reader.cancel();reader.releaseLock();}else if(done){if(pending.trim())event(pending);if(!finished){if(finishReason)finish();else throw new Error('incomplete_stream');}ended=true;reader.releaseLock();}}
    const next=parts.shift();if(next)controller.enqueue(next);else if(ended)controller.close();
-  }catch{await reader.cancel().catch(()=>{});ended=true;parts=[];controller.enqueue(encoder.encode('data: {"error":{"message":"回复传输中断，请重试。"}}\n\n'));controller.close();}
+  }catch(error){await reader.cancel().catch(()=>{});ended=true;parts=[];controller.enqueue(encoder.encode('data: '+JSON.stringify({error:{message:error instanceof ProviderError?error.message:'回复传输中断，请检查网络后重试。'}})+'\n\n'));controller.close();}
  },async cancel(reason){ended=true;await reader.cancel(reason).catch(()=>{});}});
 }

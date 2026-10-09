@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./refinement.css";
 import "./comfort.css";
+import "./settings.css";
 
 export const metadata: Metadata = {
   title: "云朵小手机 · 我们的小小世界",

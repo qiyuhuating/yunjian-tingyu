@@ -2,6 +2,12 @@
 
 为自己留一处能聊天、听歌、写日记的小天地。个人使用的 Android 陪伴应用；无需登录，界面与资源随 APK 打包，聊天、附件、角色卡和设置保存在设备本地。调用 AI 服务时仍需要网络和你自己的 API Key。
 
+## API 连接与设置重设计（源码草稿）
+
+修复 DeepSeek、OpenRouter 等连接的地址处理、流内错误与诊断反馈；设置改为八个分类、关键词搜索、直接选择和独立连接测试。聊天失败原因刷新后保留，并提供检查连接与重试入口。详见 [分析、设计与验收报告](docs/API连接与设置重设计-2026-10-09.md)。
+
+本轮本地通过 192 项核心、74 项浏览器流程、14 项存储检查，以及严格 TypeScript、网页和 Android 界面生产构建。未调用真实付费 API、未进行真机验收或重新签署 APK；当前已安装版本不会自动更新。
+
 ## 下载与安装
 
 [历史 0.0.1 系统隔离 APK](outputs/云笺听雨-0.0.1-系统隔离版.apk) · [安装说明](outputs/APK安装说明.md) · [签名与完整性报告](outputs/云笺听雨系统隔离签名与完整性报告.md)
@@ -66,14 +72,16 @@ cd work/qa && npx playwright install chromium && cd ../..
 python3 scripts/verify-delivery.py
 python3 work/check-release.py
 node outputs/mori-phone/scripts/verify-media.mjs
+node outputs/mori-phone/scripts/verify-connections.mjs
 node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+node work/qa/connection-ui.mjs
 node work/qa/features.mjs
 node work/qa/storage.mjs
 ```
 
 已有浏览器可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`；其他构建目录可设置 `FEATURE_BUILD_DIR`。新的浏览器检查从当前源码构建，不混用会升级数据库的新版存储和历史 APK 页面。`scripts/verify-delivery.py` 继续校验原签名 APK 与随包资源；历史测试可按对应版本运行，不代表新源码通过。
 
-本轮包含 103 项原核心回归、11 项新增媒体协议与后台记忆检查、16 项浏览器流程、9 项存储回归、严格 TypeScript、生产构建及 Android Java 编译。接口使用本地 fixture；录音使用 Chromium 模拟麦克风并产生真实 MediaRecorder Blob。未使用真实服务商 Key，未完成本轮真机、真实通话或低内存回收测试。历史 Android 15 / WebView 124 模拟器证据属于旧 APK。
+此前源码升级包含 103 项原核心回归、11 项新增媒体协议与后台记忆检查、16 项浏览器流程、9 项存储回归、严格 TypeScript、生产构建及 Android Java 编译。接口使用本地 fixture；录音使用 Chromium 模拟麦克风并产生真实 MediaRecorder Blob。未使用真实服务商 Key，未完成本轮真机、真实通话或低内存回收测试。历史 Android 15 / WebView 124 模拟器证据属于旧 APK。
 
 重新生成安装包资源会覆盖 `outputs/android/assets/web`，必须在发布分支按 [原生构建说明](outputs/android/README.md) 操作，随后用原签名签署并重新生成 APK 校验清单。Windows 请使用 ASCII 构建路径。私有签名文件由机主保管，本轮未改签名或签名 APK。
 
@@ -86,5 +94,4 @@ node work/qa/storage.mjs
 仓库应保持 private。包含源码、APK、源码归档、测试、报告、截图、字体许可和其他已交付文件。排除了签名私钥与密码、真实 API Key、个人聊天备份、依赖安装目录和临时编译缓存。网页托管配置仅为原网页工程元数据，APK 不依赖托管页面或登录。
 
 本轮按外部 APK 审计计划核实修复：详见 [审计计划落实记录](docs/审计计划落实记录.md)。该历史审计报告对应 0.0.1；当前源码版本已更新为 0.0.2 / 8；适用项已修复并验证，未证实项及延期项分别记录。
-
 
