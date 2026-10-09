@@ -41,9 +41,9 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  },[ownerId,toast]);
  const setVision=(value:boolean)=>{void commit(s=>{s.vision=value;}).catch(()=>{});};
  const setDraft=useCallback((thread:string,text:string)=>{
-  if(!data.current||!thread)return;text=text.slice(0,thread.startsWith('editor:')?500000:18000);const next={...data.current,drafts:{...data.current.drafts}};if(text)next.drafts[thread]=text;else delete next.drafts[thread];data.current=next;setState(next);setSync(current=>blocked.current?current:'saving');
+  if(!data.current||!thread)return;if(thread.startsWith('editor:')&&text.length>8000000){toast('编辑草稿超过 800 万字符，请拆分世界书后再保存。');return;}if(!thread.startsWith('editor:'))text=text.slice(0,18000);const next={...data.current,drafts:{...data.current.drafts}};if(text)next.drafts[thread]=text;else delete next.drafts[thread];data.current=next;setState(next);setSync(current=>blocked.current?current:'saving');
   if(draftTimer.current)clearTimeout(draftTimer.current);draftTimer.current=setTimeout(()=>{draftTimer.current=null;void commit(()=>{}).catch(()=>{});},800);
- },[commit]);
+ },[commit,toast]);
  const flushPending=useCallback(async()=>{const draftPending=!!draftTimer.current;if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;if(blocked.current)throw new Error('本机保存尚未成功。');if(draftPending)await commit(()=>{});},[commit]);
  useEffect(()=>{window.NativeFlush=flushPending;const visibility=()=>{if(document.visibilityState==='hidden')void flushPending().catch(()=>{});};document.addEventListener('visibilitychange',visibility);return()=>{if(window.NativeFlush===flushPending)delete window.NativeFlush;document.removeEventListener('visibilitychange',visibility);};},[flushPending]);
  useEffect(()=>{const warn=(event:BeforeUnloadEvent)=>{if(draftTimer.current||pendingWrites.current||blocked.current){event.preventDefault();event.returnValue='';}};window.addEventListener('beforeunload',warn);return()=>window.removeEventListener('beforeunload',warn);},[]);

@@ -19,3 +19,6 @@ outputs/android/build/
 work/feature-build/
 work/storage-build/
 work/feature-test-failure.png
+
+work/card-library/
+work/card-library-failure.png

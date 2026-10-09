@@ -25,6 +25,7 @@ jobs:
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
           node work/qa/features.mjs
           node work/qa/roleplay.mjs
+          node work/qa/card-library.mjs
           node work/qa/storage.mjs
       - name: Compile Android source without signing or modifying bundled assets
         run: |
