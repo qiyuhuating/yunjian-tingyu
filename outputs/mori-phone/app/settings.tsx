@@ -7,6 +7,7 @@ import AIControls from './ai-controls';
 import SystemPromptEditor from './system-prompt-editor';
 import {modelLimitKey,rememberRouterParameters,type ModelLimit} from '../lib/context-window';
 import {MODEL_CATALOG_TIMEOUT_MS,connectionStatusMessage,connectionTimeoutMessage} from '../lib/connection-reliability';
+import {probeAIConnection} from '../lib/connection-probe';
 import RoleplayControls from './roleplay-controls';
 import CompanionSettings from './companion-settings';
 import WallpaperSettings from './wallpaper-settings';
@@ -41,15 +42,15 @@ export default function Settings(){
  };
  useEffect(()=>{
   // Only discover automatically after saving the key: avoid a new HTTPS request on every key stroke.
-  if(!p.savedAI||p.apiKey.trim().length<8||(state.provider==='compatible'&&!baseURL.trim()))return;
+  if(working||!p.savedAI||p.apiKey.trim().length<8||(state.provider==='compatible'&&!baseURL.trim()))return;
   const abort=new AbortController(),timer=setTimeout(()=>{
    setModelStatus('正在读取服务商模型…');
    void loadCatalog(abort.signal).then(async body=>{if(abort.signal.aborted)return;setModels(body.models!);await storeLimits(body.limits);if(!abort.signal.aborted)setModelStatus(`已读取 ${body.models!.length} 个模型`);})
     .catch(error=>{if(!abort.signal.aborted)setModelStatus((error instanceof Error?error.message:'读取失败')+' 可手动填写模型，或测试真实连接。');});
   },1100);
   return()=>{clearTimeout(timer);abort.abort();};
- },[state.provider,p.apiKey,p.savedAI,baseURL]);
- const test=async()=>{await save();const answer=await p.requestAI('请只回复“连接成功”。',state.primary,state.primary,'chat',undefined,undefined,undefined,true);toast('真实 AI 已响应：'+answer.slice(0,70));};
+ },[state.provider,p.apiKey,p.savedAI,baseURL,working]);
+ const test=async()=>{await save();const saved=p.snapshot();const answer=await probeAIConnection({provider:saved.provider,model:saved.model,baseURL:saved.baseURL,apiKey:p.apiKey,sampling:saved.sampling});toast('真实 AI 已响应：'+answer.slice(0,70));};
  const disabled=!!working||p.busy;
  return <div className="scroll-panel settings-local"><span className="eyebrow">YOUR LITTLE WORLD</span><h2 className="panel-title">你的小手机，你说了算</h2><div className="device-status"><ShieldCheck size={16}/><span>记录留在本机</span><small>{providers.length-1} 个服务商预设</small></div>
   <section className="settings-section connection-section"><h3><KeyRound size={18}/>把喜欢的 AI 接进来</h3><p className="helper">选择服务商，填入 Key，就可以开始聊天。预设已配好地址；保存 Key 后自动读取模型目录。目录不可用不代表聊天连接失败。</p>

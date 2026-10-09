@@ -27,6 +27,35 @@ await check('Claude 缓存总输入与累计输出准确，不泄露思考事件
 await check('Gemini 只显示正文，输出包含思考用量，缓存缺失保持未知',async()=>{const out=await stream('gemini',[{candidates:[{content:{parts:[{text:'隐藏思考',thought:true},{text:'你好呀'}]}}]},{candidates:[{finishReason:'STOP'}],usageMetadata:{promptTokenCount:80,candidatesTokenCount:10,thoughtsTokenCount:5}}]);assert(out.includes('[DONE]'));assert(!out.includes('隐藏思考'));const usage=parseUsage(chunks(out).find(c=>c.usage).usage);assert.equal(usage.completion,15);assert.equal(usage.hit,null);const missing=await stream('gemini',[{candidates:[{finishReason:'STOP'}],usageMetadata:{totalTokenCount:95}}]);assert(!chunks(missing).some(c=>c.usage));});
 await check('中途断流、原生错误与 Gemini 阻断都不会伪造成功',async()=>{for(const [p,e] of [['openai',[{choices:[{delta:{content:'半句'}}]}]],['anthropic',[{type:'content_block_delta',delta:{type:'text_delta',text:'半句'}}]],['gemini',[{candidates:[{finishReason:'SAFETY'}]}]],['anthropic',[{type:'error',error:{message:'private key should never be relayed'}}]]]){const out=await stream(p,e);assert(out.includes('"error"'));assert(!out.includes('[DONE]'));assert(!out.includes('private key'));}});
 await check('Android 流式超时保留明确错误且绝不伪造完成',async()=>{const source=new ReadableStream({start(c){c.error(new Error('AI 响应超时'));}}),out=await new Response(normalizeStream(source,'openai')).text();assert(out.includes('AI 流式回复超时'));assert(!out.includes('[DONE]'));});
+const {connectionStatusMessage,connectionTimeoutMessage,MODEL_CATALOG_TIMEOUT_MS,CHAT_HEADERS_TIMEOUT_MS,CHAT_IDLE_TIMEOUT_MS}=load('connection-reliability');
+const {probeAIConnection}=load('connection-probe');
+await check('API 状态码区分 Key 失效、限流、额度、模型目录缺失和服务商宕机',()=>{
+ assert.match(connectionStatusMessage(401,'chat'),/Key/);
+ assert.match(connectionStatusMessage(429,'chat'),/限流/);
+ assert.match(connectionStatusMessage(402,'chat'),/余额/);
+ assert.match(connectionStatusMessage(404,'models'),/手动输入/);
+ assert.match(connectionStatusMessage(400,'chat'),/参数/);
+ assert.match(connectionStatusMessage(503,'chat'),/不.*自动重复/);
+ assert.match(connectionTimeoutMessage('models'),/不代表聊天连接失效/);
+ assert.match(connectionTimeoutMessage('chat','stream'),/手动重试/);
+ assert.equal(MODEL_CATALOG_TIMEOUT_MS,25000);assert(CHAT_HEADERS_TIMEOUT_MS<CHAT_IDLE_TIMEOUT_MS);
+});
+await check('真实连接探针只发送 2 条轻量消息，不携带历史和附件',async()=>{
+ const calls=[],answer=['data: '+JSON.stringify({choices:[{delta:{content:'连接成功'},finish_reason:'stop'}]}),'data: [DONE]',''].join('\n\n');
+ const send=async (url,init)=>{calls.push({url,init});return new Response(answer,{headers:{'Content-Type':'text/event-stream'}});};
+ const value=await probeAIConnection({provider:'openrouter',model:'openrouter/free',baseURL:'',apiKey:'test-fixture-key',sampling:samplingSchema.parse({thinking:true,penalties:true,sendRepetition:true})},send);
+ assert.equal(value,'连接成功');assert.equal(calls.length,1);assert.equal(calls[0].url,'/api/chat');
+ const body=JSON.parse(calls[0].init.body);assert.equal(body.messages.length,2);assert.equal(body.sampling.maxTokens,128);
+ assert.equal(body.sampling.thinking,false);assert.equal(body.sampling.penalties,false);assert.equal(body.sampling.sendRepetition,false);
+ assert(!JSON.stringify(body.messages).includes('characterCards'));assert(!JSON.stringify(body.messages).includes('attachments'));
+});
+await check('连接探针 429 失败不自动重试，流无完成标记不能通过',async()=>{
+ const sample={provider:'openrouter',model:'openrouter/free',baseURL:'',apiKey:'test-fixture-key',sampling:samplingSchema.parse({})};
+ let attempts=0;const limited=async()=>{attempts++;return Response.json({error:'test'},{status:429});};
+ await assert.rejects(()=>probeAIConnection(sample,limited),/限流/);assert.equal(attempts,1);
+ const interrupted=async()=>new Response('data: '+JSON.stringify({choices:[{delta:{content:'半句'}}]})+'\n\n');
+ await assert.rejects(()=>probeAIConnection(sample,interrupted),/提前中断/);
+});
 await check('取消下游会取消上游流',async()=>{let cancelled=false;const source=new ReadableStream({cancel(){cancelled=true;}}),out=normalizeStream(source,'anthropic');await out.cancel();assert(cancelled);});
 await check('迁移编码跨字节边界、空文件与中文元数据保持原字节',async()=>{const {migrationStream}=load('asset-transport');for(const size of [0,1,2,3,8193,65539]){const bytes=Uint8Array.from({length:size},(_,i)=>i%256);let i=0;const source=new ReadableStream({pull(c){if(i>=bytes.length){c.close();return;}const n=1+i%47;c.enqueue(bytes.slice(i,i+n));i+=n;}});const body=await new Response(migrationStream(source,{name:'云朵文件.zip',mime:'application/octet-stream',size})).json();assert.equal(body.name,'云朵文件.zip');assert.deepEqual(Buffer.from(body.base64,'base64'),Buffer.from(bytes));}});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

@@ -44,8 +44,8 @@
   {
     "path": "docs/Android-API-连接可靠性修复.md",
     "description": "本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md",
-    "bytes": 2781,
-    "sha256": "a01999e79a42d43fc77ef53f9b54ee41294cee7879652cbd32104de7d3dc273a"
+    "bytes": 3278,
+    "sha256": "c937d4b71adf68e83dba993eca6294b9e5fb202414f9bd780d9fc1256a0c666c"
   },
   {
     "path": "docs/build-performance-results.json",
@@ -842,8 +842,8 @@
   {
     "path": "outputs/mori-phone/app/settings.tsx",
     "description": "全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx",
-    "bytes": 15838,
-    "sha256": "5134e4ac57bdb1a30a9c9d10af019e2639125b4c22796d850b6a083dd9ce1c6e"
+    "bytes": 15945,
+    "sha256": "8df64714d0efa7da9b48bc129a942411e58c6a4ef0e77884613f803052fd808c"
   },
   {
     "path": "outputs/mori-phone/app/system-prompt-editor.tsx",
@@ -1108,6 +1108,12 @@
     "description": "中文与语言切换、角色偏好和编程数学美术教学的质量预设；路径：outputs/mori-phone/lib/companion-capabilities.ts",
     "bytes": 2729,
     "sha256": "7b3f68b3611449b6548e7e55183380a19ba145477f46feb07dacfcc8e5b1e901"
+  },
+  {
+    "path": "outputs/mori-phone/lib/connection-probe.ts",
+    "description": "仅用于验证实际 API 连通性的轻量探针：隔离角色历史、限制输出并校验流式完成；路径：outputs/mori-phone/lib/connection-probe.ts",
+    "bytes": 3086,
+    "sha256": "ee81a6faeedcb5bab6ca091d7adffae487fd8f6b4d8f2d3ed5faf333e35d1c79"
   },
   {
     "path": "outputs/mori-phone/lib/connection-reliability.ts",
@@ -1538,8 +1544,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-providers.mjs",
     "description": "17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs",
-    "bytes": 10651,
-    "sha256": "dd74c410dbff8f06d2c38e631282a77fff251bcdb3cb2edc79cc4bb2fa006904"
+    "bytes": 13330,
+    "sha256": "2dedb28ba5ad6b4a67fc541d920f51bb1c30fe5f060ed3cd24ff337dda8a24af"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-review.mjs",

@@ -153,7 +153,7 @@
 | [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31305 |
 | [outputs/mori-phone/app/render-recovery.tsx](outputs/mori-phone/app/render-recovery.tsx) | 渲染异常恢复界面、当前内存记录备份入口与重新打开确认；路径：outputs/mori-phone/app/render-recovery.tsx | 716 |
 | [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1622 |
-| [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx | 15838 |
+| [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx | 15945 |
 | [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1846 |
 | [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | 共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx | 9490 |
 | [outputs/mori-phone/app/use-editor-draft.ts](outputs/mori-phone/app/use-editor-draft.ts) | 按编辑器键切换持久草稿，拒绝前一编辑器迟到回调的Hook；路径：outputs/mori-phone/app/use-editor-draft.ts | 1352 |
@@ -267,7 +267,7 @@
 | [outputs/mori-phone/scripts/verify-group.mjs](outputs/mori-phone/scripts/verify-group.mjs) | 20 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者；路径：outputs/mori-phone/scripts/verify-group.mjs | 9866 |
 | [outputs/mori-phone/scripts/verify-media.mjs](outputs/mori-phone/scripts/verify-media.mjs) | 11 项媒体协议、能力提示、原生媒体与后台摘要并发检查；路径：outputs/mori-phone/scripts/verify-media.mjs | 8678 |
 | [outputs/mori-phone/scripts/verify-p0.mjs](outputs/mori-phone/scripts/verify-p0.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：outputs/mori-phone/scripts/verify-p0.mjs | 4956 |
-| [outputs/mori-phone/scripts/verify-providers.mjs](outputs/mori-phone/scripts/verify-providers.mjs) | 17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs | 10651 |
+| [outputs/mori-phone/scripts/verify-providers.mjs](outputs/mori-phone/scripts/verify-providers.mjs) | 17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs | 13330 |
 | [outputs/mori-phone/scripts/verify-review.mjs](outputs/mori-phone/scripts/verify-review.mjs) | 7 项审查缺陷修复回归检查；路径：outputs/mori-phone/scripts/verify-review.mjs | 4486 |
 | [outputs/mori-phone/scripts/verify-roleplay.mjs](outputs/mori-phone/scripts/verify-roleplay.mjs) | 27项AI片段覆盖、世界书往返、递归、记忆并发与摘要过期回归；路径：outputs/mori-phone/scripts/verify-roleplay.mjs | 13693 |
 | [outputs/mori-phone/scripts/verify-voice.mjs](outputs/mori-phone/scripts/verify-voice.mjs) | 6 项语音与原生桥接检查；路径：outputs/mori-phone/scripts/verify-voice.mjs | 4501 |
@@ -417,5 +417,11 @@
 
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
-| [docs/Android-API-连接可靠性修复.md](docs/Android-API-连接可靠性修复.md) | 本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md | 2781 |
+| [docs/Android-API-连接可靠性修复.md](docs/Android-API-连接可靠性修复.md) | 本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md | 3278 |
 | [outputs/mori-phone/lib/connection-reliability.ts](outputs/mori-phone/lib/connection-reliability.ts) | 连接故障码、超时阈值和可操作的提示映射（不记录密钥）；路径：outputs/mori-phone/lib/connection-reliability.ts | 2181 |
+
+## 连接测试独立化
+
+| 文件 | 用途 | 字节数 |
+| --- | --- | ---: |
+| [outputs/mori-phone/lib/connection-probe.ts](outputs/mori-phone/lib/connection-probe.ts) | 仅用于验证实际 API 连通性的轻量探针：隔离角色历史、限制输出并校验流式完成；路径：outputs/mori-phone/lib/connection-probe.ts | 3086 |
