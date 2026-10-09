@@ -488,8 +488,8 @@
   {
     "path": "outputs/android/src/chat/cloudlet/phone/MainActivity.java",
     "description": "保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java",
-    "bytes": 26291,
-    "sha256": "d0b6da4e8b2b063e592dd37a75d4429a6a2780a7d8a7063605d322c8423e8ebb"
+    "bytes": 26609,
+    "sha256": "549cd09af37fe14625515c08028e1781b224a5cda07fe07e96e326d50ff63486"
   },
   {
     "path": "outputs/android/vendor/via-release-cn.apk",
@@ -596,8 +596,8 @@
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
     "description": "APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts",
-    "bytes": 10245,
-    "sha256": "54d19a98877925b30a884cf8e91442683bc154646d477f2b35360c6a2d113ce8"
+    "bytes": 10642,
+    "sha256": "5defb4fd4f7588faa677a4b05b28c9535249874f9bcffeecdaa8b4040d5953b7"
   },
   {
     "path": "outputs/mori-phone/android-web/vite.config.ts",
@@ -710,8 +710,8 @@
   {
     "path": "outputs/mori-phone/app/comfort.css",
     "description": "聊天导航、群头像、短消息、触控、图片对话框和横屏布局样式；路径：outputs/mori-phone/app/comfort.css",
-    "bytes": 9906,
-    "sha256": "c77a766bc99826ac9ac0cbba5368b196265aab38a12c857b1d2ffcaabca07550"
+    "bytes": 13728,
+    "sha256": "e6230b472b1f37420f8563f3871ee43f9798c3a340b20f361bbc439e399d746b"
   },
   {
     "path": "outputs/mori-phone/app/companion-settings.tsx",
@@ -788,8 +788,8 @@
   {
     "path": "outputs/mori-phone/app/pet-3d.tsx",
     "description": "可见时才绘制的低负载 3D 宠物与减少动态效果的静态表情刷新；路径：outputs/mori-phone/app/pet-3d.tsx",
-    "bytes": 6200,
-    "sha256": "9315424ddee0a55170c9fc0cbd0d986bbed521dd974a37a7ebc0b6429a36c73e"
+    "bytes": 9571,
+    "sha256": "ac3232b23b3bf55b1b040f1494c1bb30e8caaa80bd490ef0a57d9252af061f9f"
   },
   {
     "path": "outputs/mori-phone/app/pet.tsx",
@@ -800,8 +800,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 29993,
-    "sha256": "9a59857c811c1886a3c7766d116a7d27719366f6b59d3b31dd85b7aac1e45cee"
+    "bytes": 30037,
+    "sha256": "7e64c1b836ce0e5e4f2eaf86ab0821ef4c7a6d4d2ad3e782e15d71528f315d7b"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -1526,8 +1526,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-providers.mjs",
     "description": "17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs",
-    "bytes": 10337,
-    "sha256": "9a2485306ebe8f0b2213da370e8b16c7c5e6b7cd2c6408d0cede90a8ea9169c7"
+    "bytes": 11419,
+    "sha256": "58761d71dea9c37e81d6da6a55307a65b68afbb623d13dc42b390954927e6911"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-review.mjs",
@@ -2434,5 +2434,11 @@
     "description": "汇总发布检查结果与安装信息；路径：work/write-release-report.py",
     "bytes": 5889,
     "sha256": "04e3f4def98f1978164a9674c900508d2cd173cb035661717eb4eda3f786091f"
+  },
+  {
+    "path": "work/qa/home-fullbleed.mjs",
+    "description": "首页全屏不可滑动的四种手机视口 Playwright 位置/滚动回归验证",
+    "bytes": 2805,
+    "sha256": "d251bf17a956f9b7299d9b8e05a5369435e4fa1b837a4e8b6773ae3a233bdf57"
   }
 ]

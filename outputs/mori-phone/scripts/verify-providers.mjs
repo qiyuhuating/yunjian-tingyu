@@ -5,16 +5,35 @@ import assert from 'node:assert/strict';
 import ts from 'typescript';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(file){const absolute=path.join(root,'lib',file+'.ts');if(loaded.has(absolute))return loaded.get(absolute);const m={exports:{}};loaded.set(absolute,m.exports);const code=ts.transpileModule(fs.readFileSync(absolute,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','module','exports',code)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
-const {chatInput,wireRequest,normalizeStream,extractModels,modelsRequest}=load('provider-adapter'),{providers,providerBase}=load('providers'),{samplingSchema}=load('phone-model'),{parseUsage}=load('chat-prompt'),checks=[];
+const {chatInput,wireRequest,normalizeStream,extractModels,modelsRequest}=load('provider-adapter'),{providers,providerBase,isCustomProvider}=load('providers'),{samplingSchema}=load('phone-model'),{parseUsage}=load('chat-prompt'),checks=[];
 async function check(name,fn){await fn();checks.push(name);}
-function input(provider,overrides={}){const preset=providers.find(p=>p.id===provider);return chatInput.parse({provider,model:preset.model||'local-model',baseURL:provider==='compatible'?'https://example.com/v1':'',apiKey:'sk-fixture-not-a-real-key',sampling:samplingSchema.parse({penalties:true,sendRepetition:true}),messages:[{role:'system',content:'固定角色前缀'},{role:'user',content:'你好'},{role:'assistant',content:'在这里'},{role:'user',content:'新的问题'},{role:'user',content:'本轮背景'}],...overrides});}
-await check('10 个服务商预设无需补地址或模型，均使用 HTTPS',()=>{for(const p of providers.filter(p=>p.id!=='compatible')){const wire=wireRequest(input(p.id));assert(new URL(wire.url).protocol==='https:');assert(p.model);assert(!wire.url.includes('sk-fixture'));}});
+function input(provider,overrides={}){const preset=providers.find(p=>p.id===provider);return chatInput.parse({provider,model:preset.model||'local-model',baseURL:isCustomProvider(provider)?'https://example.com/v1':'',apiKey:'sk-fixture-not-a-real-key',sampling:samplingSchema.parse({penalties:true,sendRepetition:true}),messages:[{role:'system',content:'固定角色前缀'},{role:'user',content:'你好'},{role:'assistant',content:'在这里'},{role:'user',content:'新的问题'},{role:'user',content:'本轮背景'}],...overrides});}
+await check('10 个服务商预设无需补地址或模型，均使用 HTTPS',()=>{for(const p of providers.filter(p=>!isCustomProvider(p.id))){const wire=wireRequest(input(p.id));assert(new URL(wire.url).protocol==='https:');assert(p.model);assert(!wire.url.includes('sk-fixture'));}});
 await check('OpenAI 使用 max_completion_tokens 与 store:false，省略 repetition',()=>{const w=wireRequest(input('openai'));assert.equal(w.body.max_completion_tokens,1200);assert.equal(w.body.store,false);assert(!('max_tokens' in w.body));assert.equal(w.body.frequency_penalty,.2);assert.equal(w.body.presence_penalty,.1);assert(!('repetition_penalty' in w.body));});
 await check('OpenAI 推理型号不发送旧采样和惩罚字段',()=>{const w=wireRequest(input('openai',{model:'gpt-5-mini'}));for(const k of ['temperature','top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));});
 await check('DeepSeek 模式选择正确，惩罚设定保留但不发送',()=>{const a=input('deepseek'),w=wireRequest(a);assert.equal(w.body.thinking.type,'disabled');assert.equal(w.body.temperature,.9);for(const k of ['top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));a.sampling.thinking=true;a.sampling.topP=.4;const b=wireRequest(a);assert.equal(b.body.top_p,.95);assert(!('temperature' in b.body));assert.equal(a.sampling.repetitionPenalty,1.08);});
 await check('百炼发送存在与重复惩罚，硅基只发送频率惩罚',()=>{const q=wireRequest(input('qwen')).body,s=wireRequest(input('siliconflow')).body;assert.equal(q.presence_penalty,.1);assert.equal(q.repetition_penalty,1.08);assert(!('frequency_penalty' in q));assert.equal(s.frequency_penalty,.2);assert(!('presence_penalty' in s));assert(!('repetition_penalty' in s));});
 await check('Kimi K2.6 固定参数省略并关闭思考，GLM 温度不超过 1',()=>{const k=wireRequest(input('moonshot')).body;assert.equal(k.thinking.type,'disabled');for(const p of ['temperature','top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(p in k));const i=input('zhipu');i.sampling.temperature=2;assert.equal(wireRequest(i).body.temperature,1);});
 await check('OpenRouter 要求后端支持显式启用的惩罚',()=>{const w=wireRequest(input('openrouter')).body;assert.equal(w.provider.require_parameters,true);assert.equal(w.repetition_penalty,1.08);});
+await check('多协议自定义连接使用正确路径、Key Header 和格式',()=>{
+ const anth=wireRequest(input('compatible-anthropic'));
+ assert.equal(anth.url,'https://example.com/v1/messages');
+ assert.equal(anth.headers['x-api-key'],'sk-fixture-not-a-real-key');
+ assert.equal(anth.protocol,'anthropic');
+ const gem=wireRequest(input('compatible-gemini'));
+ assert(gem.url.includes('/v1/models/local-model:streamGenerateContent'));
+ assert(gem.headers['x-goog-api-key']);
+ assert.equal(gem.protocol,'gemini');
+ const open=wireRequest(input('compatible'));
+ assert.equal(open.url,'https://example.com/v1/chat/completions');
+ assert(open.headers.Authorization.startsWith('Bearer '));
+});
+await check('OpenRouter 模型目录不要求 Key，完整目录超过 300 项可见',()=>{
+ const route=modelsRequest('openrouter','');
+ assert(!route.headers.Authorization);
+ assert.equal(route.url,'https://openrouter.ai/api/v1/models');
+ assert.equal(extractModels('openrouter',{data:Array.from({length:510},(_,i)=>({id:'example/model-'+i}))}).length,510);
+});
 const image={type:'image_url',image_url:{url:'data:image/png;base64,aGVsbG8='}};
 await check('Claude 使用原生鉴权、系统缓存点、合并用户消息与 base64 图片',()=>{const i=input('anthropic');i.messages[1].content=[{type:'text',text:'看图'},image];const w=wireRequest(i);assert.equal(w.url,'https://api.anthropic.com/v1/messages');assert.equal(w.headers['anthropic-version'],'2023-06-01');assert(w.headers['x-api-key']);assert(!w.headers.Authorization);assert.equal(w.body.system[0].cache_control.type,'ephemeral');assert.equal(w.body.messages[0].content[1].source.media_type,'image/png');assert.equal(w.body.messages.at(-1).content.length,2);for(const k of ['top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));});
 await check('Gemini 使用原生角色、图片、generationConfig 与非 URL 密钥',()=>{const i=input('gemini');i.messages[1].content=[{type:'text',text:'看图'},image];const w=wireRequest(i);assert(w.url.endsWith(':streamGenerateContent?alt=sse'));assert(!w.url.includes('key='));assert(w.headers['x-goog-api-key']);assert.equal(w.body.contents[0].parts[1].inlineData.mimeType,'image/png');assert.equal(w.body.contents[1].role,'model');assert.equal(w.body.generationConfig.frequencyPenalty,.2);assert.equal(w.body.generationConfig.presencePenalty,.1);});

@@ -34,9 +34,11 @@ public final class MainActivity extends Activity {
         BrowserIntegration.install(getApplication());
         if(!compatibleWebView())return;
         getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // The app draws its own status strip. Do not inset it below a camera cutout.
+        if(Build.VERSION.SDK_INT>=28){android.view.WindowManager.LayoutParams attrs=getWindow().getAttributes();attrs.layoutInDisplayCutoutMode=android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;getWindow().setAttributes(attrs);}
         getWindow().setNavigationBarColor(android.graphics.Color.rgb(242,246,248));
         web=new WebView(this);android.widget.FrameLayout frame=new android.widget.FrameLayout(this);frame.addView(web,new android.widget.FrameLayout.LayoutParams(-1,-1));setContentView(frame);
-        frame.setOnApplyWindowInsetsListener((v,insets)->{int bottom=Build.VERSION.SDK_INT>=30?Math.max(insets.getInsets(android.view.WindowInsets.Type.navigationBars()).bottom,insets.getInsets(android.view.WindowInsets.Type.ime()).bottom):insets.getSystemWindowInsetBottom();int left=0,top=0,right=0;if(Build.VERSION.SDK_INT>=28&&insets.getDisplayCutout()!=null){android.view.DisplayCutout cutout=insets.getDisplayCutout();left=cutout.getSafeInsetLeft();top=cutout.getSafeInsetTop();right=cutout.getSafeInsetRight();}v.setPadding(left,top,right,bottom);return insets;});
+        frame.setOnApplyWindowInsetsListener((v,insets)->{int bottom=Build.VERSION.SDK_INT>=30?Math.max(insets.getInsets(android.view.WindowInsets.Type.navigationBars()).bottom,insets.getInsets(android.view.WindowInsets.Type.ime()).bottom):insets.getSystemWindowInsetBottom();int left=0,top=0,right=0;if(Build.VERSION.SDK_INT>=28&&insets.getDisplayCutout()!=null){android.view.DisplayCutout cutout=insets.getDisplayCutout();left=cutout.getSafeInsetLeft();right=cutout.getSafeInsetRight();}v.setPadding(left,top,right,bottom);return insets;});
         WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(false);settings.setAllowFileAccessFromFileURLs(false);settings.setAllowUniversalAccessFromFileURLs(false);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setMediaPlaybackRequiresUserGesture(false);settings.setSupportMultipleWindows(false);
