@@ -147,7 +147,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 .theme-night .focus-card>span:not(.eyebrow):not(.round-play){color:var(--muted)}
 .theme-night .round-play{background:#c2d8e81a;color:var(--blue-dark)}
 .theme-night .phone-frame{background:linear-gradient(145deg,#4b5057,#24272b 72%,#555b62);border-color:#62666c;box-shadow:0 35px 75px -25px #000000a8,inset 0 0 0 1px #ffffff12}
-.theme-night .phone-screen{background-color:#191b1e;background-image:linear-gradient(#191b1eea,#16181bf2),url('/wallpaper.png')}
+.theme-night .phone-screen{background-color:#191b1e;background-image:linear-gradient(#191b1eea,#16181bf2),url('/wallpaper.webp')}
 .theme-night .status-bar{color:var(--ink)}
 .theme-night .dynamic-pill{background:#0c0d0f;box-shadow:inset 0 -1px 0 #ffffff12}
 .theme-night :is(.app-window,.app-header,.chat-person,.composer-area){background:var(--surface);border-color:var(--line);color:var(--ink)}

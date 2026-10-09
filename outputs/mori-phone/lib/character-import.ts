@@ -1,6 +1,48 @@
 import {characterSchema,loreSchema,uid,type Character,type PhoneState} from './phone-model';
 export type ImportedCharacter={character:Character;lore:PhoneState['lore'];warnings:string[];format:string;image?:File};
 export function blankCharacter(name='新朋友',description=''):Character{return characterSchema.parse({id:uid(),name:name.slice(0,50)||'新朋友',description:description.slice(0,18000),personality:'',scenario:'',greeting:'你好，很高兴见到你。',examples:'',avatar:'',color:'blue',emoji:'✨',affection:0,trust:30,birthday:'',systemPrompt:''});}
+const logic=['andAny','notAll','notAny','andAll'] as const;
+export function normalizeLore(e:any,index:number,scope:string,book:any={},archive=false){
+ const ext=e.extensions||{},keys=(v:unknown)=>{const list=Array.isArray(v)?v.filter(k=>typeof k==='string'):typeof v==='string'?v.split(/[,，]/):[],kept:string[]=[];let size=0;for(const raw of list){const key=raw.trim();if(!key||size+key.length+(kept.length?1:0)>400)continue;kept.push(key);size+=key.length+(kept.length>1?1:0);}return kept.join(',');};
+ const limit=(v:unknown,max:number)=>typeof v==='string'?v.slice(0,max):'';
+ const rawDepth=ext.scan_depth??e.scanDepth??book.scan_depth;
+ return loreSchema.parse({id:uid(),scope,title:limit(e.name||e.comment,160)||'世界背景 '+(index+1),keys:keys(e.keys??e.key),text:limit(e.content,18000),enabled:e.enabled!==false&&e.disable!==true,constant:e.constant===true,order:Number.isFinite(e.insertion_order??e.order)?e.insertion_order??e.order:100,selective:e.selective===true,secondaryKeys:keys(e.secondary_keys??e.keysecondary),caseSensitive:(e.case_sensitive??ext.case_sensitive??e.caseSensitive)===true,sourceIndex:archive?undefined:index,selectiveLogic:logic[ext.selectiveLogic??e.selectiveLogic]||'andAny',wholeWords:(ext.match_whole_words??e.matchWholeWords)===true,scanDepth:Number.isInteger(rawDepth)?Math.min(100,Math.max(1,rawDepth)):4,recursive:book.recursive_scanning===true,excludeRecursion:(ext.exclude_recursion??e.excludeRecursion)===true,preventRecursion:(ext.prevent_recursion??e.preventRecursion)===true,position:e.position==='before_char'||ext.position===0||e.position===0?'before':'after',sourceExtras:archive?JSON.stringify(e):'{}'});
+}
+function loreCompatibilityWarnings(e:any,index:number){
+ const ext=e.extensions||{},warnings:string[]=[];
+ const allKeys=[...(Array.isArray(e.keys??e.key)?e.keys??e.key:[]),...(Array.isArray(e.secondary_keys??e.keysecondary)?e.secondary_keys??e.keysecondary:[])];
+ if(allKeys.some(k=>typeof k==='string'&&/^\/.+\/[a-z]*$/i.test(k)))warnings.push(`世界书第 ${index+1} 条含正则样式关键词，本应用按字面关键词处理，不执行正则。`);
+ if(allKeys.filter(k=>typeof k==='string').join(',').length>400)warnings.push(`世界书第 ${index+1} 条关键词较长，当前保留400字符预算内的完整关键词；完整原字段仍用于未修改导出。`);
+ if((e.content?.length||0)>18000)warnings.push(`世界书第 ${index+1} 条超过18000字，当前使用前18000字；完整原文保留用于未修改导出。`);
+ if((e.position!==undefined&&!['before_char','after_char',0,1].includes(e.position))||(ext.position!==undefined&&![0,1].includes(ext.position))||ext.useProbability===true||ext.sticky||ext.cooldown||ext.delay||e.use_regex||e.decorators?.length)warnings.push(`世界书第 ${index+1} 条含未支持的插入位置、正则或定时/概率规则，将使用普通背景匹配；原始规则保留用于导出。`);
+ return warnings;
+}
+export async function parseWorldBook(file:File,scope:string){
+ if(file.size>4*1024*1024)throw new Error('世界书文件请控制在4 MB以内。');
+ const raw=JSON.parse(await file.text()),book=raw.character_book??raw.data?.character_book??raw;
+ if(!book||typeof book!=='object'||!book.entries||typeof book.entries!=='object')throw new Error('请选择含 entries 的 SillyTavern 或角色卡世界书 JSON。');
+ const entries=Array.isArray(book.entries)?book.entries:Object.values(book.entries);
+ if(!entries.length||entries.length>1000)throw new Error('世界书需要1至1000个条目。');
+ const warnings:string[]=[],lore:PhoneState['lore']=entries.map((e:any,i:number)=>{
+  if(!e||typeof e!=='object'||typeof e.content!=='string'||!e.content.trim())throw new Error(`世界书第 ${i+1} 条缺少正文。`);
+  if(e.content.length>18000||JSON.stringify(e).length>65000)throw new Error(`世界书第 ${i+1} 条过长，请先拆分以完整保留原文。`);
+  warnings.push(...loreCompatibilityWarnings(e,i));return normalizeLore(e,i,scope,book,true);
+ });
+ return {lore,warnings};
+}
+function sourceRecord(l:PhoneState['lore'][number]){let raw:any={};try{raw=JSON.parse(l.sourceExtras);}catch{}return raw;}
+function exportLore(l:PhoneState['lore'][number],source:any={},before?:PhoneState['lore'][number]){
+ const unchanged=(field:keyof typeof l)=>before&&JSON.stringify(l[field])===JSON.stringify(before[field]);
+ const keep=(value:unknown,key:string,field:keyof typeof l)=>unchanged(field)&&source[key]!==undefined?source[key]:value;
+ const extensions={...source.extensions};
+ for(const [field,key,value] of [['selectiveLogic','selectiveLogic',logic.indexOf(l.selectiveLogic)],['wholeWords','match_whole_words',l.wholeWords],['scanDepth','scan_depth',l.scanDepth],['excludeRecursion','exclude_recursion',l.excludeRecursion],['preventRecursion','prevent_recursion',l.preventRecursion]] as const){if(!unchanged(field))extensions[key]=value;}
+ if(!unchanged('position')&&extensions.position!==undefined)extensions.position=l.position==='before'?0:1;
+ return {...source,name:keep(l.title,'name','title'),keys:keep(l.keys.split(/[,，]/).map(k=>k.trim()).filter(Boolean),'keys','keys'),content:keep(l.text,'content','text'),enabled:l.enabled,...(source.disable!==undefined?{disable:!l.enabled}:{}),constant:l.constant,insertion_order:l.order,selective:l.selective,secondary_keys:keep(l.secondaryKeys.split(/[,，]/).map(k=>k.trim()).filter(Boolean),'secondary_keys','secondaryKeys'),case_sensitive:l.caseSensitive,position:keep(l.position==='before'?'before_char':'after_char','position','position'),extensions};
+}
+export function exportWorldBook(lore:PhoneState['lore']){
+ return {name:'云笺世界书',recursive_scanning:lore.some(l=>l.recursive),entries:lore.map(l=>{const source=sourceRecord(l);const before=Object.keys(source).length?normalizeLore(source,0,l.scope,{},true):undefined;return exportLore(l,source,before);})};
+}
+
 function fromJson(raw:any,fileName:string):ImportedCharacter{
  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('角色卡需要是一个 JSON 对象。');
  const data=raw.data&&typeof raw.data==='object'&&!Array.isArray(raw.data)?raw.data:raw,warnings:string[]=[];
@@ -12,18 +54,19 @@ function fromJson(raw:any,fileName:string):ImportedCharacter{
  if(data.alternate_greetings?.length>30)warnings.push('应用最多使用 30 个备选开场白，完整列表仍保留在原始卡中。');
  character.tags=(Array.isArray(data.tags)?data.tags:[]).filter((v:unknown)=>typeof v==='string').slice(0,40).map((v:string)=>v.slice(0,160));
  character.creator=str(data.creator,'作者',160);character.creatorNotes=str(data.creator_notes,'作者说明');character.cardVersion=str(data.character_version,'卡片版本',160);
- const original=JSON.stringify(raw);if(original.length>120000)throw new Error('角色数据超过 12 万字符。请拆分大型世界书后再导入，以完整保留卡片字段。');character.cardExtras=original;
+ const original=JSON.stringify(raw);if(original.length>1000000)throw new Error('角色数据超过 100 万字符。请拆分大型世界书后再导入，以完整保留卡片字段。');character.cardExtras=original;
  const entries=data.character_book?.entries,lore:PhoneState['lore']=[];
  if(Array.isArray(entries)){
-  if(entries.length>100)throw new Error('角色卡包含超过 100 个世界书条目，请先拆分。');
+  if(entries.length>1000)throw new Error('角色卡包含超过 1000 个世界书条目，请先拆分。');
   for(const [index,e] of entries.entries()){
    if(!e||typeof e!=='object')throw new Error(`第 ${index+1} 个世界书条目格式不正确。`);
-   const keys=(v:unknown)=>Array.isArray(v)?v.filter(k=>typeof k==='string').join(',').slice(0,400):'';
-   lore.push(loreSchema.parse({id:uid(),title:str(e.name||e.comment,'世界书名称',160)||'导入的世界书',keys:keys(e.keys),text:str(e.content,'世界书正文'),enabled:e.enabled!==false,scope:character.id,constant:e.constant===true,order:typeof e.insertion_order==='number'&&Number.isFinite(e.insertion_order)?e.insertion_order:100,selective:e.selective===true,secondaryKeys:keys(e.secondary_keys),caseSensitive:e.case_sensitive===true,sourceIndex:index}));
+   lore.push(normalizeLore(e,index,character.id,data.character_book));
+   if(JSON.stringify(e).length>65000)throw new Error('单条世界书原始数据过大，请拆分。');
+   warnings.push(...loreCompatibilityWarnings(e,index));
   }
  }
  if(!character.description&&!character.personality&&!character.systemPrompt)throw new Error('角色卡里没有 description、personality 或人设内容。');
- if(raw.spec==='chara_card_v3'||data.assets?.length||data.extensions||entries?.some((e:any)=>e?.extensions||e?.position))warnings.push('扩展、媒体引用与世界书插入位置会保留用于导出；本应用采用缓存优先的后置背景，不执行第三方脚本、递归世界书或 V3 装饰器。');
+ if(raw.spec==='chara_card_v3'||data.assets?.length||data.extensions||entries?.some((e:any)=>e?.extensions||e?.position))warnings.push('扩展、媒体引用与世界书插入位置会保留用于导出；本应用支持有界递归、主次条件和角色前后背景；深度/示例/作者注插入位置、正则、概率、定时效果、第三方脚本与 V3 装饰器保留但不执行。');
  return {character:characterSchema.parse(character),lore,warnings,format:raw.spec==='chara_card_v3'?'JSON V3':raw.spec==='chara_card_v2'?'JSON V2':'JSON V1 / 人设'};
 }
 async function inflate(data:Uint8Array):Promise<string>{
@@ -69,10 +112,10 @@ export function exportCharacter(character:Character,lore:PhoneState['lore']){
  const keep=(value:unknown,key:string,field:keyof Character,alias?:string)=>baseline&&JSON.stringify(value)===JSON.stringify(baseline.character[field])?(original[key]??(alias?original[alias]:undefined)??value):value;
  const data={...original,name:keep(character.name,'name','name'),description:keep(character.description,'description','description',original.persona?'persona':'prompt'),personality:keep(character.personality,'personality','personality'),scenario:keep(character.scenario,'scenario','scenario'),first_mes:keep(character.greeting,'first_mes','greeting','greeting'),mes_example:keep(character.examples,'mes_example','examples','examples'),system_prompt:keep(character.systemPrompt,'system_prompt','systemPrompt','systemPrompt'),post_history_instructions:keep(character.postHistory,'post_history_instructions','postHistory'),alternate_greetings:keep(character.alternateGreetings,'alternate_greetings','alternateGreetings'),tags:keep(character.tags,'tags','tags'),creator:keep(character.creator,'creator','creator'),creator_notes:keep(character.creatorNotes,'creator_notes','creatorNotes'),character_version:keep(character.cardVersion,'character_version','cardVersion'),extensions:original.extensions||{}};
  const entries=lore.filter(l=>l.scope===character.id).map(l=>{
-  const source=l.sourceIndex===undefined?undefined:original.character_book?.entries?.[l.sourceIndex],before=baseline?.lore.find(v=>v.sourceIndex===l.sourceIndex);
-  const retain=(value:unknown,key:string,field:keyof typeof l)=>source&&before&&JSON.stringify(l[field])===JSON.stringify(before[field])?(source[key]??value):value;
-  return {...source,name:retain(l.title,'name','title'),keys:retain(l.keys.split(/[,，]/).map(v=>v.trim()).filter(Boolean),'keys','keys'),content:retain(l.text,'content','text'),enabled:l.enabled,constant:l.constant,insertion_order:l.order,selective:l.selective,secondary_keys:retain(l.secondaryKeys.split(/[,，]/).map(v=>v.trim()).filter(Boolean),'secondary_keys','secondaryKeys'),case_sensitive:l.caseSensitive};
+  const source=l.sourceIndex===undefined?sourceRecord(l):original.character_book?.entries?.[l.sourceIndex]||{},before=l.sourceIndex===undefined?(Object.keys(source).length?normalizeLore(source,0,l.scope,{},true):undefined):baseline?.lore.find(v=>v.sourceIndex===l.sourceIndex);
+  return exportLore(l,source,before);
  });
- if(entries.length||original.character_book)data.character_book={...original.character_book,entries};
+ if(entries.length||original.character_book)data.character_book={...original.character_book,recursive_scanning:lore.filter(l=>l.scope===character.id).some(l=>l.recursive),entries};
  return {...raw,spec:raw.spec==='chara_card_v3'?'chara_card_v3':'chara_card_v2',spec_version:raw.spec==='chara_card_v3'?'3.0':'2.0',data};
 }
+

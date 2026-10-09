@@ -14,3 +14,15 @@ outputs/android/build/
 **/*.keystore
 **/signing.json
 **/Android签名备份.zip
+
+
+work/feature-build/
+work/storage-build/
+work/feature-test-failure.png
+
+work/card-library/
+work/card-library-failure.png
+work/live-card-build/
+work/merge-inputs/
+work/apk-candidate/
+work/native-classes/

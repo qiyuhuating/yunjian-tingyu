@@ -118,12 +118,16 @@ public final class MainActivity extends Activity {
     }
     private final class Bridge {
         @JavascriptInterface public void request(String id,String target,String method,String headerJSON,String body){
+            requestBody(id,target,method,headerJSON,body,false);
+        }
+        @JavascriptInterface public void requestBase64(String id,String target,String method,String headerJSON,String body){requestBody(id,target,method,headerJSON,body,true);}
+        private void requestBody(String id,String target,String method,String headerJSON,String body,boolean encoded){
             HttpsJob job=new HttpsJob();jobs.put(id,job);workers.execute(()->{try{
                 URL url=new URL(target);if(!allowed(url))throw new IOException();
                 HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;
                 if(job.cancelled)return;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(30000);connection.setReadTimeout(300000);connection.setRequestMethod(method);
                 JSONObject headers=new JSONObject(headerJSON);for(Iterator<String> it=headers.keys();it.hasNext();){String key=it.next();if(Arrays.asList("authorization","content-type","accept","x-api-key","anthropic-version","anthropic-beta","x-goog-api-key","openai-organization","openai-project","http-referer","x-title","api-key","x-api-version").contains(key.toLowerCase(Locale.ROOT)))connection.setRequestProperty(key,headers.getString(key));}
-                if(!body.isEmpty()){byte[] data=body.getBytes(StandardCharsets.UTF_8);connection.setDoOutput(true);connection.setFixedLengthStreamingMode(data.length);try(OutputStream output=connection.getOutputStream()){output.write(data);}}
+                if(!body.isEmpty()){if(body.length()>24*1024*1024)throw new IOException();byte[] data=encoded?Base64.decode(body,Base64.DEFAULT):body.getBytes(StandardCharsets.UTF_8);connection.setDoOutput(true);connection.setFixedLengthStreamingMode(data.length);try(OutputStream output=connection.getOutputStream()){output.write(data);}}
                 int status=connection.getResponseCode();if(status<100||status>599)throw new IOException();if(status>=300&&status<400&&status!=304)throw new RedirectException();if(job.cancelled)return;
                 JSONObject result=new JSONObject();String type=connection.getContentType();if(type!=null)result.put("content-type",type);
                 result.put("cache-control","no-store");callback("headers",id,status+","+JSONObject.quote(result.toString()));
@@ -176,3 +180,4 @@ public final class MainActivity extends Activity {
     @Override protected void onResume(){super.onResume();if(web!=null)web.onResume();}
     @Override protected void onDestroy(){for(HttpsJob job:jobs.values()){job.cancelled=true;if(job.connection!=null)job.connection.disconnect();}workers.shutdownNow();if(picker!=null){picker.onReceiveValue(null);picker=null;}if(tts!=null){tts.stop();tts.shutdown();}if(web!=null){web.removeJavascriptInterface("Android");web.destroy();web=null;}super.onDestroy();}
 }
+

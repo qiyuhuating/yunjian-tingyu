@@ -69,3 +69,19 @@ button:active:not(:disabled),a.soft-button:active{filter:brightness(.94)}
 .quoted-message{border-left:3px solid var(--blue);padding:8px 12px;margin:4px 0;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}.reply-draft{display:flex;align-items:center;gap:12px}.reply-draft span{flex:1}.reply-draft button{min-width:44px;min-height:44px}
 
 .code-message{max-width:100%;min-width:0}.code-message header{display:flex;align-items:center;justify-content:space-between;gap:12px}.code-message pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0;line-height:1.65}.code-message code{font-family:inherit;font-size:inherit}.code-message .text-button{min-height:44px}
+
+
+/* Media, draft/search and long code affordances. */
+.recorder-panel{padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:grid;gap:8px;font-size:12px}
+.recorder-panel audio,.message-card audio{display:block;width:100%;min-width:0;max-width:100%;height:36px}
+.message-card:has(audio){min-width:min(230px,65vw)}
+.maintenance-status,.chat-search-status{padding:4px 14px;font-size:11px;color:var(--muted);flex-shrink:0}
+.chat-search-status{display:flex;justify-content:space-between;background:var(--surface)}
+.search-hit .message-card{outline:2px solid #c29941;outline-offset:3px}
+.wallpaper-thumbnail{height:140px;overflow:hidden;border-radius:12px;margin-bottom:10px}
+.wallpaper-thumbnail img{width:100%;height:100%;object-fit:contain}
+.code-message pre,.code-message code{font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;font-size:12px;line-height:1.65;white-space:pre;tab-size:2}
+.code-message pre{max-height:340px;overflow:auto}.code-message pre.expanded{max-height:none}
+.code-message header{flex-wrap:wrap;gap:5px}.code-message header small{margin-right:auto}
+.gallery-grid figcaption .check-label{font-size:10px;display:flex;gap:4px;padding-block:4px}
+.toast{top:max(12px,env(safe-area-inset-top));bottom:auto;max-width:calc(100vw - 24px)}
