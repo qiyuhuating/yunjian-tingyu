@@ -1,0 +1,40 @@
+{
+  "passed": 10,
+  "checks": [
+    "未连接AI可预览并取消TXT导入，不修改任何角色",
+    "保存连接后真实发起独立分析请求，不发送记忆与历史",
+    "采用拆分可撤销，世界条目均能检查且确认前不落库",
+    "失败的AI拆分显示错误并保留全部原文",
+    "成功拆分后确认导入，人物与世界分开且刷新保留原卡",
+    "拆分后原卡可从编辑界面真实下载，文本与导入文件相同",
+    "拆分后的世界背景真正进入模型请求并保留角色口吻配置",
+    "世界书独立JSON导入有预览、归属选择和原字段保存",
+    "命中解释和关键词设置为实际引擎结果，320宽度无溢出",
+    "取消分析不会把迟到结果写入预览或聊天"
+  ],
+  "analysisRequests": 4,
+  "requestBodies": [
+    {
+      "model": "deepseek-flash",
+      "messageCount": 2
+    },
+    {
+      "model": "deepseek-flash",
+      "messageCount": 2
+    },
+    {
+      "model": "deepseek-flash",
+      "messageCount": 2
+    },
+    {
+      "model": "deepseek-flash",
+      "messageCount": 5
+    },
+    {
+      "model": "deepseek-flash",
+      "messageCount": 2
+    }
+  ],
+  "pageErrors": [],
+  "providerMode": "local HTTP fixtures; no live provider evaluation"
+}

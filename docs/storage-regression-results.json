@@ -12,7 +12,7 @@
     "状态与会话事务原子性：落盘失败不伪造成功"
   ],
   "textOriginalBytes": 195000,
-  "backupBytes": 44981,
+  "backupBytes": 45079,
   "historyMessages": 5002,
   "pageErrors": []
 }
