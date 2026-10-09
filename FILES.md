@@ -5,12 +5,13 @@
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
-| [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 3947 |
+| [.github/workflows/release-standalone-v002.yml](.github/workflows/release-standalone-v002.yml) | 独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml | 9864 |
+| [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 4777 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 436 |
 | [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 9284 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
 | [docs/0.0.2-integration-results.json](docs/0.0.2-integration-results.json) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2-integration-results.json | 23214 |
-| [docs/0.0.2.md](docs/0.0.2.md) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2.md | 3281 |
+| [docs/0.0.2.md](docs/0.0.2.md) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2.md | 4237 |
 | [docs/P0复验与阶段台账-2026-10-08.md](docs/P0复验与阶段台账-2026-10-08.md) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：docs/P0复验与阶段台账-2026-10-08.md | 15414 |
 | [docs/UI-UX与图片优化计划-2026-10-08.md](docs/UI-UX与图片优化计划-2026-10-08.md) | 当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md | 17812 |
 | [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
@@ -93,8 +94,8 @@
 | [outputs/android/assets/web/music-listen.png](outputs/android/assets/web/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/android/assets/web/music-listen.png | 1200508 |
 | [outputs/android/assets/web/via-browser.png](outputs/android/assets/web/via-browser.png) | 随 APK 打包的 Via 入口笑脸云朵原图，离线显示；路径：outputs/android/assets/web/via-browser.png | 985903 |
 | [outputs/android/assets/web/wallpaper.png](outputs/android/assets/web/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/android/assets/web/wallpaper.png | 1822518 |
-| [outputs/android/build-apk.py](outputs/android/build-apk.py) | 正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py | 5868 |
-| [outputs/android/merge-via.py](outputs/android/merge-via.py) | 保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py | 6447 |
+| [outputs/android/build-apk.py](outputs/android/build-apk.py) | 正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py | 6976 |
+| [outputs/android/merge-via.py](outputs/android/merge-via.py) | 保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py | 6626 |
 | [outputs/android/res/drawable/cloud_pet.png](outputs/android/res/drawable/cloud_pet.png) | 用户提供的笑脸耳机云朵原图，作为软件桌面图标的位图主体；路径：outputs/android/res/drawable/cloud_pet.png | 985903 |
 | [outputs/android/res/mipmap-anydpi-v26/app_icon.xml](outputs/android/res/mipmap-anydpi-v26/app_icon.xml) | 工程支持文件：outputs/android/res/mipmap-anydpi-v26/app_icon.xml | 484 |
 | [outputs/android/res/mipmap-anydpi/app_icon.xml](outputs/android/res/mipmap-anydpi/app_icon.xml) | Android 7 的固定尺寸笑脸云朵图标，避免原图分辨率导致过度缩小；路径：outputs/android/res/mipmap-anydpi/app_icon.xml | 367 |
