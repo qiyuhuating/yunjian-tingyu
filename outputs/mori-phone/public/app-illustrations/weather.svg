@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>天气</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#c4dff8"/><stop offset=".52" stop-color="#c4dff8"/><stop offset="1" stop-color="#a7cee8"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="89" cy="40" r="22" fill="url(#gold)" stroke="#fffaf0" stroke-width="3"/>
+  <path d="M89 11v7M111 18l-5 6M117 40h-6M64 19l5 6" stroke="#e8bf68" stroke-width="3"/>
+  <path d="M39 92c-15 0-24-10-24-22 0-13 9-22 21-23 4-18 18-29 33-29 17 0 29 12 33 27 13 2 21 12 21 24 0 14-11 23-26 23Z" fill="url(#paint)" stroke="#fff" stroke-width="3.5" transform="translate(0 13) scale(.98 .88)"/>
+  <path d="M28 82q9 7 19 2" stroke="#fff" stroke-width="3" opacity=".8"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

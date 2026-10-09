@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>钱包</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#f3beb6"/><stop offset=".52" stop-color="#f3beb6"/><stop offset="1" stop-color="#dd9bc2"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="28" y="27" width="67" height="64" rx="14" fill="#e2b0bf" stroke="#fff" stroke-width="3"/>
+  <rect x="20" y="39" width="88" height="63" rx="17" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <path d="M25 50h68" stroke="#fff" stroke-width="3" opacity=".72"/>
+  <rect x="67" y="62" width="45" height="23" rx="11" fill="#fbe2ab" stroke="#fff" stroke-width="3"/>
+  <circle cx="86" cy="73" r="5" fill="#fff"/>
+  <path d="M29 89h28" stroke="#fff" stroke-width="3" opacity=".65"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

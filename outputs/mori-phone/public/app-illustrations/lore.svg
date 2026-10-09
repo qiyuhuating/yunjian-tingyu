@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>世界书</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#bca9e8"/><stop offset=".52" stop-color="#bca9e8"/><stop offset="1" stop-color="#9ebbe5"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M64 39Q44 22 21 32v59q24-11 43 8 20-19 43-8V32q-25-10-43 7Z" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <path d="M64 40v58" stroke="#fff" stroke-width="3"/>
+  <path d="M30 45q14-5 25 3M30 59q14-5 25 3M73 48q11-8 24-3M73 62q11-8 24-3" stroke="#f5f0ff" stroke-width="3" opacity=".8"/>
+  <path d="M45 24 49 14l4 10 10 4-10 4-4 10-4-10-10-4Z" fill="url(#gold)" stroke="#fff" stroke-width="2"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>工作</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#a8c9f4"/><stop offset=".52" stop-color="#a8c9f4"/><stop offset="1" stop-color="#819bc9"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="45" y="31" width="37" height="25" rx="8" fill="#cad9fb" stroke="#fff" stroke-width="3"/>
+  <path d="M54 49V40h20v9" stroke="#8aace0" stroke-width="4"/>
+  <rect x="23" y="45" width="82" height="57" rx="16" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <path d="M25 66Q64 86 103 66" stroke="#eaf5ff" stroke-width="4"/>
+  <rect x="56" y="71" width="16" height="12" rx="4" fill="#f9de99" stroke="#fff" stroke-width="2"/>
+  <path d="M33 57h21" stroke="#fff" stroke-width="4" opacity=".55"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

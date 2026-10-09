@@ -246,3 +246,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 .roleplay-section .helper{margin-bottom:0}
 
 .lyrics-card>.lyric-lines{display:block;margin-bottom:0}.lyric-lines button{display:block;width:100%;text-align:left;border:0;background:transparent;color:var(--muted);font-size:15px;line-height:1.85;margin:6px 0;padding:4px 0;white-space:normal}.lyric-lines button.active{color:var(--blue-dark);font-weight:600}.lyric-lines button:disabled{opacity:1;cursor:default}
+
+/* Illustrated app entry points only. Settings, controls and other Lucide SVG glyphs stay unchanged. */
+.launcher-grid .launcher-art-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
+@media(prefers-reduced-motion:reduce){.launcher-grid .launcher-art-image{transition:none}}
