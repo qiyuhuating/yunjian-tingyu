@@ -1,0 +1,50 @@
+name: Inspect archived Android signing backups
+on:
+  push:
+    branches:
+      - audit/github-signing-materials-20261009
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check signing key and metadata presence without reading credentials
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, is_zipfile
+          from io import BytesIO
+          import json
+          root = Path('.')
+          targets = ('cloudlet-release.p12', 'signing.json', 'Android签名备份.zip')
+          inspected = []
+          matches = []
+          errors = []
+          def scan(archive, label, depth):
+              for info in archive.infolist():
+                  name = info.filename
+                  clean = name.replace('\\','/').split('/')[-1]
+                  if clean in targets or clean.lower().endswith(('.p12','.jks','.keystore')):
+                      matches.append({'archive':label,'path':name,'bytes':info.file_size})
+                  if depth < 2 and name.lower().endswith('.zip') and info.file_size <= 35_000_000:
+                      try:
+                          with ZipFile(BytesIO(archive.read(info))) as nested:
+                              scan(nested, label+'!'+name,depth+1)
+                      except Exception as exc:
+                          errors.append({'archive':label,'file':name,'error':type(exc).__name__})
+          for p in root.rglob('*'):
+              if not p.is_file():continue
+              if p.name in targets or p.suffix.lower() in ('.p12','.jks','.keystore'):
+                  matches.append({'archive':'tracked source','path':p.as_posix(),'bytes':p.stat().st_size})
+              if p.suffix.lower() != '.zip':continue
+              inspected.append(p.as_posix())
+              try:
+                  with ZipFile(p) as z:scan(z,p.as_posix(),0)
+              except Exception as exc:errors.append({'archive':p.as_posix(),'error':type(exc).__name__})
+          print('ZIP_COUNT',len(inspected))
+          print('SIGNING_MATERIAL_MATCHES',json.dumps(matches,ensure_ascii=False))
+          print('ARCHIVE_ERRORS',json.dumps(errors,ensure_ascii=False))
+          PY
