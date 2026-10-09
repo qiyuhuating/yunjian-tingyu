@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>小镇微博</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#b9abed"/><stop offset=".52" stop-color="#b9abed"/><stop offset="1" stop-color="#e0a6cf"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M28 57c0-7 6-12 13-12h19l29-16v60L60 72H41c-7 0-13-6-13-15Z" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <path d="m45 72 8 25h17l-9-25" fill="#dcc5f4" stroke="#fff" stroke-width="3"/>
+  <path d="m61 50 24-12v43L61 68Z" fill="#eee6fa" opacity=".7"/>
+  <path d="M95 49q11 10 0 21M103 41q17 19 0 37" stroke="#e4accc" stroke-width="4.5"/>
+  <path d="M38 55h18" stroke="#fff" stroke-width="3" opacity=".85"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

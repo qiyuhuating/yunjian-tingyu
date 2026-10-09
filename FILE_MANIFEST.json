@@ -108,6 +108,12 @@
     "sha256": "6adac09ad922e7069d47a4b990a9cdbcd2a220b192de5042da817c6509a5a3a5"
   },
   {
+    "path": "docs/launcher-illustration-design.md",
+    "description": "启动器插画范围、映射、布局和验收说明；路径：docs/launcher-illustration-design.md",
+    "bytes": 1928,
+    "sha256": "fcd984f835559ec6afa80fd908be34b565c01ba329e9961386a19247dccfdc2b"
+  },
+  {
     "path": "docs/p0-image-verification.json",
     "description": "P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：docs/p0-image-verification.json",
     "bytes": 1938,
@@ -770,8 +776,8 @@
   {
     "path": "outputs/mori-phone/app/modules.tsx",
     "description": "React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx",
-    "bytes": 25637,
-    "sha256": "5e60d9b40561400ff9bd77c7c90d3fbb437cc0e3ce722e365a4722c698401d69"
+    "bytes": 25501,
+    "sha256": "295b73592f348113cb1d213040e099b3f8cf1850e2329f15dc2de5467d505d23"
   },
   {
     "path": "outputs/mori-phone/app/music.tsx",
@@ -818,8 +824,8 @@
   {
     "path": "outputs/mori-phone/app/refinement.css",
     "description": "精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css",
-    "bytes": 31305,
-    "sha256": "147455e20fb81f0c4f79d7a4441eeabf98e45beb83ccba0193dbf794446b800b"
+    "bytes": 31630,
+    "sha256": "dcbcf57bb220a16cd7326f2f5a3eb20acd4d793f109cc57d9187cbfa2ed4cdee"
   },
   {
     "path": "outputs/mori-phone/app/render-recovery.tsx",
@@ -848,8 +854,8 @@
   {
     "path": "outputs/mori-phone/app/ui.tsx",
     "description": "共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx",
-    "bytes": 9490,
-    "sha256": "2980ee0b9c5347eaefc152459c8e610f3fe5ce55dea348745e47081aaf50477c"
+    "bytes": 10375,
+    "sha256": "7eb987d6180bddba26bfa3aca7530a13cd36ffbfc91dffa0608aad07c4ead738"
   },
   {
     "path": "outputs/mori-phone/app/use-editor-draft.ts",
@@ -1294,6 +1300,90 @@
     "description": "工程支持文件：outputs/mori-phone/postcss.config.mjs",
     "bytes": 94,
     "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/characters.svg",
+    "description": "仅用于应用入口的角色设定绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/characters.svg",
+    "bytes": 1731,
+    "sha256": "850a78634c537e8ea08c2b719e84b103db224678b5c7d28644753794b35d0f6c"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/face.svg",
+    "description": "仅用于应用入口的面对面绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/face.svg",
+    "bytes": 1725,
+    "sha256": "e5a8e8f89dcb3f5754e52d9fee1d094406aee4fffbae391c7b3d681e3055e805"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/favorites.svg",
+    "description": "仅用于应用入口的收藏绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/favorites.svg",
+    "bytes": 1561,
+    "sha256": "89eea72783079d19f80063c19776e6b6329b1e7377b2d9ea6931648af5d8fff5"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/focus.svg",
+    "description": "仅用于应用入口的专注绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/focus.svg",
+    "bytes": 1698,
+    "sha256": "0d8f935515ba5216b84e1a3fa38000385481f766676b576fd732c574b0c2ebf3"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/live.svg",
+    "description": "仅用于应用入口的直播绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/live.svg",
+    "bytes": 1708,
+    "sha256": "5f508e526286ab9fd55e41f13192d01978884732e3dcfa04c2bce0d7d256581e"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/lore.svg",
+    "description": "仅用于应用入口的世界书绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/lore.svg",
+    "bytes": 1683,
+    "sha256": "c45c329f244fbe9e46041788e331afd81f426a8346244d44fb411fa92222475c"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/music.svg",
+    "description": "仅用于应用入口的一起听音乐绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/music.svg",
+    "bytes": 1871,
+    "sha256": "c3b467fe17c3a19243f7804e74c70fc8ca0837085410844b046e0fd1d191fbd6"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/notes.svg",
+    "description": "仅用于应用入口的小纸条绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/notes.svg",
+    "bytes": 1700,
+    "sha256": "14c65ab890e36bf7b61486b32f92e2dbc03a50d16d98db7bc1d37c88c994da0f"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/pet.svg",
+    "description": "仅用于应用入口的小云宠物绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/pet.svg",
+    "bytes": 1880,
+    "sha256": "18aeeefe178fb2efcf91206aaa4fd0d9893478dd6e38cb79f4b9a6007d6bda2e"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/tasks.svg",
+    "description": "仅用于应用入口的任务绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/tasks.svg",
+    "bytes": 1710,
+    "sha256": "442bfb5ff0541ed80bc1fb7c79eabe404f3835f5d39ab3a691aa743c65c268d1"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/wallet.svg",
+    "description": "仅用于应用入口的钱包绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/wallet.svg",
+    "bytes": 1759,
+    "sha256": "f7b7ff11e1fcf80f6e71ea90cd3d97353de46ff38634a1f2234e3e9ee9a1737a"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/weather.svg",
+    "description": "仅用于应用入口的天气绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/weather.svg",
+    "bytes": 1735,
+    "sha256": "a47a49ddb81327fdf2544736174f53ccbef5698af2fac5bd5fb57052c24bf99d"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/weibo.svg",
+    "description": "仅用于应用入口的小镇微博绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/weibo.svg",
+    "bytes": 1699,
+    "sha256": "e58999c4400ee50c7568115606fdcbcc7de33cd02051108b99953d5d9d266201"
+  },
+  {
+    "path": "outputs/mori-phone/public/app-illustrations/work.svg",
+    "description": "仅用于应用入口的工作绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/work.svg",
+    "bytes": 1773,
+    "sha256": "a0196834cce6c9c1a0a79bd1bdf86eb3bd353ff8e25ff8db69be8aeb736af0c1"
   },
   {
     "path": "outputs/mori-phone/public/button-sprite.webp",

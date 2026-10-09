@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>小纸条</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#f8dfb4"/><stop offset=".52" stop-color="#f8dfb4"/><stop offset="1" stop-color="#f1bcce"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="28" y="21" width="71" height="82" rx="12" fill="url(#paint)" stroke="#fff" stroke-width="3.5" transform="rotate(-6 64 62)"/>
+  <path d="M41 49h39M41 60h35M41 71h24" stroke="#fff9ef" stroke-width="4" opacity=".95"/>
+  <path d="m78 80 19-20 9 9-20 19-12 4Z" fill="#a7c7e6" stroke="#fff" stroke-width="2.5"/>
+  <path d="m74 92 4-12 8 8Z" fill="#ead9b5"/>
+  <path d="M37 29h24" stroke="#fff" stroke-width="3" opacity=".7"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>
