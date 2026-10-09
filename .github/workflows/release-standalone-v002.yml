@@ -1,7 +1,7 @@
 name: Publish standalone v0.0.2
 on:
   push:
-    branches: [main]
+    branches: [main, release/standalone-v0.0.2]
     paths: ['.github/workflows/release-standalone-v002.yml']
   workflow_dispatch:
 permissions:
@@ -10,6 +10,31 @@ concurrency:
   group: standalone-v002-one-time-release
   cancel-in-progress: false
 jobs:
+  preview:
+    if: github.ref == 'refs/heads/release/standalone-v0.0.2'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Compile and inspect independent package without signing
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          npm ci --prefix outputs/mori-phone
+          mkdir -p work/apk-candidate
+          curl --fail --location --retry 2 https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar -o work/apk-candidate/apktool.jar
+          echo 'dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423  work/apk-candidate/apktool.jar' | sha256sum -c -
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/standalone-preview-unsigned.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/standalone-preview-unsigned.apk > work/apk-candidate/package-info.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/standalone-preview-unsigned.apk AndroidManifest.xml > work/apk-candidate/manifest-tree.txt
+          grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/package-info.txt
+          grep -F 'mark.via.phonev02' work/apk-candidate/manifest-tree.txt
   regression:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +60,7 @@ jobs:
           node work/qa/storage.mjs
           node work/qa/p0-storage-scale.mjs
   release:
+    if: github.ref == 'refs/heads/main'
     needs: regression
     runs-on: ubuntu-latest
     steps:

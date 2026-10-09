@@ -5,7 +5,7 @@
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
-| [.github/workflows/release-standalone-v002.yml](.github/workflows/release-standalone-v002.yml) | 独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml | 8082 |
+| [.github/workflows/release-standalone-v002.yml](.github/workflows/release-standalone-v002.yml) | 独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml | 9877 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 3947 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 436 |
 | [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 9284 |
