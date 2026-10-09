@@ -6,6 +6,7 @@ import {readBackup,type PreparedBackup} from '../lib/local-backup';
 import AIControls from './ai-controls';
 import SystemPromptEditor from './system-prompt-editor';
 import {modelLimitKey,rememberRouterParameters,type ModelLimit} from '../lib/context-window';
+import {MODEL_CATALOG_TIMEOUT_MS,connectionStatusMessage,connectionTimeoutMessage} from '../lib/connection-reliability';
 import RoleplayControls from './roleplay-controls';
 import CompanionSettings from './companion-settings';
 import WallpaperSettings from './wallpaper-settings';
@@ -20,12 +21,38 @@ export default function Settings(){
  const action=async(label:string,fn:()=>Promise<void>)=>{setWorking(label);try{await fn();}catch(e){toast(e instanceof Error?e.message:'操作未完成。');}finally{setWorking('');}};
  const save=async()=>{if(!model.trim())throw new Error('请选择或填写模型名称。');if(state.provider==='compatible'&&!baseURL.trim())throw new Error('自定义连接需要填写 HTTPS 地址。');await p.saveKey();await commit(s=>{s.model=model.trim();s.baseURL=baseURL.trim();s.connections[s.provider]={model:s.model,baseURL:s.baseURL,vision:s.vision};});toast('Key 与连接已保存在这台设备，下次无需重填。');};
  const storeLimits=async(limits?:Record<string,ModelLimit>)=>{if(!limits||!Object.keys(limits).length)return;const provider=state.provider;await commit(s=>{for(const [id,limit] of Object.entries(limits)){const {supportedParameters,...stored}=limit;if(provider==='openrouter'&&supportedParameters)rememberRouterParameters(id,supportedParameters);s.modelLimits[modelLimitKey(provider,baseURL,id)]=stored;}});};
- const readModels=async()=>{if(!p.apiKey.trim())throw new Error('请先填写 API Key。');const response=await fetch('/api/models',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:state.provider,apiKey:p.apiKey.trim(),baseURL})});const body=await response.json() as {error?:string;models?:string[];limits?:Record<string,ModelLimit>};if(!response.ok)throw new Error(body.error||'模型列表读取失败。');if(!body.models?.length)throw new Error('接口未提供可用模型，可以手动填写模型 ID。');setModels(body.models);await storeLimits(body.limits);setModelStatus(`已实时读取 ${body.models.length} 个模型`);toast(`已读取 ${body.models.length} 个模型；请按账号权限与模型能力选择。`);};
- useEffect(()=>{if(p.apiKey.trim().length<8||(state.provider==='compatible'&&!baseURL.trim()))return;const abort=new AbortController(),timer=setTimeout(()=>{setModelStatus('正在读取服务商模型…');void fetch('/api/models',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:state.provider,apiKey:p.apiKey.trim(),baseURL}),signal:abort.signal}).then(async response=>{const body=await response.json() as {error?:string;models?:string[];limits?:Record<string,ModelLimit>};if(!response.ok)throw new Error(body.error||'列表不可用');if(!abort.signal.aborted){setModels(body.models||[]);await storeLimits(body.limits);setModelStatus(`已实时读取 ${body.models?.length||0} 个模型`);}}).catch(e=>{if(!abort.signal.aborted){setModels([]);setModelStatus(e instanceof Error?e.message:'读取失败，可填写 Custom 模型');}});},900);return()=>{clearTimeout(timer);abort.abort();};},[state.provider,p.apiKey,baseURL]);
+ const loadCatalog=async(signal?:AbortSignal)=>{
+  const timeout=AbortSignal.timeout(MODEL_CATALOG_TIMEOUT_MS),combined=signal?AbortSignal.any([signal,timeout]):timeout;
+  let response:Response;
+  try{response=await fetch('/api/models',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:state.provider,apiKey:p.apiKey.trim(),baseURL}),signal:combined});}
+  catch(error){if(signal?.aborted)throw error;if(timeout.aborted)throw new Error(connectionTimeoutMessage('models'));throw error;}
+  let body:{error?:string;models?:string[];limits?:Record<string,ModelLimit>};
+  try{body=await response.json();}
+  catch(error){if(signal?.aborted)throw error;if(timeout.aborted)throw new Error(connectionTimeoutMessage('models'));throw new Error('模型列表响应不完整，可手动填写模型 ID。');}
+  if(!response.ok)throw new Error(body.error||connectionStatusMessage(response.status,'models'));
+  if(!body.models?.length)throw new Error('服务商未返回模型列表，可手动填写模型 ID 并测试真实连接。');
+  return body;
+ };
+ const readModels=async()=>{
+  if(!p.apiKey.trim())throw new Error('请先填写 API Key。');
+  setModelStatus('正在读取实时模型列表…');
+  try{const body=await loadCatalog();setModels(body.models!);await storeLimits(body.limits);setModelStatus(`已读取 ${body.models!.length} 个模型`);toast(`已读取 ${body.models!.length} 个模型；请按账号权限选择。`);}
+  catch(error){setModelStatus((error instanceof Error?error.message:'模型列表暂时不可用')+' 不影响手动选择模型。');throw error;}
+ };
+ useEffect(()=>{
+  // Only discover automatically after saving the key: avoid a new HTTPS request on every key stroke.
+  if(!p.savedAI||p.apiKey.trim().length<8||(state.provider==='compatible'&&!baseURL.trim()))return;
+  const abort=new AbortController(),timer=setTimeout(()=>{
+   setModelStatus('正在读取服务商模型…');
+   void loadCatalog(abort.signal).then(async body=>{if(abort.signal.aborted)return;setModels(body.models!);await storeLimits(body.limits);if(!abort.signal.aborted)setModelStatus(`已读取 ${body.models!.length} 个模型`);})
+    .catch(error=>{if(!abort.signal.aborted)setModelStatus((error instanceof Error?error.message:'读取失败')+' 可手动填写模型，或测试真实连接。');});
+  },1100);
+  return()=>{clearTimeout(timer);abort.abort();};
+ },[state.provider,p.apiKey,p.savedAI,baseURL]);
  const test=async()=>{await save();const answer=await p.requestAI('请只回复“连接成功”。',state.primary,state.primary,'chat',undefined,undefined,undefined,true);toast('真实 AI 已响应：'+answer.slice(0,70));};
  const disabled=!!working||p.busy;
  return <div className="scroll-panel settings-local"><span className="eyebrow">YOUR LITTLE WORLD</span><h2 className="panel-title">你的小手机，你说了算</h2><div className="device-status"><ShieldCheck size={16}/><span>记录留在本机</span><small>{providers.length-1} 个服务商预设</small></div>
-  <section className="settings-section connection-section"><h3><KeyRound size={18}/>把喜欢的 AI 接进来</h3><p className="helper">选择服务商，填入 Key，就可以开始聊天。预设已配好地址；填入 Key 后自动读取实时模型列表。</p>
+  <section className="settings-section connection-section"><h3><KeyRound size={18}/>把喜欢的 AI 接进来</h3><p className="helper">选择服务商，填入 Key，就可以开始聊天。预设已配好地址；保存 Key 后自动读取模型目录。目录不可用不代表聊天连接失败。</p>
    <FormField label="服务商预设"><select aria-label="服务商预设" value={state.provider} disabled={disabled} onChange={e=>void action('切换',()=>p.selectProvider(e.target.value as ProviderId))}>{providers.map(v=><option key={v.id} value={v.id}>{v.name}</option>)}</select></FormField>
    <div className="provider-preview"><strong>{preset.name}</strong><span>{model||'填写自己的模型 ID'}</span><p>{preset.note}</p></div>
    <FormField label="API Key"><div className="key-input"><input aria-label="API Key" type={showKey?'text':'password'} maxLength={2048} autoComplete="off" spellCheck={false} value={p.apiKey} onChange={e=>p.setApiKey(e.target.value)} placeholder="只需填写这个服务商的 Key"/><button type="button" className="icon-button" aria-label={showKey?'隐藏 Key':'显示 Key'} onClick={()=>setShowKey(!showKey)}>{showKey?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></FormField>

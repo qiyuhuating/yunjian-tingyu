@@ -42,6 +42,12 @@
     "sha256": "beb9d263cc8e448749ba61c79f5aad568f7a220bd8cb8b95ad065e9f1800bb41"
   },
   {
+    "path": "docs/Android-API-连接可靠性修复.md",
+    "description": "本机 Android API 连接风险、修复措施、验证要求和升级边界；路径：docs/Android-API-连接可靠性修复.md",
+    "bytes": 2781,
+    "sha256": "a01999e79a42d43fc77ef53f9b54ee41294cee7879652cbd32104de7d3dc273a"
+  },
+  {
     "path": "docs/build-performance-results.json",
     "description": "相同工具链独立生产构建的逐文件大小与摘要，区别首屏 JS、总产物和未测 APK/FPS；路径：docs/build-performance-results.json",
     "bytes": 3889,
@@ -596,8 +602,8 @@
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
     "description": "APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts",
-    "bytes": 10245,
-    "sha256": "54d19a98877925b30a884cf8e91442683bc154646d477f2b35360c6a2d113ce8"
+    "bytes": 10990,
+    "sha256": "69d59e9c00b18314beaf04526c5a74ce5ddd24843508760ecb8f6fd9d4614048"
   },
   {
     "path": "outputs/mori-phone/android-web/vite.config.ts",
@@ -800,8 +806,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 29993,
-    "sha256": "9a59857c811c1886a3c7766d116a7d27719366f6b59d3b31dd85b7aac1e45cee"
+    "bytes": 30097,
+    "sha256": "c988c25af6bec3af41ad76fa171b263d8632903c95ea5b78568e2b93b09621f6"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -836,8 +842,8 @@
   {
     "path": "outputs/mori-phone/app/settings.tsx",
     "description": "全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx",
-    "bytes": 14961,
-    "sha256": "a70e26365190daefe0825a9cde58f42938db1ef9d93aac61e863924dd6f88cf9"
+    "bytes": 15838,
+    "sha256": "5134e4ac57bdb1a30a9c9d10af019e2639125b4c22796d850b6a083dd9ce1c6e"
   },
   {
     "path": "outputs/mori-phone/app/system-prompt-editor.tsx",
@@ -1104,6 +1110,12 @@
     "sha256": "7b3f68b3611449b6548e7e55183380a19ba145477f46feb07dacfcc8e5b1e901"
   },
   {
+    "path": "outputs/mori-phone/lib/connection-reliability.ts",
+    "description": "连接故障码、超时阈值和可操作的提示映射（不记录密钥）；路径：outputs/mori-phone/lib/connection-reliability.ts",
+    "bytes": 2181,
+    "sha256": "fd99f36e22d20afe6541225408647b42e1460f36f193c10c9f918c81001b415c"
+  },
+  {
     "path": "outputs/mori-phone/lib/connector-context.ts",
     "description": "TypeScript 业务或构建模块：connector-context；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-context.ts",
     "bytes": 612,
@@ -1232,8 +1244,8 @@
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
-    "bytes": 10603,
-    "sha256": "5f98d8744c0519e6ded7fa1a05a9b0bb4dcff24ee482d1de780d99620ac62338"
+    "bytes": 10765,
+    "sha256": "915918f6aa29c68818b6fdd7556aee4c6c288f96f29a5a5c3911fbd3f32cae2d"
   },
   {
     "path": "outputs/mori-phone/lib/providers.ts",
@@ -1526,8 +1538,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-providers.mjs",
     "description": "17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs",
-    "bytes": 10337,
-    "sha256": "9a2485306ebe8f0b2213da370e8b16c7c5e6b7cd2c6408d0cede90a8ea9169c7"
+    "bytes": 10651,
+    "sha256": "dd74c410dbff8f06d2c38e631282a77fff251bcdb3cb2edc79cc4bb2fa006904"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-review.mjs",
