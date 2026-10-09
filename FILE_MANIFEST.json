@@ -650,8 +650,8 @@
   {
     "path": "outputs/mori-phone/app/api/models/route.ts",
     "description": "可选网页服务 API 路由：models/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/models/route.ts",
-    "bytes": 1700,
-    "sha256": "3329978392c73155b5b7986e0241a4888952903d647f1ed5a9cf6df4f8a60630"
+    "bytes": 1756,
+    "sha256": "ac1dda106480399c26a5f683cb97cc71665ab241170da3d14f27540718c192d6"
   },
   {
     "path": "outputs/mori-phone/app/api/realtime/route.ts",
@@ -680,8 +680,8 @@
   {
     "path": "outputs/mori-phone/app/character-ai-settings.tsx",
     "description": "角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx",
-    "bytes": 5155,
-    "sha256": "97bfaa4c898f6a4495a6911196e0cc4ad7ed1252503aa2c048b058244cb15768"
+    "bytes": 5185,
+    "sha256": "0b7a220b29d88299c04aa4d26fc797f74b8c880917eb140d5440a02abc56a6aa"
   },
   {
     "path": "outputs/mori-phone/app/character-library.tsx",
@@ -836,8 +836,8 @@
   {
     "path": "outputs/mori-phone/app/settings.tsx",
     "description": "全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx",
-    "bytes": 14961,
-    "sha256": "a70e26365190daefe0825a9cde58f42938db1ef9d93aac61e863924dd6f88cf9"
+    "bytes": 16783,
+    "sha256": "15d5855f43ea97d1b41ac016e54fa28fdeb00ff210330bdb840ea28e19803f80"
   },
   {
     "path": "outputs/mori-phone/app/system-prompt-editor.tsx",
@@ -1064,8 +1064,8 @@
   {
     "path": "outputs/mori-phone/lib/character-ai.ts",
     "description": "角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts",
-    "bytes": 1304,
-    "sha256": "f8e79760e61dafd096d4b6b1663dfeb8d84e4d7991e9abb1831169528872028a"
+    "bytes": 1327,
+    "sha256": "963831b89a64179bcdd732161e16b21bdd760fed415ee5b850769004c7d33337"
   },
   {
     "path": "outputs/mori-phone/lib/character-import.ts",
@@ -1136,8 +1136,8 @@
   {
     "path": "outputs/mori-phone/lib/context-window.ts",
     "description": "服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts",
-    "bytes": 3966,
-    "sha256": "ddf57ce535508d10834aafe99b6a1015d89d006f539aa223ab399642b13dee84"
+    "bytes": 4009,
+    "sha256": "92f9c4e09525ba166744ed7f96fff7d3e269dd591e7e9dcfcf0c51c5c1926bd5"
   },
   {
     "path": "outputs/mori-phone/lib/continuity.ts",
@@ -1232,14 +1232,14 @@
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
-    "bytes": 10603,
-    "sha256": "5f98d8744c0519e6ded7fa1a05a9b0bb4dcff24ee482d1de780d99620ac62338"
+    "bytes": 10661,
+    "sha256": "274137a47bf3778088645acdca25ebb77012a7bf1717de70da14f98dd6ebd12a"
   },
   {
     "path": "outputs/mori-phone/lib/providers.ts",
     "description": "服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts",
-    "bytes": 6075,
-    "sha256": "f25ed97a1ebbde36586c5bd68f2d8a23e4c926f7b4e4901b2be4e73332467444"
+    "bytes": 6837,
+    "sha256": "e84432504b415742d2607b50ff15d9e1fca773dcd93af37d7bc4616e1d486058"
   },
   {
     "path": "outputs/mori-phone/lib/reasoning.ts",

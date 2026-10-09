@@ -8,7 +8,7 @@ const image=z.object({type:z.literal('image_url'),image_url:z.object({url:z.stri
 const nativeMedia=z.object({type:z.literal('native_media'),native_media:z.object({mimeType:z.enum(['audio/webm','audio/mp4','audio/mpeg','audio/wav','audio/x-wav','audio/ogg','audio/flac','audio/aac','video/mp4','video/webm']),data:z.string().max(11200000).regex(/^[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const text=z.object({type:z.literal('text'),text:z.string().max(200000)}).strict();
 export const chatInput=z.object({provider:providerSchema,model:z.string().min(1).max(160),apiKey:z.string().min(8).max(2048),baseURL:z.string().max(1500).default(''),sampling:samplingSchema,supportedParameters:z.array(z.string().min(1).max(80)).max(80).optional(),messages:z.array(z.object({role:z.enum(['system','user','assistant']),content:z.union([z.string().max(200000),z.array(z.union([image,text,nativeMedia])).max(3)])}).strict()).min(2).max(100010)}).strict().superRefine((data,ctx)=>{
- let images=0,chars=0;for(const m of data.messages){if(typeof m.content==='string')chars+=m.content.length;else for(const p of m.content){if(p.type==='image_url')images++;else if(p.type==='native_media'){images++;if(data.provider!=='gemini')ctx.addIssue({code:'custom',message:'当前适配器不支持原生音视频，请使用转写文本。'});}else chars+=p.text.length;}if(m.role==='system'&&typeof m.content!=='string')ctx.addIssue({code:'custom',message:'系统背景只能包含文字'});}
+ let images=0,chars=0;for(const m of data.messages){if(typeof m.content==='string')chars+=m.content.length;else for(const p of m.content){if(p.type==='image_url')images++;else if(p.type==='native_media'){images++;if(getProvider(data.provider).protocol!=='gemini')ctx.addIssue({code:'custom',message:'当前适配器不支持原生音视频，请使用转写文本。'});}else chars+=p.text.length;}if(m.role==='system'&&typeof m.content!=='string')ctx.addIssue({code:'custom',message:'系统背景只能包含文字'});}
  if(images>2||chars>16777216||data.messages[0].role!=='system'||data.messages.slice(1).some(m=>m.role==='system'))ctx.addIssue({code:'custom',message:'对话上下文格式不正确或过大'});
 });
 export type ChatInput=z.infer<typeof chatInput>;
@@ -38,10 +38,10 @@ export function wireRequest(data:ChatInput){
 }
 export function modelsRequest(provider:ChatInput['provider'],apiKey:string,baseURL=''){
  const p=getProvider(provider),base=providerBase(provider,baseURL),headers:Record<string,string>={Accept:'application/json'};
- if(p.protocol==='anthropic'){headers['x-api-key']=apiKey;headers['anthropic-version']='2023-06-01';}else if(p.protocol==='gemini')headers['x-goog-api-key']=apiKey;else headers.Authorization='Bearer '+apiKey;
+ if(p.protocol==='anthropic'){headers['x-api-key']=apiKey;headers['anthropic-version']='2023-06-01';}else if(p.protocol==='gemini')headers['x-goog-api-key']=apiKey;else if(provider!=='openrouter'&&apiKey)headers.Authorization='Bearer '+apiKey;
  return {url:base+'/models',headers};
 }
-export function extractModels(provider:ChatInput['provider'],body:any){const list=getProvider(provider).protocol==='gemini'?(body.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')).map((m:any)=>m.name?.replace(/^models\//,'')):(body.data||[]).map((m:any)=>m.id);return [...new Set(list.filter((id:unknown)=>typeof id==='string'&&id.length>0&&id.length<=160))].slice(0,300) as string[];}
+export function extractModels(provider:ChatInput['provider'],body:any){const list=getProvider(provider).protocol==='gemini'?(body.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')).map((m:any)=>m.name?.replace(/^models\//,'')):(body.data||[]).map((m:any)=>m.id);return [...new Set(list.filter((id:unknown)=>typeof id==='string'&&id.length>0&&id.length<=160))].slice(0,2500) as string[];}
 
 // Normalize native events without storing a request or response. A completion marker is required for a successful stream.
 export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'openai'|'anthropic'|'gemini'){

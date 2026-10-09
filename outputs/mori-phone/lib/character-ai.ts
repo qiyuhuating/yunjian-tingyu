@@ -1,5 +1,5 @@
 import type {Character,PhoneState} from './phone-model';
-import {getProvider,type ProviderId} from './providers';
+import {getProvider,isCustomProvider,type ProviderId} from './providers';
 
 // The role card contains connection preferences only. Credentials live in the
 // device's encrypted key store, never in chat history, exports or backups.
@@ -12,6 +12,6 @@ export function characterConnection(state:PhoneState,character:Character,useDefa
  const preset=getProvider(override.provider);
  // A "compatible" role can target an arbitrary HTTPS host. Never reuse the
  // unrelated globally configured compatible key with that host.
- const ownKey=override.provider==='compatible'||override.keyScope==='character';
- return {provider:override.provider,model:override.model,baseURL:override.provider==='compatible'?override.baseURL:preset.baseURL,vision:override.vision,keyScope:ownKey?'character' as const:'provider' as const,keySlot:ownKey?characterKeySlot(character.id,override.provider):override.provider,inherited:false};
+ const ownKey=isCustomProvider(override.provider)||override.keyScope==='character';
+ return {provider:override.provider,model:override.model,baseURL:isCustomProvider(override.provider)?override.baseURL:preset.baseURL,vision:override.vision,keyScope:ownKey?'character' as const:'provider' as const,keySlot:ownKey?characterKeySlot(character.id,override.provider):override.provider,inherited:false};
 }

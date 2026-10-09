@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 import type {Character} from '../lib/phone-model';
 import {characterKeySlot} from '../lib/character-ai';
 import {readDeviceKey,saveDeviceKey} from '../lib/local-phone';
-import {getProvider,providers,type ProviderId} from '../lib/providers';
+import {getProvider,isCustomProvider,providers,type ProviderId} from '../lib/providers';
 import {FormField,usePhone} from './ui';
 
 export default function CharacterAISettings({character,onChange,persisted}:{character:Character;onChange:(value:Character)=>void;persisted:boolean}){
@@ -17,9 +17,9 @@ export default function CharacterAISettings({character,onChange,persisted}:{char
  const update=(next:Partial<NonNullable<Character['aiConnection']>>)=>{if(connection)onChange({...character,aiConnection:{...connection,...next}});};
  const choose=(value:string)=>{if(!value){onChange({...character,aiConnection:undefined});return;}
   const provider=value as ProviderId,setting=getProvider(provider);
-  onChange({...character,aiConnection:{provider,model:setting.model,baseURL:setting.baseURL,vision:setting.vision,keyScope:provider==='compatible'?'character':'provider'}});
+  onChange({...character,aiConnection:{provider,model:setting.model,baseURL:setting.baseURL,vision:setting.vision,keyScope:isCustomProvider(provider)?'character':'provider'}});
  };
- const dedicated=!!connection&&(connection.provider==='compatible'||connection.keyScope==='character');
+ const dedicated=!!connection&&(isCustomProvider(connection.provider)||connection.keyScope==='character');
  const save=async(remove=false)=>{if(!slot||!persisted)return;const value=remove?'':key.trim();if(value&&value.length<8){p.toast('请填写完整的角色 API Key。');return;}
   setSaving(true);try{await saveDeviceKey(p.ownerId,slot,value);if(await readDeviceKey(p.ownerId,slot)!==value)throw new Error('角色密钥保存校验失败。');
    setKey('');setHasSavedKey(!!value);p.toast(value?'角色专属 Key 已加密保存在本机。':'角色专属 Key 已移除。');
@@ -35,9 +35,9 @@ export default function CharacterAISettings({character,onChange,persisted}:{char
   {connection&&<>
    <FormField label="模型 ID"><input aria-label="角色模型 ID" list={'role-models-'+character.id} maxLength={160} value={connection.model} onChange={e=>update({model:e.target.value})}/></FormField>
    <datalist id={'role-models-'+character.id}>{getProvider(connection.provider).models.map(model=><option key={model} value={model}/>)}</datalist>
-   {connection.provider==='compatible'&&<FormField label="OpenAI 兼容 HTTPS 地址"><input aria-label="角色 API 地址" type="url" maxLength={1500} value={connection.baseURL} placeholder="https://api.example.com/v1" onChange={e=>update({baseURL:e.target.value})}/></FormField>}
+   {isCustomProvider(connection.provider)&&<FormField label="自定义 HTTPS API 地址"><input aria-label="角色 API 地址" type="url" maxLength={1500} value={connection.baseURL} placeholder="https://api.example.com/v1" onChange={e=>update({baseURL:e.target.value})}/></FormField>}
    <label className="check-label"><input type="checkbox" checked={connection.vision} onChange={e=>update({vision:e.target.checked})}/>这个角色的模型支持图片理解</label>
-   {connection.provider!=='compatible'&&<FormField label="API Key 使用方式"><select aria-label="角色 Key 使用方式" value={connection.keyScope} onChange={e=>update({keyScope:e.target.value as 'provider'|'character'})}><option value="provider">共用此服务商已保存的 Key</option><option value="character">使用这位角色自己的 Key</option></select></FormField>}
+   {!isCustomProvider(connection.provider)&&<FormField label="API Key 使用方式"><select aria-label="角色 Key 使用方式" value={connection.keyScope} onChange={e=>update({keyScope:e.target.value as 'provider'|'character'})}><option value="provider">共用此服务商已保存的 Key</option><option value="character">使用这位角色自己的 Key</option></select></FormField>}
    {dedicated&&<>
     <FormField label="角色专属 API Key"><input aria-label="角色专属 API Key" type="password" autoComplete="off" spellCheck={false} maxLength={2048} value={key} placeholder={hasSavedKey?'已保存，可输入新 Key 替换':'填写角色自己的 API Key'} onChange={e=>setKey(e.target.value)}/></FormField>
     <div className="button-row"><button type="button" className="soft-button" disabled={!persisted||saving||key.trim().length<8} onClick={()=>void save()}>保存角色 Key</button><button type="button" className="text-button" disabled={!persisted||saving||!hasSavedKey} onClick={()=>void save(true)}>清除角色 Key</button></div>
