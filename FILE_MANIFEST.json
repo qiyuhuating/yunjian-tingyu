@@ -14,8 +14,8 @@
   {
     "path": ".github/workflows/verify.yml",
     "description": "持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml",
-    "bytes": 3947,
-    "sha256": "7affcf84e0048bc946b0c0e293fe51abdb126daeea47973c42e9a0bb67ba3255"
+    "bytes": 4770,
+    "sha256": "1ef0b2cac6cd466f16d9c5705e7b3b23bc5ac9cfc07d1bd1dc52968a2a24d1d3"
   },
   {
     "path": ".gitignore",

@@ -62,6 +62,13 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-0.0.2-unsigned.apk > work/apk-candidate/package-info.txt
           python3 -c 'from pathlib import Path; s=Path("work/apk-candidate/package-info.txt").read_text(); assert "name=\"chat.cloudlet.phone\"" in s.replace(chr(39),chr(34)) and "versionCode=\"8\"" in s.replace(chr(39),chr(34)) and "versionName=\"0.0.2\"" in s.replace(chr(39),chr(34)), s'
           cd work/apk-candidate && sha256sum yunjian-tingyu-0.0.2-unsigned.apk > SHA256SUMS
+      - name: Verify 0.0.2 independent package and Via provider
+        run: |
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-v002-independent-preview.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-v002-independent-preview.apk > work/apk-candidate/standalone-package.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/yunjian-v002-independent-preview.apk AndroidManifest.xml > work/apk-candidate/standalone-manifest.txt
+          grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/standalone-package.txt
+          grep -F 'mark.via.phonev02' work/apk-candidate/standalone-manifest.txt
       - uses: actions/upload-artifact@v4
         with:
           name: yunjian-tingyu-0.0.2-unsigned
