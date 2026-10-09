@@ -142,7 +142,7 @@
 | [outputs/mori-phone/app/media-settings.tsx](outputs/mori-phone/app/media-settings.tsx) | 真实媒体能力开关、模型/地址和独立 Key 配置入口；路径：outputs/mori-phone/app/media-settings.tsx | 4418 |
 | [outputs/mori-phone/app/memory-drawer.tsx](outputs/mori-phone/app/memory-drawer.tsx) | 本地记忆编辑、锁定保护、来源证据、修改历史和按角色筛选；路径：outputs/mori-phone/app/memory-drawer.tsx | 3970 |
 | [outputs/mori-phone/app/message-text.tsx](outputs/mori-phone/app/message-text.tsx) | 完整 Markdown 与代码复制、保存、长代码折叠；路径：outputs/mori-phone/app/message-text.tsx | 2016 |
-| [outputs/mori-phone/app/modules.tsx](outputs/mori-phone/app/modules.tsx) | React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx | 25637 |
+| [outputs/mori-phone/app/modules.tsx](outputs/mori-phone/app/modules.tsx) | React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx | 25501 |
 | [outputs/mori-phone/app/music.tsx](outputs/mori-phone/app/music.tsx) | 一起听、本地音乐、歌词及外部音乐链接；路径：outputs/mori-phone/app/music.tsx | 5235 |
 | [outputs/mori-phone/app/page.tsx](outputs/mori-phone/app/page.tsx) | React 界面模块：page；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/page.tsx | 255 |
 | [outputs/mori-phone/app/pet-3d.tsx](outputs/mori-phone/app/pet-3d.tsx) | 可见时才绘制的低负载 3D 宠物与减少动态效果的静态表情刷新；路径：outputs/mori-phone/app/pet-3d.tsx | 6200 |
@@ -150,12 +150,12 @@
 | [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx | 29993 |
 | [outputs/mori-phone/app/realtime-call.tsx](outputs/mori-phone/app/realtime-call.tsx) | React 界面模块：realtime-call；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/realtime-call.tsx | 6236 |
 | [outputs/mori-phone/app/recording-preview.tsx](outputs/mori-phone/app/recording-preview.tsx) | 原录音试听与对象 URL 生命周期；路径：outputs/mori-phone/app/recording-preview.tsx | 350 |
-| [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31305 |
+| [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31630 |
 | [outputs/mori-phone/app/render-recovery.tsx](outputs/mori-phone/app/render-recovery.tsx) | 渲染异常恢复界面、当前内存记录备份入口与重新打开确认；路径：outputs/mori-phone/app/render-recovery.tsx | 716 |
 | [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1622 |
 | [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx | 14961 |
 | [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1846 |
-| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | 共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx | 9490 |
+| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | 共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx | 10375 |
 | [outputs/mori-phone/app/use-editor-draft.ts](outputs/mori-phone/app/use-editor-draft.ts) | 按编辑器键切换持久草稿，拒绝前一编辑器迟到回调的Hook；路径：outputs/mori-phone/app/use-editor-draft.ts | 1352 |
 | [outputs/mori-phone/app/use-recorder.ts](outputs/mori-phone/app/use-recorder.ts) | 真实麦克风、MediaRecorder、最长两分钟录音、试听文件与取消/后台释放；路径：outputs/mori-phone/app/use-recorder.ts | 3201 |
 | [outputs/mori-phone/app/use-voice.ts](outputs/mori-phone/app/use-voice.ts) | 设备文字朗读与真实服务 TTS 的统一播放和取消所有权；路径：outputs/mori-phone/app/use-voice.ts | 2572 |
@@ -410,3 +410,25 @@
 | [work/verify-signing-gate.py](work/verify-signing-gate.py) | 通过真实构建预检验证缺少私钥和替换私钥均被拒绝，临时测试密钥自动销毁；路径：work/verify-signing-gate.py | 2029 |
 | [work/verify-ui-apk.py](work/verify-ui-apk.py) | 上一版群聊优化交付；当时群聊版的签名、同证书、对齐、CRC 和源资源一致性检查；路径：work/verify-ui-apk.py | 4652 |
 | [work/write-release-report.py](work/write-release-report.py) | 汇总发布检查结果与安装信息；路径：work/write-release-report.py | 5889 |
+
+## 新增应用入口插画（2026-10-09）
+
+仅为缺少独立绘图的应用入口新增资源；已有手绘图与 Dock 图保持原样，设置和聊天界面的操作图标仍为原 SVG。
+
+| 文件 | 用途 | 字节数 |
+| --- | --- | ---: |
+| [docs/launcher-illustration-design.md](docs/launcher-illustration-design.md) | 启动器插画范围、映射、布局和验收说明；路径：docs/launcher-illustration-design.md | 1928 |
+| [outputs/mori-phone/public/app-illustrations/characters.svg](outputs/mori-phone/public/app-illustrations/characters.svg) | 仅用于应用入口的角色设定绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/characters.svg | 1731 |
+| [outputs/mori-phone/public/app-illustrations/face.svg](outputs/mori-phone/public/app-illustrations/face.svg) | 仅用于应用入口的面对面绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/face.svg | 1725 |
+| [outputs/mori-phone/public/app-illustrations/favorites.svg](outputs/mori-phone/public/app-illustrations/favorites.svg) | 仅用于应用入口的收藏绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/favorites.svg | 1561 |
+| [outputs/mori-phone/public/app-illustrations/focus.svg](outputs/mori-phone/public/app-illustrations/focus.svg) | 仅用于应用入口的专注绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/focus.svg | 1698 |
+| [outputs/mori-phone/public/app-illustrations/live.svg](outputs/mori-phone/public/app-illustrations/live.svg) | 仅用于应用入口的直播绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/live.svg | 1708 |
+| [outputs/mori-phone/public/app-illustrations/lore.svg](outputs/mori-phone/public/app-illustrations/lore.svg) | 仅用于应用入口的世界书绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/lore.svg | 1683 |
+| [outputs/mori-phone/public/app-illustrations/music.svg](outputs/mori-phone/public/app-illustrations/music.svg) | 仅用于应用入口的一起听音乐绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/music.svg | 1871 |
+| [outputs/mori-phone/public/app-illustrations/notes.svg](outputs/mori-phone/public/app-illustrations/notes.svg) | 仅用于应用入口的小纸条绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/notes.svg | 1700 |
+| [outputs/mori-phone/public/app-illustrations/pet.svg](outputs/mori-phone/public/app-illustrations/pet.svg) | 仅用于应用入口的小云宠物绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/pet.svg | 1880 |
+| [outputs/mori-phone/public/app-illustrations/tasks.svg](outputs/mori-phone/public/app-illustrations/tasks.svg) | 仅用于应用入口的任务绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/tasks.svg | 1710 |
+| [outputs/mori-phone/public/app-illustrations/wallet.svg](outputs/mori-phone/public/app-illustrations/wallet.svg) | 仅用于应用入口的钱包绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/wallet.svg | 1759 |
+| [outputs/mori-phone/public/app-illustrations/weather.svg](outputs/mori-phone/public/app-illustrations/weather.svg) | 仅用于应用入口的天气绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/weather.svg | 1735 |
+| [outputs/mori-phone/public/app-illustrations/weibo.svg](outputs/mori-phone/public/app-illustrations/weibo.svg) | 仅用于应用入口的小镇微博绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/weibo.svg | 1699 |
+| [outputs/mori-phone/public/app-illustrations/work.svg](outputs/mori-phone/public/app-illustrations/work.svg) | 仅用于应用入口的工作绘画 SVG，配合原有插画设计；路径：outputs/mori-phone/public/app-illustrations/work.svg | 1773 |
