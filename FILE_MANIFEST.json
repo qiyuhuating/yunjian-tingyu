@@ -9,7 +9,7 @@
     "path": ".github/workflows/release-standalone-v002.yml",
     "description": "独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml",
     "bytes": 8082,
-    "sha256": "52d5da06dcd3db124ffa019f52b0b9308ab0433095f30da357ea0da8f985fe68"
+    "sha256": "9c5e5f4a0f444195df85dae93f8be35f3d951c560290b24d9a3311721bd0fbcd"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -39,7 +39,7 @@
     "path": "docs/0.0.2.md",
     "description": "0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2.md",
     "bytes": 4237,
-    "sha256": "db4ae1c38c871f1c27307f187ec8fdaea4aa2fbd6f653d762fdc89776cfb9781"
+    "sha256": "beb9d263cc8e448749ba61c79f5aad568f7a220bd8cb8b95ad065e9f1800bb41"
   },
   {
     "path": "docs/build-performance-results.json",
@@ -441,13 +441,13 @@
     "path": "outputs/android/build-apk.py",
     "description": "正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py",
     "bytes": 6976,
-    "sha256": "3199e08cf772247688767b97891481f73a078197814d52814f943cf72c010a84"
+    "sha256": "7b786779ad474e07980ccb88f0d7c9a749ffa748706571f89997351fa98c1c7e"
   },
   {
     "path": "outputs/android/merge-via.py",
     "description": "保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py",
     "bytes": 6626,
-    "sha256": "1394313aed1f1a957a9aadc2d2924a61ec08d731340803b85b198dcb46456a0e"
+    "sha256": "a81b95f6e209a5cc7d6e98139823b62c9f9e77b81809d1796807c987ea03856c"
   },
   {
     "path": "outputs/android/README.md",
