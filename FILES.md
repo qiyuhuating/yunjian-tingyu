@@ -28,7 +28,7 @@
 | [docs/核心提示词隔离说明.md](docs/核心提示词隔离说明.md) | 用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据；路径：docs/核心提示词隔离说明.md | 7151 |
 | [docs/群聊与角色记忆调研.md](docs/群聊与角色记忆调研.md) | Telegram、Hermes、kuihua 与 PDF.js 的一手来源、实施计划和能力边界；路径：docs/群聊与角色记忆调研.md | 4714 |
 | [docs/自然群聊与内置Via说明.md](docs/自然群聊与内置Via说明.md) | 自然群聊、Via二进制来源/合包、参考首页回退、系统栏和实际原生验收；路径：docs/自然群聊与内置Via说明.md | 4326 |
-| [docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md](docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md) | SillyTavern固定版本研究、计划决策执行验收、兼容范围与正式发布门槛；路径：docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md | 10299 |
+| [docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md](docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md) | SillyTavern固定版本研究、计划决策执行验收、兼容范围与正式发布门槛；路径：docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md | 10617 |
 | [docs/角色独立AI模型路由.md](docs/角色独立AI模型路由.md) | 角色独立服务商、专属密钥和群聊路由的产品说明、手工配置流程与验收标准；路径：docs/角色独立AI模型路由.md | 3892 |
 | [outputs/0.0.1暗夜聊天预览.png](outputs/0.0.1暗夜聊天预览.png) | 界面预览或绘图资源：0.0.1暗夜聊天预览.png；目录 outputs；路径：outputs/0.0.1暗夜聊天预览.png | 83201 |
 | [outputs/0.0.1暗夜设置预览.png](outputs/0.0.1暗夜设置预览.png) | 界面预览或绘图资源：0.0.1暗夜设置预览.png；目录 outputs；路径：outputs/0.0.1暗夜设置预览.png | 174224 |
@@ -191,7 +191,7 @@
 | [outputs/mori-phone/lib/reasoning.ts](outputs/mori-phone/lib/reasoning.ts) | 思考强度与模型能力转换；路径：outputs/mori-phone/lib/reasoning.ts | 5898 |
 | [outputs/mori-phone/lib/roleplay.ts](outputs/mori-phone/lib/roleplay.ts) | 保持人物价值观和示例边界、为技术任务保留完整回答的节奏预设；路径：outputs/mori-phone/lib/roleplay.ts | 3748 |
 | [outputs/mori-phone/lib/server-phone.ts](outputs/mori-phone/lib/server-phone.ts) | TypeScript 业务或构建模块：server-phone；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/server-phone.ts | 2736 |
-| [outputs/mori-phone/lib/system-prompt.ts](outputs/mori-phone/lib/system-prompt.ts) | 保持原始核心常量与独立事实摘要规则，不插入角色或个人资料；路径：outputs/mori-phone/lib/system-prompt.ts | 3126 |
+| [outputs/mori-phone/lib/system-prompt.ts](outputs/mori-phone/lib/system-prompt.ts) | 用户聊天核心与后台事实整理器的隔离指令；记忆任务按JSON契约输出，摘要按普通条目输出；路径：outputs/mori-phone/lib/system-prompt.ts | 3315 |
 | [outputs/mori-phone/lib/world-info.ts](outputs/mori-phone/lib/world-info.ts) | 作用域、四类关键词逻辑、完整条目预算、模板和有界递归的世界书引擎；路径：outputs/mori-phone/lib/world-info.ts | 3333 |
 | [outputs/mori-phone/next.config.ts](outputs/mori-phone/next.config.ts) | TypeScript 业务或构建模块：next.config；位于 outputs/mori-phone；路径：outputs/mori-phone/next.config.ts | 133 |
 | [outputs/mori-phone/package-lock.json](outputs/mori-phone/package-lock.json) | 可重复安装依赖的版本锁定清单：outputs/mori-phone；路径：outputs/mori-phone/package-lock.json | 409358 |

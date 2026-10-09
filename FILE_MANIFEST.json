@@ -145,8 +145,8 @@
   },
   {
     "path": "docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md",
-    "bytes": 10299,
-    "sha256": "33be6ee99b9cfcefd3055c2ad41d7b16bf953f55f47b9443ed33b6d7fb01da4e",
+    "bytes": 10617,
+    "sha256": "be7d1bec7d5c944642bc39f496d2bf780b5fe7a959156970c6c760ee90d8545a",
     "description": "SillyTavern固定版本研究、计划决策执行验收、兼容范围与正式发布门槛；路径：docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md"
   },
   {
@@ -1123,9 +1123,9 @@
   },
   {
     "path": "outputs/mori-phone/lib/system-prompt.ts",
-    "description": "保持原始核心常量与独立事实摘要规则，不插入角色或个人资料；路径：outputs/mori-phone/lib/system-prompt.ts",
-    "bytes": 3126,
-    "sha256": "02e90c5007dcc847c318f6dcd830227d58b4e5c188678eb5a5aa5fdb9c5c0e4f"
+    "description": "用户聊天核心与后台事实整理器的隔离指令；记忆任务按JSON契约输出，摘要按普通条目输出；路径：outputs/mori-phone/lib/system-prompt.ts",
+    "bytes": 3315,
+    "sha256": "47405ca487bb53f28e108df93c3e090c652b0d6352c0409621233176e9962171"
   },
   {
     "path": "outputs/mori-phone/lib/world-info.ts",
