@@ -1,0 +1,136 @@
+{
+  "providers": [
+    {
+      "provider": "openrouter",
+      "status": "failed",
+      "requests": 6,
+      "model": "liquid/lfm-2.5-2.6b:free",
+      "parameterNames": [
+        "stream",
+        "max_tokens",
+        "temperature",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "stream_options",
+        "provider"
+      ],
+      "probes": [
+        {
+          "phase": "first",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18975,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 14,
+          "firstTokenMs": 4890.307699999999,
+          "durationMs": 4891.9082,
+          "usage": {
+            "prompt": 3294,
+            "completion": 120,
+            "hit": 3280,
+            "miss": 14
+          },
+          "cacheHitRate": 0.9957498482088646
+        },
+        {
+          "phase": "repeat",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18975,
+          "status": "failed",
+          "failure": "incomplete_or_wrong_role",
+          "finishReason": "stop",
+          "replyCharacters": 16,
+          "firstTokenMs": 15814.792800000001,
+          "durationMs": 15954.618800000002,
+          "usage": {
+            "prompt": 3294,
+            "completion": 567,
+            "hit": 3280,
+            "miss": 14
+          },
+          "cacheHitRate": 0.9957498482088646
+        },
+        {
+          "phase": "parallel-3",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18975,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 14,
+          "firstTokenMs": 9459.0272,
+          "durationMs": 9463.877199999999,
+          "usage": {
+            "prompt": 3294,
+            "completion": 465,
+            "hit": 3280,
+            "miss": 14
+          },
+          "cacheHitRate": 0.9957498482088646
+        },
+        {
+          "phase": "parallel-3",
+          "role": "reviewer",
+          "http": 200,
+          "reservedTokenUpperBound": 18979,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 16,
+          "firstTokenMs": 6642.842199999999,
+          "durationMs": 6789.354899999998,
+          "usage": {
+            "prompt": 3296,
+            "completion": 325,
+            "hit": 0,
+            "miss": 3296
+          },
+          "cacheHitRate": 0
+        },
+        {
+          "phase": "parallel-3",
+          "role": "integrator",
+          "http": 200,
+          "reservedTokenUpperBound": 18983,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 18,
+          "firstTokenMs": 4271.429200000002,
+          "durationMs": 4272.133700000002,
+          "usage": {
+            "prompt": 3296,
+            "completion": 96,
+            "hit": 3264,
+            "miss": 32
+          },
+          "cacheHitRate": 0.9902912621359223
+        }
+      ],
+      "parallelWallMs": 9464.3001,
+      "cache": {
+        "reportedRequests": 5,
+        "promptTokens": 16474,
+        "hitTokens": 13104,
+        "tokenWeightedHitRate": 0.7954352312735219,
+        "coverageRequests": 5
+      },
+      "tokens": 18047,
+      "invalidKeyHTTP": 401
+    },
+    {
+      "provider": "deepseek",
+      "status": "blocked",
+      "reason": "Temporary API credential not provided",
+      "requests": 0
+    }
+  ],
+  "passed": 0,
+  "blocked": 1,
+  "failed": 1,
+  "tokenLimit": 20000000,
+  "reservedUpperBound": 94887,
+  "reportedTotalTokens": 18047,
+  "scope": "Actual source provider adapter; first/repeat and three concurrent roles. API throughput only, not app UI/FPS/Android or Hermes collaboration acceptance. Cache rate=sum reported cache-hit prompt tokens / sum prompts with reported cache fields; absent fields remain unknown. No credentials, headers or response bodies recorded."
+}

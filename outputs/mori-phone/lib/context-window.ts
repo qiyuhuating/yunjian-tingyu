@@ -6,7 +6,10 @@ import {reasoningPlan} from './reasoning';
 export const MAX_CONTEXT_TOKENS=16777216;
 const tokens=z.number().int().min(1).max(MAX_CONTEXT_TOKENS);
 export const modelLimitSchema=z.object({contextTokens:tokens.optional(),inputTokens:tokens.optional(),outputTokens:tokens.optional()}).strict();
-export type ModelLimit=z.infer<typeof modelLimitSchema>;
+export type ModelLimit=z.infer<typeof modelLimitSchema>&{supportedParameters?:string[]};
+const routerParameters=new Map<string,string[]>();
+export const routerModelParameters=(model:string)=>routerParameters.get(model);
+export function rememberRouterParameters(model:string,parameters:string[]){routerParameters.set(model,parameters);}
 export function modelLimitKey(provider:ProviderId,baseURL:string,model:string){return provider+'|'+(provider==='compatible'?baseURL.trim().replace(/\/$/,''):getProvider(provider).baseURL)+'|'+model;}
 export function extractModelLimits(provider:ProviderId,body:any){
  const rows=getProvider(provider).protocol==='gemini'?body.models:body.data,result:Record<string,ModelLimit>={};
@@ -14,7 +17,8 @@ export function extractModelLimits(provider:ProviderId,body:any){
  const valid=(value:unknown)=>tokens.safeParse(value).success?value as number:undefined;
  for(const row of rows.slice(0,300)){
   const id=provider==='gemini'?row.name?.replace(/^models\//,''):row.id;if(typeof id!=='string'||!id.length||id.length>160)continue;
-  const limit={contextTokens:valid(row.context_window??row.context_length??row.top_provider?.context_length),inputTokens:valid(row.inputTokenLimit??row.max_input_tokens),outputTokens:valid(row.outputTokenLimit??row.max_output_tokens??row.max_tokens??row.top_provider?.max_completion_tokens)};
+  const supportedParameters=provider==='openrouter'&&Array.isArray(row.supported_parameters)?row.supported_parameters.filter((p:unknown)=>typeof p==='string'&&p.length>0&&p.length<=80).slice(0,80) as string[]:undefined;
+  const limit={contextTokens:valid(row.context_window??row.context_length??row.top_provider?.context_length),inputTokens:valid(row.inputTokenLimit??row.max_input_tokens),outputTokens:valid(row.outputTokenLimit??row.max_output_tokens??row.max_tokens??row.top_provider?.max_completion_tokens),...(supportedParameters?{supportedParameters}:{})};
   if(limit.contextTokens||limit.inputTokens)result[id]=limit;
  }
  return result;

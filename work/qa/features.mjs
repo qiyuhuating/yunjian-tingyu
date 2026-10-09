@@ -62,4 +62,3 @@ try{
  await page.locator('.message-flow').evaluate(n=>n.scrollTop=n.scrollHeight);await page.waitForTimeout(250);
  await page.screenshot({path:path.join(path.dirname(report),'feature-chat-preview.png')});console.log(JSON.stringify({passed:checks.length,pageErrors:errors}));
 }catch(e){await page.screenshot({path:path.join(repo,'work/feature-test-failure.png')});throw e;}finally{await context.close();await browser.close();await new Promise(r=>server.close(r));}
-

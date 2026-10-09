@@ -19,7 +19,8 @@ export const providers:ProviderPreset[]=[
 export const getProvider=(id:ProviderId)=>providers.find(p=>p.id===id)!;
 export function capabilities(id:ProviderId,model:string){
  const p=getProvider(id),reasoning=id==='openai'&&/^(o[134]|gpt-5)/.test(model),modernClaude=id==='anthropic'&&/claude-(opus|sonnet)-4-[6-9]/.test(model),kimi=id==='moonshot'&&/^kimi-k2/.test(model),grok=id==='xai'&&/^grok-4/.test(model);
- return {...p,temperature:!reasoning&&!modernClaude&&!kimi&&!grok,penalties:p.penalties&&!reasoning&&!kimi,frequency:(p.frequency??p.penalties)&&!reasoning&&!kimi,presence:(p.presence??p.penalties)&&!reasoning&&!kimi,topP:!reasoning&&id!=='anthropic'&&!kimi&&!grok};
+ // The Liquid free endpoint rejects top_p in a live probe despite advertising support.
+ return {...p,temperature:!reasoning&&!modernClaude&&!kimi&&!grok,penalties:p.penalties&&!reasoning&&!kimi,frequency:(p.frequency??p.penalties)&&!reasoning&&!kimi,presence:(p.presence??p.penalties)&&!reasoning&&!kimi,topP:!reasoning&&id!=='anthropic'&&!kimi&&!grok&&!(id==='openrouter'&&model==='liquid/lfm-2.5-2.6b:free')};
 }
 export function providerBase(id:ProviderId,custom=''){
  const base=id==='compatible'?custom:getProvider(id).baseURL;const url=new URL(base);

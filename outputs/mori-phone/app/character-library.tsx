@@ -3,7 +3,7 @@ import {useDeferredValue,useMemo,useState} from 'react';
 import {ChevronLeft,Download,Plus,Search,Upload} from 'lucide-react';
 import {loreSchema,uid,type SavedCard,type PhoneState} from '../lib/phone-model';
 import {exportCharacter,type ImportedCharacter} from '../lib/character-import';
-import {addSavedCard,blankSavedCard,cardCharacter,cardSettings,copySavedCard,editSavedCard,makeSavedCard,previewSavedCard,removeSavedCard} from '../lib/character-library';
+import {addSavedCard,blankSavedCard,cardCharacter,cardSettings,copySavedCard,editSavedCard,previewSavedCard,removeSavedCard} from '../lib/character-library';
 import {Avatar,FormField,downloadJson,usePhone} from './ui';
 import {useEditorDraft} from './use-editor-draft';
 import CardAnalysisPreview from './card-analysis-preview';
@@ -13,11 +13,11 @@ function CardEditor({initial,onClose,onUse}:{initial:SavedCard;onClose:()=>void;
  const {state,commit,upload,toast}=usePhone();
  const [wasSaved]=useState(state.characterCards.some(c=>c.id===initial.id));
  const [card,setCard,clear]=useEditorDraft<SavedCard>('editor:cards:'+(wasSaved?initial.id:'new'),initial),[busy,setBusy]=useState(false),[loreQuery,setLoreQuery]=useState(''),[lorePage,setLorePage]=useState(0);
- const persisted=state.characterCards.find(c=>c.id===card.id),[baseline]=useState(card.revision);
+ const persisted=state.characterCards.find(c=>c.id===card.id),[savedId,setSavedId]=useState(persisted?.id||''),[baseline,setBaseline]=useState(card.revision);
  const character={...card.character,affection:0,trust:30},setCharacter=(changes:Partial<SavedCard['character']>)=>setCard({...card,character:{...card.character,...changes}});
  const loreMatches=card.lore.filter(l=>(l.title+l.keys+l.text).includes(loreQuery)),lastPage=Math.max(0,Math.ceil(loreMatches.length/20)-1),page=Math.min(lorePage,lastPage);
  const setLore=(id:string,changes:Partial<PhoneState['lore'][number]>)=>setCard({...card,lore:card.lore.map(l=>l.id===id?{...l,...changes}:l)});
- const save=async()=>{if(busy)return;setBusy(true);try{await commit(s=>{if(wasSaved)editSavedCard(s,card,baseline);else addSavedCard(s,{...makeSavedCard(character,card.lore),folder:card.folder,favorite:card.favorite,notes:card.notes});});clear(card);toast('角色卡已保存到仓库。');onClose();}catch(e){toast(e instanceof Error?e.message:'保存失败，草稿仍保留。');}finally{setBusy(false);}};
+ const save=async()=>{if(busy)return;setBusy(true);try{let saved:SavedCard|undefined;await commit(s=>{let id=savedId;if(id)editSavedCard(s,card,baseline);else id=addSavedCard(s,card).id;saved=JSON.parse(JSON.stringify(s.characterCards.find(c=>c.id===id)));});if(!saved)throw new Error('保存的角色卡不可用。');setSavedId(saved.id);setBaseline(saved.revision);const cleared=clear(card,card);if(!cleared){const stored=saved;setCard(latest=>({...latest,id:stored.id,character:{...latest.character,id:stored.id},lore:latest.lore.map(l=>({...l,scope:stored.id})),revision:stored.revision,createdAt:stored.createdAt,updatedAt:stored.updatedAt}));}toast(cleared?'角色卡已保存到仓库。':'角色卡已保存；新输入仍保留在草稿中。');if(cleared)onClose();}catch(e){toast(e instanceof Error?e.message:'保存失败，草稿仍保留。');}finally{setBusy(false);}};
  const preview=useMemo<ImportedCharacter>(()=>({character:{...card.character,affection:0,trust:30},lore:card.lore,warnings:[],format:'卡库草稿'}),[card]);
  return <div className="scroll-panel"><button className="text-button" disabled={busy} onClick={onClose}><ChevronLeft size={16}/>返回角色卡仓库</button><div className="profile-hero"><Avatar character={character} size="large"/><div><h2>编辑角色卡</h2><small>{persisted?'第 '+persisted.revision+' 版':'尚未收入仓库'} · 修改后点击保存</small></div></div><p className="helper">卡片是可重复使用的设定。编辑卡片不会自动修改已创建角色；未保存内容会保留为本机草稿。</p>
  <section className="settings-section"><h3>收藏与分类</h3><FormField label="卡片名字"><input maxLength={50} value={card.character.name} onChange={e=>setCharacter({name:e.target.value})}/></FormField><FormField label="分类"><input maxLength={160} value={card.folder} onChange={e=>setCard({...card,folder:e.target.value})}/></FormField><FormField label="标签（逗号分隔）"><input defaultValue={card.character.tags.join(', ')} onBlur={e=>setCharacter({tags:e.target.value.split(/[,，]/).map(t=>t.trim()).filter(Boolean).slice(0,40).map(t=>t.slice(0,160))})}/></FormField><FormField label="我的卡片备注"><textarea rows={2} maxLength={4000} value={card.notes} onChange={e=>setCard({...card,notes:e.target.value})}/></FormField><label className="check-label"><input type="checkbox" checked={card.favorite} onChange={e=>setCard({...card,favorite:e.target.checked})}/>收藏这张卡</label></section>

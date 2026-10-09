@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-08",
+  "tokenLimit": 100000000,
+  "reportedTotalTokens": 6439196,
+  "conservativeReservationUpperBound": 30603560,
+  "formula": "sum(reported cache-hit input tokens) / sum(input tokens on requests with reported cache fields)",
+  "providers": {
+    "deepseek": {
+      "requests": 995,
+      "measuredRequests": 995,
+      "prompt": 6164696,
+      "hit": 5189888,
+      "reportedTokens": 6274228,
+      "tokenWeightedCacheHitRate": 0.8418724946047623,
+      "requestsWithoutCacheUsage": 0
+    },
+    "openrouter": {
+      "requests": 42,
+      "measuredRequests": 26,
+      "prompt": 149627,
+      "hit": 54976,
+      "reportedTokens": 164968,
+      "tokenWeightedCacheHitRate": 0.3674203185253998,
+      "requestsWithoutCacheUsage": 16
+    }
+  },
+  "stages": [
+    {
+      "name": "p0-live-api-results.json",
+      "reportedTokens": 18047
+    },
+    {
+      "name": "p0-live-cache-first-results.json",
+      "reportedTokens": 15538
+    },
+    {
+      "name": "p0-live-cache-liquid-truncated-results.json",
+      "reportedTokens": 3422
+    },
+    {
+      "name": "p0-live-cache-parameter-detail-results.json",
+      "reportedTokens": 0
+    },
+    {
+      "name": "p0-live-cache-parameter-results.json",
+      "reportedTokens": 0
+    },
+    {
+      "name": "p0-live-cache-top-p-failure.json",
+      "reportedTokens": 0
+    },
+    {
+      "name": "p0-live-cache-truncated-results.json",
+      "reportedTokens": 3409
+    },
+    {
+      "name": "角色对话修复前",
+      "reportedTokens": 3207521,
+      "reservedUpperBound": 15099497
+    },
+    {
+      "name": "角色对话修复后",
+      "reportedTokens": 3047427,
+      "reservedUpperBound": 29334123
+    },
+    {
+      "name": "隐藏标签自动评审",
+      "reportedTokens": 143832,
+      "reservedUpperBound": 30603560
+    }
+  ],
+  "additionalAttempt": {
+    "provider": "openrouter",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "status": "timeout",
+    "timeoutMs": 55000,
+    "usage": null,
+    "evidence": "Observed tool timeout; no response or usage retained. Selected only after public catalog showed zero input/output price. Included in early 500000-token allowance."
+  },
+  "negativeCredentialChecks": 2,
+  "limitations": [
+    "Reported usage is not a complete billing statement; failed/no-usage requests remain unknown.",
+    "Reservation counts input UTF-8 bytes plus configured output bounds, including unreported attempts and conservative allowances; no spending target.",
+    "Cache percentages are workload-dependent; before/after differences do not establish causal improvement.",
+    "No paid OpenRouter fallback. No API keys, headers, private source cards or transcripts published to the application repo."
+  ]
+}

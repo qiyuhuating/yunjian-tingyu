@@ -32,3 +32,11 @@ SDK来自Google官方下载并与官方仓库的SHA-1一致；字体来自Adobe�
 `vendor/via-release-cn.apk` 是机主提供的 Via 7.3.3 二进制，不是开源 SDK。构建使用 Apktool 3.0.3，来自 https://github.com/iBotPeaches/Apktool/releases/tag/v3.0.3 ，JAR SHA-256 为 dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423。`merge-via.py` 固定核对原包摘要，保留资源 ID，改应用入口、组件权限与文件共享标识；Via DEX 只做等长 authority 替换与必要摘要更新。原包始终原样保留。
 
 应用要求 Android System WebView 120+；旧内核显示明确更新提示。Android 15 实测覆盖安全区域、同应用 Via 页面、链接/返回、桥接隔离、本地日记重启和独立 Via 共存。运行 `python work/verify-native-via.py --adb <adb路径> --serial emulator-5556 --legacy-serial emulator-5554` 可在两个可丢弃模拟器复现。测试不会操作物理手机。Via 自己的网页书签、历史与下载记录留在应用私有目录；小手机的 ZIP 备份不包含 Via 的独立数据库。
+
+## 0.0.2 最终源码与构建
+
+四份草稿已整合，AndroidManifest 的 versionName 为 0.0.2、versionCode 为 8。原包名与正式证书不变。构建脚本兼容 Windows/Linux，固定 Build Tools 35.0.0、Android platform 35 和 Apktool 3.0.3，编译前核对旧证书；不会生成替代签名。
+
+从仓库根目录先 `npm ci --prefix outputs/mori-phone`，然后用上面的 Vite 命令构建当前网页，再运行 build-apk.py 并提供原签名目录。仓库中的 assets/web 和 0.0.1 APK 是一起校验的历史交付，不能跳过前端构建直接包装旧页面。
+
+GitHub Actions 在完整回归通过后重新生成网页、编译原生代码和 Via，上传 `yunjian-tingyu-0.0.2-unsigned` 构建产物。`--unsigned` 仅用于无私钥的构建验证，该文件不能安装。正式安装包仍需原 Android签名备份.zip 中的 cloudlet-release.p12 与 signing.json。当前工作环境缺少它们，未发布可覆盖安装的签名 APK。安装新签名正式包之前先导出 ZIP 备份，再覆盖安装，保留现有本机记录。

@@ -22,13 +22,53 @@ jobs:
       - name: Media adapters and current source browser regression
         run: |
           node outputs/mori-phone/scripts/verify-media.mjs
+          node outputs/mori-phone/scripts/verify-p0.mjs
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
           node work/qa/features.mjs
           node work/qa/roleplay.mjs
           node work/qa/card-library.mjs
+          node work/qa/p0-reliability.mjs
           node work/qa/storage.mjs
+          node work/qa/p0-storage-scale.mjs
       - name: Compile Android source without signing or modifying bundled assets
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"
           mkdir -p /tmp/cloudlet-native-classes
           javac --release 8 -classpath "$ANDROID_HOME/platforms/android-35/android.jar" -d /tmp/cloudlet-native-classes outputs/android/src/chat/cloudlet/phone/*.java
+  build-apk:
+    name: Build 0.0.2 APK candidate
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned Android tools and dependencies
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          npm ci --prefix outputs/mori-phone
+          mkdir -p work/apk-candidate
+          curl --fail --location --retry 2 https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar -o work/apk-candidate/apktool.jar
+          echo 'dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423  work/apk-candidate/apktool.jar' | sha256sum -c -
+      - name: Bundle current UI and compile APK with original Via
+        run: |
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-0.0.2-unsigned.apk | tee work/apk-candidate/build-report.log
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-0.0.2-unsigned.apk > work/apk-candidate/package-info.txt
+          python3 -c 'from pathlib import Path; s=Path("work/apk-candidate/package-info.txt").read_text(); assert "name=\"chat.cloudlet.phone\"" in s.replace(chr(39),chr(34)) and "versionCode=\"8\"" in s.replace(chr(39),chr(34)) and "versionName=\"0.0.2\"" in s.replace(chr(39),chr(34)), s'
+          cd work/apk-candidate && sha256sum yunjian-tingyu-0.0.2-unsigned.apk > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yunjian-tingyu-0.0.2-unsigned
+          path: |
+            work/apk-candidate/yunjian-tingyu-0.0.2-unsigned.apk
+            work/apk-candidate/SHA256SUMS
+            work/apk-candidate/build-report.log
+            work/apk-candidate/package-info.txt
+          if-no-files-found: error
+          retention-days: 30

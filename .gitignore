@@ -22,3 +22,7 @@ work/feature-test-failure.png
 
 work/card-library/
 work/card-library-failure.png
+work/live-card-build/
+work/merge-inputs/
+work/apk-candidate/
+work/native-classes/

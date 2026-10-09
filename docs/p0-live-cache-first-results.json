@@ -1,0 +1,148 @@
+{
+  "providers": [
+    {
+      "provider": "openrouter",
+      "status": "failed",
+      "requests": 1,
+      "model": "poolside/laguna-xs-2.1:free",
+      "parameterNames": [
+        "stream",
+        "max_tokens",
+        "temperature",
+        "stream_options"
+      ],
+      "probes": [
+        {
+          "phase": "first",
+          "role": "author",
+          "http": 429,
+          "reservedTokenUpperBound": 18079,
+          "status": "failed",
+          "failure": "chat_http_429"
+        }
+      ],
+      "failure": "chat_http_429"
+    },
+    {
+      "provider": "deepseek",
+      "status": "passed",
+      "requests": 6,
+      "model": "deepseek-flash",
+      "parameterNames": [
+        "stream",
+        "max_tokens",
+        "thinking",
+        "temperature"
+      ],
+      "probes": [
+        {
+          "phase": "first",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18079,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 14,
+          "firstTokenMs": 331.6497000000004,
+          "durationMs": 673.0345000000002,
+          "usage": {
+            "prompt": 3103,
+            "completion": 4,
+            "hit": 0,
+            "miss": 3103
+          },
+          "cacheHitRate": 0
+        },
+        {
+          "phase": "repeat",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18079,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 14,
+          "firstTokenMs": 821.9892999999997,
+          "durationMs": 882.1226000000001,
+          "usage": {
+            "prompt": 3103,
+            "completion": 4,
+            "hit": 2944,
+            "miss": 159
+          },
+          "cacheHitRate": 0.9487592652271994
+        },
+        {
+          "phase": "parallel-3",
+          "role": "author",
+          "http": 200,
+          "reservedTokenUpperBound": 18079,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 14,
+          "firstTokenMs": 576.6864999999998,
+          "durationMs": 632.1059999999998,
+          "usage": {
+            "prompt": 3103,
+            "completion": 4,
+            "hit": 2944,
+            "miss": 159
+          },
+          "cacheHitRate": 0.9487592652271994
+        },
+        {
+          "phase": "parallel-3",
+          "role": "reviewer",
+          "http": 200,
+          "reservedTokenUpperBound": 18083,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 16,
+          "firstTokenMs": 856.2371000000003,
+          "durationMs": 882.6439,
+          "usage": {
+            "prompt": 3103,
+            "completion": 4,
+            "hit": 2944,
+            "miss": 159
+          },
+          "cacheHitRate": 0.9487592652271994
+        },
+        {
+          "phase": "parallel-3",
+          "role": "integrator",
+          "http": 200,
+          "reservedTokenUpperBound": 18087,
+          "status": "passed",
+          "finishReason": "stop",
+          "replyCharacters": 18,
+          "firstTokenMs": 921.2343999999994,
+          "durationMs": 1053.6165,
+          "usage": {
+            "prompt": 3105,
+            "completion": 5,
+            "hit": 2944,
+            "miss": 161
+          },
+          "cacheHitRate": 0.9481481481481482
+        }
+      ],
+      "parallelWallMs": 1054.5194000000001,
+      "cache": {
+        "reportedRequests": 5,
+        "promptTokens": 15517,
+        "hitTokens": 11776,
+        "tokenWeightedHitRate": 0.7589095830379584,
+        "coverageRequests": 5
+      },
+      "tokens": 15538,
+      "invalidKeyHTTP": 401
+    }
+  ],
+  "passed": 1,
+  "blocked": 0,
+  "failed": 1,
+  "tokenLimit": 20000000,
+  "reservedUpperBound": 108486,
+  "reportedTotalTokens": 15538,
+  "scope": "Actual source provider adapter; first/repeat and three concurrent roles. API throughput only, not app UI/FPS/Android or Hermes collaboration acceptance. Cache rate=sum reported cache-hit prompt tokens / sum prompts with reported cache fields; absent fields remain unknown. No credentials, headers or response bodies recorded."
+}
