@@ -66,7 +66,7 @@ jobs:
         run: |
           python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-v002-independent-preview.apk
           "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-v002-independent-preview.apk > work/apk-candidate/standalone-package.txt
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/yunjian-v002-independent-preview.apk AndroidManifest.xml > work/apk-candidate/standalone-manifest.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-v002-independent-preview.apk > work/apk-candidate/standalone-manifest.txt
           grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/standalone-package.txt
           grep -F 'mark.via.phonev02' work/apk-candidate/standalone-manifest.txt
       - uses: actions/upload-artifact@v4

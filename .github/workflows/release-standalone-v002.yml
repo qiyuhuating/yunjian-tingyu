@@ -32,7 +32,7 @@ jobs:
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
           python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/standalone-preview-unsigned.apk
           "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/standalone-preview-unsigned.apk > work/apk-candidate/package-info.txt
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/standalone-preview-unsigned.apk AndroidManifest.xml > work/apk-candidate/manifest-tree.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/standalone-preview-unsigned.apk > work/apk-candidate/manifest-tree.txt
           grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/package-info.txt
           grep -F 'mark.via.phonev02' work/apk-candidate/manifest-tree.txt
   regression:
@@ -111,7 +111,7 @@ jobs:
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
           python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --signing work/apk-candidate/signing --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk | tee work/apk-candidate/build-report.log
           "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk > work/apk-candidate/package-info.txt
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk AndroidManifest.xml > work/apk-candidate/manifest-tree.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk > work/apk-candidate/manifest-tree.txt
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/apk-candidate/yunjian-tingyu-v0.0.2-standalone.apk > work/apk-candidate/certificate-check.txt
           python3 - <<'PY'
           from pathlib import Path

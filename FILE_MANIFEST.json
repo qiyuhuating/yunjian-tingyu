@@ -8,14 +8,14 @@
   {
     "path": ".github/workflows/release-standalone-v002.yml",
     "description": "独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml",
-    "bytes": 9877,
-    "sha256": "86ed6afede191650f3a21b4bb7562408ae78a090ad54a7adf380ae765bd87d70"
+    "bytes": 9864,
+    "sha256": "0fa77c67c166d161fe1f57697f5e8a6c1c5d71da422b36adc3a77736408fcfe3"
   },
   {
     "path": ".github/workflows/verify.yml",
     "description": "持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml",
-    "bytes": 4770,
-    "sha256": "1ef0b2cac6cd466f16d9c5705e7b3b23bc5ac9cfc07d1bd1dc52968a2a24d1d3"
+    "bytes": 4777,
+    "sha256": "04f067744eeb572e0c6e5968dd6afb301184702f71d7e4da244f2f7b404ea101"
   },
   {
     "path": ".gitignore",
