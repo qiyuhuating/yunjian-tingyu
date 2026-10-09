@@ -24,13 +24,15 @@ function stable(value:unknown):unknown{
 export function cardFingerprint(card:SavedCard){
  const {id:_id,...settings}=card.character;
  // Raw archives are included: different extensions or original text are distinct cards.
- const content={settings,lore:card.lore.map(({id:_id,scope:_scope,...l})=>l)};
+ let original:unknown=settings.cardExtras;try{original=JSON.parse(settings.cardExtras);}catch{}
+ const content={settings:{...settings,cardExtras:original},lore:card.lore.map(({id:_id,scope:_scope,...l})=>l)};
  const bytes=sha256(new TextEncoder().encode(JSON.stringify(stable(content))));return Array.from(bytes,v=>v.toString(16).padStart(2,'0')).join('');
 }
-export function addSavedCard(state:PhoneState,card:SavedCard){
- const parsed=savedCardSchema.parse(card),fingerprint=cardFingerprint(parsed),same=state.characterCards.find(c=>cardFingerprint(c)===fingerprint);
+export function addSavedCard(state:PhoneState,card:SavedCard,allowDuplicate=false){
+ const parsed=savedCardSchema.parse(card),fingerprint=cardFingerprint(parsed),same=allowDuplicate?undefined:state.characterCards.find(c=>cardFingerprint(c)===fingerprint);
  if(same)return {id:same.id,duplicate:true};
  if(state.characterCards.length>=200)throw new Error('角色卡仓库最多保存 200 张卡，请先导出并整理。');
+ if(state.characterCards.some(c=>c.id===parsed.id))throw new Error('角色卡编号已存在。');
  state.characterCards.push(parsed);return {id:parsed.id,duplicate:false};
 }
 export function editSavedCard(state:PhoneState,card:SavedCard,expectedRevision:number){
@@ -40,12 +42,21 @@ export function editSavedCard(state:PhoneState,card:SavedCard,expectedRevision:n
  state.characterCards[index]=parsed;
 }
 export function copySavedCard(card:SavedCard){
- const copy=makeSavedCard(cardCharacter(card),card.lore);return {...copy,folder:card.folder,notes:card.notes,character:{...copy.character,name:(card.character.name+' 副本').slice(0,50)}};
+ const copy=makeSavedCard(cardCharacter(card),card.lore);return {...copy,folder:card.folder,notes:card.notes,character:{...copy.character,name:card.character.name.slice(0,47)+' 副本'}};
 }
-export function removeSavedCard(state:PhoneState,id:string){state.characterCards=state.characterCards.filter(c=>c.id!==id);delete state.drafts['editor:cards:'+id];}
+export function currentSavedCard(state:PhoneState,id:string,revision:number){
+ const card=state.characterCards.find(c=>c.id===id);if(!card)throw new Error('这张角色卡已被删除，请返回仓库。');
+ if(card.revision!==revision)throw new Error('这张角色卡已被修改，请重新打开后再操作。');return card;
+}
+export function removeSavedCard(state:PhoneState,id:string,revision?:number){
+ const current=state.characterCards.find(c=>c.id===id);if(!current)throw new Error('这张角色卡已被删除，请返回仓库。');
+ currentSavedCard(state,id,revision??current.revision);state.characterCards=state.characterCards.filter(c=>c.id!==id);delete state.drafts['editor:cards:'+id];
+}
+
 
 // Every application creates fresh runtime IDs. Updates are deliberate and retain all live state.
 export function installCharacterCard(state:PhoneState,settings:Character,lore:PhoneState['lore'],targetId='',greetingIndex=0,includeLore=true){
+ if(settings.sourceCardId)currentSavedCard(state,settings.sourceCardId,settings.sourceCardRevision||1);
  const existing=targetId?state.characters.find(c=>c.id===targetId):undefined;
  if(targetId&&!existing)throw new Error('要更新的角色已不存在，请重新选择。');
  if(!existing&&state.characters.length>=80)throw new Error('最多保存 80 位聊天角色，请先整理。');
@@ -56,3 +67,4 @@ export function installCharacterCard(state:PhoneState,settings:Character,lore:Ph
  if(includeLore){state.lore=state.lore.filter(l=>l.scope!==character.id);state.lore.push(...lore.map(l=>({...l,id:uid(),scope:character.id})));}
  return character;
 }
+

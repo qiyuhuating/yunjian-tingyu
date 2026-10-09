@@ -1,15 +1,21 @@
 # 文件索引
 
-本索引说明当前源码、验收证据与历史交付资源。历史 APK 和归档保留原版本；2026-10-09 新角色卡仓库、AI分类、世界书和记忆功能见 [本轮计划与验收](docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md)，仍为草稿源码。
+本索引说明当前源码、验收证据与历史交付资源。角色卡仓库与本轮整合见 [计划与验收](docs/角色卡仓库-计划决策执行验收-2026-10-09.md)。本轮为接续PR #3的草稿源码，历史APK和随包资源保持原版本。
 
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 1547 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 354 |
+| [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 9138 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
+| [docs/UI-UX与图片优化计划-2026-10-08.md](docs/UI-UX与图片优化计划-2026-10-08.md) | 当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md | 17812 |
+| [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
+| [docs/UI群聊调优计划.md](docs/UI群聊调优计划.md) | 上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md | 2128 |
 | [docs/build-performance-results.json](docs/build-performance-results.json) | 相同工具链独立生产构建的逐文件大小与摘要，区别首屏 JS、总产物和未测 APK/FPS；路径：docs/build-performance-results.json | 3889 |
-| [docs/card-library-browser-results.json](docs/card-library-browser-results.json) | 11项角色卡仓库、真实编辑、AI拆分、头像持久化、独立使用及删除归档的浏览器结果；路径：docs/card-library-browser-results.json | 1012 |
+| [docs/card-library-browser-results.json](docs/card-library-browser-results.json) | 13项真实页面卡片管理和AI拆分验收结果，记录档案草稿恢复和页面异常检查；路径：docs/card-library-browser-results.json | 1144 |
+| [docs/card-library-core-results.json](docs/card-library-core-results.json) | 19项角色卡核心检查的具名通过记录，覆盖去重、独立复用、修订与UTF-8总预算；路径：docs/card-library-core-results.json | 1283 |
+| [docs/card-library-regression-results.json](docs/card-library-regression-results.json) | 165项核心媒体和仓库检查的完整结果，涵盖世界书、记忆、群聊、路由与模板复用；路径：docs/card-library-regression-results.json | 12538 |
 | [docs/core-media-regression-results.json](docs/core-media-regression-results.json) | 103 项核心加 11 项媒体和后台维护检查的具名结果与原生编译范围；路径：docs/core-media-regression-results.json | 8544 |
 | [docs/feature-browser-results.json](docs/feature-browser-results.json) | 17项当前源码页面、录音、多模型、媒体与Android二进制桥接的浏览器结果；路径：docs/feature-browser-results.json | 1488 |
 | [docs/feature-chat-preview.png](docs/feature-chat-preview.png) | 当前源码中文界面、自然短消息、实际表情图片和音频播放器的测试截图（fixture 媒体）；路径：docs/feature-chat-preview.png | 66001 |
@@ -19,22 +25,36 @@
 | [docs/image-optimization-results.json](docs/image-optimization-results.json) | 六张原图和输出的尺寸、精确字节数、SHA-256 与完整 RGBA 一致性结果；路径：docs/image-optimization-results.json | 2587 |
 | [docs/roleplay-browser-results.json](docs/roleplay-browser-results.json) | 10项角色卡分析、原卡下载、独立世界书、实际请求和取消回归的浏览器证据；路径：docs/roleplay-browser-results.json | 1274 |
 | [docs/roleplay-core-results.json](docs/roleplay-core-results.json) | 151项核心、协议、独立记忆、角色卡分析、世界书与可复用卡库的具名自动检查结果；路径：docs/roleplay-core-results.json | 11578 |
-| [docs/storage-regression-results.json](docs/storage-regression-results.json) | 11项本机写入、跨窗口冲突、共享附件、角色卡仓库和头像备份恢复的执行结果；路径：docs/storage-regression-results.json | 845 |
-| [docs/UI-UX与图片优化计划-2026-10-08.md](docs/UI-UX与图片优化计划-2026-10-08.md) | 当前源码与运行界面的深度审视、分批 UX 优化任务及无损图片结果和 APK 发布边界；路径：docs/UI-UX与图片优化计划-2026-10-08.md | 17812 |
-| [docs/UI与群聊审视报告.md](docs/UI与群聊审视报告.md) | UI 发现与修复、功能真实性边界、群聊规则与完整验收证据；路径：docs/UI与群聊审视报告.md | 7638 |
-| [docs/UI群聊调优计划.md](docs/UI群聊调优计划.md) | 上一版群聊优化交付；该轮计划、UI UX Pro Max 参考与群聊验收标准；路径：docs/UI群聊调优计划.md | 2128 |
+| [docs/storage-regression-results.json](docs/storage-regression-results.json) | 5000条历史、跨窗口与原子性、模板草稿备份恢复和头像引用回收的13项存储结果；路径：docs/storage-regression-results.json | 972 |
 | [docs/优化实施与验收-2026-10-08.md](docs/优化实施与验收-2026-10-08.md) | 图片画质、存储架构、真实多模态、壁纸、自然对话、功能真实性及发布余项的完整执行验收；路径：docs/优化实施与验收-2026-10-08.md | 13545 |
 | [docs/审计计划落实记录.md](docs/审计计划落实记录.md) | 外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md | 9555 |
 | [docs/本机记录与接口边界修复.md](docs/本机记录与接口边界修复.md) | 本轮问题证据、修复计划、停止红队后的功能验收与未覆盖边界；路径：docs/本机记录与接口边界修复.md | 6620 |
 | [docs/核心提示词隔离说明.md](docs/核心提示词隔离说明.md) | 用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据；路径：docs/核心提示词隔离说明.md | 7151 |
 | [docs/群聊与角色记忆调研.md](docs/群聊与角色记忆调研.md) | Telegram、Hermes、kuihua 与 PDF.js 的一手来源、实施计划和能力边界；路径：docs/群聊与角色记忆调研.md | 4714 |
 | [docs/自然群聊与内置Via说明.md](docs/自然群聊与内置Via说明.md) | 自然群聊、Via二进制来源/合包、参考首页回退、系统栏和实际原生验收；路径：docs/自然群聊与内置Via说明.md | 4326 |
+| [docs/角色卡仓库-计划决策执行验收-2026-10-09.md](docs/角色卡仓库-计划决策执行验收-2026-10-09.md) | 可复用角色卡仓库的计划决策执行验收、上游整合、容量与版本保护及APK交付边界；路径：docs/角色卡仓库-计划决策执行验收-2026-10-09.md | 6346 |
 | [docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md](docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md) | SillyTavern及角色卡管理项目源码调研、独立卡库、世界书记忆设计与211项验收证据；路径：docs/角色扮演导入与记忆-计划决策执行验收-2026-10-09.md | 14658 |
 | [docs/角色独立AI模型路由.md](docs/角色独立AI模型路由.md) | 角色独立服务商、专属密钥和群聊路由的产品说明、手工配置流程与验收标准；路径：docs/角色独立AI模型路由.md | 3892 |
 | [outputs/0.0.1暗夜聊天预览.png](outputs/0.0.1暗夜聊天预览.png) | 界面预览或绘图资源：0.0.1暗夜聊天预览.png；目录 outputs；路径：outputs/0.0.1暗夜聊天预览.png | 83201 |
 | [outputs/0.0.1暗夜设置预览.png](outputs/0.0.1暗夜设置预览.png) | 界面预览或绘图资源：0.0.1暗夜设置预览.png；目录 outputs；路径：outputs/0.0.1暗夜设置预览.png | 174224 |
 | [outputs/0.0.1暗夜预览.png](outputs/0.0.1暗夜预览.png) | 界面预览或绘图资源：0.0.1暗夜预览.png；目录 outputs；路径：outputs/0.0.1暗夜预览.png | 522338 |
+| [outputs/APK安装说明.md](outputs/APK安装说明.md) | 项目说明、调研或验证文档：APK安装说明.md；路径：outputs/APK安装说明.md | 3753 |
+| [outputs/Android审计验证-logcat.txt](outputs/Android审计验证-logcat.txt) | 本轮实际模拟器安装、Via与文件选择验收的AndroidRuntime及Chromium日志；路径：outputs/Android审计验证-logcat.txt | 24020 |
+| [outputs/Android源码.zip](outputs/Android源码.zip) | 源码归档：Android源码.zip；可直接下载解压，当前推荐带 0.0.1 的归档；路径：outputs/Android源码.zip | 9300566 |
+| [outputs/Android验证-Via.png](outputs/Android验证-Via.png) | 内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图；路径：outputs/Android验证-Via.png | 90080 |
+| [outputs/Android验证-文件读取.png](outputs/Android验证-文件读取.png) | Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图；路径：outputs/Android验证-文件读取.png | 341805 |
+| [outputs/Android验证-桌面图标.png](outputs/Android验证-桌面图标.png) | Android 15 系统应用列表实际显示笑脸云朵软件图标的验收截图；路径：outputs/Android验证-桌面图标.png | 212212 |
+| [outputs/Android验证-首页.png](outputs/Android验证-首页.png) | 恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图；路径：outputs/Android验证-首页.png | 2580690 |
+| [outputs/UI暗夜-私聊.png](outputs/UI暗夜-私聊.png) | 当前暗夜单人聊天与主要触控操作验收截图；路径：outputs/UI暗夜-私聊.png | 84564 |
+| [outputs/UI暗夜-设置.png](outputs/UI暗夜-设置.png) | 当前暗夜服务商设置和可读性验收截图；路径：outputs/UI暗夜-设置.png | 177462 |
+| [outputs/UI暗夜-首页.png](outputs/UI暗夜-首页.png) | 当前暗夜首页、留白、插画和卡片层次验收截图；路径：outputs/UI暗夜-首页.png | 522479 |
+| [outputs/UI系统隔离-暗夜.png](outputs/UI系统隔离-暗夜.png) | 当前暗夜群聊、输入操作与消息层次的验收截图；路径：outputs/UI系统隔离-暗夜.png | 54084 |
+| [outputs/UI系统隔离-浅色.png](outputs/UI系统隔离-浅色.png) | 当前浅色群聊、短消息与文件预览功能的验收截图；路径：outputs/UI系统隔离-浅色.png | 71531 |
+| [outputs/UI群聊-暗夜.png](outputs/UI群聊-暗夜.png) | 上一版群聊优化交付；当时暗夜群聊的短消息、成员头像和输入区验收截图；路径：outputs/UI群聊-暗夜.png | 51693 |
+| [outputs/UI群聊-浅色.png](outputs/UI群聊-浅色.png) | 上一版群聊优化交付；当时浅色群聊消息、附件与输入区的浏览器验收截图；路径：outputs/UI群聊-浅色.png | 71157 |
+| [outputs/UI角色记忆与文件.png](outputs/UI角色记忆与文件.png) | 角色群聊、真实读取状态与新能力的浏览器验收截图；路径：outputs/UI角色记忆与文件.png | 51272 |
 | [outputs/android/AndroidManifest.xml](outputs/android/AndroidManifest.xml) | Android 包名、0.0.1 版本、组件及系统权限声明；路径：outputs/android/AndroidManifest.xml | 1524 |
+| [outputs/android/README.md](outputs/android/README.md) | 使用或构建指南，适用目录：outputs/android；路径：outputs/android/README.md | 3635 |
 | [outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf](outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf) | 随包 Source Serif 4 字体资源：SourceSerif4Variable-Roman.ttf；路径：outputs/android/assets/fonts/SourceSerif4Variable-Roman.ttf | 1204208 |
 | [outputs/android/assets/licenses/Source-Serif-OFL.txt](outputs/android/assets/licenses/Source-Serif-OFL.txt) | 第三方资源许可与归属声明：outputs/android/assets/licenses/Source-Serif-OFL.txt | 4491 |
 | [outputs/android/assets/web/assets/index-Bt4QJ_c-.css](outputs/android/assets/web/assets/index-Bt4QJ_c-.css) | 当前 APK 的随包界面样式，含主题、触控及响应式；路径：outputs/android/assets/web/assets/index-Bt4QJ_c-.css | 100523 |
@@ -52,15 +72,14 @@
 | [outputs/android/assets/web/icon-192.png](outputs/android/assets/web/icon-192.png) | 界面预览或绘图资源：icon-192.png；目录 outputs/android/assets/web；路径：outputs/android/assets/web/icon-192.png | 5393 |
 | [outputs/android/assets/web/icon-512.png](outputs/android/assets/web/icon-512.png) | 界面预览或绘图资源：icon-512.png；目录 outputs/android/assets/web；路径：outputs/android/assets/web/icon-512.png | 18315 |
 | [outputs/android/assets/web/index.html](outputs/android/assets/web/index.html) | 工程支持文件：outputs/android/assets/web/index.html | 377 |
-| [outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt](outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt) | APK内增量SHA256库的MIT许可证副本；路径：outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt | 1109 |
 | [outputs/android/assets/web/licenses/PDFjs-LICENSE.txt](outputs/android/assets/web/licenses/PDFjs-LICENSE.txt) | APK 内保留的 PDF.js Apache 2.0 许可副本；路径：outputs/android/assets/web/licenses/PDFjs-LICENSE.txt | 10174 |
+| [outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt](outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt) | APK内增量SHA256库的MIT许可证副本；路径：outputs/android/assets/web/licenses/noble-hashes-LICENSE.txt | 1109 |
 | [outputs/android/assets/web/manifest.webmanifest](outputs/android/assets/web/manifest.webmanifest) | 工程支持文件：outputs/android/assets/web/manifest.webmanifest | 359 |
 | [outputs/android/assets/web/music-listen.png](outputs/android/assets/web/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/android/assets/web/music-listen.png | 1200508 |
 | [outputs/android/assets/web/via-browser.png](outputs/android/assets/web/via-browser.png) | 随 APK 打包的 Via 入口笑脸云朵原图，离线显示；路径：outputs/android/assets/web/via-browser.png | 985903 |
 | [outputs/android/assets/web/wallpaper.png](outputs/android/assets/web/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/android/assets/web/wallpaper.png | 1822518 |
 | [outputs/android/build-apk.py](outputs/android/build-apk.py) | 正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py | 4058 |
 | [outputs/android/merge-via.py](outputs/android/merge-via.py) | 保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py | 6447 |
-| [outputs/android/README.md](outputs/android/README.md) | 使用或构建指南，适用目录：outputs/android；路径：outputs/android/README.md | 3635 |
 | [outputs/android/res/drawable/cloud_pet.png](outputs/android/res/drawable/cloud_pet.png) | 用户提供的笑脸耳机云朵原图，作为软件桌面图标的位图主体；路径：outputs/android/res/drawable/cloud_pet.png | 985903 |
 | [outputs/android/res/mipmap-anydpi-v26/app_icon.xml](outputs/android/res/mipmap-anydpi-v26/app_icon.xml) | 工程支持文件：outputs/android/res/mipmap-anydpi-v26/app_icon.xml | 484 |
 | [outputs/android/res/mipmap-anydpi/app_icon.xml](outputs/android/res/mipmap-anydpi/app_icon.xml) | Android 7 的固定尺寸笑脸云朵图标，避免原图分辨率导致过度缩小；路径：outputs/android/res/mipmap-anydpi/app_icon.xml | 367 |
@@ -68,13 +87,6 @@
 | [outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java](outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java) | 内置Via字体、独立返回位置、状态栏/系统导航隐藏与生命周期接入；路径：outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java | 4488 |
 | [outputs/android/src/chat/cloudlet/phone/MainActivity.java](outputs/android/src/chat/cloudlet/phone/MainActivity.java) | 保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java | 26291 |
 | [outputs/android/vendor/via-release-cn.apk](outputs/android/vendor/via-release-cn.apk) | 机主提供的Via7.3.3原始二进制，固定SHA-256，原件未修改；路径：outputs/android/vendor/via-release-cn.apk | 2628334 |
-| [outputs/Android审计验证-logcat.txt](outputs/Android审计验证-logcat.txt) | 本轮实际模拟器安装、Via与文件选择验收的AndroidRuntime及Chromium日志；路径：outputs/Android审计验证-logcat.txt | 24020 |
-| [outputs/Android源码.zip](outputs/Android源码.zip) | 源码归档：Android源码.zip；可直接下载解压，当前推荐带 0.0.1 的归档；路径：outputs/Android源码.zip | 9300566 |
-| [outputs/Android验证-Via.png](outputs/Android验证-Via.png) | 内置Via实际网页、桥接隔离和隐藏顶部系统状态栏的模拟器截图；路径：outputs/Android验证-Via.png | 90080 |
-| [outputs/Android验证-文件读取.png](outputs/Android验证-文件读取.png) | Android 15 实际系统文件选择器、离线PDF解析与未知二进制消息截图；路径：outputs/Android验证-文件读取.png | 341805 |
-| [outputs/Android验证-桌面图标.png](outputs/Android验证-桌面图标.png) | Android 15 系统应用列表实际显示笑脸云朵软件图标的验收截图；路径：outputs/Android验证-桌面图标.png | 212212 |
-| [outputs/Android验证-首页.png](outputs/Android验证-首页.png) | 恢复参考首页和四个插画导航、隐藏系统三键栏的实际模拟器截图；路径：outputs/Android验证-首页.png | 2580690 |
-| [outputs/APK安装说明.md](outputs/APK安装说明.md) | 项目说明、调研或验证文档：APK安装说明.md；路径：outputs/APK安装说明.md | 3753 |
 | [outputs/code-review-validation/README.txt](outputs/code-review-validation/README.txt) | 修复前代码审查的缺陷复现材料：README.txt；路径：outputs/code-review-validation/README.txt | 644 |
 | [outputs/code-review-validation/review-core.mjs](outputs/code-review-validation/review-core.mjs) | 修复前代码审查的缺陷复现材料：review-core.mjs；路径：outputs/code-review-validation/review-core.mjs | 2493 |
 | [outputs/code-review-validation/review-native.mjs](outputs/code-review-validation/review-native.mjs) | 修复前代码审查的缺陷复现材料：review-native.mjs；路径：outputs/code-review-validation/review-native.mjs | 1681 |
@@ -82,6 +94,7 @@
 | [outputs/mori-phone/.gitignore](outputs/mori-phone/.gitignore) | 工程支持文件：outputs/mori-phone/.gitignore | 624 |
 | [outputs/mori-phone/.npmrc](outputs/mori-phone/.npmrc) | 工程支持文件：outputs/mori-phone/.npmrc | 45 |
 | [outputs/mori-phone/.openai/hosting.json](outputs/mori-phone/.openai/hosting.json) | 配置或机器可读验证记录：outputs/mori-phone/.openai/hosting.json | 100 |
+| [outputs/mori-phone/README.md](outputs/mori-phone/README.md) | 使用或构建指南，适用目录：outputs/mori-phone；路径：outputs/mori-phone/README.md | 7484 |
 | [outputs/mori-phone/android-web/index.html](outputs/mori-phone/android-web/index.html) | 工程支持文件：outputs/mori-phone/android-web/index.html | 274 |
 | [outputs/mori-phone/android-web/main.tsx](outputs/mori-phone/android-web/main.tsx) | React 界面模块：main；位于 outputs/mori-phone/android-web；路径：outputs/mori-phone/android-web/main.tsx | 450 |
 | [outputs/mori-phone/android-web/runtime.ts](outputs/mori-phone/android-web/runtime.ts) | APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts | 10245 |
@@ -99,7 +112,7 @@
 | [outputs/mori-phone/app/api/state/route.ts](outputs/mori-phone/app/api/state/route.ts) | 可选网页服务 API 路由：state/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/state/route.ts | 1671 |
 | [outputs/mori-phone/app/card-analysis-preview.tsx](outputs/mori-phone/app/card-analysis-preview.tsx) | 角色卡AI分析连接选择、取消、失败回退与人物及世界书拆分预览；路径：outputs/mori-phone/app/card-analysis-preview.tsx | 2809 |
 | [outputs/mori-phone/app/character-ai-settings.tsx](outputs/mori-phone/app/character-ai-settings.tsx) | 角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx | 5155 |
-| [outputs/mori-phone/app/character-library.tsx](outputs/mori-phone/app/character-library.tsx) | 角色卡仓库、人物与世界书分区编辑、收藏分类搜索、草稿续写、复制导出及反复使用预览；路径：outputs/mori-phone/app/character-library.tsx | 16130 |
+| [outputs/mori-phone/app/character-library.tsx](outputs/mori-phone/app/character-library.tsx) | 角色卡分类备注与分页、人物及高级世界书编辑、AI拆分和明确复制删除的仓库界面；路径：outputs/mori-phone/app/character-library.tsx | 16150 |
 | [outputs/mori-phone/app/characters.tsx](outputs/mori-phone/app/characters.tsx) | 聊天角色编辑、角色卡原始档案、AI分类、默认归档卡库及独立复用/定向更新预览；路径：outputs/mori-phone/app/characters.tsx | 14168 |
 | [outputs/mori-phone/app/chat.tsx](outputs/mori-phone/app/chat.tsx) | 聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx | 33223 |
 | [outputs/mori-phone/app/chatgpt-auth.ts](outputs/mori-phone/app/chatgpt-auth.ts) | TypeScript 业务或构建模块：chatgpt-auth；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/chatgpt-auth.ts | 2550 |
@@ -118,7 +131,7 @@
 | [outputs/mori-phone/app/page.tsx](outputs/mori-phone/app/page.tsx) | React 界面模块：page；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/page.tsx | 255 |
 | [outputs/mori-phone/app/pet-3d.tsx](outputs/mori-phone/app/pet-3d.tsx) | 可见时才绘制的低负载 3D 宠物与减少动态效果的静态表情刷新；路径：outputs/mori-phone/app/pet-3d.tsx | 6200 |
 | [outputs/mori-phone/app/pet.tsx](outputs/mori-phone/app/pet.tsx) | 桌宠互动、情绪与对话栏状态；路径：outputs/mori-phone/app/pet.tsx | 4746 |
-| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 独立角色请求与分类模式、输出预算及真实文本媒体流的统一调用；路径：outputs/mori-phone/app/phone.tsx | 29348 |
+| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx | 29370 |
 | [outputs/mori-phone/app/realtime-call.tsx](outputs/mori-phone/app/realtime-call.tsx) | React 界面模块：realtime-call；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/realtime-call.tsx | 6236 |
 | [outputs/mori-phone/app/recording-preview.tsx](outputs/mori-phone/app/recording-preview.tsx) | 原录音试听与对象 URL 生命周期；路径：outputs/mori-phone/app/recording-preview.tsx | 350 |
 | [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31305 |
@@ -151,10 +164,10 @@
 | [outputs/mori-phone/drizzle/0000_colorful_lady_ursula.sql](outputs/mori-phone/drizzle/0000_colorful_lady_ursula.sql) | 网页服务数据库迁移或快照：0000_colorful_lady_ursula.sql；路径：outputs/mori-phone/drizzle/0000_colorful_lady_ursula.sql | 497 |
 | [outputs/mori-phone/drizzle/0001_flashy_natasha_romanoff.sql](outputs/mori-phone/drizzle/0001_flashy_natasha_romanoff.sql) | 网页服务数据库迁移或快照：0001_flashy_natasha_romanoff.sql；路径：outputs/mori-phone/drizzle/0001_flashy_natasha_romanoff.sql | 55 |
 | [outputs/mori-phone/drizzle/0002_friendly_mysterio.sql](outputs/mori-phone/drizzle/0002_friendly_mysterio.sql) | 网页服务数据库迁移或快照：0002_friendly_mysterio.sql；路径：outputs/mori-phone/drizzle/0002_friendly_mysterio.sql | 94 |
-| [outputs/mori-phone/drizzle/meta/_journal.json](outputs/mori-phone/drizzle/meta/_journal.json) | 网页服务数据库迁移或快照：_journal.json；路径：outputs/mori-phone/drizzle/meta/_journal.json | 506 |
 | [outputs/mori-phone/drizzle/meta/0000_snapshot.json](outputs/mori-phone/drizzle/meta/0000_snapshot.json) | 网页服务数据库迁移或快照：0000_snapshot.json；路径：outputs/mori-phone/drizzle/meta/0000_snapshot.json | 3109 |
 | [outputs/mori-phone/drizzle/meta/0001_snapshot.json](outputs/mori-phone/drizzle/meta/0001_snapshot.json) | 网页服务数据库迁移或快照：0001_snapshot.json；路径：outputs/mori-phone/drizzle/meta/0001_snapshot.json | 3278 |
 | [outputs/mori-phone/drizzle/meta/0002_snapshot.json](outputs/mori-phone/drizzle/meta/0002_snapshot.json) | 网页服务数据库迁移或快照：0002_snapshot.json；路径：outputs/mori-phone/drizzle/meta/0002_snapshot.json | 3855 |
+| [outputs/mori-phone/drizzle/meta/_journal.json](outputs/mori-phone/drizzle/meta/_journal.json) | 网页服务数据库迁移或快照：_journal.json；路径：outputs/mori-phone/drizzle/meta/_journal.json | 506 |
 | [outputs/mori-phone/eslint.config.mjs](outputs/mori-phone/eslint.config.mjs) | 工程支持文件：outputs/mori-phone/eslint.config.mjs | 846 |
 | [outputs/mori-phone/examples/d1/app/api/notes/route.ts](outputs/mori-phone/examples/d1/app/api/notes/route.ts) | 可选网页服务 API 路由：notes/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/examples/d1/app/api/notes/route.ts | 1700 |
 | [outputs/mori-phone/examples/d1/db/schema.ts](outputs/mori-phone/examples/d1/db/schema.ts) | TypeScript 业务或构建模块：schema；位于 outputs/mori-phone/examples/d1/db；路径：outputs/mori-phone/examples/d1/db/schema.ts | 370 |
@@ -164,7 +177,7 @@
 | [outputs/mori-phone/lib/card-analysis.ts](outputs/mori-phone/lib/card-analysis.ts) | 原文单元编号、AI连续分类契约、全覆盖校验和不改写的本地重组；路径：outputs/mori-phone/lib/card-analysis.ts | 3529 |
 | [outputs/mori-phone/lib/character-ai.ts](outputs/mori-phone/lib/character-ai.ts) | 角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts | 1304 |
 | [outputs/mori-phone/lib/character-import.ts](outputs/mori-phone/lib/character-import.ts) | TXT/JSON/PNG角色卡与独立世界书解析、兼容告知、原字段保留和导出；路径：outputs/mori-phone/lib/character-import.ts | 16473 |
-| [outputs/mori-phone/lib/character-library.ts](outputs/mori-phone/lib/character-library.ts) | 独立角色卡模板的数据操作、内容重复识别、修订保护与保留运行状态的实例应用；路径：outputs/mori-phone/lib/character-library.ts | 5067 |
+| [outputs/mori-phone/lib/character-library.ts](outputs/mori-phone/lib/character-library.ts) | 独立卡片捕获与复用、原卡规范化去重、复制后缀与修订校验和保留聊天状态的应用逻辑；路径：outputs/mori-phone/lib/character-library.ts | 5988 |
 | [outputs/mori-phone/lib/character-memory.ts](outputs/mori-phone/lib/character-memory.ts) | 原话证据、任务基线、时间检查点和满库整批原子的独立角色记忆更新；路径：outputs/mori-phone/lib/character-memory.ts | 5413 |
 | [outputs/mori-phone/lib/chat-maintenance.ts](outputs/mori-phone/lib/chat-maintenance.ts) | 验证每条摘要原消息并拒绝过期、失败或空白结果的后台维护；路径：outputs/mori-phone/lib/chat-maintenance.ts | 1854 |
 | [outputs/mori-phone/lib/chat-prompt.ts](outputs/mori-phone/lib/chat-prompt.ts) | 分类任务隔离及按世界书引擎组装角色前后背景和历史预算；路径：outputs/mori-phone/lib/chat-prompt.ts | 8543 |
@@ -188,7 +201,7 @@
 | [outputs/mori-phone/lib/media-contract.ts](outputs/mori-phone/lib/media-contract.ts) | 媒体设置与有界工具命令，只有实际启用能力和授权表情进入提示词；路径：outputs/mori-phone/lib/media-contract.ts | 2536 |
 | [outputs/mori-phone/lib/native-media.ts](outputs/mori-phone/lib/native-media.ts) | 有界原生图片/音频文件解码与 Gemini 24 kHz PCM 的 WAV 包装；路径：outputs/mori-phone/lib/native-media.ts | 1449 |
 | [outputs/mori-phone/lib/pdf-reading.ts](outputs/mori-phone/lib/pdf-reading.ts) | 随包 PDF.js worker 读取 PDF 文字，提示页数、截断、扫描件及加密失败；路径：outputs/mori-phone/lib/pdf-reading.ts | 1178 |
-| [outputs/mori-phone/lib/phone-model.ts](outputs/mori-phone/lib/phone-model.ts) | 完整本机数据契约、独立角色卡模板和修订、世界书规则、编辑草稿与记忆时间检查点；路径：outputs/mori-phone/lib/phone-model.ts | 15413 |
+| [outputs/mori-phone/lib/phone-model.ts](outputs/mori-phone/lib/phone-model.ts) | 聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts | 15609 |
 | [outputs/mori-phone/lib/provider-adapter.ts](outputs/mori-phone/lib/provider-adapter.ts) | 服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts | 10298 |
 | [outputs/mori-phone/lib/providers.ts](outputs/mori-phone/lib/providers.ts) | 服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts | 5930 |
 | [outputs/mori-phone/lib/reasoning.ts](outputs/mori-phone/lib/reasoning.ts) | 思考强度与模型能力转换；路径：outputs/mori-phone/lib/reasoning.ts | 5898 |
@@ -209,14 +222,13 @@
 | [outputs/mori-phone/public/fonts/source-serif-4-latin-700.woff2](outputs/mori-phone/public/fonts/source-serif-4-latin-700.woff2) | 随包 Source Serif 4 字体资源：source-serif-4-latin-700.woff2；路径：outputs/mori-phone/public/fonts/source-serif-4-latin-700.woff2 | 21716 |
 | [outputs/mori-phone/public/icon-192.png](outputs/mori-phone/public/icon-192.png) | 界面预览或绘图资源：icon-192.png；目录 outputs/mori-phone/public；路径：outputs/mori-phone/public/icon-192.png | 5393 |
 | [outputs/mori-phone/public/icon-512.png](outputs/mori-phone/public/icon-512.png) | 界面预览或绘图资源：icon-512.png；目录 outputs/mori-phone/public；路径：outputs/mori-phone/public/icon-512.png | 18315 |
+| [outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt](outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt) | 随包 PDF.js 的 Apache 2.0 许可证；路径：outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt | 10174 |
 | [outputs/mori-phone/public/licenses/immer-LICENSE.txt](outputs/mori-phone/public/licenses/immer-LICENSE.txt) | 新增 Immer 状态依赖的 MIT 分发许可；路径：outputs/mori-phone/public/licenses/immer-LICENSE.txt | 1074 |
 | [outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt](outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt) | 增量哈希库@noble/hashes的MIT许可证，随前端源码保留；路径：outputs/mori-phone/public/licenses/noble-hashes-LICENSE.txt | 1109 |
-| [outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt](outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt) | 随包 PDF.js 的 Apache 2.0 许可证；路径：outputs/mori-phone/public/licenses/PDFjs-LICENSE.txt | 10174 |
 | [outputs/mori-phone/public/manifest.webmanifest](outputs/mori-phone/public/manifest.webmanifest) | 工程支持文件：outputs/mori-phone/public/manifest.webmanifest | 359 |
 | [outputs/mori-phone/public/music-listen.webp](outputs/mori-phone/public/music-listen.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：music-listen；路径：outputs/mori-phone/public/music-listen.webp | 706036 |
 | [outputs/mori-phone/public/via-browser.webp](outputs/mori-phone/public/via-browser.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：via-browser；路径：outputs/mori-phone/public/via-browser.webp | 706622 |
 | [outputs/mori-phone/public/wallpaper.webp](outputs/mori-phone/public/wallpaper.webp) | 保持原分辨率与原完整 RGBA 的无损 UI 插画：wallpaper；路径：outputs/mori-phone/public/wallpaper.webp | 1396454 |
-| [outputs/mori-phone/README.md](outputs/mori-phone/README.md) | 使用或构建指南，适用目录：outputs/mori-phone；路径：outputs/mori-phone/README.md | 7484 |
 | [outputs/mori-phone/scripts/build-verified.sh](outputs/mori-phone/scripts/build-verified.sh) | 工程支持文件：outputs/mori-phone/scripts/build-verified.sh | 661 |
 | [outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs](outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs) | 工程支持文件：outputs/mori-phone/scripts/connector-preview/connector-preview-session.mjs | 6842 |
 | [outputs/mori-phone/scripts/connector-preview/host-binding.mjs](outputs/mori-phone/scripts/connector-preview/host-binding.mjs) | 工程支持文件：outputs/mori-phone/scripts/connector-preview/host-binding.mjs | 7793 |
@@ -230,7 +242,7 @@
 | [outputs/mori-phone/scripts/run-framework.mjs](outputs/mori-phone/scripts/run-framework.mjs) | 工程支持文件：outputs/mori-phone/scripts/run-framework.mjs | 993 |
 | [outputs/mori-phone/scripts/sites-env.mjs](outputs/mori-phone/scripts/sites-env.mjs) | 工程支持文件：outputs/mori-phone/scripts/sites-env.mjs | 906 |
 | [outputs/mori-phone/scripts/sites-env.sh](outputs/mori-phone/scripts/sites-env.sh) | 工程支持文件：outputs/mori-phone/scripts/sites-env.sh | 1530 |
-| [outputs/mori-phone/scripts/verify-card-library.mjs](outputs/mori-phone/scripts/verify-card-library.mjs) | 16项可复用角色卡、实例隔离、定向更新、容量原子性、迁移与档案往返检查；路径：outputs/mori-phone/scripts/verify-card-library.mjs | 9138 |
+| [outputs/mori-phone/scripts/verify-card-library.mjs](outputs/mori-phone/scripts/verify-card-library.mjs) | 19项独立角色卡核心验收，包含语义去重、反复复用、关系隔离、满库与过期任务拒绝；路径：outputs/mori-phone/scripts/verify-card-library.mjs | 10566 |
 | [outputs/mori-phone/scripts/verify-companion.mjs](outputs/mori-phone/scripts/verify-companion.mjs) | 21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs | 11645 |
 | [outputs/mori-phone/scripts/verify-context.mjs](outputs/mori-phone/scripts/verify-context.mjs) | 11 项最大上下文和系统编辑回归，含600条大请求与旧备份迁移；路径：outputs/mori-phone/scripts/verify-context.mjs | 6151 |
 | [outputs/mori-phone/scripts/verify-core.mjs](outputs/mori-phone/scripts/verify-core.mjs) | 26 项模型状态、角色导入和提示词核心检查；路径：outputs/mori-phone/scripts/verify-core.mjs | 12865 |
@@ -241,18 +253,10 @@
 | [outputs/mori-phone/scripts/verify-roleplay.mjs](outputs/mori-phone/scripts/verify-roleplay.mjs) | 27项AI片段覆盖、世界书往返、递归、记忆并发与摘要过期回归；路径：outputs/mori-phone/scripts/verify-roleplay.mjs | 13693 |
 | [outputs/mori-phone/scripts/verify-voice.mjs](outputs/mori-phone/scripts/verify-voice.mjs) | 6 项语音与原生桥接检查；路径：outputs/mori-phone/scripts/verify-voice.mjs | 4501 |
 | [outputs/mori-phone/tsconfig.json](outputs/mori-phone/tsconfig.json) | 配置或机器可读验证记录：outputs/mori-phone/tsconfig.json | 800 |
-| [outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css](outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css) | 工程支持文件：outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css | 16041 |
 | [outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.LICENSE.md](outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.LICENSE.md) | 第三方资源许可与归属声明：outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.LICENSE.md | 1063 |
+| [outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css](outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css) | 工程支持文件：outputs/mori-phone/vendor/shadcn-tailwind-4.13.0.css | 16041 |
 | [outputs/mori-phone/vite-assets.d.ts](outputs/mori-phone/vite-assets.d.ts) | PDF worker URL 资源的严格 TypeScript 声明；路径：outputs/mori-phone/vite-assets.d.ts | 62 |
 | [outputs/mori-phone/vite.config.ts](outputs/mori-phone/vite.config.ts) | TypeScript 业务或构建模块：vite.config；位于 outputs/mori-phone；路径：outputs/mori-phone/vite.config.ts | 3115 |
-| [outputs/UI暗夜-私聊.png](outputs/UI暗夜-私聊.png) | 当前暗夜单人聊天与主要触控操作验收截图；路径：outputs/UI暗夜-私聊.png | 84564 |
-| [outputs/UI暗夜-设置.png](outputs/UI暗夜-设置.png) | 当前暗夜服务商设置和可读性验收截图；路径：outputs/UI暗夜-设置.png | 177462 |
-| [outputs/UI暗夜-首页.png](outputs/UI暗夜-首页.png) | 当前暗夜首页、留白、插画和卡片层次验收截图；路径：outputs/UI暗夜-首页.png | 522479 |
-| [outputs/UI系统隔离-暗夜.png](outputs/UI系统隔离-暗夜.png) | 当前暗夜群聊、输入操作与消息层次的验收截图；路径：outputs/UI系统隔离-暗夜.png | 54084 |
-| [outputs/UI系统隔离-浅色.png](outputs/UI系统隔离-浅色.png) | 当前浅色群聊、短消息与文件预览功能的验收截图；路径：outputs/UI系统隔离-浅色.png | 71531 |
-| [outputs/UI群聊-暗夜.png](outputs/UI群聊-暗夜.png) | 上一版群聊优化交付；当时暗夜群聊的短消息、成员头像和输入区验收截图；路径：outputs/UI群聊-暗夜.png | 51693 |
-| [outputs/UI群聊-浅色.png](outputs/UI群聊-浅色.png) | 上一版群聊优化交付；当时浅色群聊消息、附件与输入区的浏览器验收截图；路径：outputs/UI群聊-浅色.png | 71157 |
-| [outputs/UI角色记忆与文件.png](outputs/UI角色记忆与文件.png) | 角色群聊、真实读取状态与新能力的浏览器验收截图；路径：outputs/UI角色记忆与文件.png | 51272 |
 | [outputs/一起听预览.png](outputs/一起听预览.png) | 界面预览或绘图资源：一起听预览.png；目录 outputs；路径：outputs/一起听预览.png | 113740 |
 | [outputs/云朵小手机.apk](outputs/云朵小手机.apk) | 历史版本安装包，保留交付记录：云朵小手机.apk；路径：outputs/云朵小手机.apk | 9357498 |
 | [outputs/云朵小手机.apk.idsig](outputs/云朵小手机.apk.idsig) | APK 的附属增量签名文件：云朵小手机.apk.idsig；路径：outputs/云朵小手机.apk.idsig | 79859 |
@@ -316,7 +320,6 @@
 | [outputs/设置预览.png](outputs/设置预览.png) | 界面预览或绘图资源：设置预览.png；目录 outputs；路径：outputs/设置预览.png | 204931 |
 | [outputs/调研与功能设计.md](outputs/调研与功能设计.md) | 项目说明、调研或验证文档：调研与功能设计.md；路径：outputs/调研与功能设计.md | 3978 |
 | [outputs/验收记录.md](outputs/验收记录.md) | 项目说明、调研或验证文档：验收记录.md；路径：outputs/验收记录.md | 2613 |
-| [README.md](README.md) | 项目介绍、本轮源码功能、复现命令及新 APK 尚待原签名发布的明确边界；路径：README.md | 8008 |
 | [scripts/optimize-ui-images.py](scripts/optimize-ui-images.py) | 六张插画白名单无损转码，逐字节校验完整 RGBA 并输出哈希；不处理用户附件或角色卡；路径：scripts/optimize-ui-images.py | 3647 |
 | [scripts/verify-delivery.py](scripts/verify-delivery.py) | 验证全仓库文件覆盖、独立说明、SHA-256、APK CRC 和随包资源字节；路径：scripts/verify-delivery.py | 2407 |
 | [work/check-browser-release.py](work/check-browser-release.py) | 运行八套编译产物浏览器回归，覆盖既有业务和新增本机恢复/ZIP边界；路径：work/check-browser-release.py | 1076 |
@@ -324,10 +327,11 @@
 | [work/package-core-sources.py](work/package-core-sources.py) | 生成系统隔离版前端与原生完整源码归档、摘要及安装说明；路径：work/package-core-sources.py | 5587 |
 | [work/package-release-sources.py](work/package-release-sources.py) | 生成发布源码压缩包并检查文件范围；路径：work/package-release-sources.py | 3225 |
 | [work/package-ui-sources.py](work/package-ui-sources.py) | 上一版群聊优化交付；打包当时完整前端及原生源码、CRC 检查与安装说明，保留历史归档；路径：work/package-ui-sources.py | 3861 |
+| [work/qa/README.md](work/qa/README.md) | 当前源码浏览器入口、环境变量与历史 APK 专项测试说明；路径：work/qa/README.md | 2610 |
 | [work/qa/android-diagnose.mjs](work/qa/android-diagnose.mjs) | 历史专项浏览器检查或开发工具：android-diagnose；使用时核对对应版本、路径和端口；路径：work/qa/android-diagnose.mjs | 467 |
 | [work/qa/android.mjs](work/qa/android.mjs) | 历史专项浏览器检查或开发工具：android；使用时核对对应版本、路径和端口；路径：work/qa/android.mjs | 4410 |
 | [work/qa/audit-regressions.mjs](work/qa/audit-regressions.mjs) | 七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs | 11085 |
-| [work/qa/card-library.mjs](work/qa/card-library.mjs) | 当前生产前端角色卡仓库操作、真实HTTP分类请求、下载和IndexedDB持久化的浏览器验收；路径：work/qa/card-library.mjs | 17958 |
+| [work/qa/card-library.mjs](work/qa/card-library.mjs) | 13项仓库页面验收，覆盖分类收藏、AI拆分、反复应用、条目增删和600KB档案草稿恢复；路径：work/qa/card-library.mjs | 20137 |
 | [work/qa/check.mjs](work/qa/check.mjs) | 历史专项浏览器检查或开发工具：check；使用时核对对应版本、路径和端口；路径：work/qa/check.mjs | 9950 |
 | [work/qa/companion.mjs](work/qa/companion.mjs) | 历史专项浏览器检查或开发工具：companion；使用时核对对应版本、路径和端口；路径：work/qa/companion.mjs | 4883 |
 | [work/qa/continuity.mjs](work/qa/continuity.mjs) | 长期记忆与摘要游标控制；路径：work/qa/continuity.mjs | 3603 |
@@ -353,7 +357,6 @@
 | [work/qa/package.json](work/qa/package.json) | 依赖与运行命令配置：work/qa；路径：work/qa/package.json | 56 |
 | [work/qa/preview.mjs](work/qa/preview.mjs) | 历史专项浏览器检查或开发工具：preview；使用时核对对应版本、路径和端口；路径：work/qa/preview.mjs | 2794 |
 | [work/qa/probe-local.mjs](work/qa/probe-local.mjs) | 历史专项浏览器检查或开发工具：probe-local；使用时核对对应版本、路径和端口；路径：work/qa/probe-local.mjs | 1559 |
-| [work/qa/README.md](work/qa/README.md) | 当前源码浏览器入口、环境变量与历史 APK 专项测试说明；路径：work/qa/README.md | 2610 |
 | [work/qa/repair-companion.mjs](work/qa/repair-companion.mjs) | 16 类文档解析、真实界面记忆编辑、长代码下载、接话排队与取消回归；路径：work/qa/repair-companion.mjs | 13481 |
 | [work/qa/repair-csp.mjs](work/qa/repair-csp.mjs) | 实际原生 CSP 下 APK 页面和桥接功能验证；路径：work/qa/repair-csp.mjs | 4963 |
 | [work/qa/repair-library.ts](work/qa/repair-library.ts) | 浏览器回归使用的真实业务模块与组件测试入口；路径：work/qa/repair-library.ts | 1932 |
@@ -365,8 +368,8 @@
 | [work/qa/roleplay.mjs](work/qa/roleplay.mjs) | 角色卡AI拆分、原卡下载、世界书请求、移动布局及取消的10项浏览器流程；路径：work/qa/roleplay.mjs | 12684 |
 | [work/qa/security-library.ts](work/qa/security-library.ts) | 边界回归注入的源辅助库：实际备份、文件读取与请求构造，无真实Key；路径：work/qa/security-library.ts | 672 |
 | [work/qa/security-regressions.mjs](work/qa/security-regressions.mjs) | 六组本机恢复和ZIP读取回归；保留修复前失败证据，检查正常文件完整性；路径：work/qa/security-regressions.mjs | 8186 |
-| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 浏览器存储验收入口，导出本机事务、完整备份及角色卡模板接口；路径：work/qa/storage-entry.ts | 410 |
-| [work/qa/storage.mjs](work/qa/storage.mjs) | 11项真实IndexedDB事务、长历史、附件去重、卡库头像清理及完整ZIP恢复检查；路径：work/qa/storage.mjs | 8120 |
+| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 412 |
+| [work/qa/storage.mjs](work/qa/storage.mjs) | 13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs | 7684 |
 | [work/qa/ui-group.mjs](work/qa/ui-group.mjs) | 25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口；路径：work/qa/ui-group.mjs | 23991 |
 | [work/qa/update-csp.py](work/qa/update-csp.py) | 历史测试维护脚本：update-csp；记录当时测试代码的调整；路径：work/qa/update-csp.py | 671 |
 | [work/qa/update-repair-tests.py](work/qa/update-repair-tests.py) | 历史测试维护脚本：update-repair-tests；记录当时测试代码的调整；路径：work/qa/update-repair-tests.py | 2256 |
@@ -383,3 +386,5 @@
 | [work/verify-signing-gate.py](work/verify-signing-gate.py) | 通过真实构建预检验证缺少私钥和替换私钥均被拒绝，临时测试密钥自动销毁；路径：work/verify-signing-gate.py | 2029 |
 | [work/verify-ui-apk.py](work/verify-ui-apk.py) | 上一版群聊优化交付；当时群聊版的签名、同证书、对齐、CRC 和源资源一致性检查；路径：work/verify-ui-apk.py | 4652 |
 | [work/write-release-report.py](work/write-release-report.py) | 汇总发布检查结果与安装信息；路径：work/write-release-report.py | 5889 |
+| [FILES.md](FILES.md) | 全仓库逐文件用途索引（本文件） | — |
+| [FILE_MANIFEST.json](FILE_MANIFEST.json) | 文件大小、SHA-256及用途的机器可读清单；索引与清单自身不纳入哈希 | — |
