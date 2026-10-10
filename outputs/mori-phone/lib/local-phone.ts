@@ -107,7 +107,12 @@ export async function prepareLocalUpload(owner:string,file:File):Promise<Prepare
 export async function uploadLocal(owner:string,file:File){
  const prepared=await prepareLocalUpload(owner,file);
  if(!prepared.asset)return prepared.result;
- const a=prepared.asset;return await putAsset(owner,a.id,a.blob,a.name,a.mime,a.sha256);
+ const a=prepared.asset,digest=a.sha256!;
+ // Preserve the legacy content-derived identifier for older callers and simultaneous
+ // identical uploads; staged chat uploads use independent IDs until their atomic commit.
+ const h=digest.slice(0,32),id=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+ const collision=await getAsset(owner,'local:'+id);
+ return await putAsset(owner,collision&&collision.sha256!==digest?crypto.randomUUID():id,a.blob,a.name,a.mime,digest);
 }
 async function legacyBlob(ref:string,expected:number){
  const response=await fetch(ref,{cache:'no-store'});if(response.ok){const blob=await response.blob();if(response.status!==204&&(!expected||blob.size===expected))return blob;}
