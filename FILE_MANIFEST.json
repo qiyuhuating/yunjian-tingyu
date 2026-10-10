@@ -1766,8 +1766,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-core.mjs",
     "description": "26 项模型状态、角色导入和提示词核心检查；路径：outputs/mori-phone/scripts/verify-core.mjs",
-    "bytes": 12865,
-    "sha256": "848abe209b274d247eef3bf525c7f475302bcdead7af73423491f75afd7c312f"
+    "bytes": 13271,
+    "sha256": "4e507f87def250a1e8bfe9de151c5798b0dd830a1429eff1b2c211cfcbd8e84c"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-group.mjs",
