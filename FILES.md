@@ -2,13 +2,15 @@
 
 0.0.2 最终源码、四份草稿整合与验收见 [版本说明](docs/0.0.2.md)。0.0.1 APK 及随包资源为保持校验的历史交付；当前构建候选待原签名。
 
+本轮 API 连接、设置重设计与验证见 [修复报告](docs/API连接与设置重设计-2026-10-09.md)。新增源码与验收文件已计入清单；历史二进制摘要保留。
+
 | 文件 | 用途 | 字节数 |
 | --- | --- | ---: |
 | [.gitattributes](.gitattributes) | 禁止换行自动转换，确保 Windows 和 Linux 检出后资源及校验值保持一致；路径：.gitattributes | 21 |
 | [.github/workflows/release-standalone-v002.yml](.github/workflows/release-standalone-v002.yml) | 独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml | 9891 |
-| [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 4777 |
+| [.github/workflows/verify.yml](.github/workflows/verify.yml) | 持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml | 4818 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 436 |
-| [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 9284 |
+| [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 10026 |
 | [docs/0.0.1.md](docs/0.0.1.md) | 0.0.1 发布说明、升级要求、安装包哈希、签名证书及验收范围；路径：docs/0.0.1.md | 1219 |
 | [docs/0.0.2-integration-results.json](docs/0.0.2-integration-results.json) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2-integration-results.json | 23214 |
 | [docs/0.0.2.md](docs/0.0.2.md) | 0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2.md | 4237 |
@@ -101,7 +103,7 @@
 | [outputs/android/res/mipmap-anydpi/app_icon.xml](outputs/android/res/mipmap-anydpi/app_icon.xml) | Android 7 的固定尺寸笑脸云朵图标，避免原图分辨率导致过度缩小；路径：outputs/android/res/mipmap-anydpi/app_icon.xml | 367 |
 | [outputs/android/res/values/styles.xml](outputs/android/res/values/styles.xml) | 工程支持文件：outputs/android/res/values/styles.xml | 415 |
 | [outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java](outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java) | 内置Via字体、独立返回位置、状态栏/系统导航隐藏与生命周期接入；路径：outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java | 4488 |
-| [outputs/android/src/chat/cloudlet/phone/MainActivity.java](outputs/android/src/chat/cloudlet/phone/MainActivity.java) | 保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java | 26858 |
+| [outputs/android/src/chat/cloudlet/phone/MainActivity.java](outputs/android/src/chat/cloudlet/phone/MainActivity.java) | 保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java | 28087 |
 | [outputs/android/vendor/via-release-cn.apk](outputs/android/vendor/via-release-cn.apk) | 机主提供的Via7.3.3原始二进制，固定SHA-256，原件未修改；路径：outputs/android/vendor/via-release-cn.apk | 2628334 |
 | [outputs/code-review-validation/README.txt](outputs/code-review-validation/README.txt) | 修复前代码审查的缺陷复现材料：README.txt；路径：outputs/code-review-validation/README.txt | 644 |
 | [outputs/code-review-validation/review-core.mjs](outputs/code-review-validation/review-core.mjs) | 修复前代码审查的缺陷复现材料：review-core.mjs；路径：outputs/code-review-validation/review-core.mjs | 2493 |
@@ -112,54 +114,53 @@
 | [outputs/mori-phone/.openai/hosting.json](outputs/mori-phone/.openai/hosting.json) | 配置或机器可读验证记录：outputs/mori-phone/.openai/hosting.json | 100 |
 | [outputs/mori-phone/README.md](outputs/mori-phone/README.md) | 使用或构建指南，适用目录：outputs/mori-phone；路径：outputs/mori-phone/README.md | 7484 |
 | [outputs/mori-phone/android-web/index.html](outputs/mori-phone/android-web/index.html) | 工程支持文件：outputs/mori-phone/android-web/index.html | 274 |
-| [outputs/mori-phone/android-web/main.tsx](outputs/mori-phone/android-web/main.tsx) | React 界面模块：main；位于 outputs/mori-phone/android-web；路径：outputs/mori-phone/android-web/main.tsx | 450 |
-| [outputs/mori-phone/android-web/runtime.ts](outputs/mori-phone/android-web/runtime.ts) | APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts | 10245 |
+| [outputs/mori-phone/android-web/main.tsx](outputs/mori-phone/android-web/main.tsx) | React 界面模块：main；位于 outputs/mori-phone/android-web；路径：outputs/mori-phone/android-web/main.tsx | 481 |
+| [outputs/mori-phone/android-web/runtime.ts](outputs/mori-phone/android-web/runtime.ts) | APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts | 10418 |
 | [outputs/mori-phone/android-web/vite.config.ts](outputs/mori-phone/android-web/vite.config.ts) | TypeScript 业务或构建模块：vite.config；位于 outputs/mori-phone/android-web；路径：outputs/mori-phone/android-web/vite.config.ts | 344 |
-| [outputs/mori-phone/app/ai-controls.tsx](outputs/mori-phone/app/ai-controls.tsx) | 模型采样及思考参数设置界面；路径：outputs/mori-phone/app/ai-controls.tsx | 8727 |
-| [outputs/mori-phone/app/api/assets/[id]/route.ts](outputs/mori-phone/app/api/assets/[id]/route.ts) | 可选网页服务 API 路由：assets/[id]/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/[id]/route.ts | 1372 |
+| [outputs/mori-phone/app/ai-controls.tsx](outputs/mori-phone/app/ai-controls.tsx) | 模型采样及思考参数设置界面；路径：outputs/mori-phone/app/ai-controls.tsx | 8837 |
 | [outputs/mori-phone/app/api/assets/route.ts](outputs/mori-phone/app/api/assets/route.ts) | 可选网页服务 API 路由：assets/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/route.ts | 287 |
-| [outputs/mori-phone/app/api/chat/route.ts](outputs/mori-phone/app/api/chat/route.ts) | 可选网页服务 API 路由：chat/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/chat/route.ts | 2038 |
+| [outputs/mori-phone/app/api/chat/route.ts](outputs/mori-phone/app/api/chat/route.ts) | 可选网页服务 API 路由：chat/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/chat/route.ts | 1205 |
 | [outputs/mori-phone/app/api/connection/route.ts](outputs/mori-phone/app/api/connection/route.ts) | 可选网页服务 API 路由：connection/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/connection/route.ts | 770 |
 | [outputs/mori-phone/app/api/health/route.ts](outputs/mori-phone/app/api/health/route.ts) | 可选网页服务 API 路由：health/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/health/route.ts | 602 |
 | [outputs/mori-phone/app/api/media/route.ts](outputs/mori-phone/app/api/media/route.ts) | 同源校验、请求边界、超时与实际生图/转写/语音媒体网关；路径：outputs/mori-phone/app/api/media/route.ts | 669 |
-| [outputs/mori-phone/app/api/models/route.ts](outputs/mori-phone/app/api/models/route.ts) | 可选网页服务 API 路由：models/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/models/route.ts | 1700 |
+| [outputs/mori-phone/app/api/models/route.ts](outputs/mori-phone/app/api/models/route.ts) | 可选网页服务 API 路由：models/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/models/route.ts | 625 |
 | [outputs/mori-phone/app/api/realtime/route.ts](outputs/mori-phone/app/api/realtime/route.ts) | 可选网页服务 API 路由：realtime/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/realtime/route.ts | 1502 |
 | [outputs/mori-phone/app/api/speech/route.ts](outputs/mori-phone/app/api/speech/route.ts) | 可选网页服务 API 路由：speech/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/speech/route.ts | 1536 |
 | [outputs/mori-phone/app/api/state/route.ts](outputs/mori-phone/app/api/state/route.ts) | 可选网页服务 API 路由：state/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/state/route.ts | 1671 |
 | [outputs/mori-phone/app/card-analysis-preview.tsx](outputs/mori-phone/app/card-analysis-preview.tsx) | 角色卡AI分析连接选择、取消、失败回退与人物及世界书拆分预览；路径：outputs/mori-phone/app/card-analysis-preview.tsx | 2809 |
-| [outputs/mori-phone/app/character-ai-settings.tsx](outputs/mori-phone/app/character-ai-settings.tsx) | 角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx | 5155 |
+| [outputs/mori-phone/app/character-ai-settings.tsx](outputs/mori-phone/app/character-ai-settings.tsx) | 角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx | 5217 |
 | [outputs/mori-phone/app/character-library.tsx](outputs/mori-phone/app/character-library.tsx) | 角色卡分类备注与分页、人物及高级世界书编辑、AI拆分和明确复制删除的仓库界面；路径：outputs/mori-phone/app/character-library.tsx | 16673 |
 | [outputs/mori-phone/app/characters.tsx](outputs/mori-phone/app/characters.tsx) | 聊天角色编辑、角色卡原始档案、AI分类、默认归档卡库及独立复用/定向更新预览；路径：outputs/mori-phone/app/characters.tsx | 14174 |
-| [outputs/mori-phone/app/chat.tsx](outputs/mori-phone/app/chat.tsx) | 聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx | 33391 |
+| [outputs/mori-phone/app/chat.tsx](outputs/mori-phone/app/chat.tsx) | 聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx | 33770 |
 | [outputs/mori-phone/app/chatgpt-auth.ts](outputs/mori-phone/app/chatgpt-auth.ts) | TypeScript 业务或构建模块：chatgpt-auth；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/chatgpt-auth.ts | 2550 |
 | [outputs/mori-phone/app/comfort.css](outputs/mori-phone/app/comfort.css) | 聊天导航、群头像、短消息、触控、图片对话框和横屏布局样式；路径：outputs/mori-phone/app/comfort.css | 9906 |
-| [outputs/mori-phone/app/companion-settings.tsx](outputs/mori-phone/app/companion-settings.tsx) | React 界面模块：companion-settings；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/companion-settings.tsx | 7764 |
+| [outputs/mori-phone/app/companion-settings.tsx](outputs/mori-phone/app/companion-settings.tsx) | React 界面模块：companion-settings；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/companion-settings.tsx | 7807 |
 | [outputs/mori-phone/app/focus-timer.tsx](outputs/mori-phone/app/focus-timer.tsx) | React 界面模块：focus-timer；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/focus-timer.tsx | 2709 |
 | [outputs/mori-phone/app/globals.css](outputs/mori-phone/app/globals.css) | 全局字体、布局和浅暗主题样式；路径：outputs/mori-phone/app/globals.css | 54005 |
-| [outputs/mori-phone/app/layout.tsx](outputs/mori-phone/app/layout.tsx) | React 界面模块：layout；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/layout.tsx | 762 |
+| [outputs/mori-phone/app/layout.tsx](outputs/mori-phone/app/layout.tsx) | React 界面模块：layout；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/layout.tsx | 787 |
 | [outputs/mori-phone/app/local-media.tsx](outputs/mori-phone/app/local-media.tsx) | 共享本机Blob预览及按重试版本重新获取原件，释放对象URL；路径：outputs/mori-phone/app/local-media.tsx | 1155 |
 | [outputs/mori-phone/app/lore.tsx](outputs/mori-phone/app/lore.tsx) | 独立世界书导入导出、作用域编辑、搜索、分页和真实引擎命中解释；路径：outputs/mori-phone/app/lore.tsx | 10058 |
-| [outputs/mori-phone/app/media-settings.tsx](outputs/mori-phone/app/media-settings.tsx) | 真实媒体能力开关、模型/地址和独立 Key 配置入口；路径：outputs/mori-phone/app/media-settings.tsx | 4418 |
+| [outputs/mori-phone/app/media-settings.tsx](outputs/mori-phone/app/media-settings.tsx) | 真实媒体能力开关、模型/地址和独立 Key 配置入口；路径：outputs/mori-phone/app/media-settings.tsx | 4361 |
 | [outputs/mori-phone/app/memory-drawer.tsx](outputs/mori-phone/app/memory-drawer.tsx) | 本地记忆编辑、锁定保护、来源证据、修改历史和按角色筛选；路径：outputs/mori-phone/app/memory-drawer.tsx | 3970 |
 | [outputs/mori-phone/app/message-text.tsx](outputs/mori-phone/app/message-text.tsx) | 完整 Markdown 与代码复制、保存、长代码折叠；路径：outputs/mori-phone/app/message-text.tsx | 2016 |
-| [outputs/mori-phone/app/modules.tsx](outputs/mori-phone/app/modules.tsx) | React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx | 25637 |
+| [outputs/mori-phone/app/modules.tsx](outputs/mori-phone/app/modules.tsx) | React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx | 25610 |
 | [outputs/mori-phone/app/music.tsx](outputs/mori-phone/app/music.tsx) | 一起听、本地音乐、歌词及外部音乐链接；路径：outputs/mori-phone/app/music.tsx | 5235 |
 | [outputs/mori-phone/app/page.tsx](outputs/mori-phone/app/page.tsx) | React 界面模块：page；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/page.tsx | 255 |
 | [outputs/mori-phone/app/pet-3d.tsx](outputs/mori-phone/app/pet-3d.tsx) | 可见时才绘制的低负载 3D 宠物与减少动态效果的静态表情刷新；路径：outputs/mori-phone/app/pet-3d.tsx | 6200 |
 | [outputs/mori-phone/app/pet.tsx](outputs/mori-phone/app/pet.tsx) | 桌宠互动、情绪与对话栏状态；路径：outputs/mori-phone/app/pet.tsx | 4746 |
-| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx | 29993 |
+| [outputs/mori-phone/app/phone.tsx](outputs/mori-phone/app/phone.tsx) | 设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx | 30756 |
 | [outputs/mori-phone/app/realtime-call.tsx](outputs/mori-phone/app/realtime-call.tsx) | React 界面模块：realtime-call；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/realtime-call.tsx | 6236 |
 | [outputs/mori-phone/app/recording-preview.tsx](outputs/mori-phone/app/recording-preview.tsx) | 原录音试听与对象 URL 生命周期；路径：outputs/mori-phone/app/recording-preview.tsx | 350 |
 | [outputs/mori-phone/app/refinement.css](outputs/mori-phone/app/refinement.css) | 精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css | 31305 |
 | [outputs/mori-phone/app/render-recovery.tsx](outputs/mori-phone/app/render-recovery.tsx) | 渲染异常恢复界面、当前内存记录备份入口与重新打开确认；路径：outputs/mori-phone/app/render-recovery.tsx | 716 |
-| [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1622 |
-| [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx | 14961 |
-| [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1846 |
-| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | 共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx | 9490 |
+| [outputs/mori-phone/app/roleplay-controls.tsx](outputs/mori-phone/app/roleplay-controls.tsx) | 酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx | 1638 |
+| [outputs/mori-phone/app/settings.tsx](outputs/mori-phone/app/settings.tsx) | 全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx | 13765 |
+| [outputs/mori-phone/app/system-prompt-editor.tsx](outputs/mori-phone/app/system-prompt-editor.tsx) | 核心提示词编辑、明确保存、载入原始版本与撤销草稿的真实入口；路径：outputs/mori-phone/app/system-prompt-editor.tsx | 1860 |
+| [outputs/mori-phone/app/ui.tsx](outputs/mori-phone/app/ui.tsx) | 共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx | 9735 |
 | [outputs/mori-phone/app/use-editor-draft.ts](outputs/mori-phone/app/use-editor-draft.ts) | 按编辑器键切换持久草稿，拒绝前一编辑器迟到回调的Hook；路径：outputs/mori-phone/app/use-editor-draft.ts | 1352 |
 | [outputs/mori-phone/app/use-recorder.ts](outputs/mori-phone/app/use-recorder.ts) | 真实麦克风、MediaRecorder、最长两分钟录音、试听文件与取消/后台释放；路径：outputs/mori-phone/app/use-recorder.ts | 3201 |
 | [outputs/mori-phone/app/use-voice.ts](outputs/mori-phone/app/use-voice.ts) | 设备文字朗读与真实服务 TTS 的统一播放和取消所有权；路径：outputs/mori-phone/app/use-voice.ts | 2572 |
-| [outputs/mori-phone/app/wallpaper-settings.tsx](outputs/mori-phone/app/wallpaper-settings.tsx) | 原图壁纸上传、显示方式、保存预览与恢复默认；路径：outputs/mori-phone/app/wallpaper-settings.tsx | 1664 |
+| [outputs/mori-phone/app/wallpaper-settings.tsx](outputs/mori-phone/app/wallpaper-settings.tsx) | 原图壁纸上传、显示方式、保存预览与恢复默认；路径：outputs/mori-phone/app/wallpaper-settings.tsx | 1657 |
 | [outputs/mori-phone/build/connector-preview-plugin.mjs](outputs/mori-phone/build/connector-preview-plugin.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-plugin.mjs | 7211 |
 | [outputs/mori-phone/build/connector-preview-worker.mjs](outputs/mori-phone/build/connector-preview-worker.mjs) | 工程支持文件：outputs/mori-phone/build/connector-preview-worker.mjs | 594 |
 | [outputs/mori-phone/build/sites-vite-plugin.LICENSE](outputs/mori-phone/build/sites-vite-plugin.LICENSE) | 第三方资源许可与归属声明：outputs/mori-phone/build/sites-vite-plugin.LICENSE | 1063 |
@@ -191,7 +192,7 @@
 | [outputs/mori-phone/lib/attachment-text.ts](outputs/mori-phone/lib/attachment-text.ts) | 文本编码、Office共享字符串、ZIP限额、未知格式与读取状态；路径：outputs/mori-phone/lib/attachment-text.ts | 5746 |
 | [outputs/mori-phone/lib/bounded-zip.ts](outputs/mori-phone/lib/bounded-zip.ts) | 限制每次压缩输入的共用解码器和ZIP文件头/尾目录完整性校验；路径：outputs/mori-phone/lib/bounded-zip.ts | 1456 |
 | [outputs/mori-phone/lib/card-analysis.ts](outputs/mori-phone/lib/card-analysis.ts) | 原文单元编号、AI连续分类契约、全覆盖校验和不改写的本地重组；路径：outputs/mori-phone/lib/card-analysis.ts | 3529 |
-| [outputs/mori-phone/lib/character-ai.ts](outputs/mori-phone/lib/character-ai.ts) | 角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts | 1304 |
+| [outputs/mori-phone/lib/character-ai.ts](outputs/mori-phone/lib/character-ai.ts) | 角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts | 1424 |
 | [outputs/mori-phone/lib/character-import.ts](outputs/mori-phone/lib/character-import.ts) | TXT/JSON/PNG角色卡与独立世界书解析、兼容告知、原字段保留和导出；路径：outputs/mori-phone/lib/character-import.ts | 16473 |
 | [outputs/mori-phone/lib/character-library.ts](outputs/mori-phone/lib/character-library.ts) | 独立卡片捕获与复用、原卡规范化去重、复制后缀与修订校验和保留聊天状态的应用逻辑；路径：outputs/mori-phone/lib/character-library.ts | 5988 |
 | [outputs/mori-phone/lib/character-memory.ts](outputs/mori-phone/lib/character-memory.ts) | 原话证据、任务基线、时间检查点和满库整批原子的独立角色记忆更新；路径：outputs/mori-phone/lib/character-memory.ts | 5413 |
@@ -203,7 +204,7 @@
 | [outputs/mori-phone/lib/connector-errors.mts](outputs/mori-phone/lib/connector-errors.mts) | TypeScript 业务或构建模块：connector-errors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-errors.mts | 2717 |
 | [outputs/mori-phone/lib/connector-preview.d.ts](outputs/mori-phone/lib/connector-preview.d.ts) | TypeScript 业务或构建模块：connector-preview.d；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-preview.d.ts | 433 |
 | [outputs/mori-phone/lib/connectors.ts](outputs/mori-phone/lib/connectors.ts) | TypeScript 业务或构建模块：connectors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connectors.ts | 416 |
-| [outputs/mori-phone/lib/context-window.ts](outputs/mori-phone/lib/context-window.ts) | 服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts | 3966 |
+| [outputs/mori-phone/lib/context-window.ts](outputs/mori-phone/lib/context-window.ts) | 服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts | 3987 |
 | [outputs/mori-phone/lib/continuity.ts](outputs/mori-phone/lib/continuity.ts) | 长期记忆与旧对话检索、重复识别和可验证原消息的阶段摘要任务；路径：outputs/mori-phone/lib/continuity.ts | 3324 |
 | [outputs/mori-phone/lib/conversation-reply.ts](outputs/mori-phone/lib/conversation-reply.ts) | 统一解析自然短消息、接话选项及真实媒体命令；路径：outputs/mori-phone/lib/conversation-reply.ts | 767 |
 | [outputs/mori-phone/lib/file-export.ts](outputs/mori-phone/lib/file-export.ts) | 48KiB原生下载块与取消清理，以及网页版OPFS导出，不聚合完整备份；路径：outputs/mori-phone/lib/file-export.ts | 1411 |
@@ -218,9 +219,9 @@
 | [outputs/mori-phone/lib/media-validation.ts](outputs/mori-phone/lib/media-validation.ts) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：outputs/mori-phone/lib/media-validation.ts | 1555 |
 | [outputs/mori-phone/lib/native-media.ts](outputs/mori-phone/lib/native-media.ts) | 有界原生图片/音频文件解码与 Gemini 24 kHz PCM 的 WAV 包装；路径：outputs/mori-phone/lib/native-media.ts | 2245 |
 | [outputs/mori-phone/lib/pdf-reading.ts](outputs/mori-phone/lib/pdf-reading.ts) | 随包 PDF.js worker 读取 PDF 文字，提示页数、截断、扫描件及加密失败；路径：outputs/mori-phone/lib/pdf-reading.ts | 1178 |
-| [outputs/mori-phone/lib/phone-model.ts](outputs/mori-phone/lib/phone-model.ts) | 聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts | 15609 |
-| [outputs/mori-phone/lib/provider-adapter.ts](outputs/mori-phone/lib/provider-adapter.ts) | 服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts | 10603 |
-| [outputs/mori-phone/lib/providers.ts](outputs/mori-phone/lib/providers.ts) | 服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts | 6075 |
+| [outputs/mori-phone/lib/phone-model.ts](outputs/mori-phone/lib/phone-model.ts) | 聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts | 15654 |
+| [outputs/mori-phone/lib/provider-adapter.ts](outputs/mori-phone/lib/provider-adapter.ts) | 服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts | 11059 |
+| [outputs/mori-phone/lib/providers.ts](outputs/mori-phone/lib/providers.ts) | 服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts | 6445 |
 | [outputs/mori-phone/lib/reasoning.ts](outputs/mori-phone/lib/reasoning.ts) | 思考强度与模型能力转换；路径：outputs/mori-phone/lib/reasoning.ts | 5898 |
 | [outputs/mori-phone/lib/roleplay.ts](outputs/mori-phone/lib/roleplay.ts) | 保持人物价值观和示例边界、为技术任务保留完整回答的节奏预设；路径：outputs/mori-phone/lib/roleplay.ts | 3748 |
 | [outputs/mori-phone/lib/server-phone.ts](outputs/mori-phone/lib/server-phone.ts) | TypeScript 业务或构建模块：server-phone；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/server-phone.ts | 2736 |
@@ -342,21 +343,21 @@
 | [scripts/optimize-ui-images.py](scripts/optimize-ui-images.py) | 六张插画白名单无损转码，逐字节校验完整 RGBA 并输出哈希；不处理用户附件或角色卡；路径：scripts/optimize-ui-images.py | 3647 |
 | [scripts/verify-delivery.py](scripts/verify-delivery.py) | 验证全仓库文件覆盖、独立说明、SHA-256、APK CRC 和随包资源字节；路径：scripts/verify-delivery.py | 2407 |
 | [work/check-browser-release.py](work/check-browser-release.py) | 运行八套编译产物浏览器回归，覆盖既有业务和新增本机恢复/ZIP边界；路径：work/check-browser-release.py | 1076 |
-| [work/check-release.py](work/check-release.py) | 聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py | 1501 |
+| [work/check-release.py](work/check-release.py) | 聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py | 1580 |
 | [work/package-core-sources.py](work/package-core-sources.py) | 生成系统隔离版前端与原生完整源码归档、摘要及安装说明；路径：work/package-core-sources.py | 5587 |
 | [work/package-release-sources.py](work/package-release-sources.py) | 生成发布源码压缩包并检查文件范围；路径：work/package-release-sources.py | 3225 |
 | [work/package-ui-sources.py](work/package-ui-sources.py) | 上一版群聊优化交付；打包当时完整前端及原生源码、CRC 检查与安装说明，保留历史归档；路径：work/package-ui-sources.py | 3861 |
-| [work/qa/README.md](work/qa/README.md) | 当前源码浏览器入口、环境变量与历史 APK 专项测试说明；路径：work/qa/README.md | 2610 |
+| [work/qa/README.md](work/qa/README.md) | 当前源码浏览器入口、环境变量与历史 APK 专项测试说明；路径：work/qa/README.md | 3482 |
 | [work/qa/android-diagnose.mjs](work/qa/android-diagnose.mjs) | 历史专项浏览器检查或开发工具：android-diagnose；使用时核对对应版本、路径和端口；路径：work/qa/android-diagnose.mjs | 467 |
 | [work/qa/android.mjs](work/qa/android.mjs) | 历史专项浏览器检查或开发工具：android；使用时核对对应版本、路径和端口；路径：work/qa/android.mjs | 4410 |
 | [work/qa/audit-regressions.mjs](work/qa/audit-regressions.mjs) | 七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs | 11085 |
-| [work/qa/card-library.mjs](work/qa/card-library.mjs) | 13项仓库页面验收，覆盖分类收藏、AI拆分、反复应用、条目增删和600KB档案草稿恢复；路径：work/qa/card-library.mjs | 22072 |
+| [work/qa/card-library.mjs](work/qa/card-library.mjs) | 13项仓库页面验收，覆盖分类收藏、AI拆分、反复应用、条目增删和600KB档案草稿恢复；路径：work/qa/card-library.mjs | 22144 |
 | [work/qa/check.mjs](work/qa/check.mjs) | 历史专项浏览器检查或开发工具：check；使用时核对对应版本、路径和端口；路径：work/qa/check.mjs | 9950 |
 | [work/qa/companion.mjs](work/qa/companion.mjs) | 历史专项浏览器检查或开发工具：companion；使用时核对对应版本、路径和端口；路径：work/qa/companion.mjs | 4883 |
 | [work/qa/continuity.mjs](work/qa/continuity.mjs) | 长期记忆与摘要游标控制；路径：work/qa/continuity.mjs | 3603 |
 | [work/qa/contrast-home.mjs](work/qa/contrast-home.mjs) | 历史专项浏览器检查或开发工具：contrast-home；使用时核对对应版本、路径和端口；路径：work/qa/contrast-home.mjs | 3335 |
 | [work/qa/current-previews.mjs](work/qa/current-previews.mjs) | 历史专项浏览器检查或开发工具：current-previews；使用时核对对应版本、路径和端口；路径：work/qa/current-previews.mjs | 1622 |
-| [work/qa/features.mjs](work/qa/features.mjs) | 实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs | 23378 |
+| [work/qa/features.mjs](work/qa/features.mjs) | 实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs | 23770 |
 | [work/qa/fixtures/encrypted.pdf](work/qa/fixtures/encrypted.pdf) | 自行生成的密码保护 PDF，验证解析失败结算而非悬挂；路径：work/qa/fixtures/encrypted.pdf | 1785 |
 | [work/qa/fixtures/reading.pdf](work/qa/fixtures/reading.pdf) | 自行生成的一页明文 PDF，验证实际文字读取与 Android 文件选择器；路径：work/qa/fixtures/reading.pdf | 1356 |
 | [work/qa/fixtures/unknown.bin](work/qa/fixtures/unknown.bin) | 五字节未知格式资料，验证任何扩展名的本地附件保存及诚实状态；路径：work/qa/fixtures/unknown.bin | 5 |
@@ -374,7 +375,7 @@
 | [work/qa/native/SecurityAudit.java](work/qa/native/SecurityAudit.java) | 仅测试用原生instrumentation：实际地址/来源判断与跳转意图构造，不连接测试地址；路径：work/qa/native/SecurityAudit.java | 4726 |
 | [work/qa/night-theme.mjs](work/qa/night-theme.mjs) | 历史专项浏览器检查或开发工具：night-theme；使用时核对对应版本、路径和端口；路径：work/qa/night-theme.mjs | 3394 |
 | [work/qa/optimization.mjs](work/qa/optimization.mjs) | 历史专项浏览器检查或开发工具：optimization；使用时核对对应版本、路径和端口；路径：work/qa/optimization.mjs | 8472 |
-| [work/qa/p0-reliability.mjs](work/qa/p0-reliability.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/p0-reliability.mjs | 16535 |
+| [work/qa/p0-reliability.mjs](work/qa/p0-reliability.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/p0-reliability.mjs | 16807 |
 | [work/qa/p0-storage-scale.mjs](work/qa/p0-storage-scale.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/p0-storage-scale.mjs | 7780 |
 | [work/qa/package-lock.json](work/qa/package-lock.json) | 可重复安装依赖的版本锁定清单：work/qa；路径：work/qa/package-lock.json | 1069 |
 | [work/qa/package.json](work/qa/package.json) | 依赖与运行命令配置：work/qa；路径：work/qa/package.json | 56 |
@@ -389,7 +390,7 @@
 | [work/qa/review-live-cards.mjs](work/qa/review-live-cards.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/review-live-cards.mjs | 6121 |
 | [work/qa/review-native.mjs](work/qa/review-native.mjs) | 历史专项浏览器检查或开发工具：review-native；使用时核对对应版本、路径和端口；路径：work/qa/review-native.mjs | 1681 |
 | [work/qa/review-restore.mjs](work/qa/review-restore.mjs) | 历史专项浏览器检查或开发工具：review-restore；使用时核对对应版本、路径和端口；路径：work/qa/review-restore.mjs | 1421 |
-| [work/qa/roleplay.mjs](work/qa/roleplay.mjs) | 角色卡AI拆分、原卡下载、世界书请求、移动布局及取消的10项浏览器流程；路径：work/qa/roleplay.mjs | 12684 |
+| [work/qa/roleplay.mjs](work/qa/roleplay.mjs) | 角色卡AI拆分、原卡下载、世界书请求、移动布局及取消的10项浏览器流程；路径：work/qa/roleplay.mjs | 12756 |
 | [work/qa/security-library.ts](work/qa/security-library.ts) | 边界回归注入的源辅助库：实际备份、文件读取与请求构造，无真实Key；路径：work/qa/security-library.ts | 672 |
 | [work/qa/security-regressions.mjs](work/qa/security-regressions.mjs) | 六组本机恢复和ZIP读取回归；保留修复前失败证据，检查正常文件完整性；路径：work/qa/security-regressions.mjs | 8186 |
 | [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 412 |
@@ -410,3 +411,24 @@
 | [work/verify-signing-gate.py](work/verify-signing-gate.py) | 通过真实构建预检验证缺少私钥和替换私钥均被拒绝，临时测试密钥自动销毁；路径：work/verify-signing-gate.py | 2029 |
 | [work/verify-ui-apk.py](work/verify-ui-apk.py) | 上一版群聊优化交付；当时群聊版的签名、同证书、对齐、CRC 和源资源一致性检查；路径：work/verify-ui-apk.py | 4652 |
 | [work/write-release-report.py](work/write-release-report.py) | 汇总发布检查结果与安装信息；路径：work/write-release-report.py | 5889 |
+| [docs/API连接与设置重设计-2026-10-09.md](docs/API连接与设置重设计-2026-10-09.md) | 本轮项目分析、缺陷修复、真实软件设计来源与验收边界；路径：docs/API连接与设置重设计-2026-10-09.md | 12529 |
+| [docs/api-settings-2026-10-09/build-validation-results.json](docs/api-settings-2026-10-09/build-validation-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/build-validation-results.json | 776 |
+| [docs/api-settings-2026-10-09/card-library-regression-results.json](docs/api-settings-2026-10-09/card-library-regression-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/card-library-regression-results.json | 1227 |
+| [docs/api-settings-2026-10-09/chat-recovery.png](docs/api-settings-2026-10-09/chat-recovery.png) | 本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/chat-recovery.png | 52700 |
+| [docs/api-settings-2026-10-09/connection-error.png](docs/api-settings-2026-10-09/connection-error.png) | 本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/connection-error.png | 68473 |
+| [docs/api-settings-2026-10-09/connection-ui-results.json](docs/api-settings-2026-10-09/connection-ui-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/connection-ui-results.json | 1590 |
+| [docs/api-settings-2026-10-09/core-validation-results.json](docs/api-settings-2026-10-09/core-validation-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/core-validation-results.json | 16956 |
+| [docs/api-settings-2026-10-09/feature-regression-results.json](docs/api-settings-2026-10-09/feature-regression-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/feature-regression-results.json | 1488 |
+| [docs/api-settings-2026-10-09/p0-reliability-results.json](docs/api-settings-2026-10-09/p0-reliability-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/p0-reliability-results.json | 692 |
+| [docs/api-settings-2026-10-09/roleplay-regression-results.json](docs/api-settings-2026-10-09/roleplay-regression-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/roleplay-regression-results.json | 1274 |
+| [docs/api-settings-2026-10-09/settings-night.png](docs/api-settings-2026-10-09/settings-night.png) | 本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-night.png | 49913 |
+| [docs/api-settings-2026-10-09/settings-overview.png](docs/api-settings-2026-10-09/settings-overview.png) | 本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-overview.png | 53737 |
+| [docs/api-settings-2026-10-09/storage-regression-results.json](docs/api-settings-2026-10-09/storage-regression-results.json) | 本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/storage-regression-results.json | 1095 |
+| [outputs/mori-phone/app/connection-settings.tsx](outputs/mori-phone/app/connection-settings.tsx) | 连接工作区：独立测试、实时模型、持久诊断和地址凭据隔离；路径：outputs/mori-phone/app/connection-settings.tsx | 11282 |
+| [outputs/mori-phone/app/setting-controls.tsx](outputs/mori-phone/app/setting-controls.tsx) | 可搜索选择弹层与支持键盘导航的分段选择控件；路径：outputs/mori-phone/app/setting-controls.tsx | 3315 |
+| [outputs/mori-phone/app/settings.css](outputs/mori-phone/app/settings.css) | 分类设置、连接诊断、暗夜恢复操作及响应布局样式；路径：outputs/mori-phone/app/settings.css | 12573 |
+| [outputs/mori-phone/lib/connection-client.ts](outputs/mori-phone/lib/connection-client.ts) | 独立连接探测：取消、超时、流结束与非空正文校验；路径：outputs/mori-phone/lib/connection-client.ts | 2442 |
+| [outputs/mori-phone/lib/provider-errors.ts](outputs/mori-phone/lib/provider-errors.ts) | 安全的服务商错误分类，区分鉴权、余额、并发额度和限流；路径：outputs/mori-phone/lib/provider-errors.ts | 2502 |
+| [outputs/mori-phone/lib/provider-transport.ts](outputs/mori-phone/lib/provider-transport.ts) | 网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts | 4862 |
+| [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 9098 |
+| [work/qa/connection-ui.mjs](work/qa/connection-ui.mjs) | 23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs | 22533 |

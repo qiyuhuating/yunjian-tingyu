@@ -1,0 +1,32 @@
+{
+  "sourceBase": "eda4dde087bc9ddee23bfb254c3d2e136b3d4d09",
+  "checks": [
+    {
+      "check": "web production",
+      "passed": true,
+      "exitCode": 0,
+      "existingLargeChunkWarning": true,
+      "command": [
+        "node",
+        "scripts/run-framework.mjs",
+        "build"
+      ]
+    },
+    {
+      "check": "Android Web production",
+      "passed": true,
+      "exitCode": 0,
+      "existingLargeChunkWarning": true,
+      "command": [
+        "node",
+        "outputs/mori-phone/node_modules/vite/bin/vite.js",
+        "build",
+        "--config",
+        "outputs/mori-phone/android-web/vite.config.ts",
+        "--outDir",
+        "D:\\Codex存储文件夹\\2026-10-09\\yunjian-api-ui-ui\\work\\release-web"
+      ]
+    }
+  ],
+  "apkAssetsModified": false
+}

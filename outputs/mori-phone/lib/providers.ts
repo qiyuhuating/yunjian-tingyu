@@ -23,7 +23,12 @@ export function capabilities(id:ProviderId,model:string){
  return {...p,temperature:!reasoning&&!modernClaude&&!kimi&&!grok,penalties:p.penalties&&!reasoning&&!kimi,frequency:(p.frequency??p.penalties)&&!reasoning&&!kimi,presence:(p.presence??p.penalties)&&!reasoning&&!kimi,topP:!reasoning&&id!=='anthropic'&&!kimi&&!grok&&!(id==='openrouter'&&model==='liquid/lfm-2.5-2.6b:free')};
 }
 export function providerBase(id:ProviderId,custom=''){
- const base=id==='compatible'?custom:getProvider(id).baseURL;const url=new URL(base);
+ const base=custom.trim()||getProvider(id).baseURL;let url:URL;try{url=new URL(base);}catch{throw new Error('请输入完整的 HTTPS API 地址。');}
  const host=url.hostname.toLowerCase();if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||url.port&&url.port!=='443'||host==='localhost'||host.endsWith('.local')||host.endsWith('.internal')||host==='metadata.google.internal'||host.includes(':')||/^\d+\.\d+\.\d+\.\d+$/.test(host))throw new Error('请输入公开服务商的 HTTPS 地址，不支持本机或内网端点。');
- return url.href.replace(/\/$/,'').replace(/\/chat\/completions$/,'');
+ url.pathname=url.pathname.replace(/\/+$/,'').replace(/\/(?:chat\/completions|models|messages)$/,'');
+ return url.href.replace(/\/+$/,'');
+}
+export function connectionKeySlot(id:ProviderId,baseURL=''){
+ let base:string;try{base=providerBase(id,baseURL);}catch{base=baseURL.trim();}
+ return base===getProvider(id).baseURL.replace(/\/+$/,'')?id:'connection:'+id+':'+base;
 }

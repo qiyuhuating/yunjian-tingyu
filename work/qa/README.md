@@ -1,6 +1,12 @@
 # 浏览器测试说明
 
-2026-10-08 源码升级的入口：
+2026-10-09 API 与设置重设计的生产构建验收：
+
+- `connection-ui.mjs`：23 项设置分类、搜索、模型列表与手填、凭据隔离、独立测试、HTTP/SSE 错误、取消、草稿、聊天恢复、暗夜对比度、响应布局和原生桥接检查。默认自建本地服务；支持 `CONNECTION_BUILD_DIR`、`CONNECTION_OUTPUT_DIR` 与 `CONNECTION_BASE_URL`。
+- `features.mjs`：17 项完整功能流程；`roleplay.mjs`：10 项导入与世界书；`card-library.mjs`：14 项卡库；`p0-reliability.mjs`：10 项异步保存与媒体可靠性；`storage.mjs`：14 项本机存储与备份。
+- 新界面验收报告与截图见 [本轮报告](../../docs/API连接与设置重设计-2026-10-09.md)。设置相关旧测试只调整导航和控件选择方式，保留业务断言；直接注入服务商的 fixture 同时指定其地址。
+
+2026-10-08 源码升级的历史入口：
 
 - `features.mjs`：当前源码生产构建的 16 项端到端流程，包括数据库升级、编辑草稿、壁纸、旧消息定位、真实录音 Blob、媒体输出及失败、转写上下文、授权表情、Gemini 原生媒体、全部应用导航与 Android multipart 桥接。
 - `storage.mjs` / `storage-entry.ts`：真实存储与备份业务模块的 9 项浏览器检查，覆盖 5000 条历史、只写变更会话、跨窗口冲突、并发去重、压缩、完整恢复与原子性。
