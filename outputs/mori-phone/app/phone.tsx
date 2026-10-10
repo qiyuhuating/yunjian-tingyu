@@ -14,7 +14,7 @@ import Pet3D from './pet-3d';
 import {assembleChatMessages} from '../lib/ai-messages';
 import {readChatStream} from '../lib/ai-stream';
 import {splitRoleplayReply} from '../lib/roleplay';
-import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,LocalConflict,clearLegacyArchive} from '../lib/local-phone';
+import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,LocalConflict,clearLegacyArchive,collectOrphanAssets} from '../lib/local-phone';
 import {backupChunks,stageBackup,type PreparedBackup} from '../lib/local-backup';
 import {getProvider,connectionKeySlot,type ProviderId} from '../lib/providers';
 import {characterConnection} from '../lib/character-ai';
@@ -27,15 +27,16 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const [chatView,setChatView]=useState({app:'chat',detail:''}),[backupProgress,setBackupProgress]=useState<string|null>(null),backupAbort=useRef<AbortController|null>(null);
  const [aiStats,setAIStats]=useState<AIStats>({last:null,requests:0,prompt:0,completion:0,firstTokenMs:null,durationMs:null,finishReason:''});
  const draftTimer=useRef<ReturnType<typeof setTimeout>|null>(null),pendingWrites=useRef(0),keyRevision=useRef(0),exporting=useRef(false);
- const data=useRef<PhoneState|null>(null),version=useRef(0),queue=useRef(Promise.resolve()),blocked=useRef(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
+ const data=useRef<PhoneState|null>(null),version=useRef(0),queue=useRef(Promise.resolve()),blocked=useRef(false),restoring=useRef(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const activeKeySlot=state?connectionKeySlot(state.provider,state.baseURL):'',apiKey=keyEntry.provider===activeKeySlot?keyEntry.value:'',savedAI=keyEntry.provider===activeKeySlot&&keyEntry.saved,serverAI=false,vision=state?.vision??false;
  const toast=useCallback((message:string)=>{setNotice(message);if(timer.current)clearTimeout(timer.current);timer.current=setTimeout(()=>setNotice(''),3500);},[]);
  const setApiKey=(value:string)=>{keyRevision.current++;setKeyEntry({provider:data.current?connectionKeySlot(data.current.provider,data.current.baseURL):'',value,saved:false});};
- const reload=useCallback(async()=>{try{if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;setSync('loading');const row=await initializeLocal(ownerId,setOpening);data.current=row.state;version.current=row.version;setLegacyArchive(!!row.legacyArchive);blocked.current=false;setState(row.state);setSync('saved');}catch(e){setSync('error');const message=e instanceof Error?e.message:'无法读取本机数据。';setOpening(message);toast(message);}},[ownerId,toast]);
+ const reload=useCallback(async()=>{try{if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;setSync('loading');const row=await initializeLocal(ownerId,setOpening);data.current=row.state;version.current=row.version;setLegacyArchive(!!row.legacyArchive);blocked.current=false;setState(row.state);setSync('saved');void collectOrphanAssets(ownerId).catch(()=>{});}catch(e){setSync('error');const message=e instanceof Error?e.message:'无法读取本机数据。';setOpening(message);toast(message);}},[ownerId,toast]);
  useEffect(()=>{void reload();setNow(new Date());const ticker=setInterval(()=>setNow(new Date()),30000);return()=>clearInterval(ticker);},[reload]);
  useEffect(()=>{if(!state)return;let active=true;const revision=keyRevision.current;void (async()=>{let value=await readDeviceKey(ownerId,activeKeySlot);if(!value&&state.provider==='compatible'){const legacy=await readDeviceKey(ownerId,'compatible');if(legacy){await saveDeviceKey(ownerId,activeKeySlot,legacy);await saveDeviceKey(ownerId,'compatible','');value=legacy;}}return value;})().then(value=>{if(active&&revision===keyRevision.current)setKeyEntry({provider:activeKeySlot,value,saved:!!value});}).catch(()=>toast('本机密钥未能读取，请在设置里重新填写。'));return()=>{active=false;};},[ownerId,activeKeySlot,toast]);
  const commit:Commit=useCallback((change)=>{
   if(!data.current)return Promise.reject(new Error('请等待数据加载。'));
+  if(restoring.current)return Promise.reject(new Error('备份恢复进行中，暂不能修改记录。'));
   if(blocked.current){toast('保存尚未成功。请先重试保存或导出备份。');return Promise.reject(new Error('保存尚未成功。'));}
   let draft:PhoneState;try{draft=produce(data.current,draft=>{change(draft);});}catch(e){toast(e instanceof Error?e.message:'无法保存');return Promise.reject(e);}const validated=stateSchema.safeParse(draft);if(!validated.success){toast('这条内容超出了允许的长度或数量，请缩短后重试。');return Promise.reject(new Error('数据校验失败。'));}
   const next=draft;pendingWrites.current++;data.current=next;setState(next);setSync('saving');
@@ -43,7 +44,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  },[ownerId,toast]);
  const setVision=(value:boolean)=>{void commit(s=>{s.vision=value;}).catch(()=>{});};
  const setDraft=useCallback((thread:string,text:string)=>{
-  if(!data.current||!thread)return;if(thread.startsWith('editor:')&&new TextEncoder().encode(text).length>12*1024*1024){toast('编辑草稿超过12 MB，请拆分世界书后再保存。');return;}if(!thread.startsWith('editor:'))text=text.slice(0,18000);const next={...data.current,drafts:{...data.current.drafts}};if(text)next.drafts[thread]=text;else delete next.drafts[thread];data.current=next;setState(next);setSync(current=>blocked.current?current:'saving');
+  if(!data.current||!thread||restoring.current)return;if(thread.startsWith('editor:')&&new TextEncoder().encode(text).length>12*1024*1024){toast('编辑草稿超过12 MB，请拆分世界书后再保存。');return;}if(!thread.startsWith('editor:'))text=text.slice(0,18000);const next={...data.current,drafts:{...data.current.drafts}};if(text)next.drafts[thread]=text;else delete next.drafts[thread];data.current=next;setState(next);setSync(current=>blocked.current?current:'saving');
   if(draftTimer.current)clearTimeout(draftTimer.current);draftTimer.current=setTimeout(()=>{draftTimer.current=null;void commit(()=>{}).catch(()=>{});},800);
  },[commit,toast]);
  const flushPending=useCallback(async()=>{const draftPending=!!draftTimer.current;if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}const operation=draftPending?commit(()=>{}):queue.current;await operation;if(blocked.current)throw new Error('本机保存尚未成功。');},[commit]);
@@ -54,7 +55,26 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  useEffect(()=>{const back=()=>{if(['chat','face','live'].includes(app)&&!window.dispatchEvent(new Event('cloudlet-chat-back',{cancelable:true})))return true;const dialog=document.querySelector<HTMLDialogElement>('dialog[open]');if(dialog){dialog.close();return true;}const close=document.querySelector<HTMLButtonElement>('.sheet-backdrop .sheet-close');if(close){close.click();return true;}if(app==='settings'&&!window.dispatchEvent(new Event('cloudlet-settings-back',{cancelable:true})))return true;if(app==='chat'&&detail){open('chat');return true;}if(app!=='home'){open('home');return true;}return false;};window.NativeBack=back;return()=>{if(window.NativeBack===back)delete window.NativeBack;};},[app,detail,open]);
  const exportBackup=async()=>{if(exporting.current){toast('正在打包，请稍等。');return;}exporting.current=true;const controller=new AbortController();backupAbort.current=controller;setBackupProgress('正在准备记录…');try{if(!data.current)return;await queue.current;const snapshot=data.current;await exportChunks(backupChunks(ownerId,snapshot,(done,total)=>setBackupProgress(total?'已打包 '+Math.floor(done/total*100)+'%':'正在打包记录…'),controller.signal),appName+'-'+localDate()+'.zip','application/zip',controller.signal);toast(window.Android?'备份已准备好，请在系统窗口选择保存位置。':'完整备份已生成，不含密钥。');}catch(e){toast(e instanceof Error&&e.name==='AbortError'?'已取消备份，原记录没有改变。':e instanceof Error?e.message:'备份失败。');}finally{exporting.current=false;backupAbort.current=null;setBackupProgress(null);}};
  useEffect(()=>{window.NativeRecoveryBackup=exportBackup;});
- const restoreBackup=async(prepared:PreparedBackup)=>{if(busy)throw new Error('请等当前回复结束再恢复备份。');stateSchema.parse(prepared.state);await queue.current;if(blocked.current)throw new Error('请先解决本机保存问题。');const restored=await stageBackup(ownerId,prepared,data.current!);await commit(s=>Object.assign(s,restored));};
+ const restoreBackup=async(prepared:PreparedBackup)=>{
+  if(busy||restoring.current)throw new Error('请等当前任务结束再恢复备份。');
+  stateSchema.parse(prepared.state);
+  restoring.current=true;if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}
+  setSync('saving');
+  const operation=queue.current.then(async()=>{
+   if(blocked.current||!data.current)throw new Error('请先解决本机保存问题。');
+   const staged=await stageBackup(ownerId,prepared,data.current),restored=stateSchema.parse(staged.state);
+   // A single durable transaction publishes the restored snapshot and its referenced blobs.
+   // React state is deliberately not changed until the storage commit succeeds.
+   const newVersion=await writeLocal(ownerId,restored,version.current,undefined,true,staged.assets);
+   version.current=newVersion;data.current=restored;setState(restored);setSync('saved');
+  });
+  queue.current=operation.catch(()=>{});
+  try{await operation;}catch(e){
+   if(e instanceof LocalConflict){blocked.current=true;setSync('conflict');}
+   else if(!blocked.current)setSync('saved');
+   throw e;
+  }finally{restoring.current=false;}
+ };
  const retrySave=async()=>{if(sync==='conflict'){toast('请先导出本页备份，再点击“读取设备记录”。');return;}blocked.current=false;try{await commit(()=>{});}catch{}};
  const clearLegacy=async()=>{await queue.current;if(blocked.current)throw new Error('请先解决本机保存问题。');await clearLegacyArchive(ownerId);setLegacyArchive(false);};
  const upload=(file:File)=>uploadLocal(ownerId,file);
