@@ -72,6 +72,22 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   const nativeFiles:File[]=[];
   const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file),false,userId);
   const parsed=conversationReply(answer,group,index>0||nativeFiles.length>0);
+  // Native generated files are materialized before reply completion and their
+  // message rows commit WITH the text and turn receipt. A process death can
+  // no longer leave a 'completed' answer waiting to upload transient File objects.
+  const nativeAssets:Asset[]=[],nativeErrors:string[]=[];
+  if(nativeFiles.length)p.onPhase?.('media');
+  for(const file of nativeFiles){
+   try{
+    p.signal.throwIfAborted();
+    const asset=await p.upload(file);
+    if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型媒体格式无法确认。');
+    nativeAssets.push(asset);
+   }catch(e){
+    if(p.signal.aborted)throw e;
+    nativeErrors.push(e instanceof Error?e.message:'模型原生媒体未保存。');
+   }
+  }
   // Commit all bubbles from one speaker as a unit. A mid-bubble storage
   // failure must not leave half that speaker's response or gain affection twice.
   p.signal.throwIfAborted();
@@ -92,6 +108,18 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      read:p.isVisible?.(thread)??false
     });
    }
+   for(const asset of nativeAssets){
+    (state.threads[thread]??=[]).push({
+     id:uid(),role:'assistant',text:'',
+     kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
+     timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
+     sender:c.name,senderId:speaker,turnId:userId,read:p.isVisible?.(thread)??false,
+     attachmentStatus:'模型原生生成的媒体'
+    });
+   }
+   for(const message of nativeErrors){
+    (state.threads[thread]??=[]).push({id:uid(),role:'system',kind:'notice',text:'媒体未发送：'+message.slice(0,450),timestamp:Date.now(),read:true});
+   }
    target.failed=!complete;if(complete)delete target.failureReason;
    else enqueueDurableTurn(state,{userId,thread,text,mode,queuedAt:Date.now()});
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
@@ -111,24 +139,6 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      timestamp:Date.now(),read:true});
    });
   };
-  if(nativeFiles.length){
-   p.onPhase?.('media');
-   for(const file of nativeFiles){
-    try{
-     p.signal.throwIfAborted();const asset=await p.upload(file);
-     if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');
-     p.signal.throwIfAborted();
-     await p.commit(state=>{
-      if(!state.threads[thread]?.some(m=>m.id===userId))throw new Error('原消息已删除，媒体不再写入。');
-      (state.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',
-       kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
-       timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
-       sender:cName(state,speaker),senderId:speaker,turnId:userId,read:p.isVisible?.(thread)??false,
-       attachmentStatus:'模型原生生成的媒体'});
-     });
-    }catch(e){await mediaFailure(e);}
-   }
-  }
   for(const job of mediaJobs){
    p.onPhase?.('media');
    let attempt=0;

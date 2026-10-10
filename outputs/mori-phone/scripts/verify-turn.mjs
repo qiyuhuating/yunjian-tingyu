@@ -186,4 +186,23 @@ await check('A failed media side effect retains finished text and a recoverable 
  assert.throws(()=>media.beginMediaDelivery(h.state,job.id),/用户确认/);
  assert.equal(media.beginMediaDelivery(h.state,job.id,true),2);
 });
+await check('Native generated media and text share a single committed reply transaction',async()=>{
+ const h=harness({onRequest:({media})=>{
+  media(new File(['native'], 'native.png',{type:'image/png'}));return '一份文字回复';
+ }});
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const msgs=h.state.threads[h.thread];
+ assert.equal(h.calls,1);
+ assert.equal(msgs.filter(m=>m.role==='assistant').length,2);
+ assert.equal(msgs.filter(m=>m.kind==='image'&&m.turnId==='turn-1').length,1);
+ assert.equal(msgs.filter(m=>m.role==='system').length,0);
+ assert.equal(msgs[0].failed,false);
+});
+await check('Native upload failed before completion preserves text plus durable notice',async()=>{
+ const h=harness({onRequest:({media})=>{media(new File(['bad'],'x.png',{type:'image/png'}));return '正文';},onUpload:()=>{throw new Error('disk full');}});
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='system'&&m.text.includes('disk full')).length,1);
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
