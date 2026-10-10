@@ -1358,8 +1358,8 @@
   {
     "path": "outputs/mori-phone/lib/continuity.ts",
     "description": "长期记忆与旧对话检索、重复识别和可验证原消息的阶段摘要任务；路径：outputs/mori-phone/lib/continuity.ts",
-    "bytes": 5495,
-    "sha256": "965c15a122157eb171e3280003707318d75ea8eb754ed1abe51a8b6939e725fc"
+    "bytes": 5512,
+    "sha256": "fa2ace4a83bb4bb9177bdf11d07050cddad2f5c7dc3c617a26140a39da0cfb7a"
   },
   {
     "path": "outputs/mori-phone/lib/conversation-reply.ts",
@@ -1742,8 +1742,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-agents.mjs",
     "description": "文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs",
-    "bytes": 15717,
-    "sha256": "e93072d1b8798221b4539f49e8898b04e846ce045ca264c8a7a0f05745d20d5f"
+    "bytes": 16195,
+    "sha256": "de65d14752157f27ed5fd4c25cfb17eafb1b4fab77983caa33ee3c27929b6da0"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-card-library.mjs",
