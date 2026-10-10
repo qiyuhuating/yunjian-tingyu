@@ -12,7 +12,8 @@ import {getProvider} from '../lib/providers';
 import {generatedImage,speechFile,transcribeFile} from '../lib/media-client';
 import {visibleReply,type MediaCommand} from '../lib/media-contract';
 import {maintainConversation} from '../lib/chat-maintenance';
-import {executeTurn,PendingTurnQueue,type TurnPhase} from '../lib/turn-execution';
+import {executeTurn,type TurnPhase} from '../lib/turn-execution';
+import {enqueueDurableTurn,dequeueDurableTurn,eligibleQueuedTurn,cancelQueuedThread} from '../lib/durable-turn-queue';
 import {markInterrupted,receiptFor,manualRetryRequiresConfirmation} from '../lib/turn-receipts';
 import {putWorkspace} from '../lib/agent-workspace';
 import {planAgentReview,executeAgentReview,flagUncertainAgentJob,authorizeAgentResume,reportEvidence} from '../lib/agent-orchestrator';
@@ -24,16 +25,20 @@ export default function Chat(){
  const [filter,setFilter]=useState(''),[input,setInput]=useState(''),[extras,setExtras]=useState(false),[groupForm,setGroupForm]=useState(false),[groupName,setGroupName]=useState(''),[members,setMembers]=useState<string[]>([]),[rawStream,setStream]=useState(''),[rawError,setError]=useState(''),[activeMessage,setActiveMessage]=useState(''),[realtime,setRealtime]=useState(false),[phase,setPhase]=useState<'reply'|'media'>('reply'),[maintenance,setMaintenance]=useState(false),[searchTarget,setSearchTarget]=useState(''),[packet,setPacket]=useState(''),[amount,setAmount]=useState(20),[uploading,setUploading]=useState(false);
  const [visibleCount,setVisibleCount]=useState(200),[menu,setMenu]=useState(false),[groupDetails,setGroupDetails]=useState(false),[groupTitle,setGroupTitle]=useState(''),[activeSpeaker,setActiveSpeaker]=useState(''),[replyTo,setReplyTo]=useState(''),[waiting,setWaiting]=useState(false);
  const recorder=useRecorder(toast),maintenanceQueue=useRef(Promise.resolve()),maintenanceAbort=useRef(new AbortController()),draftInput=useRef(input);draftInput.current=input;
- const retrySpeakers=useRef<{thread:string;userId:string;speakers:string[]}|null>(null),queued=useRef(new PendingTurnQueue()),runningThread=useRef(''),running=useRef(false),runningUserId=useRef(''),errorThread=useRef(''),view=useRef({thread:'',visible:false});
+ const retrySpeakers=useRef<{thread:string;userId:string;speakers:string[]}|null>(null),runningThread=useRef(''),running=useRef(false),runningUserId=useRef(''),errorThread=useRef(''),view=useRef({thread:'',visible:false});
+ const [stopping,setStopping]=useState(false);
  const partial=useRef(''),follow=useRef(true),viewport=useRef<HTMLDivElement>(null),[showLatest,setShowLatest]=useState(false);
  const end=useRef<HTMLDivElement>(null),fileInput=useRef<HTMLInputElement>(null),abort=useRef<AbortController|null>(null);
  const thread=detail||(app==='face'||app==='live'?state.primary:'');const group=state.groups.find(g=>g.id===thread),character=state.characters.find(c=>c.id===thread)||state.characters.find(c=>c.id===group?.members[0])||state.characters.find(c=>c.id===state.primary)!;
  view.current={thread,visible:!!p.chatVisible};const lastUser=(state.threads[thread]||[]).filter(m=>m.role==='user').at(-1),error=p.busy&&runningThread.current===thread?'':(errorThread.current===thread?rawError:'')||(lastUser?.failed?lastUser.failureReason||'上次回复未完成，可以重试或检查连接。':'');
  const busyHere=p.busy&&runningThread.current===thread,stream=runningThread.current===thread?rawStream:'';
- useEffect(()=>{if(!p.busy&&!running.current){const next=queued.current.take(thread,item=>!!p.snapshot().threads[item.thread]?.some(m=>m.id===item.id&&m.role==='user'&&m.failed));if(next)void reply(next.text,true,next.id,next.thread);}},[p.busy,thread,state.threads]);
+ useEffect(()=>{if(!p.chatVisible||p.busy||running.current||stopping)return;
+  const next=eligibleQueuedTurn(p.snapshot(),thread);
+  if(next)void reply(next.text,true,next.userId,next.thread);
+ },[p.chatVisible,p.busy,thread,state.threads,state.queuedTurns,stopping]);
  useEffect(()=>{const back=(event:Event)=>{if(!p.chatVisible)return; if(activeMessage){setActiveMessage('');event.preventDefault();}else if(groupDetails){setGroupDetails(false);event.preventDefault();}else if(menu){setMenu(false);event.preventDefault();}else if(extras){setExtras(false);event.preventDefault();}else if(groupForm){setGroupForm(false);event.preventDefault();}};window.addEventListener('cloudlet-chat-back',back);return()=>window.removeEventListener('cloudlet-chat-back',back);},[p.chatVisible,activeMessage,groupDetails,menu,extras,groupForm]);
  useEffect(()=>{setRealtime(false);},[p.chatVisible,thread]);
- const pendingReply=(id:string)=>(p.busy&&runningUserId.current===id)||queued.current.has(id);
+ const pendingReply=(id:string)=>(p.busy&&runningUserId.current===id)||state.queuedTurns.some(t=>t.userId===id);
  const messages=state.threads[thread]||[],targetIndex=searchTarget?messages.findIndex(m=>m.id===searchTarget):-1;const shown=targetIndex>=0?messages.slice(Math.max(0,targetIndex-30),targetIndex+31):state.longChat?messages.slice(-visibleCount):messages.slice(-6);
  useEffect(()=>{if(searchTarget){follow.current=false;requestAnimationFrame(()=>document.getElementById('message-'+searchTarget)?.scrollIntoView({block:'center'}));}},[searchTarget,thread]);
  useEffect(()=>{if(p.chatVisible&&thread&&follow.current){const frame=requestAnimationFrame(()=>end.current?.scrollIntoView({block:'end'}));return()=>cancelAnimationFrame(frame);}},[p.chatVisible,thread]);
@@ -52,12 +57,18 @@ export default function Chat(){
    }catch(e){if(signal?.aborted||effectId)throw e;await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'system',kind:'notice',text:'媒体未发送：'+(e instanceof Error?e.message:'生成失败。'),timestamp:Date.now(),read:true});});}
   }
  };
+ const stopReply=async()=>{
+  setStopping(true);abort.current?.abort();
+  try{await commit(s=>cancelQueuedThread(s,thread));}catch(e){toast(e instanceof Error?e.message:'待发送队列未能停止，请先解决保存问题。');}
+  finally{setStopping(false);}
+ };
  const reply=async(text:string,newTurn=false,userId?:string,targetThread=thread)=>{
-  if(p.busy||running.current)return;
+  if(p.busy||running.current||stopping)return;
   const current=p.snapshot(),targetGroup=current.groups.find(g=>g.id===targetThread);
   const turnUserId=userId||(current.threads[targetThread]||[]).filter(m=>m.role==='user').at(-1)?.id;
   if(!turnUserId)return;
-  const mode=targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat';
+  const persistedMode=current.queuedTurns.find(t=>t.userId===turnUserId)?.mode||receiptFor(current,turnUserId)?.mode;
+  const mode=persistedMode??(targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat');
   const retry=retrySpeakers.current;
   const speakers=!newTurn&&retry?.thread===targetThread&&retry.userId===turnUserId?retry.speakers:undefined;
   const receipt=receiptFor(current,turnUserId);
@@ -72,7 +83,7 @@ export default function Chat(){
   abort.current=new AbortController();let replyingAs:string|undefined,activeAttempt=0;
   try{
    const completed=await executeTurn({thread:targetThread,userId:turnUserId,text,mode,speakers,allowManualRetry:!newTurn},{
-    snapshot:p.snapshot,commit,requestAI:p.requestAI,upload:p.upload,
+    snapshot:p.snapshot,commit,requestAI:p.requestAI,prepareUpload:p.prepareUpload,
     deliverMedia,signal:abort.current.signal,
     onPhase:(step:TurnPhase)=>setPhase(step==='media'?'media':'reply'),
     onWait:setWaiting,
@@ -97,6 +108,7 @@ export default function Chat(){
      if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
     const original=s.threads[targetThread]?.find(m=>m.id===turnUserId);
     markInterrupted(s,turnUserId,message,activeAttempt);
+    dequeueDurableTurn(s,turnUserId);
     if(original&&needsRetry){original.failed=true;original.failureReason=message.slice(0,600);}
    }).catch(()=>{});
   }finally{
@@ -106,15 +118,15 @@ export default function Chat(){
  const send=async(event?:React.FormEvent)=>{
   event?.preventDefault();
   const submitted=input,text=submitted.trim(),target=thread,id=uid();
-  if(!text||uploading||!target)return;
+  if(!text||uploading||stopping||!target)return;
   try{
    // Persist before clearing the composer or charging for a model request.
-   await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});delete s.drafts[target];});
+   await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});enqueueDurableTurn(s,{thread:target,userId:id,text,mode:s.groups.some(g=>g.id===target)?'group':app==='face'?'face':app==='live'?'live':'chat',queuedAt:Date.now()});delete s.drafts[target];});
    if(view.current.thread===target&&draftInput.current===submitted){
     setInput('');setReplyTo('');p.setDraft(target,'');
    }
    follow.current=true;
-   if(p.busy||running.current){queued.current.enqueue({thread:target,text,id});return;}
+   if(p.busy||running.current)return;
    await reply(text,true,id,target);
   }catch(e){toast(e instanceof Error?e.message:'消息未保存，请重试。');}
  };
@@ -136,7 +148,7 @@ export default function Chat(){
    },staged.asset?[staged.asset]:[]);
    let canRead=!audio||p.snapshot().provider==='gemini'&&p.snapshot().mediaSettings.nativeAudio;
    if(audio&&p.snapshot().mediaSettings.transcriptionEnabled){try{const transcript=await transcribeFile(p.ownerId,p.snapshot(),file);await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message){message.extracted=transcript;message.attachmentStatus='已转写；原音频保留。';}});canRead=true;}catch(e){await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message)message.attachmentStatus=e instanceof Error?e.message:'转写失败，原录音保留。';});toast('语音已保存，转写未成功。');}}
-   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)queued.current.enqueue({thread:target,text,id});else await reply(text,true,id,target);}
+   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m){m.failed=true;enqueueDurableTurn(s,{userId:id,thread:target,text,mode:s.groups.some(g=>g.id===target)?'group':app==='face'?'face':app==='live'?'live':'chat',queuedAt:Date.now()});}});if(!p.busy&&!running.current)await reply(text,true,id,target);}
   }success=true;if(view.current.thread===target&&draftInput.current===submitted){setInput('');p.setDraft(target,'');setReplyTo('');}follow.current=true;toast('附件和记录已保存。');
   }catch(e){toast(e instanceof Error?e.message:'附件发送失败。');}finally{setUploading(false);if(fileInput.current)fileInput.current.value='';}return success;
  };
@@ -221,7 +233,7 @@ const createGroup=async()=>{if(!groupName.trim()||members.length<2){toast('请�
   </div></React.Fragment>)}{busyHere&&phase==='reply'&&<div className="message-row role-assistant"><Avatar character={state.characters.find(c=>c.id===activeSpeaker)||character} size="tiny"/><div className="message-card streaming" role="status" aria-label="正在输入">{(!group&&visibleReply(splitRoleplayReply(stream).text))||<span className="typing-dots"><i/><i/><i/></span>}</div></div>}{error&&<div className="chat-error" role="alert"><strong>这次回复没有完成</strong><p>{error}</p><button onClick={()=>open('settings','connection')}>检查 API 连接</button><button disabled={p.busy} onClick={()=>{const last=messages.filter(m=>m.role==='user').at(-1);if(last)void reply(last.text,false,last.id);}}><RotateCw size={13}/>重试回复</button></div>}<div ref={end}/></div>
   {showLatest&&<button className="latest-message" onClick={()=>{follow.current=true;setShowLatest(false);end.current?.scrollIntoView({block:'end',behavior:'smooth'});}}>回到最新消息 ↓</button>}
   {searchTarget&&<div className="chat-search-status" role="status">已定位搜索结果<button onClick={()=>{setSearchTarget('');follow.current=true;}}>回到最新</button></div>}{maintenance&&<small className="maintenance-status" role="status">正在后台整理记忆</small>}
-  <div className="composer-area">{recorder.status!=='idle'&&<section className="recorder-panel" aria-label="语音录制"><span>{recorder.status==='requesting'?'正在请求麦克风…':recorder.status==='recording'?'录音中':'录音已就绪'} · {recorder.seconds}s / 120s</span>{recorder.file&&<RecordingPreview file={recorder.file}/>}<div className="button-row">{recorder.status==='recording'&&<button className="primary" onClick={recorder.stop}>停止录音</button>}{recorder.status==='ready'&&<button className="primary" disabled={uploading} onClick={()=>void sendRecording()}>发送原录音</button>}<button className="text-button" disabled={uploading} onClick={recorder.cancel}>取消录音</button></div></section>}{replyTo&&<div className="quoted-message reply-draft"><span>回复：{messages.find(m=>m.id===replyTo)?.text.slice(0,80)||'原消息已删除'}</span><button aria-label="取消引用" onClick={()=>setReplyTo('')}>×</button></div>}{state.roleplay.choices&&!p.busy&&!error&&messages.at(-1)?.role==='assistant'&&!!messages.at(-1)?.suggestions?.length&&<div className="reply-suggestions" aria-label="接话选项"><span>你可以这样接话</span><div>{messages.at(-1)!.suggestions!.map(v=><button type="button" key={v} onClick={()=>{setInput(v);p.setDraft(thread,v);document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus();}}>{v}<span aria-hidden="true">↗</span></button>)}</div></div>}<div className="composer-tools"><button className="icon-button" aria-label="发送文件、图片或表情包" disabled={uploading||p.busy} onClick={()=>fileInput.current?.click()}><Paperclip size={19}/></button><button className="icon-button" aria-label="表情与心意" aria-expanded={extras} onClick={()=>setExtras(v=>!v)}><Smile size={20}/></button><button className={`icon-button ${recorder.status==='recording'?'active':''}`} aria-label="录制语音消息" disabled={uploading||recorder.status==='requesting'} onClick={()=>void recorder.start()}><Mic size={18}/></button>{busyHere&&<button className="icon-button" aria-label="停止回复" onClick={()=>{queued.current.prune(item=>item.thread!==thread);abort.current?.abort();}}><Square size={16}/></button>}</div>
+  <div className="composer-area">{recorder.status!=='idle'&&<section className="recorder-panel" aria-label="语音录制"><span>{recorder.status==='requesting'?'正在请求麦克风…':recorder.status==='recording'?'录音中':'录音已就绪'} · {recorder.seconds}s / 120s</span>{recorder.file&&<RecordingPreview file={recorder.file}/>}<div className="button-row">{recorder.status==='recording'&&<button className="primary" onClick={recorder.stop}>停止录音</button>}{recorder.status==='ready'&&<button className="primary" disabled={uploading} onClick={()=>void sendRecording()}>发送原录音</button>}<button className="text-button" disabled={uploading} onClick={recorder.cancel}>取消录音</button></div></section>}{replyTo&&<div className="quoted-message reply-draft"><span>回复：{messages.find(m=>m.id===replyTo)?.text.slice(0,80)||'原消息已删除'}</span><button aria-label="取消引用" onClick={()=>setReplyTo('')}>×</button></div>}{state.roleplay.choices&&!p.busy&&!error&&messages.at(-1)?.role==='assistant'&&!!messages.at(-1)?.suggestions?.length&&<div className="reply-suggestions" aria-label="接话选项"><span>你可以这样接话</span><div>{messages.at(-1)!.suggestions!.map(v=><button type="button" key={v} onClick={()=>{setInput(v);p.setDraft(thread,v);document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus();}}>{v}<span aria-hidden="true">↗</span></button>)}</div></div>}<div className="composer-tools"><button className="icon-button" aria-label="发送文件、图片或表情包" disabled={uploading||p.busy} onClick={()=>fileInput.current?.click()}><Paperclip size={19}/></button><button className="icon-button" aria-label="表情与心意" aria-expanded={extras} onClick={()=>setExtras(v=>!v)}><Smile size={20}/></button><button className={`icon-button ${recorder.status==='recording'?'active':''}`} aria-label="录制语音消息" disabled={uploading||recorder.status==='requesting'} onClick={()=>void recorder.start()}><Mic size={18}/></button>{busyHere&&<button className="icon-button" aria-label="停止回复" disabled={stopping} onClick={()=>void stopReply()}><Square size={16}/></button>}</div>
    {extras&&<div className="emoji-tray">{['☁️','🤍','🥰','🥺','🌷','🍓','🫶','✨','🐾','🎧','🌙','(｡･ω･｡)'].map(e=><button key={e} onClick={()=>{setInput(v=>v+e);p.setDraft(thread,input+e);}}>{e}</button>)}<div className="heart-actions"><button onClick={()=>setPacket('packet')}>红包</button><button onClick={()=>setPacket('transfer')}>转账</button><button onClick={()=>setPacket('kinship')}>亲属卡</button></div></div>}
    <form className="composer" onSubmit={send}><textarea aria-label="消息内容" maxLength={18000} rows={1} placeholder={app==='live'?'发送一条弹幕…':'把今天的小事说给我听…'} value={input} onChange={e=>{setInput(e.target.value);p.setDraft(thread,e.target.value);}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();void send();}}}/><button type="submit" className="send-button" disabled={!input.trim()||uploading} aria-label="发送消息"><Send size={18}/></button></form>
    <input ref={fileInput} type="file" multiple hidden onChange={e=>void attach(e.target.files)}/>

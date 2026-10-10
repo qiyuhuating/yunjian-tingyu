@@ -10,6 +10,7 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "outputs/mori-phone/lib/durable-turn-queue.ts": "IndexedDB 同事务的聊天待执行队列，排队意图与崩溃后的保守安全续接；路径：outputs/mori-phone/lib/durable-turn-queue.ts",
     "outputs/mori-phone/lib/turn-causality.ts": "按消息 ID 固定因果边界与同一回合角色发言证据；路径：outputs/mori-phone/lib/turn-causality.ts",
     "outputs/mori-phone/lib/media-outbox.ts": "持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts",
     "outputs/mori-phone/lib/asset-references.ts": "资产引用统计与跨领域文件引用追踪",

@@ -3,3 +3,5 @@ export {readLocal,writeLocal,uploadLocal,prepareLocalUpload,getAsset,assetRefere
 export {makeBackup,readBackup,stageBackup} from '../../outputs/mori-phone/lib/local-backup';
 
 export {makeSavedCard,addSavedCard,removeSavedCard} from '../../outputs/mori-phone/lib/character-library';
+export {executeTurn} from '../../outputs/mori-phone/lib/turn-execution';
+export {enqueueDurableTurn,eligibleQueuedTurn} from '../../outputs/mori-phone/lib/durable-turn-queue';

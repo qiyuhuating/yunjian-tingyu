@@ -39,5 +39,40 @@ try{const result=await page.evaluate(async()=>{
  checks.push('普通附件在消息与 Blob 同一事务中保存');
  const isolated=a.freshState(),only=a.makeSavedCard({...isolated.characters[0],avatar:staged.wallpaper.asset},isolated.lore);isolated.characterCards=[only];await a.writeLocal(owner,isolated,5);if(!await a.getAsset(owner,only.character.avatar))throw Error('Only library avatar was collected');checks.push('删除聊天角色后，仅仓库引用的头像仍被保留');a.removeSavedCard(isolated,only.id,only.revision);await a.writeLocal(owner,isolated,6);if(!await a.getAsset(owner,only.character.avatar))throw Error('Original library avatar was destructively collected');checks.push('删除库卡保留原头像附件，避免销毁未提交的新引用');
  const raceOwner='pending-dedup',raceState=a.freshState(),original=new File(['pending original'],'original.txt',{type:'text/plain'}),first=await a.uploadLocal(raceOwner,original);raceState.threads[raceState.primary].push({id:'first-use',role:'user',kind:'file',text:'原件',timestamp:1,asset:first.url});await a.writeLocal(raceOwner,raceState,0);const pending=await a.uploadLocal(raceOwner,original);const removed=structuredClone(raceState);removed.threads[removed.primary]=[];await a.writeLocal(raceOwner,removed,1);const attached=structuredClone(removed);attached.threads[attached.primary].push({id:'new-use',role:'user',kind:'file',text:'再次引用',timestamp:2,asset:pending.url});await a.writeLocal(raceOwner,attached,2);if(await (await a.getAsset(raceOwner,pending.url))?.blob.text()!=='pending original')throw Error('Pending deduplicated upload lost its original');checks.push('删除旧用途时不销毁待提交去重附件，新引用仍有完整原件');
+
+ const queueOwner='durable-queue-24',queueState=a.freshState(),queueThread=queueState.primary;
+ queueState.threads[queueThread].push({id:'queued-intent',role:'user',kind:'text',text:'queued-intent',timestamp:1,failed:true});
+ a.enqueueDurableTurn(queueState,{userId:'queued-intent',thread:queueThread,text:'queued-intent',mode:'chat',queuedAt:1});
+ let queueAbort=false;IDBObjectStore.prototype.put=function(value,...args){const r=put.call(this,value,...args);if(this.name==='states')this.transaction.abort();return r;};
+ try{await a.writeLocal(queueOwner,queueState,0);}catch{queueAbort=true;}IDBObjectStore.prototype.put=put;
+ if(!queueAbort||await a.readLocal(queueOwner))throw Error('Aborted queue transaction saved a partial intent');
+ await a.writeLocal(queueOwner,queueState,0);
+ const queueReload=(await a.readLocal(queueOwner)).state;
+ if(a.eligibleQueuedTurn(queueReload)?.userId!=='queued-intent')throw Error('Persisted queue lost intent');
+ const untrusted={...backup,state:queueReload};const isolatedRestore=await a.stageBackup(queueOwner,untrusted,queueReload);
+ if(isolatedRestore.state.queuedTurns.length)throw Error('Backup import authorized an old POST');
+ checks.push('真实 IndexedDB 的消息与待发意图共同回滚、读取恢复、外部备份禁止自动发送');
+ for(const abortReply of [false,true]){
+  const turnOwner='native-atomic-'+abortReply;let turnState=a.freshState(),turnVersion=0,turnCalls=0,ref='';
+  turnState.threads[turnState.primary].push({id:'native-turn',role:'user',kind:'text',text:'native question',timestamp:1,failed:true});
+  await a.writeLocal(turnOwner,turnState,turnVersion++);
+  const controller=new AbortController();
+  const services={snapshot:()=>turnState,signal:controller.signal,deliverMedia:async()=>{},
+   requestAI:async(_text,_speaker,_thread,_mode,_delta,_signal,media)=>{
+    turnCalls++;media(new File([new Uint8Array([137,80,78,71,13,10,26,10,0])],'native.png',{type:'image/png'}));return 'native text';
+   },prepareUpload:async file=>{const prepared=await a.prepareLocalUpload(turnOwner,file);ref=prepared.result.url;if(await a.getAsset(turnOwner,ref))throw Error('Native blob persisted prematurely');return prepared;},
+   commit:async(fn,assets=[])=>{
+    const draft=structuredClone(turnState);fn(draft);
+    if(abortReply&&assets.length)IDBObjectStore.prototype.put=function(value,...args){const r=put.call(this,value,...args);if(this.name==='states')this.transaction.abort();return r;};
+    try{turnVersion=await a.writeLocal(turnOwner,draft,turnVersion,undefined,false,assets);turnState=draft;}
+    finally{IDBObjectStore.prototype.put=put;}
+   }};
+  let replyFailed=false;try{await a.executeTurn({thread:turnState.primary,userId:'native-turn',text:'native question',mode:'chat'},services);}catch{replyFailed=true;}
+  const persisted=(await a.readLocal(turnOwner)).state,reply=persisted.threads[persisted.primary].filter(m=>m.role==='assistant'&&m.turnId==='native-turn'),receipt=persisted.turnReceipts.find(r=>r.userId==='native-turn'),asset=await a.getAsset(turnOwner,ref);
+  if(turnCalls!==1||replyFailed!==abortReply)throw Error('Native turn sent unexpected requests');
+  if(abortReply){if(reply.length||asset||receipt.phase!=='in_flight'||a.eligibleQueuedTurn(persisted))throw Error('Failed native transaction left a reply, blob or replayable intent');}
+  else if(reply.length!==2||!asset||receipt.phase!=='completed')throw Error('Native transaction failed to persist complete delivery');
+ }
+ checks.push('原生生成 Blob、正文、媒体消息、回执同事务成功；强制中止后全部回滚且未知 POST 不自动重放');
  return {passed:checks.length,checks,textOriginalBytes:file.size,backupBytes:zip.byteLength,historyMessages:5002};
- });assert.deepEqual(errors,[]);fs.writeFileSync(path.join(repo,'docs/storage-regression-results.json'),JSON.stringify({...result,pageErrors:errors},null,2));console.log(JSON.stringify(result,null,2));}finally{await browser.close();await new Promise(r=>server.close(r));}
+ });await page.reload();await page.waitForFunction(()=>window.QA);await page.evaluate(async()=>{const a=window.QA,q=(await a.readLocal('durable-queue-24')).state,failed=(await a.readLocal('native-atomic-true')).state;if(a.eligibleQueuedTurn(q)?.userId!=='queued-intent'||a.eligibleQueuedTurn(failed)||failed.turnReceipts[0].phase!=='in_flight')throw Error('Cold reload lost queue or replayed uncertain POST');});result.checks.push('页面冷重载后的真实落盘队列恢复，未知原生请求仍不可自动重放');result.passed=result.checks.length;assert.deepEqual(errors,[]);fs.writeFileSync(path.join(repo,'docs/storage-regression-results.json'),JSON.stringify({...result,pageErrors:errors},null,2));console.log(JSON.stringify(result,null,2));}finally{await browser.close();await new Promise(r=>server.close(r));}

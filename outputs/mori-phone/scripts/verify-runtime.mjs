@@ -113,6 +113,17 @@ await check('Causal user anchor blocks future queued messages and preserves peer
  assert.equal(items.at(-1).content,'第一条问题');
  await assert.rejects(assembleChatMessages({...args,text:'修改后的第一条'}),/修改|不存在/);
 });
+await check('Failed restore cleanup never deletes assets referenced by persisted data',()=>{
+ const state=freshState(),ref='local:11111111-1111-1111-1111-111111111111',added='local:22222222-2222-2222-2222-222222222222';
+ const {orphanedStagedAssets}=load('asset-references');
+ const staged=structuredClone(state);
+ staged.gallery.push({id:'new-gallery',name:'new',url:added});
+ const current=structuredClone(state);current.gallery.push({id:'old-gallery',name:'old',url:ref});
+ staged.gallery.push({id:'old-gallery',name:'old',url:ref});
+ assert.deepEqual(orphanedStagedAssets(current,staged,current),[added.slice(6)]);
+ const saved=structuredClone(staged);
+ assert.deepEqual(orphanedStagedAssets(current,staged,saved),[]);
+});
 await check('No hidden automatic retry remains in the chat turn',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
  assert.equal((source.match(/await p\.requestAI\(/g)||[]).length,0);

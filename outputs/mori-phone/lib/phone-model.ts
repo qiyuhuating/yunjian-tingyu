@@ -1,5 +1,6 @@
 import {turnReceiptsSchema} from './turn-receipts';
 import {mediaOutboxSchema} from './media-outbox';
+import {queuedTurnsSchema} from './durable-turn-queue';
 import {workspaceSchema} from './agent-workspace';
 import {agentJobsSchema} from './agent-orchestrator';
 import { z } from 'zod';
@@ -31,8 +32,9 @@ export const stateSchema=z.object({
   bookmarks:z.array(z.object({id,name:short,url:z.string().url().max(1500).refine(v=>/^https?:\/\//.test(v))}).strict()).max(100),claimed:z.array(short).max(100),workDate:short,focusMinutes:z.number().int().min(0).max(100000),focusSession:z.object({duration:z.number().int().min(1).max(120),remaining:z.number().int().min(0).max(7200),running:z.boolean(),deadline:z.number().min(0)}).strict().default({duration:25,remaining:1500,running:false,deadline:0}),longChat:z.boolean(),provider:providerSchema,model:short,baseURL:z.string().max(1500).default(''),vision:z.boolean().default(false),connections:z.record(z.object({model:short,baseURL:z.string().max(1500),vision:z.boolean()}).strict()).default({}),
   coreSystemPrompt:z.string().min(1).max(20000).refine(v=>!!v.trim(),'系统提示词不能为空。').default(CORE_SYSTEM_PROMPT),modelLimits:z.record(modelLimitSchema).default({}),
   sampling:samplingSchema.default({}),roleplay:roleplaySchema.default({}),drafts:z.record(z.string().max(12*1024*1024)).default({}),
-  continuity:z.record(z.object({text:z.string().max(6000),through:id,updatedAt:z.number().finite().min(0),sources:z.array(z.object({id,role:z.enum(['user','assistant']),timestamp:z.number().finite().min(0),senderId:id.optional(),excerpt:z.string().max(2000)}).strict()).max(100).optional()}).strict()).default({}),
+  continuity:z.record(z.object({text:z.string().max(6000),through:id,updatedAt:z.number().finite().min(0),sourceDigest:z.string().regex(/^[0-9a-f]{64}$/).optional(),sources:z.array(z.object({id,role:z.enum(['user','assistant']),timestamp:z.number().finite().min(0),senderId:id.optional(),excerpt:z.string().max(2000)}).strict()).max(100).optional()}).strict()).default({}),
   turnReceipts:turnReceiptsSchema,
+  queuedTurns:queuedTurnsSchema,
   mediaOutbox:mediaOutboxSchema,
   workspaceFiles:workspaceSchema,
   agentJobs:agentJobsSchema,
@@ -77,5 +79,3 @@ export function freshState():PhoneState{
  bookmarks:[{id:'book-st',name:'SillyTavern 角色与世界书',url:'https://docs.sillytavern.app/usage/characters/'},{id:'book-cloud',name:'Small Cloud 小手机',url:'https://github.com/Guaizai-s/small-cloud'}],claimed:[],workDate:'',focusMinutes:0,focusSession:{duration:25,remaining:1500,running:false,deadline:0},longChat:true,provider:'deepseek',model:'deepseek-flash'});
 }
 export const APP_NAMES:Record<string,string>={home:'首页',chat:'聊天',forum:'论坛',browser:'浏览器',diary:'日记',moments:'朋友圈',music:'一起听',calendar:'日历',gallery:'相册',shop:'云朵商店',work:'工作',weibo:'小镇微博',live:'直播',face:'面对面',wallet:'钱包',pet:'小云',tasks:'任务',focus:'专注',weather:'天气',notes:'小纸条',memories:'记忆',lore:'世界书',characters:'角色设定',settings:'设置',all:'全部应用',favorites:'收藏'};
-
-

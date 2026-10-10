@@ -5,7 +5,9 @@ import {uid,type PhoneState} from './phone-model';
 import {beginTurn,markRequesting,markCommitted,receiptFor,remainingSpeakers} from './turn-receipts';
 import type {MediaCommand} from './media-contract';
 import {queueMedia,beginMediaDelivery,interruptMediaDelivery} from './media-outbox';
+import {enqueueDurableTurn,dequeueDurableTurn} from './durable-turn-queue';
 import type {MediaEffect} from './media-outbox';
+import type {StagedAsset,PreparedLocalUpload} from './local-phone';
 
 export type TurnMode='chat'|'face'|'group'|'live';
 export type TurnPhase='waiting'|'requesting'|'persisting'|'media';
@@ -13,9 +15,9 @@ export type TurnRequest={thread:string;userId:string;text:string;mode:TurnMode;s
 type Asset={url:string;id:string;mime:string;size:number;name:string};
 export type TurnServices={
  snapshot:()=>PhoneState;
- commit:(change:(state:PhoneState)=>void)=>Promise<void>;
+ commit:(change:(state:PhoneState)=>void,stagedAssets?:ReadonlyArray<StagedAsset>)=>Promise<void>;
  requestAI:(text:string,characterId:string,thread:string,mode:TurnMode,onDelta?:(value:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void,useDefaultConnection?:boolean,causalUserId?:string)=>Promise<string>;
- upload:(file:File)=>Promise<Asset>;
+ prepareUpload:(file:File)=>Promise<PreparedLocalUpload>;
  deliverMedia:(commands:MediaCommand[],speaker:string,thread:string,signal:AbortSignal,effectId?:string,attempt?:number)=>Promise<void>;
  signal:AbortSignal;
  onPhase?:(phase:TurnPhase)=>void;
@@ -64,13 +66,29 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    throw new Error('等待期间消息或角色已修改，旧请求没有发送。');
   // Persist uncertainty BEFORE posting. If the app dies here, never auto resend.
   let requestAttempt=0;
-  await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);});
+  await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);dequeueDurableTurn(state,userId);});
   p.onRequest?.(requestAttempt);
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=text; // Run guidance must not change the causal source message.
   const nativeFiles:File[]=[];
   const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file),false,userId);
   const parsed=conversationReply(answer,group,index>0||nativeFiles.length>0);
+  // Prepare native blobs without writing them. The blobs, message rows, text
+  // and receipt are persisted in the same storage transaction.
+  const nativeAssets:Asset[]=[],stagedAssets:StagedAsset[]=[],nativeErrors:string[]=[];
+  if(nativeFiles.length)p.onPhase?.('media');
+  for(const file of nativeFiles){
+   try{
+    p.signal.throwIfAborted();
+    const prepared=await p.prepareUpload(file),asset=prepared.result;
+    if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型媒体格式无法确认。');
+    nativeAssets.push(asset);
+    if(prepared.asset&&!stagedAssets.some(a=>a.id===prepared.asset!.id))stagedAssets.push(prepared.asset);
+   }catch(e){
+    if(p.signal.aborted)throw e;
+    nativeErrors.push(e instanceof Error?e.message:'模型原生媒体未保存。');
+   }
+  }
   // Commit all bubbles from one speaker as a unit. A mid-bubble storage
   // failure must not leave half that speaker's response or gain affection twice.
   p.signal.throwIfAborted();
@@ -91,10 +109,23 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      read:p.isVisible?.(thread)??false
     });
    }
+   for(const asset of nativeAssets){
+    (state.threads[thread]??=[]).push({
+     id:uid(),role:'assistant',text:'',
+     kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
+     timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
+     sender:c.name,senderId:speaker,turnId:userId,read:p.isVisible?.(thread)??false,
+     attachmentStatus:'模型原生生成的媒体'
+    });
+   }
+   for(const message of nativeErrors){
+    (state.threads[thread]??=[]).push({id:uid(),role:'system',kind:'notice',text:'媒体未发送：'+message.slice(0,450),timestamp:Date.now(),read:true});
+   }
    target.failed=!complete;if(complete)delete target.failureReason;
+   else enqueueDurableTurn(state,{userId,thread,text,mode,queuedAt:Date.now()});
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
    mediaJobs=queueMedia(state,{thread,userId,speaker},parsed.commands);
-  });
+  },stagedAssets);
   p.onRemaining?.(speakers.slice(index+1));
   p.onDelta?.('');
   if(current.voiceSettings.autoRead&&parsed.bubbles.length)p.onVoice?.(parsed.bubbles.join('。'));
@@ -109,24 +140,6 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      timestamp:Date.now(),read:true});
    });
   };
-  if(nativeFiles.length){
-   p.onPhase?.('media');
-   for(const file of nativeFiles){
-    try{
-     p.signal.throwIfAborted();const asset=await p.upload(file);
-     if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');
-     p.signal.throwIfAborted();
-     await p.commit(state=>{
-      if(!state.threads[thread]?.some(m=>m.id===userId))throw new Error('原消息已删除，媒体不再写入。');
-      (state.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',
-       kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
-       timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
-       sender:cName(state,speaker),senderId:speaker,turnId:userId,read:p.isVisible?.(thread)??false,
-       attachmentStatus:'模型原生生成的媒体'});
-     });
-    }catch(e){await mediaFailure(e);}
-   }
-  }
   for(const job of mediaJobs){
    p.onPhase?.('media');
    let attempt=0;
@@ -144,7 +157,6 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
  }
  return speakers;
 }
-function cName(state:PhoneState,speaker:string){return state.characters.find(c=>c.id===speaker)?.name||'角色';}
 
 /**
  * Only an explicit failed-message retry may enqueue. Scope and deduplicate
