@@ -1,0 +1,61 @@
+name: Android signed candidate upgrade acceptance
+on:
+  push:
+    branches: [test/android-upgrade-acceptance-20261010]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  android-upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Obtain exact signed candidate and previous official package
+        run: |
+          mkdir -p work/android-acceptance/packages work/android-acceptance/evidence
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/11664487240/zip > work/android-acceptance/packages/candidate.zip
+          unzip -q work/android-acceptance/packages/candidate.zip -d work/android-acceptance/packages/candidate
+          gh release download v0.0.2-standalone -p yunjian-tingyu-v0.0.2-standalone.apk -p SHA256SUMS --dir work/android-acceptance/packages/old
+          cd work/android-acceptance/packages/candidate && sha256sum -c SHA256SUMS
+          cd ../old && sha256sum -c SHA256SUMS
+      - name: Verify both APK signatures before installation
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/android-acceptance/packages/old/yunjian-tingyu-v0.0.2-standalone.apk > work/android-acceptance/evidence/old-signature.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/android-acceptance/packages/candidate/yunjian-tingyu-v0.0.3-rc2-signed.apk > work/android-acceptance/evidence/new-signature.txt
+          grep -F 'Signer #1 certificate SHA-256 digest: 6a597e2d26f69840694fb027d7a1c7a2a9df4376095e22a63994be9c9c09c8b1' work/android-acceptance/evidence/old-signature.txt
+          grep -F 'Signer #1 certificate SHA-256 digest: 6a597e2d26f69840694fb027d7a1c7a2a9df4376095e22a63994be9c9c09c8b1' work/android-acceptance/evidence/new-signature.txt
+          cp work/android-acceptance/packages/candidate/candidate-check.json work/android-acceptance/evidence/
+      - name: Enable KVM for disposable Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install, upgrade and exercise the exact release APK through Android UI
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          ram-size: 2048M
+          emulator-boot-timeout: 600
+          disable-animations: true
+          disable-spellchecker: true
+          script: python3 work/qa/android-upgrade-smoke.py --old-apk work/android-acceptance/packages/old/yunjian-tingyu-v0.0.2-standalone.apk --new-apk work/android-acceptance/packages/candidate/yunjian-tingyu-v0.0.3-rc2-signed.apk --output work/android-acceptance/evidence
+      - name: Preserve only synthetic test evidence, never signing material
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-api35-rc2-upgrade-acceptance
+          path: work/android-acceptance/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
