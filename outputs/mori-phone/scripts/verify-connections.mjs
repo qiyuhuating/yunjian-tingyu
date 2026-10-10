@@ -22,6 +22,19 @@ await check('200 HTML 不会误判为成功连接',async()=>{const {fetchChat}=l
 await check('网络错误和超时有明确原因，用户取消仍为 AbortError',async()=>{const {fetchModels}=load('provider-transport');const input={provider:'deepseek',baseURL:'',apiKey:'sk-fixture'};await assert.rejects(fetchModels(input,async()=>{throw new TypeError('Failed to fetch')}),/网络/);await assert.rejects(fetchModels(input,async()=>{throw new DOMException('timeout','TimeoutError')}),/超时/);const controller=new AbortController();controller.abort();await assert.rejects(fetchModels(input,async()=>{throw controller.signal.reason},controller.signal),e=>e.name==='AbortError');});
 await check('正常 DeepSeek/OpenRouter 中文 SSE 与用量可读取',async()=>{for(const provider of ['deepseek','openrouter']){const {fetchChat}=load('provider-transport');const result=await fetchChat(data(provider),async()=>new Response('data: {"choices":[{"delta":{"content":"连接成功"},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n',{headers:{'Content-Type':'text/event-stream'}}));const text=await result.text();assert(text.includes('连接成功'));assert(text.includes('[DONE]'));}});
 await check('新地址的凭据隔离，官方连接保持旧 Key 槽位',()=>{const {connectionKeySlot}=load('providers');assert.equal(connectionKeySlot('deepseek',''),'deepseek');assert.notEqual(connectionKeySlot('openrouter','https://relay.example/v1'),'openrouter');assert.equal(connectionKeySlot('compatible','https://relay.example/v1/models/'),connectionKeySlot('compatible','https://relay.example/v1'));});
+await check('自定义原生协议拥有独立的地址与角色专属密钥命名空间',()=>{
+ const {connectionKeySlot}=load('providers'),{characterConnection}=load('character-ai'),{freshState}=load('phone-model');
+ const a='https://relay-a.example/v1',b='https://relay-b.example/v1';
+ assert.notEqual(connectionKeySlot('compatible',a),connectionKeySlot('compatible-anthropic',a));
+ assert.notEqual(connectionKeySlot('compatible-anthropic',a),connectionKeySlot('compatible-gemini',a));
+ assert.notEqual(connectionKeySlot('compatible-anthropic',a),connectionKeySlot('compatible-anthropic',b));
+ const state=freshState(),first=state.characters[0],second=state.characters[1];
+ first.aiConnection={provider:'compatible-anthropic',model:'custom-claude',baseURL:a,vision:false,keyScope:'provider'};
+ second.aiConnection={provider:'compatible-anthropic',model:'custom-claude',baseURL:a,vision:false,keyScope:'provider'};
+ const one=characterConnection(state,first),two=characterConnection(state,second);
+ assert.equal(one.keyScope,'character');
+ assert.notEqual(one.keySlot,two.keySlot);
+});
 await check('429 quota 错误仍分类为限流，错误文本不回显凭据',()=>{const {upstreamFailure}=load('provider-errors');const error=upstreamFailure(429,{message:'quota exceeded sk-fixture-private'},'30');assert.match(error.message,/限流/);assert.match(error.message,/30 秒/);assert(!error.message.includes('sk-fixture-private'));});
 await check('OpenRouter 临时并发额度与 Key 限额分别提示',async()=>{const {fetchModels}=load('provider-transport');const input={provider:'openrouter',baseURL:'',apiKey:'sk-fixture'};for(const [limit,pattern] of [['openrouter_in_flight_budget',/临时并发额度/],['openrouter_key_limit',/Key.*限额/]])await assert.rejects(fetchModels(input,async()=>Response.json({error:{metadata:{limit_source:limit}}},{status:402,headers:{'Retry-After':'20'}})),pattern);});
 await check('只有 finish_reason error 的回复也不能伪报成功',async()=>{const out=await new Response(normalizeStream(new Response('data: {"choices":[{"delta":{"content":"部分文字"},"finish_reason":"error"}]}\n\ndata: [DONE]\n\n').body,'openai')).text();assert(out.includes('error'));assert(!out.includes('[DONE]'));});
