@@ -126,4 +126,30 @@ await check('Failed backup commits never delete assets referenced by older recor
  assert(!/catch\(e\)\{[^{}]*removeAssets/.test(source));
  assert(!source.includes('removeAssets(ownerId,assetReferences(restored)'));
 });
+await check('Restoring an archive prepares only referenced blobs and writes nothing before the transaction',async()=>{
+ const {stageBackup}=load('local-backup'),state=freshState();
+ const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',extra='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+ state.wallpaper.asset='local:'+id;
+ const content=new Blob(['abc'],{type:'text/html'});
+ const prepared={state,legacy:false,assets:[
+  {id,blob:content,name:'unsafe.html',mime:'text/html',size:3},
+  {id:extra,blob:new Blob(['other']),name:'unused.txt',mime:'text/plain',size:5}
+ ]};
+ // Node fixtures have no IndexedDB; stageBackup must not touch local storage here.
+ const staged=await stageBackup('fixture',prepared,freshState());
+ assert.equal(staged.assets.length,1);
+ assert.equal(staged.assets[0].blob,content);
+ assert.equal(staged.assets[0].id!==id,true);
+ assert.equal(staged.state.wallpaper.asset,'local:'+staged.assets[0].id);
+ assert.equal(staged.state.provider,freshState().provider);
+});
+await check('A restore uses a single atomic state/threads/assets transaction before publishing React state',()=>{
+ const local=fs.readFileSync(path.join(root,'lib/local-phone.ts'),'utf8');
+ const phone=fs.readFileSync(path.join(root,'app/phone.tsx'),'utf8');
+ assert(local.includes("['states','threads','assets']"));
+ assert(local.includes('assets.add({owner,id:a.id'));
+ assert(phone.includes('writeLocal(ownerId,restored,version.current,undefined,true,staged.assets)'));
+ assert(phone.indexOf('const newVersion=await writeLocal(ownerId,restored')<phone.indexOf('data.current=restored'));
+ assert(!phone.includes('await commit(s=>Object.assign(s,restored))'));
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
