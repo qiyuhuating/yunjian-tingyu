@@ -17,9 +17,16 @@ def run(*args, timeout=40):
 def adb(*args, timeout=40):
     return run("adb", *args, timeout=timeout)
 
+class HierarchyNotReady(Exception):
+    pass
+
 def hierarchy():
-    adb("shell", "uiautomator", "dump", "--compressed", "/sdcard/cloudlet-smoke.xml", timeout=30)
-    raw = adb("shell", "cat", "/sdcard/cloudlet-smoke.xml")
+    path = "/data/local/tmp/cloudlet-smoke.xml"
+    adb("shell", "rm", "-f", path)
+    output = adb("shell", "uiautomator", "dump", "--compressed", path, timeout=30)
+    if "dumped to:" not in output:
+        raise HierarchyNotReady(output)
+    raw = adb("shell", "cat", path)
     root = ET.fromstring(raw[raw.index("<?xml"):])
     return raw, root
 
@@ -43,8 +50,8 @@ def wait_ui(predicate, timeout=75):
                 if predicate(n) and bounds(n): return n
             if "先更新一下浏览器内核" in raw:
                 raise RuntimeError("System image WebView is too old for the actual APK")
-        except (ET.ParseError, subprocess.TimeoutExpired, ValueError):
-            pass
+        except (ET.ParseError, subprocess.TimeoutExpired, ValueError, HierarchyNotReady) as e:
+            last = str(e)
         time.sleep(1)
     raise RuntimeError("UI assertion timed out; last hierarchy: " + last[:12000])
 
@@ -70,10 +77,10 @@ def type_text(text):
     adb("shell", "input", "text", text)
 
 def snapshot(name, output):
-    raw, _ = hierarchy()
-    (output / (name + ".xml")).write_text(raw)
     r = subprocess.run(["adb", "exec-out", "screencap", "-p"], capture_output=True, check=True, timeout=30)
     (output / (name + ".png")).write_bytes(r.stdout)
+    raw, _ = hierarchy()
+    (output / (name + ".xml")).write_text(raw)
 
 def version(expected):
     data = adb("shell", "dumpsys", "package", PACKAGE)
