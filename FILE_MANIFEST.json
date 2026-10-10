@@ -1461,7 +1461,7 @@
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
     "bytes": 11080,
-    "sha256": "710bb6d67ed27f3fffe99814a43dfcaa48dbad06c9d6a11f327f0c2940afb600"
+    "sha256": "750fc5f3893f11c7a67e1f38984e240a8238de518c33cef49266bae4b738af1a"
   },
   {
     "path": "outputs/mori-phone/lib/provider-errors.ts",
@@ -1748,8 +1748,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-companion.mjs",
     "description": "21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs",
-    "bytes": 11645,
-    "sha256": "b80b68aa81c52c19b64847eeb3702d47bce012da433b93c067efb0330535a023"
+    "bytes": 11671,
+    "sha256": "b998797a4bc932b3d95b4504324e460f7b6b7a7c1c35073b5d72d8e54bd34e2d"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
