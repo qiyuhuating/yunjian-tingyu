@@ -96,7 +96,7 @@
 | [outputs/android/assets/web/music-listen.png](outputs/android/assets/web/music-listen.png) | 一起听笑脸云朵耳机插画；路径：outputs/android/assets/web/music-listen.png | 1200508 |
 | [outputs/android/assets/web/via-browser.png](outputs/android/assets/web/via-browser.png) | 随 APK 打包的 Via 入口笑脸云朵原图，离线显示；路径：outputs/android/assets/web/via-browser.png | 985903 |
 | [outputs/android/assets/web/wallpaper.png](outputs/android/assets/web/wallpaper.png) | 天空小屋桌面壁纸；路径：outputs/android/assets/web/wallpaper.png | 1822518 |
-| [outputs/android/build-apk.py](outputs/android/build-apk.py) | 正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py | 6976 |
+| [outputs/android/build-apk.py](outputs/android/build-apk.py) | 正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py | 7055 |
 | [outputs/android/merge-via.py](outputs/android/merge-via.py) | 保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py | 6626 |
 | [outputs/android/res/drawable/cloud_pet.png](outputs/android/res/drawable/cloud_pet.png) | 用户提供的笑脸耳机云朵原图，作为软件桌面图标的位图主体；路径：outputs/android/res/drawable/cloud_pet.png | 985903 |
 | [outputs/android/res/mipmap-anydpi-v26/app_icon.xml](outputs/android/res/mipmap-anydpi-v26/app_icon.xml) | 工程支持文件：outputs/android/res/mipmap-anydpi-v26/app_icon.xml | 484 |
@@ -439,7 +439,7 @@
 | [outputs/mori-phone/lib/turn-execution.ts](outputs/mori-phone/lib/turn-execution.ts) | 可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts | 8675 |
 | [outputs/mori-phone/scripts/verify-turn.mjs](outputs/mori-phone/scripts/verify-turn.mjs) | 确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs | 8691 |
 | [docs/聊天回合执行器-2026-10-10.md](docs/聊天回合执行器-2026-10-10.md) | 聊天执行器阶段性分层、费用与状态安全不变量及后续验收清单；路径：docs/聊天回合执行器-2026-10-10.md | 2706 |
-| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1060 |
+| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1168 |
 | [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 4999 |
 | [outputs/mori-phone/app/api/assets/[id]/route.ts](outputs/mori-phone/app/api/assets/[id]/route.ts) | 可选网页服务 API 路由：assets/[id]/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/[id]/route.ts | 1372 |
 | [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 7130 |
@@ -447,6 +447,8 @@
 | [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4666 |
 | [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 11248 |
 | [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 5142 |
-| [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 3184 |
+| [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 3490 |
 | [outputs/mori-phone/lib/asset-references.ts](outputs/mori-phone/lib/asset-references.ts) | 资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts | 860 |
 | [outputs/mori-phone/lib/local-thread-store.ts](outputs/mori-phone/lib/local-thread-store.ts) | 线程独立持久化模块、增量写入、删除与事务隔离；路径：outputs/mori-phone/lib/local-thread-store.ts | 996 |
+| [.github/workflows/build-agent-v003-candidate.yml](.github/workflows/build-agent-v003-candidate.yml) | 0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml | 9406 |
+| [docs/0.0.3-agent-candidate-acceptance.md](docs/0.0.3-agent-candidate-acceptance.md) | 最新聊天与Agent草稿集成、证据等级和可安装候选包的严格验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md | 1855 |

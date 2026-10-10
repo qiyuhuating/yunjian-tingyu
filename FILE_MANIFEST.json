@@ -6,6 +6,12 @@
     "sha256": "a04c1ecee5f831666e805f64d7ab9b1f22cbb8550d7ca83bdad379e5f9a7439c"
   },
   {
+    "path": ".github/workflows/build-agent-v003-candidate.yml",
+    "description": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml",
+    "bytes": 9406,
+    "sha256": "a9bfdf1591e035d489b177f0eec91a4c9d2b0da3f5c8b4c0a960bb59f9862522"
+  },
+  {
     "path": ".github/workflows/release-standalone-v002.yml",
     "description": "独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml",
     "bytes": 9891,
@@ -14,8 +20,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1060,
-    "sha256": "db9361fc8f970d1c1899c3da1e37190cf059690312c4660f784f816ea96b6ae7"
+    "bytes": 1168,
+    "sha256": "bf2aa765dd09fd8355412391d05a63be2172a380e22c821af902da55447f4b68"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -52,6 +58,12 @@
     "description": "0.0.2 四草稿合并、验收与签名构建交付；路径：docs/0.0.2.md",
     "bytes": 4237,
     "sha256": "beb9d263cc8e448749ba61c79f5aad568f7a220bd8cb8b95ad065e9f1800bb41"
+  },
+  {
+    "path": "docs/0.0.3-agent-candidate-acceptance.md",
+    "description": "最新聊天与Agent草稿集成、证据等级和可安装候选包的严格验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md",
+    "bytes": 1855,
+    "sha256": "f91282a06a61fc69f010e7db18bffec9eae663a543933e5cf5e364400e9cfcc5"
   },
   {
     "path": "docs/API连接与设置重设计-2026-10-09.md",
@@ -644,8 +656,8 @@
   {
     "path": "outputs/android/build-apk.py",
     "description": "正式APK构建及原签名指纹前置门控，拒绝缺失或替换签名私钥；路径：outputs/android/build-apk.py",
-    "bytes": 6976,
-    "sha256": "7b786779ad474e07980ccb88f0d7c9a749ffa748706571f89997351fa98c1c7e"
+    "bytes": 7055,
+    "sha256": "f8b4e9cbf1d0162e4fbce4d68cac6cee184c861e6a0838460c2c0322507dd364"
   },
   {
     "path": "outputs/android/merge-via.py",
@@ -2234,8 +2246,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 3184,
-    "sha256": "dba923e355a4b8326ed3987b27f706222ba4d6b0824fbbdd5d9ac80a448e961f"
+    "bytes": 3490,
+    "sha256": "1aebff6b68e6b75ca1677ba3ca6ae875e87086661d44a28d39bbb788fd03e9a3"
   },
   {
     "path": "scripts/verify-delivery.py",
