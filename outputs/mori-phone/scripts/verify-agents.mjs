@@ -140,4 +140,22 @@ await check('Changed source revision invalidates previously linked Agent results
  w.putWorkspace(state,{thread:f.thread,path:'imports/sample.ts',content:'export const sum=()=>0;'},1);
  assert(!a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
 });
+await check('Transitive summary provenance rejects tampering in earlier summarized intervals',()=>{
+ const continuity=load('continuity'),f=fixture(),s=f.state;
+ const t=f.thread;
+ s.threads[t]=Array.from({length:96},(_,i)=>({id:'row-'+i,role:i%2?'user':'assistant',timestamp:i,text:'记忆原文 '+i,kind:'text'}));
+ const tail=s.threads[t].slice(64,96).map(m=>({id:m.id,role:m.role,timestamp:m.timestamp,excerpt:m.text}));
+ s.continuity[t]={text:'继承了早期事实',through:'row-95',updatedAt:10,sources:tail,sourceDigest:continuity.continuityPrefixDigest(s,t,'row-95')};
+ assert(continuity.validContinuity(s,t));
+ s.threads[t][5].text='更正过的早期事实';
+ assert(!continuity.validContinuity(s,t));
+});
+await check('Multi-source factual memory requires every cited source to remain valid',()=>{
+ const continuity=load('continuity'),f=fixture(),s=f.state;
+ s.threads[f.thread]=[{id:'x1',role:'user',kind:'text',timestamp:1,text:'我喜欢雨天'},
+ {id:'x2',role:'user',kind:'text',timestamp:2,text:'雨天我会散步'}];
+ const m={id:'multi',scope:f.speakers[0],text:'雨天习惯',origin:'auto',sourceIds:['x1','x2'],sourceThread:f.thread,date:'2026-10-10',locked:false,revisions:[]};
+ assert(continuity.validMemorySource(s,m));
+ s.threads[f.thread].pop();assert(!continuity.validMemorySource(s,m));
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
