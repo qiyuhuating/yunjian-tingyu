@@ -4,7 +4,6 @@ import {Search,Plus,Send,Paperclip,Smile,PhoneCall,Mic,Square,ChevronLeft,MoreHo
 import {uid,localDate,type Message} from '../lib/phone-model';
 import {readAttachment} from '../lib/attachment-text';
 import {splitRoleplayReply} from '../lib/roleplay';
-import {groupSpeakers} from '../lib/group-chat';
 import {useVoice} from './use-voice';
 import {useRecorder} from './use-recorder';
 import RecordingPreview from './recording-preview';
@@ -12,9 +11,8 @@ import {getAsset} from '../lib/local-phone';
 import {getProvider} from '../lib/providers';
 import {generatedImage,speechFile,transcribeFile} from '../lib/media-client';
 import {visibleReply,type MediaCommand} from '../lib/media-contract';
-import {conversationReply} from '../lib/conversation-reply';
 import {maintainConversation} from '../lib/chat-maintenance';
-import {groupDelay,waitForReply} from '../lib/group-cadence';
+import {executeTurn,PendingTurnQueue,type TurnPhase} from '../lib/turn-execution';
 import RealtimeCall from './realtime-call';
 import {Avatar,GroupAvatar,DockArt,MessageCard,usePhone,downloadJson} from './ui';
 export default function Chat(){
@@ -22,16 +20,16 @@ export default function Chat(){
  const [filter,setFilter]=useState(''),[input,setInput]=useState(''),[extras,setExtras]=useState(false),[groupForm,setGroupForm]=useState(false),[groupName,setGroupName]=useState(''),[members,setMembers]=useState<string[]>([]),[rawStream,setStream]=useState(''),[rawError,setError]=useState(''),[activeMessage,setActiveMessage]=useState(''),[realtime,setRealtime]=useState(false),[phase,setPhase]=useState<'reply'|'media'>('reply'),[maintenance,setMaintenance]=useState(false),[searchTarget,setSearchTarget]=useState(''),[packet,setPacket]=useState(''),[amount,setAmount]=useState(20),[uploading,setUploading]=useState(false);
  const [visibleCount,setVisibleCount]=useState(200),[menu,setMenu]=useState(false),[groupDetails,setGroupDetails]=useState(false),[groupTitle,setGroupTitle]=useState(''),[activeSpeaker,setActiveSpeaker]=useState(''),[replyTo,setReplyTo]=useState(''),[waiting,setWaiting]=useState(false);
  const recorder=useRecorder(toast),maintenanceQueue=useRef(Promise.resolve()),maintenanceAbort=useRef(new AbortController()),draftInput=useRef(input);draftInput.current=input;
- const retrySpeakers=useRef<string[]|null>(null),queued=useRef<{thread:string;text:string;id:string}[]>([]),runningThread=useRef(''),running=useRef(false),runningUserId=useRef(''),errorThread=useRef(''),view=useRef({thread:'',visible:false});
+ const retrySpeakers=useRef<{thread:string;userId:string;speakers:string[]}|null>(null),queued=useRef(new PendingTurnQueue()),runningThread=useRef(''),running=useRef(false),runningUserId=useRef(''),errorThread=useRef(''),view=useRef({thread:'',visible:false});
  const partial=useRef(''),follow=useRef(true),viewport=useRef<HTMLDivElement>(null),[showLatest,setShowLatest]=useState(false);
  const end=useRef<HTMLDivElement>(null),fileInput=useRef<HTMLInputElement>(null),abort=useRef<AbortController|null>(null);
  const thread=detail||(app==='face'||app==='live'?state.primary:'');const group=state.groups.find(g=>g.id===thread),character=state.characters.find(c=>c.id===thread)||state.characters.find(c=>c.id===group?.members[0])||state.characters.find(c=>c.id===state.primary)!;
  view.current={thread,visible:!!p.chatVisible};const lastUser=(state.threads[thread]||[]).filter(m=>m.role==='user').at(-1),error=p.busy&&runningThread.current===thread?'':(errorThread.current===thread?rawError:'')||(lastUser?.failed?lastUser.failureReason||'上次回复未完成，可以重试或检查连接。':'');
  const busyHere=p.busy&&runningThread.current===thread,stream=runningThread.current===thread?rawStream:'';
- useEffect(()=>{if(!p.busy&&!running.current){queued.current=queued.current.filter(item=>p.snapshot().threads[item.thread]?.some(m=>m.id===item.id&&m.failed));const index=queued.current.findIndex(item=>item.thread===thread);if(index>=0){const [next]=queued.current.splice(index,1);void reply(next.text,true,next.id);}}},[p.busy,thread,state.threads]);
+ useEffect(()=>{if(!p.busy&&!running.current){const next=queued.current.take(thread,item=>!!p.snapshot().threads[item.thread]?.some(m=>m.id===item.id&&m.role==='user'&&m.failed));if(next)void reply(next.text,true,next.id,next.thread);}},[p.busy,thread,state.threads]);
  useEffect(()=>{const back=(event:Event)=>{if(!p.chatVisible)return; if(activeMessage){setActiveMessage('');event.preventDefault();}else if(groupDetails){setGroupDetails(false);event.preventDefault();}else if(menu){setMenu(false);event.preventDefault();}else if(extras){setExtras(false);event.preventDefault();}else if(groupForm){setGroupForm(false);event.preventDefault();}};window.addEventListener('cloudlet-chat-back',back);return()=>window.removeEventListener('cloudlet-chat-back',back);},[p.chatVisible,activeMessage,groupDetails,menu,extras,groupForm]);
  useEffect(()=>{setRealtime(false);},[p.chatVisible,thread]);
- const pendingReply=(id:string)=>p.busy&&(runningUserId.current===id||queued.current.some(item=>item.id===id));
+ const pendingReply=(id:string)=>(p.busy&&runningUserId.current===id)||queued.current.has(id);
  const messages=state.threads[thread]||[],targetIndex=searchTarget?messages.findIndex(m=>m.id===searchTarget):-1;const shown=targetIndex>=0?messages.slice(Math.max(0,targetIndex-30),targetIndex+31):state.longChat?messages.slice(-visibleCount):messages.slice(-6);
  useEffect(()=>{if(searchTarget){follow.current=false;requestAnimationFrame(()=>document.getElementById('message-'+searchTarget)?.scrollIntoView({block:'center'}));}},[searchTarget,thread]);
  useEffect(()=>{if(p.chatVisible&&thread&&follow.current){const frame=requestAnimationFrame(()=>end.current?.scrollIntoView({block:'end'}));return()=>cancelAnimationFrame(frame);}},[p.chatVisible,thread]);
@@ -50,39 +48,69 @@ export default function Chat(){
    }catch(e){if(signal?.aborted)throw e;await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'system',kind:'notice',text:'媒体未发送：'+(e instanceof Error?e.message:'生成失败。'),timestamp:Date.now(),read:true});});}
   }
  };
- const reply=async(text:string,newTurn=false,userId?:string)=>{
-  if(p.busy||running.current)return;running.current=true;runningThread.current=thread;errorThread.current=thread;p.setBusy(true);partial.current='';setPhase('reply');setStream('');setError('');abort.current=new AbortController();let replyingAs:string|undefined;const turnUserId=userId||(p.snapshot().threads[thread]||[]).filter(m=>m.role==='user').at(-1)?.id;runningUserId.current=turnUserId||'';
+ const reply=async(text:string,newTurn=false,userId?:string,targetThread=thread)=>{
+  if(p.busy||running.current)return;
+  const current=p.snapshot(),targetGroup=current.groups.find(g=>g.id===targetThread);
+  const turnUserId=userId||(current.threads[targetThread]||[]).filter(m=>m.role==='user').at(-1)?.id;
+  if(!turnUserId)return;
+  const mode=targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat';
+  const retry=retrySpeakers.current;
+  const speakers=!newTurn&&retry?.thread===targetThread&&retry.userId===turnUserId?retry.speakers:undefined;
+  running.current=true;runningThread.current=targetThread;errorThread.current=targetThread;
+  runningUserId.current=turnUserId;p.setBusy(true);partial.current='';setPhase('reply');setStream('');setError('');
+  abort.current=new AbortController();let replyingAs:string|undefined;
   try{
-   const speakers=group?(newTurn||!retrySpeakers.current?groupSpeakers(p.snapshot(),thread,text):retrySpeakers.current):[character.id];
-   if(!speakers.length)throw new Error('这个群暂时没有成员，请先添加一位朋友。');
-   if(group)retrySpeakers.current=speakers;
-   for(let index=0;index<speakers.length;index++){
-    const speaker=speakers[index],c=p.snapshot().characters.find(v=>v.id===speaker);if(!c)continue;
-    replyingAs=speaker;setActiveSpeaker(speaker);if(group){setWaiting(true);await waitForReply(groupDelay(p.snapshot().groupSettings,index,text.length),abort.current.signal);setWaiting(false);}partial.current='';setStream('');const mode=group?'group':app==='face'?'face':app==='live'?'live':'chat';
-    const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
-    const nativeFiles:File[]=[];const answer=await p.requestAI(turnText,speaker,thread,mode,value=>{partial.current=value;if(!group)setStream(value);},abort.current.signal,file=>nativeFiles.push(file));
-    // Do not silently resend charged API calls to repair formatting or repetition.
-    // Preserve the original reply; malformed replies remain visible as retryable failures.
-    const parsed=conversationReply(answer,!!group,index>0||nativeFiles.length>0);
-    const bubbles=parsed.bubbles;
-    for(const [i,bubble] of bubbles.entries()){if(i){setWaiting(true);await waitForReply(groupDelay(p.snapshot().groupSettings,i,bubble.length,true),abort.current.signal);setWaiting(false);}await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'assistant',text:bubble,suggestions:!group&&state.roleplay.choices?parsed.suggestions:[],timestamp:Date.now(),kind:'text',sender:c.name,senderId:speaker,read:view.current.thread===thread&&view.current.visible});const request=s.threads[thread].find(m=>m.id===turnUserId);if(request){request.failed=false;delete request.failureReason;}if(i===0){const char=s.characters.find(v=>v.id===speaker);if(char){char.affection=Math.min(100,char.affection+1);char.trust=Math.min(100,char.trust+1);}}});}
-    for(const file of nativeFiles){abort.current.signal.throwIfAborted();const asset=await p.upload(file);if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',timestamp:Date.now(),kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,sender:c.name,senderId:speaker,read:view.current.thread===thread&&view.current.visible,attachmentStatus:'模型原生生成的媒体'});});}
-    if(p.snapshot().threads[thread]?.find(m=>m.id===turnUserId)?.failed)await commit(s=>{const m=s.threads[thread]?.find(m=>m.id===turnUserId);if(m){m.failed=false;delete m.failureReason;}});if(group)retrySpeakers.current=speakers.slice(index+1);partial.current='';setStream('');if(state.voiceSettings.autoRead&&bubbles.length)void reader.read(bubbles.join('。'));if(parsed.commands.length){setPhase('media');await deliverMedia(parsed.commands,speaker,thread,abort.current.signal);setPhase('reply');}
-
-   }
-   retrySpeakers.current=null;const maintenanceSignal=maintenanceAbort.current.signal,participants=[...speakers],services={snapshot:p.snapshot,commit,requestAI:p.requestAI,toast};maintenanceQueue.current=maintenanceQueue.current.catch(()=>{}).then(async()=>{setMaintenance(true);try{await maintainConversation(services,participants,thread,maintenanceSignal);}finally{setMaintenance(false);}}).catch(()=>{});
-  }catch(e){const message=e instanceof Error?e.message:'回复失败。';errorThread.current=thread;setError(e instanceof Error&&e.name==='AbortError'?'已中止回复。':message);setStream('');await commit(s=>{if(partial.current&&!group)(s.threads[thread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});const last=s.threads[thread]?.find(m=>m.id===turnUserId);if(last){last.failed=true;last.failureReason=message.slice(0,600);}}).catch(()=>{});}finally{running.current=false;p.setBusy(false);setWaiting(false);setActiveSpeaker('');abort.current=null;}
+   const completed=await executeTurn({thread:targetThread,userId:turnUserId,text,mode,speakers},{
+    snapshot:p.snapshot,commit,requestAI:p.requestAI,upload:p.upload,
+    deliverMedia,signal:abort.current.signal,
+    onPhase:(step:TurnPhase)=>setPhase(step==='media'?'media':'reply'),
+    onWait:setWaiting,
+    onSpeaker:speaker=>{replyingAs=speaker;setActiveSpeaker(speaker);},
+    onDelta:value=>{partial.current=value;if(!targetGroup)setStream(value);},
+    onRemaining:remaining=>{retrySpeakers.current={thread:targetThread,userId:turnUserId,speakers:remaining};},
+    onVoice:value=>{void reader.read(value).catch(()=>{});},
+    isVisible:id=>view.current.visible&&view.current.thread===id
+   });
+   retrySpeakers.current=null;
+   const maintenanceSignal=maintenanceAbort.current.signal,participants=[...completed];
+   const services={snapshot:p.snapshot,commit,requestAI:p.requestAI,toast};
+   maintenanceQueue.current=maintenanceQueue.current.catch(()=>{}).then(async()=>{setMaintenance(true);try{await maintainConversation(services,participants,targetThread,maintenanceSignal);}finally{setMaintenance(false);}}).catch(()=>{});
+  }catch(e){
+   const message=e instanceof Error?e.message:'回复失败。';errorThread.current=targetThread;
+   setError(e instanceof Error&&e.name==='AbortError'?'已中止回复。':message);setStream('');
+   const pending=retrySpeakers.current;
+   const needsRetry=!pending||pending.thread!==targetThread||pending.userId!==turnUserId||pending.speakers.length>0;
+   await commit(s=>{
+    if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
+    const original=s.threads[targetThread]?.find(m=>m.id===turnUserId);
+    if(original&&needsRetry){original.failed=true;original.failureReason=message.slice(0,600);}
+   }).catch(()=>{});
+  }finally{
+   running.current=false;p.setBusy(false);runningUserId.current='';setWaiting(false);setActiveSpeaker('');abort.current=null;
+  }
  };
- const send=async(event?:React.FormEvent)=>{event?.preventDefault();const text=input.trim(),id=uid();if(!text||uploading)return;try{const operation=commit(s=>{(s.threads[thread]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});delete s.drafts[thread];});if(!p.snapshot().threads[thread]?.some(m=>m.id===id)){await operation;return;}
-  // Clear only the submitted draft; an older disk completion must never clear the next input.
-  setInput('');setReplyTo('');p.setDraft(thread,'');follow.current=true;await operation;if(p.busy||running.current){queued.current.push({thread,text,id});return;}await reply(text,true,id);}catch(e){toast(e instanceof Error?e.message:'消息未保存，请重试。');}};
+ const send=async(event?:React.FormEvent)=>{
+  event?.preventDefault();
+  const submitted=input,text=submitted.trim(),target=thread,id=uid();
+  if(!text||uploading||!target)return;
+  try{
+   // Persist before clearing the composer or charging for a model request.
+   await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});delete s.drafts[target];});
+   if(view.current.thread===target&&draftInput.current===submitted){
+    setInput('');setReplyTo('');p.setDraft(target,'');
+   }
+   follow.current=true;
+   if(p.busy||running.current){queued.current.enqueue({thread:target,text,id});return;}
+   await reply(text,true,id,target);
+  }catch(e){toast(e instanceof Error?e.message:'消息未保存，请重试。');}
+ };
  const sendFiles=async(files:File[],duration?:number)=>{
   if(!files.length||uploading||!thread)return false;setUploading(true);const submitted=draftInput.current,quoted=replyTo,target=thread;let success=false;
   try{for(const file of files.slice(0,6)){const result=await p.upload(file),audio=result.mime.startsWith('audio/'),parsed=audio?{text:'',status:'原录音已保存；尚未转写。'}:await readAttachment(file,result.mime),id=uid();const text=submitted.trim()||(audio?'发送了一条语音':`发送了 ${file.name}`);
    await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,timestamp:Date.now(),kind:audio?'voice':result.mime.startsWith('image/')?'image':'file',asset:result.url,fileName:file.name.slice(0,160),fileSize:result.size,mime:result.mime,duration,extracted:parsed.text||undefined,attachmentStatus:parsed.status,replyTo:quoted||undefined,read:true});if(result.mime.startsWith('image/')&&!s.gallery.some(g=>g.url===result.url))s.gallery.push({id:result.id,url:result.url,name:result.name});if(s.gallery.length>100)s.gallery=s.gallery.slice(-100);});
    let canRead=!audio||p.snapshot().provider==='gemini'&&p.snapshot().mediaSettings.nativeAudio;
    if(audio&&p.snapshot().mediaSettings.transcriptionEnabled){try{const transcript=await transcribeFile(p.ownerId,p.snapshot(),file);await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message){message.extracted=transcript;message.attachmentStatus='已转写；原音频保留。';}});canRead=true;}catch(e){await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message)message.attachmentStatus=e instanceof Error?e.message:'转写失败，原录音保留。';});toast('语音已保存，转写未成功。');}}
-   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)queued.current.push({thread:target,text,id});else await reply(text,true,id);}
+   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)queued.current.enqueue({thread:target,text,id});else await reply(text,true,id,target);}
   }success=true;if(view.current.thread===target&&draftInput.current===submitted){setInput('');p.setDraft(target,'');setReplyTo('');}follow.current=true;toast('附件和记录已保存。');
   }catch(e){toast(e instanceof Error?e.message:'附件发送失败。');}finally{setUploading(false);if(fileInput.current)fileInput.current.value='';}return success;
  };
