@@ -1,4 +1,5 @@
 import {turnReceiptsSchema} from './turn-receipts';
+import {mediaOutboxSchema} from './media-outbox';
 import {workspaceSchema} from './agent-workspace';
 import {agentJobsSchema} from './agent-orchestrator';
 import { z } from 'zod';
@@ -32,6 +33,7 @@ export const stateSchema=z.object({
   sampling:samplingSchema.default({}),roleplay:roleplaySchema.default({}),drafts:z.record(z.string().max(12*1024*1024)).default({}),
   continuity:z.record(z.object({text:z.string().max(6000),through:id,updatedAt:z.number().finite().min(0),sources:z.array(z.object({id,role:z.enum(['user','assistant']),timestamp:z.number().finite().min(0),senderId:id.optional(),excerpt:z.string().max(2000)}).strict()).max(100).optional()}).strict()).default({}),
   turnReceipts:turnReceiptsSchema,
+  mediaOutbox:mediaOutboxSchema,
   workspaceFiles:workspaceSchema,
   agentJobs:agentJobsSchema,
   memoryCursors:z.record(z.record(id)).default({}),memoryWatermarks:z.record(z.record(z.number().finite().min(0))).default({}),groupSettings:z.object({cadence:z.enum(['natural','fast']).default('natural'),maxResponders:z.number().int().min(1).max(4).default(2)}).strict().default({}),

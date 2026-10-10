@@ -4,6 +4,8 @@ import {groupSpeakers} from './group-chat';
 import {uid,type PhoneState} from './phone-model';
 import {beginTurn,markRequesting,markCommitted,receiptFor,remainingSpeakers} from './turn-receipts';
 import type {MediaCommand} from './media-contract';
+import {queueMedia,beginMediaDelivery,interruptMediaDelivery} from './media-outbox';
+import type {MediaEffect} from './media-outbox';
 
 export type TurnMode='chat'|'face'|'group'|'live';
 export type TurnPhase='waiting'|'requesting'|'persisting'|'media';
@@ -14,7 +16,7 @@ export type TurnServices={
  commit:(change:(state:PhoneState)=>void)=>Promise<void>;
  requestAI:(text:string,characterId:string,thread:string,mode:TurnMode,onDelta?:(value:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void,useDefaultConnection?:boolean,causalUserId?:string)=>Promise<string>;
  upload:(file:File)=>Promise<Asset>;
- deliverMedia:(commands:MediaCommand[],speaker:string,thread:string,signal:AbortSignal)=>Promise<void>;
+ deliverMedia:(commands:MediaCommand[],speaker:string,thread:string,signal:AbortSignal,effectId?:string,attempt?:number)=>Promise<void>;
  signal:AbortSignal;
  onPhase?:(phase:TurnPhase)=>void;
  onWait?:(waiting:boolean)=>void;
@@ -65,7 +67,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);});
   p.onRequest?.(requestAttempt);
   p.onPhase?.('requesting');p.onDelta?.('');
-  const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
+  const turnText=text; // Run guidance must not change the causal source message.
   const nativeFiles:File[]=[];
   const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file),false,userId);
   const parsed=conversationReply(answer,group,index>0||nativeFiles.length>0);
@@ -73,6 +75,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   // failure must not leave half that speaker's response or gain affection twice.
   p.signal.throwIfAborted();
   p.onPhase?.('persisting');
+  let mediaJobs:MediaEffect[]=[];
   await p.commit(state=>{
    const target=state.threads[thread]?.find(m=>m.id===userId&&m.role==='user');
    if(!target||target.text!==text)throw new Error('原用户消息已删除或编辑，不再写入旧回复。');
@@ -90,6 +93,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    }
    target.failed=!complete;if(complete)delete target.failureReason;
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
+   mediaJobs=queueMedia(state,{thread,userId,speaker},parsed.commands);
   });
   p.onRemaining?.(speakers.slice(index+1));
   p.onDelta?.('');
@@ -123,10 +127,19 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
     }catch(e){await mediaFailure(e);}
    }
   }
-  if(parsed.commands.length){
+  for(const job of mediaJobs){
    p.onPhase?.('media');
-   try{await p.deliverMedia(parsed.commands,speaker,thread,p.signal);}
-   catch(e){await mediaFailure(e);}
+   let attempt=0;
+   try{
+    p.signal.throwIfAborted();
+    await p.commit(state=>{attempt=beginMediaDelivery(state,job.id);});
+    await p.deliverMedia([job.command],speaker,thread,p.signal,job.id,attempt);
+    if(p.snapshot().mediaOutbox.find(j=>j.id===job.id)?.phase!=='completed')
+     throw new Error('媒体输出尚未写入回执，需人工核查。');
+   }catch(e){
+    if(attempt>0)await p.commit(state=>interruptMediaDelivery(state,job.id,attempt,e instanceof Error?e.message:'媒体中断')).catch(()=>{});
+    await mediaFailure(e);
+   }
   }
  }
  return speakers;
