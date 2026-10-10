@@ -120,7 +120,7 @@ export default function Chat(){
   try{for(const file of files.slice(0,6)){const result=await p.upload(file),audio=result.mime.startsWith('audio/'),parsed=audio?{text:'',status:'原录音已保存；尚未转写。'}:await readAttachment(file,result.mime),id=uid();const text=submitted.trim()||(audio?'发送了一条语音':`发送了 ${file.name}`);
    await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,timestamp:Date.now(),kind:audio?'voice':result.mime.startsWith('image/')?'image':'file',asset:result.url,fileName:file.name.slice(0,160),fileSize:result.size,mime:result.mime,duration,extracted:parsed.text||undefined,attachmentStatus:parsed.status,replyTo:quoted||undefined,read:true});if(result.mime.startsWith('image/')&&!s.gallery.some(g=>g.url===result.url))s.gallery.push({id:result.id,url:result.url,name:result.name});if(s.gallery.length>100)s.gallery=s.gallery.slice(-100);
     if(parsed.text){
-     const safeName=file.name.replace(/[^a-zA-Z0-9_\\u4e00-\\u9fff.\\- ]/g,'_').slice(0,90)||'attachment.txt';
+     const safeName=file.name.replace(/[^a-zA-Z0-9_\u4e00-\u9fff. -]/g,'_').slice(0,90)||'attachment.txt';
      try{
       putWorkspace(s,{thread:target,path:'imports/'+id+'/'+safeName,content:parsed.text,sourceId:id},null);
       const original=s.threads[target]?.find(m=>m.id===id);
