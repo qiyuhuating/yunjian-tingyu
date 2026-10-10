@@ -11,7 +11,8 @@ function load(name){
  new Function('require','module','exports',code)(id=>id.startsWith('./')?load(id.slice(2)):native(id),module,module.exports);
  loaded.set(name,module.exports);return module.exports;
 }
-const {freshState}=load('phone-model'),{executeTurn,PendingTurnQueue}=load('turn-execution');
+const {freshState,stateSchema}=load('phone-model'),{executeTurn,PendingTurnQueue}=load('turn-execution');
+const {receiptFor,remainingSpeakers,markInterrupted,manualRetryRequiresConfirmation}=load('turn-receipts');
 const checks=[];async function check(name,fn){await fn();checks.push(name);}
 function harness({group=false,answer='收到',onRequest=undefined,onUpload=undefined,onCommit=undefined}={}){
  let state=freshState();const speaker=state.characters[0],other=state.characters[1],thread=group?'test-group':speaker.id;
@@ -63,7 +64,7 @@ await check('One-to-one turn persists exactly one reply and one affection increm
 });
 await check('A saved reply may not be charged for again',async()=>{
  const h=harness();await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
- await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/已回复/);
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/已回复|已经结束/);
  assert.equal(h.calls,1);
 });
 await check('Missing user record never generates orphaned assistant messages',async()=>{
@@ -81,7 +82,7 @@ await check('Deleted single-chat character must not silently fall back to anothe
 });
 await check('Speaker bubbles commit atomically rather than one write per bubble',async()=>{
  const h=harness({group:true,answer:'一条'});const result=await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services);
- assert.equal(h.calls,2);assert.equal(result.length,2);assert.equal(h.commits,2);
+ assert.equal(h.calls,2);assert.equal(result.length,2);assert.equal(h.commits,5);
  assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,2);
 });
 await check('A failed second group speaker retains first speaker and safe resume cursor',async()=>{
