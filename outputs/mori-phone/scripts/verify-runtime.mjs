@@ -67,7 +67,8 @@ await check('Plain chat uses one real last user message and a single system enve
  assert.equal(messages.at(-1).role,'user');
  assert.equal(messages.at(-1).content,'只回答这次');
  assert(!messages.some((m,i)=>i>0&&typeof m.content==='string'&&/^\[应用运行配置\]|^\[本轮补充背景/.test(m.content)));
- assert(messages[0].content.includes(character.name));
+ assert.equal(messages[0].content,state.coreSystemPrompt);
+ assert(messages.some((m,i)=>i>0&&typeof m.content==='string'&&m.content.startsWith('[应用参考资料')&&m.content.includes(character.name)));
  chatInput.parse({provider:'deepseek',model:'deepseek-flash',apiKey:'fixture-only-key',baseURL:'',sampling:samplingSchema.parse({}),messages});
 });
 await check('Group chat preserves other-speaker identity but not fabricated user turn',async()=>{
