@@ -2,7 +2,7 @@ name: Synchronize source inventory (architecture branch)
 on:
   push:
     branches:
-      - refactor/fenced-agent-state-20261010
+      - refactor/causal-execution-evidence-20261010
   workflow_dispatch:
 permissions:
   contents: write
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inventory:
-    if: github.ref == 'refs/heads/refactor/fenced-agent-state-20261010'
+    if: github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,5 +26,5 @@ jobs:
           git add -- FILES.md FILE_MANIFEST.json
           if ! git diff --cached --quiet; then
             git commit -m "chore(inventory): sync source sizes and SHA256"
-            git push origin HEAD:refactor/fenced-agent-state-20261010
+            git push origin HEAD:refactor/causal-execution-evidence-20261010
           fi
