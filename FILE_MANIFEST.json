@@ -14,8 +14,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1081,
-    "sha256": "90b19cb227adbf61216043fd6cc983788ab1807d125b0c702438bc7c59fe1eb9"
+    "bytes": 1099,
+    "sha256": "f2b50433998ed3eb9cd4a26cb78f4dca2cc8d1c08456696a94e00ec2fbf3c405"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -860,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 38609,
-    "sha256": "ace3d25bcaaae6615331e2f62548b800e82de76d900a5e7938774515de0bb190"
+    "bytes": 38956,
+    "sha256": "a93d46c3ecc00656e4c52e52616360f06e9c1c75c310fd14281805a9d5cfcc09"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1368,6 +1368,12 @@
     "sha256": "e9542e46a7952e23d45b8bb79d115c36dda4c5309a40db4c2d897a30a4c60016"
   },
   {
+    "path": "outputs/mori-phone/lib/durable-turn-queue.ts",
+    "description": "IndexedDB 同事务的聊天待执行队列，排队意图与崩溃后的保守安全续接；路径：outputs/mori-phone/lib/durable-turn-queue.ts；路径：outputs/mori-phone/lib/durable-turn-queue.ts",
+    "bytes": 1941,
+    "sha256": "ab3d09ee3e93c662148d211f800988e51eb7e2d6f622bead1e72ebeac9a4adaa"
+  },
+  {
     "path": "outputs/mori-phone/lib/file-export.ts",
     "description": "48KiB原生下载块与取消清理，以及网页版OPFS导出，不聚合完整备份；路径：outputs/mori-phone/lib/file-export.ts",
     "bytes": 1411,
@@ -1454,8 +1460,8 @@
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
     "description": "聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 16197,
-    "sha256": "fb3cfad9416ab062ccaae13a147de9df33dccdf5cf518f20068ac0f8abb22705"
+    "bytes": 16286,
+    "sha256": "5bbf4f8da7452370bbcf2dfc527a027c9fa3e21947fb64a116c5d8333f64df5c"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -1514,8 +1520,8 @@
   {
     "path": "outputs/mori-phone/lib/turn-execution.ts",
     "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
-    "bytes": 9358,
-    "sha256": "637e38b34a599a9fbfea768744f9b27845c13c0f784604a285d75283fd12cd56"
+    "bytes": 9548,
+    "sha256": "86bea7029b476fb7d02259108217b9c149e0ec61488437b31807cfbfd05d6733"
   },
   {
     "path": "outputs/mori-phone/lib/turn-receipts.ts",
@@ -1820,8 +1826,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
     "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
-    "bytes": 10905,
-    "sha256": "4d0e4c7ab49b3474545e5f9f53ecbb4055931d752a2a2979d0e5cb9ed7d8f2c1"
+    "bytes": 12484,
+    "sha256": "935575b9e141dc319fbeb6964118f0320e0fcc6388afc3b469454effe54f0016"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
@@ -2246,8 +2252,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 3524,
-    "sha256": "f2bba04ca1874e6b1134ad79f61908c89b6bb58ce295749fea072cde33e97cc4"
+    "bytes": 3727,
+    "sha256": "9f4ca4e418dbd9c21b9b1deefb80bccd12d4478d07bc08edfed31df68f4994c6"
   },
   {
     "path": "scripts/verify-delivery.py",
