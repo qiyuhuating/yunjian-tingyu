@@ -5,7 +5,8 @@ export function relevance(query:string,text:string){const q=terms(query),t=terms
 // Provenance must remain verifiable before automatic memories enter the prompt.
 // Manual/legacy memories continue to work; the user may explicitly revise them.
 export function validMemorySource(state:PhoneState,m:PhoneState['memories'][number]){
- if(m.origin!=='auto'||!m.sourceIds?.length||!m.sourceThread)return true;
+ if(m.origin!=='auto')return true;
+ if(!m.sourceIds?.length||!m.sourceThread)return false;
  const source=state.threads[m.sourceThread]||[];
  return m.sourceIds.every(id=>source.some(v=>v.id===id&&v.role==='user'&&!v.failed&&
   (!m.evidence||v.text.includes(m.evidence))&&(!m.sourceAt||v.timestamp===m.sourceAt)));
