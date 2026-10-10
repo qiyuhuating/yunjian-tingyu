@@ -1,5 +1,7 @@
 import {sha256} from '@noble/hashes/sha2.js';
 import {freshState,stateSchema,type PhoneState} from './phone-model';
+import {assetReferences} from './asset-references';
+export {assetReferences} from './asset-references';
 
 const DB_NAME='cloudlet-device',DB_VERSION=3;
 type Snapshot={owner:string;state:PhoneState;version:number;updatedAt:number;legacyArchive?:boolean;threadStorage?:1;assetIds?:string[]};
@@ -51,7 +53,6 @@ export async function uploadLocal(owner:string,file:File){
  const hash=sha256.create();for(let offset=0;offset<file.size;offset+=1024*1024)hash.update(new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer()));const digest=Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join(''),d=await db(),saved=await result(d.transaction('assets').objectStore('assets').index('content').get([owner,digest])) as LocalAsset|undefined;if(saved&&saved.mime===mime)return {url:'local:'+saved.id,id:saved.id,mime,size:saved.size,name:file.name.slice(0,160)};
  const h=digest.slice(0,32),id=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);const collision=await getAsset(owner,'local:'+id);return putAsset(owner,collision&&collision.sha256!==digest?crypto.randomUUID():id,file.slice(0,file.size,mime),file.name,mime,digest);
 }
-export function assetReferences(state:PhoneState){const refs=new Set<string>();if(state.wallpaper?.asset)refs.add(state.wallpaper.asset);for(const [key,draft] of Object.entries(state.drafts||{})){if(key.startsWith('editor:characters:')||key.startsWith('editor:cards:'))try{const parsed=JSON.parse(draft),c=key.startsWith('editor:cards:')?parsed?.character:parsed;if(c?.avatar&&/^(local:|\/api\/assets\/)[a-f0-9-]{36}$/.test(c.avatar))refs.add(c.avatar);}catch{}}for(const card of state.characterCards||[])if(card.character.avatar)refs.add(card.character.avatar);for(const c of state.characters)if(c.avatar)refs.add(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)refs.add(m.asset);for(const a of [...state.gallery,...state.music])refs.add(a.url);return [...refs];}
 async function legacyBlob(ref:string,expected:number){
  const response=await fetch(ref,{cache:'no-store'});if(response.ok){const blob=await response.blob();if(response.status!==204&&(!expected||blob.size===expected))return blob;}
  // Retry via an explicit migration format without treating an empty download response as a valid file.
