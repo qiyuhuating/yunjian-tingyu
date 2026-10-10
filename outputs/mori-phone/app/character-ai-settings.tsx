@@ -10,7 +10,7 @@ import {FormField,usePhone} from './ui';
 export default function CharacterAISettings({character,onChange,persisted}:{character:Character;onChange:(value:Character)=>void;persisted:boolean}){
  const p=usePhone(),connection=character.aiConnection;
  const [key,setKey]=useState(''),[hasSavedKey,setHasSavedKey]=useState(false),[saving,setSaving]=useState(false);
- const slot=connection?characterKeySlot(character.id,connection.provider):'';
+ const slot=connection?characterKeySlot(character.id,connection.provider,connection.baseURL):'';
  useEffect(()=>{let active=true;setKey('');setHasSavedKey(false);if(!persisted||!slot)return;
   void readDeviceKey(p.ownerId,slot).then(value=>{if(active)setHasSavedKey(!!value);}).catch(()=>{if(active)p.toast('无法读取角色专属 Key 状态。');});
   return()=>{active=false;};
@@ -39,7 +39,7 @@ export default function CharacterAISettings({character,onChange,persisted}:{char
    {dedicated&&<>
     <FormField label="角色专属 API Key"><input aria-label="角色专属 API Key" type="password" autoComplete="off" spellCheck={false} maxLength={2048} value={key} placeholder={hasSavedKey?'已保存，可输入新 Key 替换':'填写角色自己的 API Key'} onChange={e=>setKey(e.target.value)}/></FormField>
     <div className="button-row"><button type="button" className="soft-button" disabled={!persisted||saving||key.trim().length<8} onClick={()=>void save()}>保存角色 Key</button><button type="button" className="text-button" disabled={!persisted||saving||!hasSavedKey} onClick={()=>void save(true)}>清除角色 Key</button></div>
-    <p className="helper">{!persisted?'请先保存新角色，再设置专属 Key。':hasSavedKey?'该角色已有独立的加密凭据。':'还没有为此角色保存独立凭据。'} 使用自定义地址时必须使用角色独立 Key，防止把其他地址的凭据发错服务。</p>
+    <p className="helper">{!persisted?'请先保存新角色，再设置专属 Key。':hasSavedKey?'该角色已有独立的加密凭据。':'还没有为此角色保存独立凭据。'} 自定义地址使用按主机隔离的角色专属 Key。升级前在旧地址保存的角色 Key 为防止跨域泄露，可能需要重新填写。</p>
    </>}
   </>}
  </section>;
