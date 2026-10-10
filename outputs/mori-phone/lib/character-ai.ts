@@ -7,7 +7,9 @@ import {getProvider,providerBase,connectionKeySlot,type ProviderId} from './prov
  * Never silently copy a legacy unbound role key to a new host. */
 export function characterKeySlot(characterId:string,provider:ProviderId,baseURL=''){
  const preset=getProvider(provider),base=baseURL||preset.baseURL;
- const suffix=base&&base!==preset.baseURL?':'+providerBase(provider,base):preset.baseURL?'':':'+(base?providerBase(provider,base):'unset');
+ const endpoint=base?providerBase(provider,base):'',
+  official=preset.baseURL?providerBase(provider,preset.baseURL):'';
+ const suffix=endpoint&&endpoint!==official?':'+endpoint:official?'':':'+(endpoint||'unset');
  return 'character-ai:'+characterId+':'+provider+suffix;
 }
 export function characterConnection(state:PhoneState,character:Character,useDefault=false){
