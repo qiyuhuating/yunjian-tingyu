@@ -25,7 +25,7 @@ export function reportEvidence(state:PhoneState,jobId:string,speaker:string){
  const message=state.threads[job.thread]?.find(m=>m.id===record.messageId);
  if(!source||source.id!==record.sourceId||source.revision!==record.sourceRevision)
   return {valid:false,reason:'审阅输入已被替换或修改，原报告来源已失效。'};
- if(!report||report.id!==record.fileId||report.revision!==record.revision||!message||message.role!=='assistant'||message.senderId!==speaker||message.text!==report.content)
+ if(record.path!=='reviews/'+jobId+'/'+speaker+'.md'||!report||report.id!==record.fileId||report.revision!==record.revision||!message||message.role!=='assistant'||message.senderId!==speaker||message.text!==report.content)
   return {valid:false,reason:'报告、消息或工作区版本不一致，不能认定已保存结果可信。'};
  return {valid:true,reason:'来源、文件版本、报告和消息一致；并不代表代码已执行或观点正确。'};
 }
@@ -74,7 +74,7 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
   await p.commit(state=>{
    const job=activeAgentJob(state,jobId),now=readWorkspace(state,initial.thread,initial.path);
    if(!job||job.status!=='planned'||!now||now.revision!==sourceRevision||
-    !state.groups.some(g=>g.id===initial.thread&&g.members.includes(speaker)))
+    !state.groups.some(g=>g.id===initial.thread&&g.members.includes(speaker))||now.id!==job.sourceId)
     throw new Error('协作任务已变化，停止外部调用。');
    job.status='requesting';job.attempts++;requestAttempt=job.attempts;job.updatedAt=Date.now();
   });
@@ -92,7 +92,7 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
   await p.commit(state=>{
    const job=activeAgentJob(state,jobId),now=readWorkspace(state,initial.thread,initial.path);
    if(!job||job.status!=='requesting'||job.attempts!==requestAttempt||
-    job.speakers[job.completed.length]!==speaker||job.completed.includes(speaker)||!now||now.revision!==sourceRevision)
+    job.speakers[job.completed.length]!==speaker||job.completed.includes(speaker)||!now||now.revision!==sourceRevision||now.id!==job.sourceId)
     throw new Error('源文件、角色次序或请求代次已经改变，本次结果未保存。');
    const out='reviews/'+jobId+'/'+speaker+'.md';
    const report=putWorkspace(state,{thread:initial.thread,path:out,content:answer},null);
@@ -119,7 +119,7 @@ export function authorizeAgentResume(state:PhoneState,jobId:string){
  if(job.status==='planned')return;
  if(job.status!=='requesting'&&job.status!=='needs_review')throw new Error('任务尚未进入可恢复状态。');
  const file=readWorkspace(state,job.thread,job.path);
- if(!file||file.revision!==job.sourceRevision)throw new Error('源文件已改变，拒绝在旧任务上继续执行。');
+ if(!file||file.revision!==job.sourceRevision||file.id!==job.sourceId)throw new Error('源文件已改变，拒绝在旧任务上继续执行。');
  for(const speaker of job.completed){
   if(!reportEvidence(state,jobId,speaker).valid)
    throw new Error('已完成角色的报告来源或存储内容不匹配，拒绝继续。');
