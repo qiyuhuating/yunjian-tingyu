@@ -22,6 +22,7 @@ export type TurnServices={
  onDelta?:(value:string)=>void;
  onRemaining?:(remaining:string[])=>void;
  onVoice?:(message:string)=>void;
+ onRequest?:(attempt:number)=>void;
  isVisible?:(thread:string)=>boolean;
 };
 
@@ -62,6 +63,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   // Persist uncertainty BEFORE posting. If the app dies here, never auto resend.
   let requestAttempt=0;
   await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);});
+  p.onRequest?.(requestAttempt);
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
   const nativeFiles:File[]=[];

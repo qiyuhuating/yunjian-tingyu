@@ -69,9 +69,9 @@ export function markCommitted(state:JournalState,userId:string,speaker:string,ex
  receipt.updatedAt=Date.now();delete receipt.error;
  return receipt.phase==='completed';
 }
-export function markInterrupted(state:JournalState,userId:string,message:string){
+export function markInterrupted(state:JournalState,userId:string,message:string,expectedAttempt?:number){
  const receipt=receiptFor(state,userId);
- if(!receipt||receipt.phase==='completed'||receipt.phase==='cancelled')return;
+ if(!receipt||receipt.phase==='completed'||receipt.phase==='cancelled'||(expectedAttempt!==undefined&&receipt.attempts!==expectedAttempt))return;
  // If the POST may have been sent, retain the ambiguity.
  receipt.phase=receipt.phase==='in_flight'?'needs_review':receipt.phase;
  receipt.error=message.slice(0,600);receipt.updatedAt=Date.now();

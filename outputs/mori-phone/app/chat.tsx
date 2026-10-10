@@ -68,7 +68,7 @@ export default function Chat(){
   }
   running.current=true;runningThread.current=targetThread;errorThread.current=targetThread;
   runningUserId.current=turnUserId;p.setBusy(true);partial.current='';setPhase('reply');setStream('');setError('');
-  abort.current=new AbortController();let replyingAs:string|undefined;
+  abort.current=new AbortController();let replyingAs:string|undefined,activeAttempt=0;
   try{
    const completed=await executeTurn({thread:targetThread,userId:turnUserId,text,mode,speakers,allowManualRetry:!newTurn},{
     snapshot:p.snapshot,commit,requestAI:p.requestAI,upload:p.upload,
@@ -76,6 +76,7 @@ export default function Chat(){
     onPhase:(step:TurnPhase)=>setPhase(step==='media'?'media':'reply'),
     onWait:setWaiting,
     onSpeaker:speaker=>{replyingAs=speaker;setActiveSpeaker(speaker);},
+     onRequest:attempt=>{activeAttempt=attempt;},
     onDelta:value=>{partial.current=value;if(!targetGroup)setStream(value);},
     onRemaining:remaining=>{retrySpeakers.current={thread:targetThread,userId:turnUserId,speakers:remaining};},
     onVoice:value=>{void reader.read(value).catch(()=>{});},
@@ -91,9 +92,10 @@ export default function Chat(){
    const pending=retrySpeakers.current;
    const needsRetry=!pending||pending.thread!==targetThread||pending.userId!==turnUserId||pending.speakers.length>0;
    await commit(s=>{
-    if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
+    if(activeAttempt>0&&receiptFor(s,turnUserId)?.attempts!==activeAttempt)return;
+     if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
     const original=s.threads[targetThread]?.find(m=>m.id===turnUserId);
-    markInterrupted(s,turnUserId,message);
+    markInterrupted(s,turnUserId,message,activeAttempt);
     if(original&&needsRetry){original.failed=true;original.failureReason=message.slice(0,600);}
    }).catch(()=>{});
   }finally{
@@ -147,16 +149,16 @@ export default function Chat(){
   if(p.busy||running.current)return;
   const speakers=g.members.slice(0,Math.min(4,g.members.length));
   if(!window.confirm('将此文件已提取的文字交给 '+speakers.length+' 位群角色依次审阅。每位角色将使用自己的 AI 连接，可能分别计费。此操作不会执行代码或自动修改原文件。继续吗？'))return;
-  const jobId=uid(),controller=new AbortController();
+  const jobId=uid(),controller=new AbortController();let activeAttempt=0;
   running.current=true;runningThread.current=target;p.setBusy(true);abort.current=controller;
   setMenu(false);setActiveMessage('');setPhase('reply');setError('');
   try{
    await commit(s=>planAgentReview(s,{jobId,thread:target,path:entry.path,speakers}));
-   await executeAgentReview(jobId,{snapshot:p.snapshot,commit,requestAI:p.requestAI,signal:controller.signal});
+   await executeAgentReview(jobId,{snapshot:p.snapshot,commit,requestAI:p.requestAI,signal:controller.signal,onRequest:attempt=>{activeAttempt=attempt;}});
    toast('协作审阅完成：各角色报告已保存至聊天与独立工作区文件。');
   }catch(e){
    const reason=e instanceof Error?e.message:'协作任务中断';
-   await commit(s=>flagUncertainAgentJob(s,jobId,reason)).catch(()=>{});
+   await commit(s=>flagUncertainAgentJob(s,jobId,reason,activeAttempt)).catch(()=>{});
    setError(reason);toast('协作未完整完成，执行记录已保留，不会自动重复请求。');
   }finally{running.current=false;p.setBusy(false);abort.current=null;setPhase('reply');}
  };
@@ -166,16 +168,16 @@ export default function Chat(){
   if(job.status==='requesting'||job.status==='needs_review'){
    if(!window.confirm('上次模型请求可能已经发送并计费。仅未保存结果的角色可能会被重新请求，可能重复计费。明确确认继续吗？'))return;
   }
-  const target=job.thread,controller=new AbortController();
+  const target=job.thread,controller=new AbortController();let activeAttempt=0;
   running.current=true;runningThread.current=target;p.setBusy(true);abort.current=controller;
   setMenu(false);setPhase('reply');setError('');
   try{
    await commit(s=>authorizeAgentResume(s,jobId));
-   await executeAgentReview(jobId,{snapshot:p.snapshot,commit,requestAI:p.requestAI,signal:controller.signal});
+   await executeAgentReview(jobId,{snapshot:p.snapshot,commit,requestAI:p.requestAI,signal:controller.signal,onRequest:attempt=>{activeAttempt=attempt;}});
    toast('已续接并保存剩余角色的审阅报告。');
   }catch(e){
    const reason=e instanceof Error?e.message:'协作任务中断';
-   await commit(s=>flagUncertainAgentJob(s,jobId,reason)).catch(()=>{});
+   await commit(s=>flagUncertainAgentJob(s,jobId,reason,activeAttempt)).catch(()=>{});
    setError(reason);toast('协作仍未完成；不会自动再次请求模型。');
   }finally{running.current=false;p.setBusy(false);abort.current=null;setPhase('reply');}
  };
