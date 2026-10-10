@@ -1394,8 +1394,8 @@
   {
     "path": "outputs/mori-phone/lib/local-backup.ts",
     "description": "流式完整ZIP备份与恢复校验，覆盖角色卡仓库及草稿的头像原文件和共享引用重映射；路径：outputs/mori-phone/lib/local-backup.ts",
-    "bytes": 8696,
-    "sha256": "7fad4ca43d405effab59bbab5e1701146936a841d17e3ed76918c2801f0035ab"
+    "bytes": 8802,
+    "sha256": "b7b41d0e15f41be1465f8e17233fded5bbfb3c6aec786235982f04adfb3731fb"
   },
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
