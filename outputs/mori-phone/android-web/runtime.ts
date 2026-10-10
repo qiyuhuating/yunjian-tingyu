@@ -6,23 +6,24 @@ import {connectionInput,fetchModels,fetchChat,ProviderError} from '../lib/provid
 type Bridge={requestBase64?:(id:string,url:string,method:string,headers:string,body:string)=>void;request:(id:string,url:string,method:string,headers:string,body:string)=>void;cancel:(id:string)=>void;openUrl:(url:string)=>void;openBrowser:(url:string)=>void;startDownload:(id:string,name:string,mime:string)=>boolean|void;downloadChunk:(id:string,base64:string)=>boolean|void;finishDownload:(id:string)=>boolean|void;cancelDownload?:(id:string)=>void;speak:(text:string,rate:number,id:string)=>void;stopSpeech:()=>void;copyText:(text:string)=>void};
 declare global{interface Window{NativeFlush?:()=>Promise<void>;NativeRecoveryBackup?:()=>Promise<void>;NativeBack?:()=>boolean;Android?:Bridge;NativeHTTP?:{headers:(id:string,status:number,headers:string)=>void;chunk:(id:string,b64:string)=>void;end:(id:string)=>void;error:(id:string,reason?:{code:string;message:string})=>void};NativeSpeechEnd?:(id:string,failed?:boolean)=>void;}}
 export function installAndroidRuntime(){const native=window.fetch.bind(window),bridge=window.Android;
- const pending=new Map<string,{resolve:(r:Response)=>void;reject:(e:Error)=>void;controller:ReadableStreamDefaultController<Uint8Array>;stream:ReadableStream<Uint8Array>;remove:()=>void}>();
+ const pending=new Map<string,{resolve:(r:Response)=>void;reject:(e:Error)=>void;controller:ReadableStreamDefaultController<Uint8Array>;stream:ReadableStream<Uint8Array>;touch:(phase:'headers'|'stream')=>void;remove:()=>void}>();
  const bytes=(value:string)=>Uint8Array.from(atob(value),c=>c.charCodeAt(0));
  const fail=(id:string,e:Error)=>{const job=pending.get(id);if(!job)return;pending.delete(id);job.remove();try{job.controller.error(e);}catch{}job.reject(e);};
  window.NativeHTTP={
   headers:(id:string,status:number,headers:string)=>{const job=pending.get(id);if(!job)return;try{
-   const empty=[204,205,304].includes(status);const r=new Response(empty?null:job.stream,{status,headers:JSON.parse(headers)});
+   job.touch('stream');const empty=[204,205,304].includes(status);const r=new Response(empty?null:job.stream,{status,headers:JSON.parse(headers)});
    job.resolve(r);if(empty){pending.delete(id);job.remove();job.controller.close();bridge?.cancel(id);}
   }catch(e){fail(id,e instanceof Error?e:new Error('响应格式不正确。'));bridge?.cancel(id);}},
-  chunk:(id:string,b64:string)=>{const job=pending.get(id);if(!job)return;try{job.controller.enqueue(bytes(b64));}catch(e){fail(id,e instanceof Error?e:new Error('响应数据损坏。'));bridge?.cancel(id);}},
+  chunk:(id:string,b64:string)=>{const job=pending.get(id);if(!job)return;try{job.touch('stream');job.controller.enqueue(bytes(b64));}catch(e){fail(id,e instanceof Error?e:new Error('响应数据损坏。'));bridge?.cancel(id);}},
   end:(id:string)=>{const job=pending.get(id);if(!job)return;pending.delete(id);job.remove();try{job.controller.close();}catch(e){job.reject(e instanceof Error?e:new Error('响应中断。'));}},
   error:(id:string,reason)=>fail(id,new Error(reason?.message||'网络连接失败，请检查网络、API 地址或服务商可用性。'))
  };
  const network=async(url:string,init:RequestInit={})=>{if(!bridge)return native(url,init);let binary='',body=typeof init.body==='string'?init.body:'',headers=new Headers(init.headers);if(init.body&&typeof init.body!=='string'){const request=new Request(url,init),blob=await request.blob();headers=request.headers;if(blob.size>16*1024*1024)throw new Error('请求文件过大。');const data=new Uint8Array(await blob.arrayBuffer());for(let at=0;at<data.length;at+=32768)binary+=String.fromCharCode(...data.subarray(at,at+32768));binary=btoa(binary);}return new Promise<Response>((resolve,reject)=>{
-  const id=crypto.randomUUID(),signal=init.signal;let controller!:ReadableStreamDefaultController<Uint8Array>;
+  const id=crypto.randomUUID(),signal=init.signal,method=(init.method||'GET').toUpperCase(),catalog=method==='GET'&&/\/models$/.test(new URL(url).pathname);let controller!:ReadableStreamDefaultController<Uint8Array>,watchdog:ReturnType<typeof setTimeout>|undefined;
+  const touch=(phase:'headers'|'stream')=>{if(watchdog)clearTimeout(watchdog);const limit=catalog?25000:phase==='stream'?120000:90000;watchdog=setTimeout(()=>{fail(id,new Error(catalog?'模型列表读取超过 25 秒，已停止等待；可手动填写模型 ID，不代表聊天连接失效。':phase==='stream'?'AI 回复长时间没有新数据，连接已取消；请检查网络后手动重试，避免重复计费。':'等待 AI 首次响应超时，已取消本次连接；请检查网络或选择响应更快的模型。'));bridge.cancel(id);},limit);};
   const cancel=()=>{fail(id,new DOMException('已中止','AbortError'));bridge.cancel(id);};
   const stream=new ReadableStream<Uint8Array>({start:c=>{controller=c;},cancel:()=>{pending.get(id)?.remove();pending.delete(id);bridge.cancel(id);}});
-  const remove=()=>signal?.removeEventListener('abort',cancel);pending.set(id,{resolve,reject,controller,remove,stream});
+  const remove=()=>{if(watchdog)clearTimeout(watchdog);signal?.removeEventListener('abort',cancel);};pending.set(id,{resolve,reject,controller,remove,stream,touch});touch('headers');
   if(signal?.aborted){cancel();return;}signal?.addEventListener('abort',cancel,{once:true});
   try{if(binary){if(!bridge.requestBase64)throw new Error('此 APK 尚不支持音频转写上传，请安装更新版；原录音已保留。');bridge.requestBase64(id,url,init.method||'GET',JSON.stringify(Object.fromEntries(headers)),binary);}else bridge.request(id,url,init.method||'GET',JSON.stringify(Object.fromEntries(headers)),body);}catch(e){fail(id,e instanceof Error?e:new Error('原生请求未启动。'));}
  });};
