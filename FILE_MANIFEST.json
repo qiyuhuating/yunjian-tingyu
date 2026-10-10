@@ -488,8 +488,8 @@
   {
     "path": "outputs/android/src/chat/cloudlet/phone/MainActivity.java",
     "description": "保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java",
-    "bytes": 26858,
-    "sha256": "77ebd63890de37927e3b2a0f550684ffd588e0b6c32a753a3782691f4c83b884"
+    "bytes": 28087,
+    "sha256": "53d1c294fbe5c2fa107f562965cb0c521976a6effbb2f91b84892059db98ad48"
   },
   {
     "path": "outputs/android/vendor/via-release-cn.apk",
@@ -596,8 +596,8 @@
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
     "description": "APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts",
-    "bytes": 9560,
-    "sha256": "f4487d19f0b61acad19f9d61b37e2e133ab359f7895f944e8bf7bf7c7a192b35"
+    "bytes": 10418,
+    "sha256": "7e3a5e8ac433ae79b98452aa5d0f0df8fc20ac41c1a14192b660dc8d7ea07ce7"
   },
   {
     "path": "outputs/mori-phone/android-web/vite.config.ts",
@@ -1232,8 +1232,8 @@
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
-    "bytes": 10905,
-    "sha256": "073652fd50f5b467c297b8c0e98cda1c6f40da76e7754505006e42ba9575993b"
+    "bytes": 11058,
+    "sha256": "a5eba3302621fc893a37e44af144bfd26ba87196812650a1def8f3468db955cd"
   },
   {
     "path": "outputs/mori-phone/lib/providers.ts",
@@ -2438,8 +2438,8 @@
   {
     "path": "docs/API连接与设置重设计-2026-10-09.md",
     "description": "本轮项目分析、缺陷修复、真实软件设计来源与验收边界；路径：docs/API连接与设置重设计-2026-10-09.md",
-    "bytes": 11292,
-    "sha256": "57a41c1b3926073e6c48bc1b3c3c89f7f9991f89c2792a4ed8c294a8d218da08"
+    "bytes": 12529,
+    "sha256": "382b73c5ece9578da844e78045e7b3aec3b95619020106c3134427138538efcc"
   },
   {
     "path": "docs/api-settings-2026-10-09/build-validation-results.json",
@@ -2546,19 +2546,19 @@
   {
     "path": "outputs/mori-phone/lib/provider-transport.ts",
     "description": "网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts",
-    "bytes": 4487,
-    "sha256": "4236e573028750e65fde67a52a7d613fc08cc2325d2509c63c02a105a436d2ee"
+    "bytes": 4862,
+    "sha256": "2a58d16bc786ce00a7271d1848b025fed68491fca0cc42d44338b0d8776184aa"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
     "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 7592,
-    "sha256": "fb7d255df638d5c168b32294c4df3af97e55ded71cdbb06e441746d1cd435ea8"
+    "bytes": 8369,
+    "sha256": "8baf1e95055ae71374cf2954265a51bc4bd2cfb6c8a651fa27d527f01e7dbb5c"
   },
   {
     "path": "work/qa/connection-ui.mjs",
     "description": "23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs",
-    "bytes": 21800,
-    "sha256": "4c4a04d409c260b639a38560eb1b9892e7a9ad9a251672b22cbb1cdcf73bfecc"
+    "bytes": 22533,
+    "sha256": "e21615831d3136fa47515ddd5fe4e0acc7807c545372e4e0edf378fef726e7b1"
   }
 ]
