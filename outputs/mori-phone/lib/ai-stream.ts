@@ -20,15 +20,15 @@ export async function readChatStream(response:Response,options:ChatStreamOptions
  let pending='',crPending=false,doneMarker=false,answer='',finishReason='',usage:AIUsage|null=null;
  let firstTokenMs:number|null=null,mediaChars=0;
  const append=(part:string)=>{
-  const joined=(crPending?'\\r':'')+part;
-  crPending=joined.endsWith('\\r');
+  const joined=(crPending?'\r':'')+part;
+  crPending=joined.endsWith('\r');
   const ready=crPending?joined.slice(0,-1):joined;
-  pending+=ready.replace(/\\r\\n?/g,'\\n');
+  pending+=ready.replace(/\r\n?/g,'\n');
   if(pending.length>MAX_EVENT_BYTES)throw new Error('AI 返回的流式事件过大，已中止接收。');
  };
  const frame=(raw:string)=>{
-  const lines=raw.split('\\n');
-  const data=lines.filter(line=>line==='data'||line.startsWith('data:')).map(line=>line==='data'?'':line.slice(5).trimStart()).join('\\n');
+  const lines=raw.split('\n');
+  const data=lines.filter(line=>line==='data'||line.startsWith('data:')).map(line=>line==='data'?'':line.slice(5).trimStart()).join('\n');
   if(!data)return;
   if(data==='[DONE]'){doneMarker=true;return;}
   if(doneMarker)throw new Error('AI 在结束标记后仍返回了数据。');
@@ -61,7 +61,7 @@ export async function readChatStream(response:Response,options:ChatStreamOptions
  };
  const consume=()=>{
   let at:number;
-  while((at=pending.indexOf('\\n\\n'))!==-1){
+  while((at=pending.indexOf('\n\n'))!==-1){
    const raw=pending.slice(0,at);pending=pending.slice(at+2);
    frame(raw);
   }
@@ -74,7 +74,7 @@ export async function readChatStream(response:Response,options:ChatStreamOptions
    append(decoder.decode(value,{stream:true}));consume();
   }
   append(decoder.decode());
-  if(crPending){crPending=false;pending+='\\n';}
+  if(crPending){crPending=false;pending+='\n';}
   consume();
   if(pending.trim())frame(pending);
   options.signal?.throwIfAborted();
