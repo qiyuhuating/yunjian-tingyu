@@ -1220,8 +1220,8 @@
   {
     "path": "outputs/mori-phone/lib/agent-orchestrator.ts",
     "description": "有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts",
-    "bytes": 9048,
-    "sha256": "607283ff11e3104b7677deef3136b6420d377e018c0f3ee157c53eff85e129d4"
+    "bytes": 9059,
+    "sha256": "2a1b0db7736042cef30ecb6ff29578d5b567d98219fb7da3e9d5fd3a0930e1e0"
   },
   {
     "path": "outputs/mori-phone/lib/agent-workspace.ts",
