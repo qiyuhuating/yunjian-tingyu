@@ -12,7 +12,7 @@ type Asset={url:string;id:string;mime:string;size:number;name:string};
 export type TurnServices={
  snapshot:()=>PhoneState;
  commit:(change:(state:PhoneState)=>void)=>Promise<void>;
- requestAI:(text:string,characterId:string,thread:string,mode:TurnMode,onDelta?:(value:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void)=>Promise<string>;
+ requestAI:(text:string,characterId:string,thread:string,mode:TurnMode,onDelta?:(value:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void,useDefaultConnection?:boolean,causalUserId?:string)=>Promise<string>;
  upload:(file:File)=>Promise<Asset>;
  deliverMedia:(commands:MediaCommand[],speaker:string,thread:string,signal:AbortSignal)=>Promise<void>;
  signal:AbortSignal;
@@ -35,7 +35,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
  if(user.text!==text)throw new Error('原消息已修改，不能使用旧草稿发送。');
  if(!group&&!initial.characters.some(c=>c.id===thread))throw new Error('聊天角色已不存在，禁止误用其他角色回复。');
  const existing=receiptFor(initial,userId);
- const planned=existing?remainingSpeakers(existing):(group?(request.speakers??groupSpeakers(initial,thread,text)):[thread]);
+ const planned=existing?remainingSpeakers(existing):(group?(request.speakers??groupSpeakers(initial,thread,text,userId)):[thread]);
  if(!planned.length)throw new Error('该回合已经结束，请勿重复调用模型。');
  if(new Set(planned).size!==planned.length||planned.some(id=>!initial.characters.some(c=>c.id===id)||
   (group&&!initial.groups.find(g=>g.id===thread)?.members.includes(id))))
@@ -67,7 +67,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
   const nativeFiles:File[]=[];
-  const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file));
+  const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file),false,userId);
   const parsed=conversationReply(answer,group,index>0||nativeFiles.length>0);
   // Commit all bubbles from one speaker as a unit. A mid-bubble storage
   // failure must not leave half that speaker's response or gain affection twice.
@@ -83,7 +83,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    const complete=markCommitted(state,userId,speaker,requestAttempt);
    for(const bubble of parsed.bubbles){
     (state.threads[thread]??=[]).push({
-     id:uid(),role:'assistant',text:bubble,kind:'text',timestamp:Date.now(),sender:c.name,senderId:speaker,
+     id:uid(),role:'assistant',text:bubble,kind:'text',timestamp:Date.now(),sender:c.name,senderId:speaker,turnId:userId,
      suggestions:!group&&state.roleplay.choices?parsed.suggestions:[],
      read:p.isVisible?.(thread)??false
     });
@@ -117,7 +117,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
       (state.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',
        kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
        timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
-       sender:cName(state,speaker),senderId:speaker,read:p.isVisible?.(thread)??false,
+       sender:cName(state,speaker),senderId:speaker,turnId:userId,read:p.isVisible?.(thread)??false,
        attachmentStatus:'模型原生生成的媒体'});
      });
     }catch(e){await mediaFailure(e);}

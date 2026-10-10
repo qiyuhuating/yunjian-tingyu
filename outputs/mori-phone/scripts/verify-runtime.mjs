@@ -12,7 +12,7 @@ function load(name){
  loaded.set(name,module.exports);return module.exports;
 }
 const {readChatStream}=load('ai-stream'),{assembleChatMessages}=load('ai-messages');
-const {freshState,samplingSchema}=load('phone-model'),{chatInput}=load('provider-adapter');
+const {freshState,samplingSchema}=load('phone-model'),{chatInput,normalizeStream}=load('provider-adapter');
 const encoder=new TextEncoder(),checks=[];
 async function check(name,fn){await fn();checks.push(name);}
 function stream(parts){
@@ -86,6 +86,32 @@ await check('A repeated group question is not skipped when another member spoke 
  const messages=await assembleChatMessages({ownerId:'fixture',state,character:a,thread,text:'再解释一下',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false});
  assert.equal(messages.at(-1).role,'user');
  assert.equal(messages.at(-1).content,'再解释一下');
+});
+await check('OpenAI truncated upstream after finish_reason must never synthesize DONE',async()=>{
+ const raw=stream([piece(delta('partial')),piece({choices:[{delta:{},finish_reason:'stop'}]})]);
+ const normalized=new Response(normalizeStream(raw.body,'openai'));
+ await assert.rejects(readChatStream(normalized,{started:performance.now()}),/中断/);
+});
+await check('Anthropic message_stop is an explicit terminal event',async()=>{
+ const raw=stream(['data: '+JSON.stringify({type:'content_block_delta',delta:{type:'text_delta',text:'ok'}})+'\n\n','data: {"type":"message_stop"}\n\n']);
+ const normalized=new Response(normalizeStream(raw.body,'anthropic'));
+ assert.equal((await readChatStream(normalized,{started:performance.now()})).answer,'ok');
+});
+await check('Causal user anchor blocks future queued messages and preserves peer evidence',async()=>{
+ const state=freshState(),a=state.characters[0],b=state.characters[1],thread='causal-test';
+ state.groups.push({id:thread,name:'测试',members:[a.id,b.id]});
+ state.threads[thread]=[
+  {id:'A',role:'user',kind:'text',timestamp:1,text:'第一条问题'},
+  {id:'B',role:'user',kind:'text',timestamp:2,text:'未来的秘密'},
+  {id:'peer',role:'assistant',kind:'text',timestamp:3,text:'已经核验过',sender:b.name,senderId:b.id,turnId:'A'}];
+ const args={ownerId:'fixture',state,character:a,thread,text:'第一条问题',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false,causalUserId:'A'};
+ const items=await assembleChatMessages(args);
+ const joined=items.map(m=>typeof m.content==='string'?m.content:'').join('\n');
+ assert(!joined.includes('未来的秘密'));
+ assert(joined.includes('已经核验过'));
+ assert.equal(items.filter(m=>m.role==='user'&&m.content==='第一条问题').length,1);
+ assert.equal(items.at(-1).content,'第一条问题');
+ await assert.rejects(assembleChatMessages({...args,text:'修改后的第一条'}),/修改|不存在/);
 });
 await check('No hidden automatic retry remains in the chat turn',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');

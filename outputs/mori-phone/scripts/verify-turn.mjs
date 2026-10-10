@@ -60,6 +60,7 @@ await check('One-to-one turn persists exactly one reply and one affection increm
  assert.deepEqual(result,[h.speaker.id]);assert.equal(h.calls,1);
  assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,1);
  assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].find(m=>m.role==='assistant').turnId,'turn-1');
  assert.equal(h.state.characters[0].affection,Math.min(100,old+1));
 });
 await check('A saved reply may not be charged for again',async()=>{
