@@ -433,5 +433,6 @@
 | [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 9098 |
 | [work/qa/connection-ui.mjs](work/qa/connection-ui.mjs) | 23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs | 22533 |
 | [outputs/mori-phone/lib/ai-stream.ts](outputs/mori-phone/lib/ai-stream.ts) | 统一 SSE 增量解码、CRLF 分帧、完成标志与媒体预算，支持取消及错误安全结算；路径：outputs/mori-phone/lib/ai-stream.ts | 4041 |
-| [outputs/mori-phone/lib/ai-messages.ts](outputs/mori-phone/lib/ai-messages.ts) | 独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts | 3617 |
-| [outputs/mori-phone/scripts/verify-runtime.mjs](outputs/mori-phone/scripts/verify-runtime.mjs) | 核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs | 6403 |
+| [outputs/mori-phone/lib/ai-messages.ts](outputs/mori-phone/lib/ai-messages.ts) | 独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts | 3778 |
+| [outputs/mori-phone/scripts/verify-runtime.mjs](outputs/mori-phone/scripts/verify-runtime.mjs) | 核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs | 7169 |
+| [docs/运行时架构治理-2026-10-10.md](docs/运行时架构治理-2026-10-10.md) | 运行时职责边界、数据和费用不变量、风险及下一阶段验收清单；路径：docs/运行时架构治理-2026-10-10.md | 3982 |
