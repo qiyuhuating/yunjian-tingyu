@@ -1520,8 +1520,8 @@
   {
     "path": "outputs/mori-phone/lib/turn-execution.ts",
     "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
-    "bytes": 9993,
-    "sha256": "41aeddb5abc768c95293ea4dc60424bc87e166acf49bf7522bd7959dfec070fb"
+    "bytes": 9879,
+    "sha256": "f13a7ef3d3e3645d20277b9df0b63519fcdeed566331d6b009a45147b6f8336c"
   },
   {
     "path": "outputs/mori-phone/lib/turn-receipts.ts",
