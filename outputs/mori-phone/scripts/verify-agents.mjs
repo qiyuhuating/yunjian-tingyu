@@ -79,7 +79,7 @@ await check('Changed source cannot be resumed into stale agent review',async()=>
 await check('Missing saved reviewer output blocks restart rather than rebilling it',async()=>{
  const f=fixture();a.planAgentReview(f.state,{jobId:'missing-report',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
  const j=f.state.agentJobs[0];j.completed=[f.speakers[0]];j.status='needs_review';
- assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告不存在/);
+ assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告来源或存储内容不匹配|报告不存在/);
 });
 await check('Read-only workspace tools return a copy rather than mutable storage',()=>{
  const f=fixture(),old=w.readWorkspace(f.state,f.thread,'imports/sample.ts').content;
