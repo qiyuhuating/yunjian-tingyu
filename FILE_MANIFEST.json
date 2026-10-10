@@ -860,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 38528,
-    "sha256": "d98aec82bdf4def6a8fb75e08d8d60a3cbd592dcb7e161567e3aef2ff1f55aee"
+    "bytes": 38609,
+    "sha256": "ace3d25bcaaae6615331e2f62548b800e82de76d900a5e7938774515de0bb190"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1220,8 +1220,8 @@
   {
     "path": "outputs/mori-phone/lib/agent-orchestrator.ts",
     "description": "有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts",
-    "bytes": 8928,
-    "sha256": "fd9bac6b26165a5c7606d7adcae38b23d471af834b8248436c4d9a07cd68465c"
+    "bytes": 9048,
+    "sha256": "607283ff11e3104b7677deef3136b6420d377e018c0f3ee157c53eff85e129d4"
   },
   {
     "path": "outputs/mori-phone/lib/agent-workspace.ts",
