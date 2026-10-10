@@ -2,11 +2,12 @@ import {conversationReply} from './conversation-reply';
 import {groupDelay,waitForReply} from './group-cadence';
 import {groupSpeakers} from './group-chat';
 import {uid,type PhoneState} from './phone-model';
+import {beginTurn,markRequesting,markCommitted,receiptFor,remainingSpeakers} from './turn-receipts';
 import type {MediaCommand} from './media-contract';
 
 export type TurnMode='chat'|'face'|'group'|'live';
 export type TurnPhase='waiting'|'requesting'|'persisting'|'media';
-export type TurnRequest={thread:string;userId:string;text:string;mode:TurnMode;speakers?:string[]};
+export type TurnRequest={thread:string;userId:string;text:string;mode:TurnMode;speakers?:string[];allowManualRetry?:boolean};
 type Asset={url:string;id:string;mime:string;size:number;name:string};
 export type TurnServices={
  snapshot:()=>PhoneState;
@@ -29,15 +30,18 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
  const {thread,userId,text,mode}=request,group=mode==='group',initial=p.snapshot();
  const user=initial.threads[thread]?.find(m=>m.id===userId&&m.role==='user');
  if(!user)throw new Error('发送记录已经不存在，请确认本机数据后重试。');
- if(!user.failed)throw new Error('本条消息已回复，不能再次自动执行。');
+ if(!user.failed&&!receiptFor(initial,userId))throw new Error('本条消息已回复，不能再次自动执行。');
  if(user.text!==text)throw new Error('原消息已修改，不能使用旧草稿发送。');
  if(!group&&!initial.characters.some(c=>c.id===thread))throw new Error('聊天角色已不存在，禁止误用其他角色回复。');
- const speakers=group?(request.speakers??groupSpeakers(initial,thread,text)):[thread];
- if(!speakers.length)throw new Error('这个群暂时没有成员，请先添加一位朋友。');
- // Reject stale or malformed retry plans before any charged request.
- if(new Set(speakers).size!==speakers.length||speakers.some(id=>!initial.characters.some(c=>c.id===id)||
+ const existing=receiptFor(initial,userId);
+ const planned=existing?remainingSpeakers(existing):(group?(request.speakers??groupSpeakers(initial,thread,text)):[thread]);
+ if(!planned.length)throw new Error('这个回合已无待回复角色，禁止重新调用模型。');
+ if(new Set(planned).size!==planned.length||planned.some(id=>!initial.characters.some(c=>c.id===id)||
   (group&&!initial.groups.find(g=>g.id===thread)?.members.includes(id))))
   throw new Error('群成员已变化，请重新选择要回复的角色。');
+ let speakers:string[]=[];
+ // The plan and the user message become durable before the first provider POST.
+ await p.commit(state=>{speakers=beginTurn(state,{userId,thread,mode,speakers:planned},request.allowManualRetry);});
  p.onRemaining?.([...speakers]);
  for(let index=0;index<speakers.length;index++){
   p.signal.throwIfAborted();
@@ -55,6 +59,8 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   if(!source||source.text!==text||!latest.characters.some(c=>c.id===speaker)||
    (group&&!latest.groups.find(g=>g.id===thread)?.members.includes(speaker)))
    throw new Error('等待期间消息或角色已修改，旧请求没有发送。');
+  // Persist uncertainty BEFORE posting. If the app dies here, never auto resend.
+  await p.commit(state=>markRequesting(state,userId,speaker));
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
   const nativeFiles:File[]=[];
@@ -77,7 +83,8 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      read:p.isVisible?.(thread)??false
     });
    }
-   target.failed=false;delete target.failureReason;
+   const complete=markCommitted(state,userId,speaker);
+   target.failed=!complete;if(complete)delete target.failureReason;
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
   });
   p.onRemaining?.(speakers.slice(index+1));
