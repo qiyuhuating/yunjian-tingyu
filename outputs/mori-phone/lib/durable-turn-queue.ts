@@ -39,3 +39,13 @@ export function eligibleQueuedTurn(state:PhoneState,preferredThread?:string):Que
  }
  return null;
 }
+
+
+/** Stop removes only this thread's automatic intents; uncertain receipts remain intact. */
+export function cancelQueuedThread(state:PhoneState,thread:string){
+ const ids=new Set(state.queuedTurns.filter(t=>t.thread===thread).map(t=>t.userId));
+ state.queuedTurns=state.queuedTurns.filter(t=>t.thread!==thread);
+ for(const message of state.threads[thread]||[]){
+  if(ids.has(message.id)&&message.failed)message.failureReason='已停止排队，可手动重试。';
+ }
+}

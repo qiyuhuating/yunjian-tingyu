@@ -7,6 +7,7 @@ import type {MediaCommand} from './media-contract';
 import {queueMedia,beginMediaDelivery,interruptMediaDelivery} from './media-outbox';
 import {enqueueDurableTurn,dequeueDurableTurn} from './durable-turn-queue';
 import type {MediaEffect} from './media-outbox';
+import type {StagedAsset,PreparedLocalUpload} from './local-phone';
 
 export type TurnMode='chat'|'face'|'group'|'live';
 export type TurnPhase='waiting'|'requesting'|'persisting'|'media';
@@ -14,9 +15,9 @@ export type TurnRequest={thread:string;userId:string;text:string;mode:TurnMode;s
 type Asset={url:string;id:string;mime:string;size:number;name:string};
 export type TurnServices={
  snapshot:()=>PhoneState;
- commit:(change:(state:PhoneState)=>void)=>Promise<void>;
+ commit:(change:(state:PhoneState)=>void,stagedAssets?:ReadonlyArray<StagedAsset>)=>Promise<void>;
  requestAI:(text:string,characterId:string,thread:string,mode:TurnMode,onDelta?:(value:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void,useDefaultConnection?:boolean,causalUserId?:string)=>Promise<string>;
- upload:(file:File)=>Promise<Asset>;
+ prepareUpload:(file:File)=>Promise<PreparedLocalUpload>;
  deliverMedia:(commands:MediaCommand[],speaker:string,thread:string,signal:AbortSignal,effectId?:string,attempt?:number)=>Promise<void>;
  signal:AbortSignal;
  onPhase?:(phase:TurnPhase)=>void;
@@ -72,17 +73,17 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   const nativeFiles:File[]=[];
   const answer=await p.requestAI(turnText,speaker,thread,mode,p.onDelta,p.signal,file=>nativeFiles.push(file),false,userId);
   const parsed=conversationReply(answer,group,index>0||nativeFiles.length>0);
-  // Native generated files are materialized before reply completion and their
-  // message rows commit WITH the text and turn receipt. A process death can
-  // no longer leave a 'completed' answer waiting to upload transient File objects.
-  const nativeAssets:Asset[]=[],nativeErrors:string[]=[];
+  // Prepare native blobs without writing them. The blobs, message rows, text
+  // and receipt are persisted in the same storage transaction.
+  const nativeAssets:Asset[]=[],stagedAssets:StagedAsset[]=[],nativeErrors:string[]=[];
   if(nativeFiles.length)p.onPhase?.('media');
   for(const file of nativeFiles){
    try{
     p.signal.throwIfAborted();
-    const asset=await p.upload(file);
+    const prepared=await p.prepareUpload(file),asset=prepared.result;
     if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型媒体格式无法确认。');
     nativeAssets.push(asset);
+    if(prepared.asset&&!stagedAssets.some(a=>a.id===prepared.asset!.id))stagedAssets.push(prepared.asset);
    }catch(e){
     if(p.signal.aborted)throw e;
     nativeErrors.push(e instanceof Error?e.message:'模型原生媒体未保存。');
@@ -124,7 +125,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    else enqueueDurableTurn(state,{userId,thread,text,mode,queuedAt:Date.now()});
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
    mediaJobs=queueMedia(state,{thread,userId,speaker},parsed.commands);
-  });
+  },stagedAssets);
   p.onRemaining?.(speakers.slice(index+1));
   p.onDelta?.('');
   if(current.voiceSettings.autoRead&&parsed.bubbles.length)p.onVoice?.(parsed.bubbles.join('。'));

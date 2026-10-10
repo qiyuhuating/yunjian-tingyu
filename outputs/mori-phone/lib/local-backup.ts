@@ -1,7 +1,7 @@
 import {Zip,ZipPassThrough,ZipDeflate,Unzip,strToU8} from 'fflate';
 import {sha256} from '@noble/hashes/sha2.js';
 import {freshState,stateSchema,type PhoneState} from './phone-model';
-import {assetReferences,getAsset,readLocal,migrateAssets,putAsset,removeAssets,type LocalAsset} from './local-phone';
+import {assetReferences,getAsset,readLocal,migrateAssets,type LocalAsset,type StagedAsset} from './local-phone';
 import {BoundedZipInflate,verifyZipContainer} from './bounded-zip';
 
 type Manifest={format:'cloudlet-device';version:2;exportedAt:string;state:PhoneState;assets:{id:string;name:string;mime:string;size:number;sha256:string}[]};
@@ -50,15 +50,22 @@ export async function readBackup(file:File):Promise<PreparedBackup>{
  for(const ref of assetReferences(state))if(!ids.has(ref.replace(/^local:|^\/api\/assets\//,'')))throw new Error('备份缺少某个附件，尚未替换现有记录。');
  return {state,assets,legacy:false};
 }
-export async function stageBackup(owner:string,prepared:PreparedBackup,current?:PhoneState){
+export type StagedBackup={state:PhoneState;assets:StagedAsset[]};
+/** Prepare identifiers and rewritten references in memory only. The caller must
+ * persist both this state and these blobs in a single IndexedDB transaction. */
+export async function stageBackup(owner:string,prepared:PreparedBackup,current?:PhoneState):Promise<StagedBackup>{
  const local=current??(await readLocal(owner))?.state??freshState();
  // Restoring untrusted records must not retarget locally stored keys or replace core rules.
- // Restored backups are imported data, not an authorization to send an old model request.
  const restored=stateSchema.parse({...prepared.state,queuedTurns:[],provider:local.provider,model:local.model,baseURL:local.baseURL,vision:local.vision,connections:local.connections,voiceSettings:local.voiceSettings,mediaSettings:{...local.mediaSettings,stickers:prepared.state.mediaSettings.stickers},coreSystemPrompt:local.coreSystemPrompt});
- if(prepared.legacy){for(const ref of assetReferences(restored))if(ref.startsWith('local:')&&!await getAsset(owner,ref))throw new Error('旧 JSON 只有附件引用，缺少原文件。请使用原设备的完整 ZIP 备份。');return await migrateAssets(owner,restored);}
+ if(prepared.legacy){for(const ref of assetReferences(restored))if(ref.startsWith('local:')&&!await getAsset(owner,ref))throw new Error('旧 JSON 只有附件引用，缺少原文件。请使用原设备的完整 ZIP 备份。');return {state:await migrateAssets(owner,restored),assets:[]};}
  // New identifiers prevent a failed restore from replacing files belonging to the current snapshot.
- const replacements=new Map<string,string>(),needed=new Set(assetReferences(restored).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')));try{for(const a of prepared.assets){if(!needed.has(a.id))continue;const id=crypto.randomUUID();await putAsset(owner,id,a.blob,a.name,a.mime);replacements.set(a.id,id);}}catch(e){await removeAssets(owner,[...replacements.values()]);throw e;}
+ const needed=new Set(assetReferences(restored).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')));
+ const replacements=new Map<string,string>(),assets:StagedAsset[]=[];
+ for(const a of prepared.assets){
+  if(!needed.has(a.id))continue;
+  const id=crypto.randomUUID();replacements.set(a.id,id);
+  assets.push({id,blob:a.blob,name:a.name,mime:a.mime,size:a.size});
+ }
  const state=structuredClone(restored),rewrite=(ref:string)=>{const id=ref.replace(/^local:|^\/api\/assets\//,'');return replacements.has(id)?'local:'+replacements.get(id):ref;};
- state.wallpaper.asset=rewrite(state.wallpaper.asset);for(const [key,draft] of Object.entries(state.drafts)){if(key.startsWith('editor:characters:')||key.startsWith('editor:cards:'))try{const parsed=JSON.parse(draft),c=key.startsWith('editor:cards:')?parsed?.character:parsed;if(c?.avatar){c.avatar=rewrite(c.avatar);state.drafts[key]=JSON.stringify(parsed);}}catch{}}for(const card of state.characterCards)card.character.avatar=rewrite(card.character.avatar);for(const c of state.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...state.gallery,...state.music])a.url=rewrite(a.url);return state;
+ state.wallpaper.asset=rewrite(state.wallpaper.asset);for(const [key,draft] of Object.entries(state.drafts)){if(key.startsWith('editor:characters:')||key.startsWith('editor:cards:'))try{const parsed=JSON.parse(draft),c=key.startsWith('editor:cards:')?parsed?.character:parsed;if(c?.avatar){c.avatar=rewrite(c.avatar);state.drafts[key]=JSON.stringify(parsed);}}catch{}}for(const card of state.characterCards)card.character.avatar=rewrite(card.character.avatar);for(const c of state.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...state.gallery,...state.music])a.url=rewrite(a.url);return {state,assets};
 }
-

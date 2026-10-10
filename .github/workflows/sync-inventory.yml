@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - refactor/recovery-memory-agent-integrity-20261010
+      - release/agent-core-v003-candidate-20261010
+      - refactor/causal-execution-evidence-20261010
+      - fix/atomic-restore-assets-20261010
+      - feat/custom-native-protocols-20261010
   workflow_dispatch:
 permissions:
   contents: write
@@ -11,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inventory:
-    if: github.ref == 'refs/heads/refactor/recovery-memory-agent-integrity-20261010'
+    if: github.ref == 'refs/heads/refactor/recovery-memory-agent-integrity-20261010' || github.ref == 'refs/heads/release/agent-core-v003-candidate-20261010' || github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010' || github.ref == 'refs/heads/fix/atomic-restore-assets-20261010' || github.ref == 'refs/heads/feat/custom-native-protocols-20261010'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,5 +30,5 @@ jobs:
           git add -- FILES.md FILE_MANIFEST.json
           if ! git diff --cached --quiet; then
             git commit -m "chore(inventory): sync source sizes and SHA256"
-            git push origin HEAD:refactor/recovery-memory-agent-integrity-20261010
+            git push origin HEAD:$GITHUB_REF_NAME
           fi

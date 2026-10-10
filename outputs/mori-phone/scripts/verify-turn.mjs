@@ -32,7 +32,7 @@ function harness({group=false,answer='收到',onRequest=undefined,onUpload=undef
    if(group)return '<cloudlet-messages>["'+answer+'"]</cloudlet-messages>';
    return answer;
   },
-  upload:async f=>onUpload?onUpload(f):({url:'local:00000000-0000-0000-0000-000000000000',id:'x',mime:f.type,size:f.size,name:f.name}),
+  prepareUpload:async f=>({result:onUpload?await onUpload(f):({url:'local:00000000-0000-0000-0000-000000000000',id:'x',mime:f.type,size:f.size,name:f.name})}),
   deliverMedia:async()=>{},
   onRemaining:r=>remaining.push([...r]),
   isVisible:()=>true
@@ -205,4 +205,48 @@ await check('Native upload failed before completion preserves text plus durable 
  assert.equal(h.state.threads[h.thread].filter(m=>m.role==='system'&&m.text.includes('disk full')).length,1);
  assert.equal(h.state.threads[h.thread][0].failed,false);
 });
+
+await check('Stopping persisted intents preserves other threads and uncertain receipts',()=>{
+ const q=load('durable-turn-queue'),j=load('turn-receipts'),s=freshState(),thread=s.primary,other=s.characters[1].id;
+ for(const [id,t] of [['active',thread],['pending',thread],['elsewhere',other]]){
+  (s.threads[t]??=[]).push({id,role:'user',kind:'text',timestamp:1,text:id,failed:true});
+  q.enqueueDurableTurn(s,{userId:id,thread:t,text:id,mode:'chat',queuedAt:1});
+ }
+ j.beginTurn(s,{userId:'active',thread,mode:'chat',speakers:[thread]});j.markRequesting(s,'active',thread);
+ q.cancelQueuedThread(s,thread);
+ const restored=stateSchema.parse(structuredClone(s));
+ assert.equal(q.eligibleQueuedTurn(restored)?.userId,'elsewhere');
+ assert.equal(j.receiptFor(restored,'active').phase,'in_flight');
+ assert(restored.threads[thread].find(m=>m.id==='pending').failureReason.includes('手动'));
+ const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
+ assert(source.includes('await commit(s=>cancelQueuedThread(s,thread))'));assert(source.includes('running.current||stopping'));
+});
+await check('A group stopped between speakers resumes only the remaining persisted speaker',async()=>{
+ const h=harness({group:true}),q=load('durable-turn-queue');
+ h.services.onRemaining=remaining=>{if(remaining.length===1)h.signal.abort();};
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services));
+ const restored=stateSchema.parse(structuredClone(h.state));
+ assert.equal(q.eligibleQueuedTurn(restored)?.userId,'turn-1');assert.equal(h.calls,1);
+ h.services.signal=new AbortController().signal;h.services.onRemaining=()=>{};
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services);
+ assert.equal(h.calls,2);assert.equal(receiptFor(h.state,'turn-1').phase,'completed');
+ assert.equal(h.state.threads[h.thread].filter(m=>m.senderId===h.speaker.id).length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.senderId===h.other.id).length,1);
+});
+await check('Native blobs are staged with reply commit; a failed commit cannot mark completion',async()=>{
+ const h=harness({onRequest:({media})=>{media(new File(['PNG'],'native.png',{type:'image/png'}));return 'native reply';}});
+ const blob=new Blob(['PNG'],{type:'image/png'}),id='11111111-1111-1111-1111-111111111111';
+ h.services.prepareUpload=async()=>({result:{id,url:'local:'+id,mime:'image/png',name:'native.png',size:3},asset:{id,blob,mime:'image/png',name:'native.png',size:3}});
+ const commit=h.services.commit;let staged=0;
+ h.services.commit=async(fn,assets=[])=>{
+  if(assets.length){staged++;assert.equal(assets[0].blob,blob);throw new Error('state storage failed');}
+  return commit(fn);
+ };
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/storage failed/);
+ assert.equal(staged,1);assert.equal(h.calls,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,0);
+ assert.equal(receiptFor(h.state,'turn-1').phase,'in_flight');
+ assert.equal(load('durable-turn-queue').eligibleQueuedTurn(h.state),null);
+});
+
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
