@@ -78,6 +78,14 @@ await check('Group chat preserves other-speaker identity but not fabricated user
  assert(messages.some(m=>m.role==='user'&&typeof m.content==='string'&&m.content.includes('B说的话')));
  assert.equal(messages.at(-1).content,'@'+a.name+' 你好');
 });
+await check('A repeated group question is not skipped when another member spoke last',async()=>{
+ const state=freshState(),a=state.characters[0],b=state.characters[1],thread='group-repeat';
+ state.groups.push({id:thread,name:'测试群',members:[a.id,b.id]});
+ state.threads[thread]=[{id:'user-1',role:'user',kind:'text',timestamp:1,text:'再解释一下'},{id:'assistant-b',role:'assistant',kind:'text',timestamp:2,text:'我刚说过',sender:b.name,senderId:b.id}];
+ const messages=await assembleChatMessages({ownerId:'fixture',state,character:a,thread,text:'再解释一下',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false});
+ assert.equal(messages.at(-1).role,'user');
+ assert.equal(messages.at(-1).content,'再解释一下');
+});
 await check('No hidden automatic retry remains in the chat turn',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
  assert.equal((source.match(/await p\.requestAI\(/g)||[]).length,1);
