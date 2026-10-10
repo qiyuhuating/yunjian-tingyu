@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {readWorkspace,putWorkspace} from './agent-workspace';
-import {uid,type PhoneState} from './phone-model';
+import type {PhoneState} from './phone-model';
 
 const id=z.string().min(1).max(100).refine(v=>!Object.prototype.hasOwnProperty.call(Object.prototype,v));
 export const agentJobSchema=z.object({
@@ -68,7 +68,7 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
     throw new Error('源文件或任务版本已经改变，本次结果未保存。');
    const out='reviews/'+jobId+'/'+speaker+'.md';
    putWorkspace(state,{thread:initial.thread,path:out,content:answer},null);
-   (state.threads[initial.thread]??=[]).push({id:uid(),role:'assistant',kind:'text',text:answer,
+   (state.threads[initial.thread]??=[]).push({id:crypto.randomUUID(),role:'assistant',kind:'text',text:answer,
     timestamp:Date.now(),sender:name,senderId:speaker,read:false});
    job.completed.push(speaker);job.updatedAt=Date.now();
    job.status=job.completed.length===job.speakers.length?'completed':'planned';
