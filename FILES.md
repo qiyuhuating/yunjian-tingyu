@@ -431,7 +431,7 @@
 | [outputs/mori-phone/lib/provider-errors.ts](outputs/mori-phone/lib/provider-errors.ts) | 安全的服务商错误分类，区分鉴权、余额、并发额度和限流；路径：outputs/mori-phone/lib/provider-errors.ts | 2502 |
 | [outputs/mori-phone/lib/provider-transport.ts](outputs/mori-phone/lib/provider-transport.ts) | 网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts | 4862 |
 | [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 9098 |
-| [work/qa/connection-ui.mjs](work/qa/connection-ui.mjs) | 23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs | 22570 |
+| [work/qa/connection-ui.mjs](work/qa/connection-ui.mjs) | 23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs | 22776 |
 | [outputs/mori-phone/lib/ai-stream.ts](outputs/mori-phone/lib/ai-stream.ts) | 统一 SSE 增量解码、CRLF 分帧、完成标志与媒体预算，支持取消及错误安全结算；路径：outputs/mori-phone/lib/ai-stream.ts | 4041 |
 | [outputs/mori-phone/lib/ai-messages.ts](outputs/mori-phone/lib/ai-messages.ts) | 独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts | 3820 |
 | [outputs/mori-phone/scripts/verify-runtime.mjs](outputs/mori-phone/scripts/verify-runtime.mjs) | 核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs | 7471 |
