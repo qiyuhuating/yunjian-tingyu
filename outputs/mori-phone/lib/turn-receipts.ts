@@ -55,11 +55,14 @@ export function markRequesting(state:JournalState,userId:string,speaker:string){
   throw new Error('执行顺序已经改变，请停止调用模型。');
  receipt.phase='in_flight';receipt.currentSpeaker=speaker;
  receipt.attempts++;receipt.updatedAt=Date.now();
+ return receipt.attempts;
 }
-export function markCommitted(state:JournalState,userId:string,speaker:string){
+/** Reject completions from a previous user-authorized retry. */
+export function markCommitted(state:JournalState,userId:string,speaker:string,expectedAttempt:number){
  const receipt=receiptFor(state,userId);
- if(!receipt||receipt.phase!=='in_flight'||receipt.currentSpeaker!==speaker)
-  throw new Error('执行回执状态错误，拒绝提交重复回复。');
+ if(!receipt||receipt.phase!=='in_flight'||receipt.currentSpeaker!==speaker||
+  !Number.isSafeInteger(expectedAttempt)||receipt.attempts!==expectedAttempt)
+  throw new Error('回执代次已经改变，拒绝提交过期或重复回复。');
  receipt.completed.push(speaker);
  receipt.currentSpeaker=undefined;
  receipt.phase=remainingSpeakers(receipt).length?'queued':'completed';

@@ -27,16 +27,24 @@ export function putWorkspace(state:WorkspaceState,detail:{thread:string;path:str
  const existing=readWorkspace(state,detail.thread,path);
  if((existing?.revision??null)!==expectedRevision)throw new Error('工作区文件已更新，需要重新阅读后再提交。');
  if(!existing&&state.workspaceFiles.length>=150)throw new Error('工作区文件已达数量上限。');
- if(existing){existing.content=detail.content;existing.revision++;existing.updatedAt=Date.now();}
- else state.workspaceFiles.push({id:crypto.randomUUID(),thread:detail.thread,path,content:detail.content,revision:1,sourceId:detail.sourceId,updatedAt:Date.now()});
- if(JSON.stringify(state.workspaceFiles).length>1024*1024)throw new Error('工作区总量上限为 1MB，请先整理旧文件。');
- return readWorkspace(state,detail.thread,path)!;
+ if(existing&&existing.revision>=1000000)throw new Error('文件版本号已达到上限。');
+ const next:WorkspaceEntry=existing?
+  {...existing,content:detail.content,revision:existing.revision+1,updatedAt:Date.now()}:
+  {id:crypto.randomUUID(),thread:detail.thread,path,content:detail.content,revision:1,sourceId:detail.sourceId,updatedAt:Date.now()};
+ const candidate=existing?state.workspaceFiles.map(v=>v===existing?next:v):[...state.workspaceFiles,next];
+ // Reject before mutation, including on a non-Immer caller.
+ if(JSON.stringify(candidate).length>1024*1024)throw new Error('工作区总量上限为 1MB，请先整理旧文件。');
+ state.workspaceFiles=candidate;
+ return {...next};
 }
 export type WorkspaceOperation={tool:'workspace.list'|'workspace.read'|'workspace.write';thread:string;path?:string;content?:string;expectedRevision?:number|null};
 export function executeWorkspaceTool(state:WorkspaceState,operation:WorkspaceOperation,approval:{thread:string;write:boolean}){
  if(operation.thread!==approval.thread)throw new Error('禁止跨会话访问工作区。');
  if(operation.tool==='workspace.list')return listWorkspace(state,operation.thread);
- if(operation.tool==='workspace.read')return readWorkspace(state,operation.thread,operation.path||'');
+ if(operation.tool==='workspace.read'){
+  const entry=readWorkspace(state,operation.thread,operation.path||'');
+  return entry?{...entry}:null;
+ }
  if(operation.tool==='workspace.write'){
   if(!approval.write)throw new Error('工具没有写入授权，必须经用户批准。');
   if(operation.expectedRevision===undefined)throw new Error('写文件必须提供乐观锁版本。');

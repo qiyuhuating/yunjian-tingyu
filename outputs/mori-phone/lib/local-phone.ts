@@ -1,6 +1,7 @@
 import {sha256} from '@noble/hashes/sha2.js';
 import {freshState,stateSchema,type PhoneState} from './phone-model';
 import {assetReferences} from './asset-references';
+import {readStoredThreads,syncStoredThreads} from './local-thread-store';
 export {assetReferences} from './asset-references';
 
 const DB_NAME='cloudlet-device',DB_VERSION=3;
@@ -22,7 +23,7 @@ function complete(tx:IDBTransaction){return new Promise<void>((resolve,reject)=>
 export class LocalConflict extends Error{constructor(){super('另一个窗口已更新本机记录。请先导出本页备份，再读取设备记录。');}}
 export async function readLocal(owner:string){
  const d=await db(),tx=d.transaction(['states','threads'],'readonly'),done=complete(tx);
- const [row,threads]=await Promise.all([result(tx.objectStore('states').get(owner)) as Promise<Snapshot|undefined>,result(tx.objectStore('threads').index('owner').getAll(owner))]);await done;if(!row)return null;
+ const [row,threads]=await Promise.all([result(tx.objectStore('states').get(owner)) as Promise<Snapshot|undefined>,result(readStoredThreads(tx,owner))]);await done;if(!row)return null;
  const state=stateSchema.parse({...row.state,threads:row.threadStorage?Object.fromEntries(threads.map(t=>[t.id,t.messages])):row.state.threads,groups:row.state.groups.filter(g=>g.members.length>0)});persisted.set(owner,{version:row.version,state});return {...row,state};
 }
 export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false){
@@ -30,11 +31,8 @@ export async function writeLocal(owner:string,state:PhoneState,version:number,le
  const d=await db(),tx=d.transaction(['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
  const request=store.get(owner);request.onsuccess=()=>{
   const old=request.result as Snapshot|undefined;if((old?.version??0)!==version){conflict=true;tx.abort();return;}
-  const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null,threads=tx.objectStore('threads');
-  const ids=new Set([...Object.keys(previous?.threads||old?.state.threads||{}),...Object.keys(parsed.threads)]);
-  // The index also removes deleted threads after a restore or a cross-window reload.
-  const cursor=threads.index('owner').openCursor(IDBKeyRange.only(owner));cursor.onsuccess=()=>{const entry=cursor.result;if(!entry)return;if(!Object.hasOwn(parsed.threads,entry.value.id))entry.delete();entry.continue();};
-  for(const id of ids)if(parsed.threads[id]&&(!previous||previous.threads[id]!==parsed.threads[id]))threads.put({owner,id,messages:parsed.threads[id]});
+  const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null;
+  syncStoredThreads(tx,owner,parsed.threads,previous?.threads||old?.state.threads||{},!!previous);
   store.put({owner,state:{...parsed,threads:{}},version:version+1,updatedAt:Date.now(),legacyArchive:legacyArchive??old?.legacyArchive??false,threadStorage:1,assetIds:refs});
  };
  try{await done;}catch(e){if(conflict)throw new LocalConflict();throw e;}persisted.set(owner,{version:version+1,state:parsed});return version+1;
