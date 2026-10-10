@@ -69,6 +69,16 @@ await check('A saved reply may not be charged for again',async()=>{
 await check('Missing user record never generates orphaned assistant messages',async()=>{
  const h=harness();await assert.rejects(executeTurn({thread:h.thread,userId:'wrong',text:'你好',mode:'chat'},h.services),/不存在/);assert.equal(h.calls,0);
 });
+await check('Edited user message must not invoke a stale paid request',async()=>{
+ const h=harness();h.state.threads[h.thread][0].text='被编辑的内容';
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/已修改/);
+ assert.equal(h.calls,0);
+});
+await check('Deleted single-chat character must not silently fall back to another actor',async()=>{
+ const h=harness();h.state.characters.splice(0,1);
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/角色已不存在/);
+ assert.equal(h.calls,0);
+});
 await check('Speaker bubbles commit atomically rather than one write per bubble',async()=>{
  const h=harness({group:true,answer:'一条'});const result=await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services);
  assert.equal(h.calls,2);assert.equal(result.length,2);assert.equal(h.commits,2);
