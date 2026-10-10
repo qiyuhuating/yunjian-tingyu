@@ -20,6 +20,8 @@ await check('Real collaboration reads actual file and hands prior review to a se
  assert(calls[0].prompt.includes('export const sum'));
  assert(calls[1].prompt.includes('建议验证类型'));
  assert.equal(state.agentJobs[0].status,'completed');
+ assert(a.reportEvidence(state,'job-1',f.speakers[0]).valid);
+ assert(a.reportEvidence(state,'job-1',f.speakers[1]).valid);
  assert.equal(state.threads[f.thread].filter(x=>x.role==='assistant').length,2);
  assert.equal(w.listWorkspace(state,f.thread).filter(x=>x.path.startsWith('reviews/')).length,2);
  await assert.rejects(a.executeAgentReview('job-1',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=>''}),/不能自动重复/);
@@ -115,5 +117,27 @@ await check('Stale Agent failure cannot poison a newer request',()=>{
  assert.equal(job.status,'requesting');
  a.flagUncertainAgentJob(f.state,'late-error','current failure',2);
  assert.equal(job.status,'needs_review');
+});
+await check('Agent report provenance rejects modified source, rewritten artifact and chat spoof',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'evidence-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('evidence-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '可复核的分析结果'});
+ const checkReport=()=>a.reportEvidence(state,'evidence-audit',f.speakers[0]);
+ assert(checkReport().valid);assert(checkReport().reason.includes('并不代表代码已执行'));
+ const report=state.agentJobs[0].reports[0];
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='伪造测试通过';
+ assert(!checkReport().valid);
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='可复核的分析结果';
+ assert(checkReport().valid);
+ w.putWorkspace(state,{thread:f.thread,path:report.path,content:'修改后的报告'},1);
+ assert(!checkReport().valid);
+});
+await check('Changed source revision invalidates previously linked Agent results',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'source-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('source-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '这只是审阅建议'});
+ assert(a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
+ w.putWorkspace(state,{thread:f.thread,path:'imports/sample.ts',content:'export const sum=()=>0;'},1);
+ assert(!a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
