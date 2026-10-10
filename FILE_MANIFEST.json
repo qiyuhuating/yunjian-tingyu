@@ -6,6 +6,12 @@
     "sha256": "a04c1ecee5f831666e805f64d7ab9b1f22cbb8550d7ca83bdad379e5f9a7439c"
   },
   {
+    "path": ".github/workflows/android-upgrade-acceptance.yml",
+    "description": "原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收；路径：.github/workflows/android-upgrade-acceptance.yml",
+    "bytes": 3499,
+    "sha256": "c787f055aae99cf34892f762cb05af7e192f967f4830485452061171d434daaa"
+  },
+  {
     "path": ".github/workflows/build-agent-v003-candidate.yml",
     "description": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml",
     "bytes": 9409,
@@ -64,6 +70,12 @@
     "description": "聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md",
     "bytes": 1962,
     "sha256": "1dfa0d86e7fe938c633d648967af83f2654c024669d5ff5e5fc15d53fef684fb"
+  },
+  {
+    "path": "docs/0.0.3-rc2-android-emulator-acceptance.md",
+    "description": "固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界；路径：docs/0.0.3-rc2-android-emulator-acceptance.md",
+    "bytes": 1462,
+    "sha256": "444b7240003fd5d5c5281de04849c564b3e6726d0d0b894b956ba6ca8bdf8690"
   },
   {
     "path": "docs/2026-10-10-draft-integration-review.md",
@@ -2270,8 +2282,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 4160,
-    "sha256": "5431f8779e70569629e236cbb7388c00727e76c98ce00e1ed3fc66f060ed8362"
+    "bytes": 4571,
+    "sha256": "fa69287bbe5b57d40130bd041f4e0f66f97f77fda7bc35ac2faeba8490104a09"
   },
   {
     "path": "scripts/verify-delivery.py",
@@ -2320,6 +2332,12 @@
     "description": "历史专项浏览器检查或开发工具：android-diagnose；使用时核对对应版本、路径和端口；路径：work/qa/android-diagnose.mjs",
     "bytes": 467,
     "sha256": "46eda04b3d69a6108af0cc3f3d29fff6fe069fb20ca65b15eb2db4d042f48f47"
+  },
+  {
+    "path": "work/qa/android-upgrade-smoke.py",
+    "description": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py",
+    "bytes": 7962,
+    "sha256": "2ec2cd76f528b3a55338ddc29c3693c2b759664770b5133630d5d6ee9cf9783c"
   },
   {
     "path": "work/qa/android.mjs",

@@ -447,7 +447,7 @@
 | [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4666 |
 | [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 21030 |
 | [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 6631 |
-| [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 4160 |
+| [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 4571 |
 | [outputs/mori-phone/lib/asset-references.ts](outputs/mori-phone/lib/asset-references.ts) | 资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts | 1359 |
 | [outputs/mori-phone/lib/local-thread-store.ts](outputs/mori-phone/lib/local-thread-store.ts) | 线程独立持久化模块、增量写入、删除与事务隔离；路径：outputs/mori-phone/lib/local-thread-store.ts | 996 |
 | [outputs/mori-phone/lib/media-outbox.ts](outputs/mori-phone/lib/media-outbox.ts) | 持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts | 3009 |
@@ -457,3 +457,6 @@
 | [.github/workflows/build-agent-v003-candidate.yml](.github/workflows/build-agent-v003-candidate.yml) | 0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml | 9409 |
 | [docs/0.0.3-agent-candidate-acceptance.md](docs/0.0.3-agent-candidate-acceptance.md) | 聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md | 1962 |
 | [docs/2026-10-10-draft-integration-review.md](docs/2026-10-10-draft-integration-review.md) | 今日草稿质量审查、修复归属、回归证据与真机待验收范围；路径：docs/2026-10-10-draft-integration-review.md | 3912 |
+| [.github/workflows/android-upgrade-acceptance.yml](.github/workflows/android-upgrade-acceptance.yml) | 原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收；路径：.github/workflows/android-upgrade-acceptance.yml | 3499 |
+| [work/qa/android-upgrade-smoke.py](work/qa/android-upgrade-smoke.py) | 仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py | 7962 |
+| [docs/0.0.3-rc2-android-emulator-acceptance.md](docs/0.0.3-rc2-android-emulator-acceptance.md) | 固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界；路径：docs/0.0.3-rc2-android-emulator-acceptance.md | 1462 |

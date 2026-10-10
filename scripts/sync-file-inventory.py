@@ -10,6 +10,9 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    ".github/workflows/android-upgrade-acceptance.yml": "原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收",
+    "work/qa/android-upgrade-smoke.py": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归",
+    "docs/0.0.3-rc2-android-emulator-acceptance.md": "固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界",
     ".github/workflows/build-agent-v003-candidate.yml": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布",
     "docs/0.0.3-agent-candidate-acceptance.md": "聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界",
     "docs/2026-10-10-draft-integration-review.md": "今日草稿质量审查、修复归属、回归证据与真机待验收范围",
