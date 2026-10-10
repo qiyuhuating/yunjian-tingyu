@@ -45,4 +45,38 @@ await check('Deleted and edited automatic memory evidence is excluded, manual no
  assert(!continuity.recallMemories(f.state,f.speakers[0],'测试').includes('用户明确说过'));
  assert(continuity.recallMemories(f.state,f.speakers[0],'测试').includes('手动保留'));
 });
+await check('Resumed collaboration skips completed reviewers and includes saved evidence',async()=>{
+ const f=fixture();let state=f.state;const calls=[];
+ const commit=async fn=>{const copy=structuredClone(state);fn(copy);state=copy;};
+ a.planAgentReview(state,{jobId:'resume-demo',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ const requestAI=async(prompt,id)=>{
+  calls.push({prompt,id});
+  if(calls.length===2)throw new Error('stream disconnected');
+  return id===f.speakers[0]?'先审查函数输入':'建议加入断言';
+ };
+ await assert.rejects(a.executeAgentReview('resume-demo',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI}),/stream disconnected/);
+ assert.equal(state.agentJobs[0].completed.length,1);
+ assert.equal(state.agentJobs[0].status,'requesting');
+ assert.equal(state.agentJobs[0].attempts,2);
+ await commit(s=>a.flagUncertainAgentJob(s,'resume-demo','network disconnected'));
+ await assert.rejects(a.executeAgentReview('resume-demo',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI}),/不能自动重复/);
+ await commit(s=>a.authorizeAgentResume(s,'resume-demo'));
+ await a.executeAgentReview('resume-demo',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI});
+ assert.equal(calls.length,3);
+ assert.deepEqual(calls.map(c=>c.id),[f.speakers[0],f.speakers[1],f.speakers[1]]);
+ assert(calls[2].prompt.includes('先审查函数输入'));
+ assert.equal(state.agentJobs[0].status,'completed');
+ assert.equal(state.agentJobs[0].attempts,3);
+});
+await check('Changed source cannot be resumed into stale agent review',async()=>{
+ const f=fixture();a.planAgentReview(f.state,{jobId:'source-changed',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ a.flagUncertainAgentJob(f.state,'source-changed','unknown');
+ w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'edited'},1);
+ assert.throws(()=>a.authorizeAgentResume(f.state,'source-changed'),/源文件已改变/);
+});
+await check('Missing saved reviewer output blocks restart rather than rebilling it',async()=>{
+ const f=fixture();a.planAgentReview(f.state,{jobId:'missing-report',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ const j=f.state.agentJobs[0];j.completed=[f.speakers[0]];j.status='needs_review';
+ assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告不存在/);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
