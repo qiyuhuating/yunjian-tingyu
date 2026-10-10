@@ -1242,6 +1242,12 @@
     "sha256": "179d16ca0d6881ae16eb09a6c59913dd01548432a93ef5c59318f243a16304c4"
   },
   {
+    "path": "outputs/mori-phone/lib/asset-references.ts",
+    "description": "资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts",
+    "bytes": 860,
+    "sha256": "0361156beef22744e6b257957d5b1e7c57874aed193b47791bcc9a8ae4cd352d"
+  },
+  {
     "path": "outputs/mori-phone/lib/asset-transport.ts",
     "description": "TypeScript 业务或构建模块：asset-transport；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/asset-transport.ts",
     "bytes": 1081,
@@ -1388,8 +1394,8 @@
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
     "description": "本机状态与会话事务、附件去重清理、库卡及草稿头像引用、旧资源迁移和加密密钥；路径：outputs/mori-phone/lib/local-phone.ts",
-    "bytes": 15312,
-    "sha256": "e3e65b57d2cb4113014591a9e3a8152cd85e24b8354cc5ba3f43de5e4c0c1e2a"
+    "bytes": 14603,
+    "sha256": "3610d03c7cc1e7c7469112ab2876ceeb68290c641315a66c43f8336ad481f728"
   },
   {
     "path": "outputs/mori-phone/lib/lyrics.ts",
@@ -2222,8 +2228,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 2960,
-    "sha256": "f55e91a043a67db3bfd9afc3f6e66fbd7020b916ff80e960306de5604e5ef4a5"
+    "bytes": 3062,
+    "sha256": "e66b43292d39cc726b2c9c13d319320743b1a40dbde8acd9e638e3797283a243"
   },
   {
     "path": "scripts/verify-delivery.py",
