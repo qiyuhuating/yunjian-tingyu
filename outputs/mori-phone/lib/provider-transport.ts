@@ -18,7 +18,7 @@ async function upstream(url:string,init:RequestInit,network:typeof fetch,signal:
   }
   if(response.headers.get('content-type')?.includes('text/html')){await response.body?.cancel();throw new ProviderError(502,'API 返回了 HTML 网页。请填写接口地址，而不是控制台或登录页面地址。');}
   return response;
- }catch(error){if(signal?.aborted)throw signal.reason;if(error instanceof ProviderError)throw error;if(timed.aborted||error instanceof Error&&error.name==='TimeoutError')throw new ProviderError(504,'连接超时。请检查网络、服务商状态，或稍后重试。');throw new ProviderError(502,'网络连接失败。请检查网络、HTTPS API 地址和服务商可用性。');}
+ }catch(error){if(signal?.aborted)throw signal.reason;if(error instanceof ProviderError)throw error;if(timed.aborted||error instanceof Error&&error.name==='TimeoutError')throw new ProviderError(504,'连接超时。请检查网络、服务商状态，或稍后重试。');const safe=error instanceof Error?error.message:'';if(/^(?:模型列表读取超过|等待 AI 首次响应超时|AI 回复长时间没有新数据|无法解析服务商地址|服务商的安全连接校验失败|无法连接服务商|服务商响应超时|接口返回了重定向)/.test(safe))throw new ProviderError(/超时|超过|长时间没有/.test(safe)?504:502,safe);throw new ProviderError(502,'网络连接失败。请检查网络、HTTPS API 地址和服务商可用性。');}
 }
 export async function fetchModels(input:z.infer<typeof connectionInput>,network:typeof fetch=fetch,signal?:AbortSignal){
  const parsed=connectionInput.parse(input);let wire;try{wire=modelsRequest(parsed.provider,parsed.apiKey,parsed.baseURL);}catch(error){throw new ProviderError(422,error instanceof Error?error.message:'请检查 HTTPS API 地址。');}const response=await upstream(wire.url,{headers:wire.headers},network,signal,20000);
