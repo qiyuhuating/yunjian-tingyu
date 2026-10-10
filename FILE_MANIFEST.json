@@ -1736,8 +1736,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-agents.mjs",
     "description": "文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs",
-    "bytes": 13228,
-    "sha256": "6461e9bcf4b18ff5702b60b8a95dce0c14424f23631d1ea5113f209c5177f66c"
+    "bytes": 14958,
+    "sha256": "8492129d572df4003f03f8e72f421f79bacf5aeddc2e2f66439484e13edaa1ef"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-card-library.mjs",
