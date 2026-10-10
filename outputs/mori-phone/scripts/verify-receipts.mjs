@@ -23,4 +23,15 @@ test('Old completion is fenced after explicitly permitted retry',()=>{
  journal.markCommitted(state,userId,speaker,currentAttempt);
  assert.equal(journal.receiptFor(state,userId).phase,'completed');
 });
+test('Late error cannot downgrade a newer attempt',()=>{
+ const {state,userId,thread,speakers}=setup(),speaker=speakers[0];
+ journal.beginTurn(state,{userId,thread,mode:'chat',speakers:[speaker]});
+ const old=journal.markRequesting(state,userId,speaker);
+ journal.markInterrupted(state,userId,'timeout',old);
+ journal.beginTurn(state,{userId,thread,mode:'chat',speakers:[speaker]},true);
+ const fresh=journal.markRequesting(state,userId,speaker);
+ journal.markInterrupted(state,userId,'stale failure',old);
+ assert.equal(journal.receiptFor(state,userId).phase,'in_flight');
+ assert.equal(journal.receiptFor(state,userId).attempts,fresh);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

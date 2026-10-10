@@ -108,4 +108,12 @@ await check('Late agent completion is fenced after a manually retried request',a
  assert.equal(state.threads[f.thread].filter(m=>m.role==='assistant'&&m.senderId===f.speakers[0]).length,1);
  assert.equal(w.readWorkspace(state,f.thread,'reviews/fenced-review/'+f.speakers[0]+'.md').content,'fresh result');
 });
+await check('Stale Agent failure cannot poison a newer request',()=>{
+ const f=fixture();a.planAgentReview(f.state,{jobId:'late-error',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ const job=f.state.agentJobs[0];job.status='requesting';job.attempts=2;
+ a.flagUncertainAgentJob(f.state,'late-error','stale failure',1);
+ assert.equal(job.status,'requesting');
+ a.flagUncertainAgentJob(f.state,'late-error','current failure',2);
+ assert.equal(job.status,'needs_review');
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
