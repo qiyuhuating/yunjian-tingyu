@@ -35,4 +35,14 @@ await check('An uncertain model call is recorded rather than silently retried',a
  assert.equal(state.agentJobs[0].status,'needs_review');
  await assert.rejects(a.executeAgentReview('job-error',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=>''}),/不能自动重复/);
 });
+await check('Deleted and edited automatic memory evidence is excluded, manual notes survive',()=>{
+ const continuity=load('continuity'),f=fixture(),sourceId='evidence-1';
+ f.state.threads[f.thread]=[{id:sourceId,role:'user',kind:'text',timestamp:500,text:'我确实喜欢测试'}];
+ f.state.memories.push({id:'auto-evidence',text:'用户明确说过：我确实喜欢测试',scope:f.speakers[0],date:'2026-10-10',origin:'auto',locked:false,revisions:[],sourceThread:f.thread,sourceIds:[sourceId],sourceAt:500,evidence:'我确实喜欢测试'});
+ f.state.memories.push({id:'manual-note',text:'手动保留的待确认资料',scope:f.speakers[0],date:'2026-10-10',origin:'manual',locked:true,revisions:[]});
+ assert(continuity.recallMemories(f.state,f.speakers[0],'测试').includes('我确实喜欢测试'));
+ f.state.threads[f.thread][0].text='原文已经编辑';
+ assert(!continuity.recallMemories(f.state,f.speakers[0],'测试').includes('用户明确说过'));
+ assert(continuity.recallMemories(f.state,f.speakers[0],'测试').includes('手动保留'));
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
