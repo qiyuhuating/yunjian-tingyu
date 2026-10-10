@@ -860,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 34057,
-    "sha256": "5cb0d260f27119c4c74c08eeb582dbfb5aa85aceae1397d81a7a418e581729e8"
+    "bytes": 35635,
+    "sha256": "92ce4e035ee067f3eab165448a1895a997f6c05c45fc31b6a3827843c668ab14"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
