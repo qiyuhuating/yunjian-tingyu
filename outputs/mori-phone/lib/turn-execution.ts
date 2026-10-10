@@ -35,7 +35,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
  if(!group&&!initial.characters.some(c=>c.id===thread))throw new Error('聊天角色已不存在，禁止误用其他角色回复。');
  const existing=receiptFor(initial,userId);
  const planned=existing?remainingSpeakers(existing):(group?(request.speakers??groupSpeakers(initial,thread,text)):[thread]);
- if(!planned.length)throw new Error('这个回合已无待回复角色，禁止重新调用模型。');
+ if(!planned.length)throw new Error('该回合已经结束，请勿重复调用模型。');
  if(new Set(planned).size!==planned.length||planned.some(id=>!initial.characters.some(c=>c.id===id)||
   (group&&!initial.groups.find(g=>g.id===thread)?.members.includes(id))))
   throw new Error('群成员已变化，请重新选择要回复的角色。');
