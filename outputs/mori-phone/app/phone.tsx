@@ -14,7 +14,7 @@ import Pet3D from './pet-3d';
 import {assembleChatMessages} from '../lib/ai-messages';
 import {readChatStream} from '../lib/ai-stream';
 import {splitRoleplayReply} from '../lib/roleplay';
-import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,LocalConflict,clearLegacyArchive,collectOrphanAssets} from '../lib/local-phone';
+import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,prepareLocalUpload,LocalConflict,clearLegacyArchive,collectOrphanAssets} from '../lib/local-phone';
 import {backupChunks,stageBackup,type PreparedBackup} from '../lib/local-backup';
 import {getProvider,connectionKeySlot,type ProviderId} from '../lib/providers';
 import {characterConnection} from '../lib/character-ai';
@@ -34,13 +34,13 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const reload=useCallback(async()=>{try{if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;setSync('loading');const row=await initializeLocal(ownerId,setOpening);data.current=row.state;version.current=row.version;setLegacyArchive(!!row.legacyArchive);blocked.current=false;setState(row.state);setSync('saved');void collectOrphanAssets(ownerId).catch(()=>{});}catch(e){setSync('error');const message=e instanceof Error?e.message:'无法读取本机数据。';setOpening(message);toast(message);}},[ownerId,toast]);
  useEffect(()=>{void reload();setNow(new Date());const ticker=setInterval(()=>setNow(new Date()),30000);return()=>clearInterval(ticker);},[reload]);
  useEffect(()=>{if(!state)return;let active=true;const revision=keyRevision.current;void (async()=>{let value=await readDeviceKey(ownerId,activeKeySlot);if(!value&&state.provider==='compatible'){const legacy=await readDeviceKey(ownerId,'compatible');if(legacy){await saveDeviceKey(ownerId,activeKeySlot,legacy);await saveDeviceKey(ownerId,'compatible','');value=legacy;}}return value;})().then(value=>{if(active&&revision===keyRevision.current)setKeyEntry({provider:activeKeySlot,value,saved:!!value});}).catch(()=>toast('本机密钥未能读取，请在设置里重新填写。'));return()=>{active=false;};},[ownerId,activeKeySlot,toast]);
- const commit:Commit=useCallback((change)=>{
+ const commit:Commit=useCallback((change,stagedAssets=[])=>{
   if(!data.current)return Promise.reject(new Error('请等待数据加载。'));
   if(restoring.current)return Promise.reject(new Error('备份恢复进行中，暂不能修改记录。'));
   if(blocked.current){toast('保存尚未成功。请先重试保存或导出备份。');return Promise.reject(new Error('保存尚未成功。'));}
   let draft:PhoneState;try{draft=produce(data.current,draft=>{change(draft);});}catch(e){toast(e instanceof Error?e.message:'无法保存');return Promise.reject(e);}const validated=stateSchema.safeParse(draft);if(!validated.success){toast('这条内容超出了允许的长度或数量，请缩短后重试。');return Promise.reject(new Error('数据校验失败。'));}
   const next=draft;pendingWrites.current++;data.current=next;setState(next);setSync('saving');
-  const operation=queue.current.then(async()=>{if(blocked.current)throw new Error('保存队列已暂停。');version.current=await writeLocal(ownerId,next,version.current,undefined,true);}).catch(e=>{if(!blocked.current){blocked.current=true;setSync(e instanceof LocalConflict?'conflict':'error');toast(e instanceof Error?e.message:'本机记录暂未保存。');}throw e;}).finally(()=>{pendingWrites.current--;if(!blocked.current)setSync(pendingWrites.current||draftTimer.current?'saving':'saved');});queue.current=operation.catch(()=>{});return operation;
+  const operation=queue.current.then(async()=>{if(blocked.current)throw new Error('保存队列已暂停。');version.current=await writeLocal(ownerId,next,version.current,undefined,true,stagedAssets);}).catch(e=>{if(!blocked.current){blocked.current=true;setSync(e instanceof LocalConflict?'conflict':'error');toast(e instanceof Error?e.message:'本机记录暂未保存。');}throw e;}).finally(()=>{pendingWrites.current--;if(!blocked.current)setSync(pendingWrites.current||draftTimer.current?'saving':'saved');});queue.current=operation.catch(()=>{});return operation;
  },[ownerId,toast]);
  const setVision=(value:boolean)=>{void commit(s=>{s.vision=value;}).catch(()=>{});};
  const setDraft=useCallback((thread:string,text:string)=>{
@@ -78,6 +78,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const retrySave=async()=>{if(sync==='conflict'){toast('请先导出本页备份，再点击“读取设备记录”。');return;}blocked.current=false;try{await commit(()=>{});}catch{}};
  const clearLegacy=async()=>{await queue.current;if(blocked.current)throw new Error('请先解决本机保存问题。');await clearLegacyArchive(ownerId);setLegacyArchive(false);};
  const upload=(file:File)=>uploadLocal(ownerId,file);
+ const prepareUpload=(file:File)=>prepareLocalUpload(ownerId,file);
  const selectProvider=async(provider:ProviderId)=>{if(busy)throw new Error('请等待当前回复结束。');const p=getProvider(provider);await commit(s=>{s.connections[s.provider]={model:s.model,baseURL:s.baseURL,vision:s.vision};const remembered=s.connections[provider];s.provider=provider;s.model=remembered?.model??p.model;s.baseURL=remembered?.baseURL??p.baseURL;s.vision=remembered?.vision??p.vision;});};
  const saveKey=async(remove=false,connection?:SavedConnection)=>{const current=data.current!,provider=connection?.provider??current.provider,baseURL=connection?.baseURL??current.baseURL,slot=connectionKeySlot(provider,baseURL),value=remove?'':(connection?.apiKey??apiKey).trim();if(!remove&&value.length<8)throw new Error('请填写完整 API Key。');await saveDeviceKey(ownerId,slot,value);if(await readDeviceKey(ownerId,slot)!==value)throw new Error('密钥落盘校验失败。');keyRevision.current++;if(slot===connectionKeySlot(data.current!.provider,data.current!.baseURL))setKeyEntry({provider:slot,value,saved:!!value});};
  const requestAI=async(text:string,characterId:string,thread:string,mode:'chat'|'face'|'group'|'live'|'summary'|'analysis'|'compose'='chat',onDelta?:(s:string)=>void,signal?:AbortSignal,onMedia?:(file:File)=>void,useDefaultConnection=false,causalUserId?:string)=>{
@@ -101,7 +102,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const companion=state.characters.find(c=>c.id===state.primary)!;const unread=counts.unread;
  const clock=now?.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})||'--:--',month=now?now.getMonth()+1:10,day=now?now.getDate():6;
  const appButton=(key:string,dock=false)=>{return <button key={key} aria-label={APP_NAMES[key]} className={`app-button ${dock?'dock-app':''}`} onClick={()=>open(key)}><span className={`app-icon icon-${key}`}>{dock?<DockArt name={key}/>:<ButtonArt name={key}/>} {key==='chat'&&unread>0&&<i className="badge">{unread>99?'99+':unread}</i>}</span><span>{APP_NAMES[key]}</span></button>;};
- return <PhoneContext.Provider value={{ownerId,legacyArchive,clearLegacy,state,snapshot:()=>data.current!,selectProvider,saveKey,restoreBackup,commit,setDraft,aiStats,open,detail,app,toast,apiKey,setApiKey,serverAI,savedAI,vision,setVision,requestAI,upload,sync,reload,exportBackup,busy,setBusy}}>
+ return <PhoneContext.Provider value={{ownerId,legacyArchive,clearLegacy,state,snapshot:()=>data.current!,selectProvider,saveKey,restoreBackup,commit,setDraft,aiStats,open,detail,app,toast,apiKey,setApiKey,serverAI,savedAI,vision,setVision,requestAI,upload,prepareUpload,sync,reload,exportBackup,busy,setBusy}}>
   <main className={`desktop theme-${state.theme}`}>
    <header className="desktop-header"><button className="brand" onClick={()=>open('home')}><span className="brand-symbol"><Cloud size={25}/><Sparkles size={11}/></span><span>{appName}<small>CLOUDLET · OUR LITTLE WORLD</small></span></button><nav aria-label="主要导航"><button className={app==='home'?'selected':''} onClick={()=>open('home')}>我们的家</button><button className={app==='characters'||app==='lore'?'selected':''} onClick={()=>open('characters')}>角色与世界</button><button className={app==='memories'?'selected':''} onClick={()=>open('memories')}>记忆抽屉</button></nav><div className="header-actions"><span className="connection-label">{apiKey||serverAI?'AI 已配置':state.characters.some(c=>!!c.aiConnection)?'已设置角色独立 AI':'连接你的 AI'}</span><button className="icon-button" aria-label="打开设置" onClick={()=>open('settings')}><Settings size={19}/></button></div></header>
    <div className="desk-layout">
