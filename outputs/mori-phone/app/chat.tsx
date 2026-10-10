@@ -120,7 +120,7 @@ export default function Chat(){
  };
  const sendFiles=async(files:File[],duration?:number)=>{
   if(!files.length||uploading||!thread)return false;setUploading(true);const submitted=draftInput.current,quoted=replyTo,target=thread;let success=false;
-  try{for(const file of files.slice(0,6)){const result=await p.upload(file),audio=result.mime.startsWith('audio/'),parsed=audio?{text:'',status:'原录音已保存；尚未转写。'}:await readAttachment(file,result.mime),id=uid();const text=submitted.trim()||(audio?'发送了一条语音':`发送了 ${file.name}`);
+  try{for(const file of files.slice(0,6)){const staged=await p.prepareUpload(file),result=staged.result,audio=result.mime.startsWith('audio/'),parsed=audio?{text:'',status:'原录音已保存；尚未转写。'}:await readAttachment(file,result.mime),id=uid();const text=submitted.trim()||(audio?'发送了一条语音':`发送了 ${file.name}`);
    await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,timestamp:Date.now(),kind:audio?'voice':result.mime.startsWith('image/')?'image':'file',asset:result.url,fileName:file.name.slice(0,160),fileSize:result.size,mime:result.mime,duration,extracted:parsed.text||undefined,attachmentStatus:parsed.status,replyTo:quoted||undefined,read:true});if(result.mime.startsWith('image/')&&!s.gallery.some(g=>g.url===result.url))s.gallery.push({id:result.id,url:result.url,name:result.name});if(s.gallery.length>100)s.gallery=s.gallery.slice(-100);
     if(parsed.text){
      const safeName=file.name.replace(/[^a-zA-Z0-9_\u4e00-\u9fff. -]/g,'_').slice(0,90)||'attachment.txt';
@@ -133,7 +133,7 @@ export default function Chat(){
       if(original)original.attachmentStatus=parsed.status+'；工作区未索引，仍可查看聊天附件';
      }
     }
-   });
+   },staged.asset?[staged.asset]:[]);
    let canRead=!audio||p.snapshot().provider==='gemini'&&p.snapshot().mediaSettings.nativeAudio;
    if(audio&&p.snapshot().mediaSettings.transcriptionEnabled){try{const transcript=await transcribeFile(p.ownerId,p.snapshot(),file);await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message){message.extracted=transcript;message.attachmentStatus='已转写；原音频保留。';}});canRead=true;}catch(e){await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message)message.attachmentStatus=e instanceof Error?e.message:'转写失败，原录音保留。';});toast('语音已保存，转写未成功。');}}
    if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)queued.current.enqueue({thread:target,text,id});else await reply(text,true,id,target);}

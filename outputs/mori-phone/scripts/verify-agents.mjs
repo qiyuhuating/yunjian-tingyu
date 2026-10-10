@@ -6,6 +6,34 @@ const checks=[],check=async(name,fn)=>{await fn();checks.push(name);};
 const fixture=()=>{const state=freshState(),thread='review-room',speakers=state.characters.slice(0,2).map(c=>c.id);state.groups.push({id:thread,name:'文档审阅组',members:speakers});w.putWorkspace(state,{thread,path:'imports/sample.ts',content:'export const sum=(a,b)=>a+b;'},null);return {state,thread,speakers};};
 await check('Reject traversal, absolute and .git workspace paths',()=>{const f=()=>({workspaceFiles:[]});for(const p of ['../x','/private/a','a/../../b','repo/.git/config','x//y'])assert.throws(()=>w.putWorkspace(f(),{thread:'t',path:p,content:'x'},null),/路径/);});
 await check('Writes require explicit approval and exact revision',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.write',thread:f.thread,path:'imports/sample.ts',content:'changed',expectedRevision:1},{thread:f.thread,write:false}),/授权/);assert.throws(()=>w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'bad'},0),/已更新/);const x=w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'updated'},1);assert.equal(x.revision,2);});
+await check('Multi-file edits commit together or leave all previous revisions unchanged',()=>{
+ const f=fixture();
+ const first=w.putWorkspace(f.state,{thread:f.thread,path:'lib/a.ts',content:'export const a=1'},null);
+ const before=structuredClone(f.state.workspaceFiles);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{
+  tool:'workspace.batch',thread:f.thread,edits:[
+   {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+   {path:'imports/sample.ts',content:'stale',expectedRevision:99}
+  ]},{thread:f.thread,write:true}),/已更新/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'a',expectedRevision:1}
+ ]},{thread:f.thread,write:false}),/授权/);
+ assert.throws(()=>w.applyWorkspaceBatch(f.state,f.thread,[
+  {path:'lib/a.ts',content:'a',expectedRevision:1},
+  {path:'lib/a.ts',content:'b',expectedRevision:2}
+ ]),/重复/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ const receipts=w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+  {path:'lib/b.ts',content:'export const b=3',expectedRevision:null}
+ ]},{thread:f.thread,write:true});
+ assert.equal(receipts.length,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/a.ts').revision,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/b.ts').revision,1);
+ assert.deepEqual(w.searchWorkspace(f.state,'other','export const'),[]);
+ assert.equal(w.executeWorkspaceTool(f.state,{tool:'workspace.search',thread:f.thread,query:'export const'},{thread:f.thread,write:false}).length,2+1);
+});
 await check('No access from another thread even with a valid file path',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.read',thread:f.thread,path:'imports/sample.ts'},{thread:'other',write:false}),/跨会话/);assert.equal(w.readWorkspace(f.state,'other','imports/sample.ts'),null);});
 await check('Legacy state defaults to an empty workspace and agent log',()=>{const state=freshState(),old={...state};Reflect.deleteProperty(old,'workspaceFiles');Reflect.deleteProperty(old,'agentJobs');const restored=stateSchema.parse(old);assert.deepEqual(restored.workspaceFiles,[]);assert.deepEqual(restored.agentJobs,[]);});
 await check('Real collaboration reads actual file and hands prior review to a second role',async()=>{
