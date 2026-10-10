@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 import type {Character} from '../lib/phone-model';
 import {characterKeySlot} from '../lib/character-ai';
 import {readDeviceKey,saveDeviceKey} from '../lib/local-phone';
-import {getProvider,providers,connectionKeySlot,type ProviderId} from '../lib/providers';
+import {getProvider,providerBase,providers,connectionKeySlot,type ProviderId} from '../lib/providers';
 import {SearchPicker,ChoiceGroup} from './setting-controls';
 import {FormField,usePhone} from './ui';
 
@@ -22,6 +22,7 @@ export default function CharacterAISettings({character,onChange,persisted}:{char
  };
  const dedicated=!!connection&&(getProvider(connection.provider).baseURL===''||connection.keyScope==='character'||connectionKeySlot(connection.provider,connection.baseURL)!==connection.provider);
  const save=async(remove=false)=>{if(!slot||!persisted)return;const value=remove?'':key.trim();if(value&&value.length<8){p.toast('请填写完整的角色 API Key。');return;}
+  if(!remove&&connection){try{providerBase(connection.provider,connection.baseURL);}catch(e){p.toast(e instanceof Error?e.message:'请先填写有效的 HTTPS API 地址。');return;}}
   setSaving(true);try{await saveDeviceKey(p.ownerId,slot,value);if(await readDeviceKey(p.ownerId,slot)!==value)throw new Error('角色密钥保存校验失败。');
    setKey('');setHasSavedKey(!!value);p.toast(value?'角色专属 Key 已加密保存在本机。':'角色专属 Key 已移除。');
   }catch(error){p.toast(error instanceof Error?error.message:'密钥保存失败。');}finally{setSaving(false);}
