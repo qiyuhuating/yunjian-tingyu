@@ -37,13 +37,50 @@ export function putWorkspace(state:WorkspaceState,detail:{thread:string;path:str
  state.workspaceFiles=candidate;
  return {...next};
 }
-export type WorkspaceOperation={tool:'workspace.list'|'workspace.read'|'workspace.write';thread:string;path?:string;content?:string;expectedRevision?:number|null};
+export type WorkspaceEdit={path:string;content:string;expectedRevision:number|null};
+export function applyWorkspaceBatch(state:WorkspaceState,thread:string,edits:WorkspaceEdit[]){
+ if(!Array.isArray(edits)||edits.length<1||edits.length>20)throw new Error('每次仅允许 1—20 项文件修改。');
+ // putWorkspace creates a replacement array on success. Work on an isolated candidate
+ // so failed revisions, size checks and forbidden paths cannot partially publish a batch.
+ const candidate:WorkspaceState={workspaceFiles:state.workspaceFiles};
+ const paths=new Set<string>(),results:WorkspaceEntry[]=[];
+ for(const edit of edits){
+  const path=safeWorkspacePath(edit.path);
+  if(paths.has(path))throw new Error('一次修改不能重复写入同一路径。');
+  if(!Object.prototype.hasOwnProperty.call(edit,'expectedRevision'))
+   throw new Error('多文件修改必须为每个文件声明期望版本。');
+  paths.add(path);
+  results.push(putWorkspace(candidate,{thread,path,content:edit.content},edit.expectedRevision));
+ }
+ state.workspaceFiles=candidate.workspaceFiles;
+ return results;
+}
+export function searchWorkspace(state:WorkspaceState,thread:string,query:string){
+ const needle=query.trim().toLocaleLowerCase();
+ if(!needle||needle.length>120)throw new Error('搜索词长度必须为 1—120 字符。');
+ const matches:{path:string;revision:number;offset:number;excerpt:string}[]=[];
+ for(const file of state.workspaceFiles){
+  if(file.thread!==thread)continue;
+  const offset=file.content.toLocaleLowerCase().indexOf(needle);
+  if(offset<0)continue;
+  matches.push({path:file.path,revision:file.revision,offset,
+   excerpt:file.content.slice(Math.max(0,offset-90),Math.min(file.content.length,offset+needle.length+150))});
+  if(matches.length>=30)break;
+ }
+ return matches;
+}
+export type WorkspaceOperation={tool:'workspace.list'|'workspace.read'|'workspace.write'|'workspace.batch'|'workspace.search';thread:string;path?:string;content?:string;expectedRevision?:number|null;edits?:WorkspaceEdit[];query?:string};
 export function executeWorkspaceTool(state:WorkspaceState,operation:WorkspaceOperation,approval:{thread:string;write:boolean}){
  if(operation.thread!==approval.thread)throw new Error('禁止跨会话访问工作区。');
  if(operation.tool==='workspace.list')return listWorkspace(state,operation.thread);
  if(operation.tool==='workspace.read'){
   const entry=readWorkspace(state,operation.thread,operation.path||'');
   return entry?{...entry}:null;
+ }
+ if(operation.tool==='workspace.search')return searchWorkspace(state,operation.thread,operation.query||'');
+ if(operation.tool==='workspace.batch'){
+  if(!approval.write)throw new Error('工具没有写入授权，必须经用户批准。');
+  return applyWorkspaceBatch(state,operation.thread,operation.edits||[]);
  }
  if(operation.tool==='workspace.write'){
   if(!approval.write)throw new Error('工具没有写入授权，必须经用户批准。');

@@ -60,6 +60,7 @@ await check('One-to-one turn persists exactly one reply and one affection increm
  assert.deepEqual(result,[h.speaker.id]);assert.equal(h.calls,1);
  assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,1);
  assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].find(m=>m.role==='assistant').turnId,'turn-1');
  assert.equal(h.state.characters[0].affection,Math.min(100,old+1));
 });
 await check('A saved reply may not be charged for again',async()=>{
@@ -128,5 +129,38 @@ await check('Composer is cleared only after user message persistence resolves',(
  const section=source.slice(start,end);
  assert(start>=0&&end>start);
  assert(section.indexOf('await commit(')<section.indexOf("setInput('');"));
+});
+
+await check('A successful text turn persists media work and a result receipt without a second AI call',async()=>{
+ const h=harness();const media=load('media-outbox');
+ h.services.requestAI=async()=> '回复已保存\n<cloudlet-media>[{"type":"sticker","id":"sticker-id"}]</cloudlet-media>';
+ h.services.deliverMedia=async(commands,speaker,thread,signal,id,attempt)=>{
+  assert.equal(commands.length,1);assert.equal(commands[0].type,'sticker');
+  await h.services.commit(state=>{
+   media.assertMediaDelivery(state,id,attempt,thread,speaker);
+   const outputId='output-sticker-1';
+   media.completeMediaDelivery(state,id,attempt,outputId);
+   (state.threads[thread]??=[]).push({id:outputId,role:'assistant',kind:'image',text:'',timestamp:3,senderId:speaker,turnId:'turn-1'});
+  });
+ };
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const job=h.state.mediaOutbox[0];
+ assert.equal(job.phase,'completed');assert.equal(job.outputId,'output-sticker-1');
+ assert.equal(job.userId,'turn-1');
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,2);
+});
+await check('A failed media side effect retains finished text and a recoverable receipt',async()=>{
+ const h=harness(),media=load('media-outbox');
+ h.services.requestAI=async()=> '文字完成\n<cloudlet-media>[{"type":"image","prompt":"一片云"}]</cloudlet-media>';
+ h.services.deliverMedia=async()=>{throw new Error('media provider offline');};
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const job=h.state.mediaOutbox[0];
+ assert.equal(job.phase,'needs_review');
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant'&&m.kind==='text').length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='system'&&m.text.includes('媒体未发送')).length,1);
+ assert.throws(()=>media.beginMediaDelivery(h.state,job.id),/用户确认/);
+ assert.equal(media.beginMediaDelivery(h.state,job.id,true),2);
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

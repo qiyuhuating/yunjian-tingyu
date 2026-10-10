@@ -11,6 +11,7 @@ const command=z.discriminatedUnion('type',[
  z.object({type:z.literal('voice'),text:z.string().trim().min(1).max(4096)}).strict(),
  z.object({type:z.literal('sticker'),id:z.string().min(1).max(100)}).strict(),
 ]);
+export const mediaCommandSchema=command;
 export type MediaCommand=z.infer<typeof command>;
 // Only a complete trailing envelope is executable. Code blocks and quoted material are never tools.
 export function parseMediaReply(reply:string){

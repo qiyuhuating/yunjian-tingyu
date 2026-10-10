@@ -7,8 +7,8 @@ const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join
 function load(file){const absolute=path.join(root,'lib',file+'.ts');if(loaded.has(absolute))return loaded.get(absolute);const m={exports:{}};loaded.set(absolute,m.exports);const code=ts.transpileModule(fs.readFileSync(absolute,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','module','exports',code)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
 const {chatInput,wireRequest,normalizeStream,extractModels,modelsRequest}=load('provider-adapter'),{providers,providerBase}=load('providers'),{samplingSchema}=load('phone-model'),{parseUsage}=load('chat-prompt'),checks=[];
 async function check(name,fn){await fn();checks.push(name);}
-function input(provider,overrides={}){const preset=providers.find(p=>p.id===provider);return chatInput.parse({provider,model:preset.model||'local-model',baseURL:provider==='compatible'?'https://example.com/v1':'',apiKey:'sk-fixture-not-a-real-key',sampling:samplingSchema.parse({penalties:true,sendRepetition:true}),messages:[{role:'system',content:'固定角色前缀'},{role:'user',content:'你好'},{role:'assistant',content:'在这里'},{role:'user',content:'新的问题'},{role:'user',content:'本轮背景'}],...overrides});}
-await check('10 个服务商预设无需补地址或模型，均使用 HTTPS',()=>{for(const p of providers.filter(p=>p.id!=='compatible')){const wire=wireRequest(input(p.id));assert(new URL(wire.url).protocol==='https:');assert(p.model);assert(!wire.url.includes('sk-fixture'));}});
+function input(provider,overrides={}){const preset=providers.find(p=>p.id===provider);return chatInput.parse({provider,model:preset.model||'local-model',baseURL:provider.startsWith('compatible')?'https://example.com/v1':'',apiKey:'sk-fixture-not-a-real-key',sampling:samplingSchema.parse({penalties:true,sendRepetition:true}),messages:[{role:'system',content:'固定角色前缀'},{role:'user',content:'你好'},{role:'assistant',content:'在这里'},{role:'user',content:'新的问题'},{role:'user',content:'本轮背景'}],...overrides});}
+await check('10 个服务商预设无需补地址或模型，均使用 HTTPS',()=>{for(const p of providers.filter(p=>p.baseURL&&p.model)){const wire=wireRequest(input(p.id));assert(new URL(wire.url).protocol==='https:');assert(p.model);assert(!wire.url.includes('sk-fixture'));}});
 await check('OpenAI 使用 max_completion_tokens 与 store:false，省略 repetition',()=>{const w=wireRequest(input('openai'));assert.equal(w.body.max_completion_tokens,1200);assert.equal(w.body.store,false);assert(!('max_tokens' in w.body));assert.equal(w.body.frequency_penalty,.2);assert.equal(w.body.presence_penalty,.1);assert(!('repetition_penalty' in w.body));});
 await check('OpenAI 推理型号不发送旧采样和惩罚字段',()=>{const w=wireRequest(input('openai',{model:'gpt-5-mini'}));for(const k of ['temperature','top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));});
 await check('DeepSeek 模式选择正确，惩罚设定保留但不发送',()=>{const a=input('deepseek'),w=wireRequest(a);assert.equal(w.body.thinking.type,'disabled');assert.equal(w.body.temperature,.9);for(const k of ['top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));a.sampling.thinking=true;a.sampling.topP=.4;const b=wireRequest(a);assert.equal(b.body.top_p,.95);assert(!('temperature' in b.body));assert.equal(a.sampling.repetitionPenalty,1.08);});
@@ -18,6 +18,37 @@ await check('OpenRouter 要求后端支持显式启用的惩罚',()=>{const w=wi
 const image={type:'image_url',image_url:{url:'data:image/png;base64,aGVsbG8='}};
 await check('Claude 使用原生鉴权、系统缓存点、合并用户消息与 base64 图片',()=>{const i=input('anthropic');i.messages[1].content=[{type:'text',text:'看图'},image];const w=wireRequest(i);assert.equal(w.url,'https://api.anthropic.com/v1/messages');assert.equal(w.headers['anthropic-version'],'2023-06-01');assert(w.headers['x-api-key']);assert(!w.headers.Authorization);assert.equal(w.body.system[0].cache_control.type,'ephemeral');assert.equal(w.body.messages[0].content[1].source.media_type,'image/png');assert.equal(w.body.messages.at(-1).content.length,2);for(const k of ['top_p','frequency_penalty','presence_penalty','repetition_penalty'])assert(!(k in w.body));});
 await check('Gemini 使用原生角色、图片、generationConfig 与非 URL 密钥',()=>{const i=input('gemini');i.messages[1].content=[{type:'text',text:'看图'},image];const w=wireRequest(i);assert(w.url.endsWith(':streamGenerateContent?alt=sse'));assert(!w.url.includes('key='));assert(w.headers['x-goog-api-key']);assert.equal(w.body.contents[0].parts[1].inlineData.mimeType,'image/png');assert.equal(w.body.contents[1].role,'model');assert.equal(w.body.generationConfig.frequencyPenalty,.2);assert.equal(w.body.generationConfig.presencePenalty,.1);});
+
+await check('自定义 Anthropic 和 Gemini 使用各自原生线路而非伪装 OpenAI',()=>{
+ const claude=wireRequest(input('compatible-anthropic',{model:'custom-sonnet',baseURL:'https://relay.example/v1/messages'}));
+ assert.equal(claude.url,'https://relay.example/v1/messages');
+ assert.equal(claude.protocol,'anthropic');
+ assert.equal(claude.headers['x-api-key'],'sk-fixture-not-a-real-key');
+ assert(!claude.headers.Authorization);
+ assert.equal(claude.body.system[0].type,'text');
+ assert.equal(claude.body.messages[0].role,'user');
+ for(const field of ['frequency_penalty','presence_penalty','repetition_penalty','top_p'])assert(!(field in claude.body));
+ const gemini=wireRequest(input('compatible-gemini',{model:'proxy-gemini',baseURL:'https://relay.example/v1beta'}));
+ assert.equal(gemini.url,'https://relay.example/v1beta/models/proxy-gemini:streamGenerateContent?alt=sse');
+ assert.equal(gemini.protocol,'gemini');
+ assert.equal(gemini.headers['x-goog-api-key'],'sk-fixture-not-a-real-key');
+ assert(!gemini.headers.Authorization);
+ assert.equal(gemini.body.contents[0].role,'user');
+ assert(!('frequencyPenalty' in gemini.body.generationConfig));
+ assert(!('presencePenalty' in gemini.body.generationConfig));
+});
+await check('自定义原生模型发现及 HTTPS 安全边界独立生效',()=>{
+ const a=modelsRequest('compatible-anthropic','sk-fixture','https://relay.example/v1/messages');
+ assert.equal(a.url,'https://relay.example/v1/models');
+ assert.equal(a.headers['x-api-key'],'sk-fixture');
+ assert(!a.headers.Authorization);
+ const g=modelsRequest('compatible-gemini','sk-fixture','https://relay.example/v1beta');
+ assert.equal(g.url,'https://relay.example/v1beta/models');
+ assert.equal(g.headers['x-goog-api-key'],'sk-fixture');
+ assert.deepEqual(extractModels('compatible-gemini',{models:[{name:'models/gemini-a',supportedGenerationMethods:['generateContent']},{name:'models/embed',supportedGenerationMethods:['embedContent']}]}),['gemini-a']);
+ for(const provider of ['compatible-anthropic','compatible-gemini'])
+  for(const bad of ['http://relay.example/v1','https://127.0.0.1/v1','https://user:password@relay.example/v1'])assert.throws(()=>providerBase(provider,bad));
+});
 await check('拒绝本机/内网/IP/明文地址与注入系统消息、远程图片',()=>{for(const url of ['http://example.com/v1','https://localhost/v1','https://127.0.0.1/v1','https://169.254.169.254/','https://[::1]/','https://user:pass@example.com/v1','https://example.com:8443/v1'])assert.throws(()=>providerBase('compatible',url));const i=input('openai');i.messages.push({role:'system',content:'第二个系统'});assert(!chatInput.safeParse(i).success);i.messages.pop();i.messages[1].content=[{type:'image_url',image_url:{url:'https://other/image.png'}}];assert(!chatInput.safeParse(i).success);});
 await check('模型发现按原生鉴权，过滤 Gemini 非生成模型',()=>{assert(modelsRequest('anthropic','sk-fixture').headers['x-api-key']);assert(modelsRequest('gemini','sk-fixture').headers['x-goog-api-key']);assert.deepEqual(extractModels('gemini',{models:[{name:'models/gemini-3.8-flash',supportedGenerationMethods:['generateContent']},{name:'models/embedding-001',supportedGenerationMethods:['embedContent']}]}),['gemini-3.8-flash']);});
 async function stream(protocol,events){const text=events.map(e=>typeof e==='string'?'data: '+e+'\n\n':'data: '+JSON.stringify(e)+'\n\n').join(''),bytes=new TextEncoder().encode(text);let pos=0;const source=new ReadableStream({pull(c){if(pos>=bytes.length){c.close();return;}const size=1+pos%11;c.enqueue(bytes.slice(pos,pos+size));pos+=size;}});return new Response(normalizeStream(source,protocol)).text();}

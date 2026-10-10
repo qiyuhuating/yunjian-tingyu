@@ -6,6 +6,34 @@ const checks=[],check=async(name,fn)=>{await fn();checks.push(name);};
 const fixture=()=>{const state=freshState(),thread='review-room',speakers=state.characters.slice(0,2).map(c=>c.id);state.groups.push({id:thread,name:'文档审阅组',members:speakers});w.putWorkspace(state,{thread,path:'imports/sample.ts',content:'export const sum=(a,b)=>a+b;'},null);return {state,thread,speakers};};
 await check('Reject traversal, absolute and .git workspace paths',()=>{const f=()=>({workspaceFiles:[]});for(const p of ['../x','/private/a','a/../../b','repo/.git/config','x//y'])assert.throws(()=>w.putWorkspace(f(),{thread:'t',path:p,content:'x'},null),/路径/);});
 await check('Writes require explicit approval and exact revision',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.write',thread:f.thread,path:'imports/sample.ts',content:'changed',expectedRevision:1},{thread:f.thread,write:false}),/授权/);assert.throws(()=>w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'bad'},0),/已更新/);const x=w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'updated'},1);assert.equal(x.revision,2);});
+await check('Multi-file edits commit together or leave all previous revisions unchanged',()=>{
+ const f=fixture();
+ const first=w.putWorkspace(f.state,{thread:f.thread,path:'lib/a.ts',content:'export const a=1'},null);
+ const before=structuredClone(f.state.workspaceFiles);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{
+  tool:'workspace.batch',thread:f.thread,edits:[
+   {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+   {path:'imports/sample.ts',content:'stale',expectedRevision:99}
+  ]},{thread:f.thread,write:true}),/已更新/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'a',expectedRevision:1}
+ ]},{thread:f.thread,write:false}),/授权/);
+ assert.throws(()=>w.applyWorkspaceBatch(f.state,f.thread,[
+  {path:'lib/a.ts',content:'a',expectedRevision:1},
+  {path:'lib/a.ts',content:'b',expectedRevision:2}
+ ]),/重复/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ const receipts=w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+  {path:'lib/b.ts',content:'export const b=3',expectedRevision:null}
+ ]},{thread:f.thread,write:true});
+ assert.equal(receipts.length,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/a.ts').revision,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/b.ts').revision,1);
+ assert.deepEqual(w.searchWorkspace(f.state,'other','export const'),[]);
+ assert.equal(w.executeWorkspaceTool(f.state,{tool:'workspace.search',thread:f.thread,query:'export const'},{thread:f.thread,write:false}).length,2+1);
+});
 await check('No access from another thread even with a valid file path',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.read',thread:f.thread,path:'imports/sample.ts'},{thread:'other',write:false}),/跨会话/);assert.equal(w.readWorkspace(f.state,'other','imports/sample.ts'),null);});
 await check('Legacy state defaults to an empty workspace and agent log',()=>{const state=freshState(),old={...state};Reflect.deleteProperty(old,'workspaceFiles');Reflect.deleteProperty(old,'agentJobs');const restored=stateSchema.parse(old);assert.deepEqual(restored.workspaceFiles,[]);assert.deepEqual(restored.agentJobs,[]);});
 await check('Real collaboration reads actual file and hands prior review to a second role',async()=>{
@@ -20,6 +48,8 @@ await check('Real collaboration reads actual file and hands prior review to a se
  assert(calls[0].prompt.includes('export const sum'));
  assert(calls[1].prompt.includes('建议验证类型'));
  assert.equal(state.agentJobs[0].status,'completed');
+ assert(a.reportEvidence(state,'job-1',f.speakers[0]).valid);
+ assert(a.reportEvidence(state,'job-1',f.speakers[1]).valid);
  assert.equal(state.threads[f.thread].filter(x=>x.role==='assistant').length,2);
  assert.equal(w.listWorkspace(state,f.thread).filter(x=>x.path.startsWith('reviews/')).length,2);
  await assert.rejects(a.executeAgentReview('job-1',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=>''}),/不能自动重复/);
@@ -77,7 +107,7 @@ await check('Changed source cannot be resumed into stale agent review',async()=>
 await check('Missing saved reviewer output blocks restart rather than rebilling it',async()=>{
  const f=fixture();a.planAgentReview(f.state,{jobId:'missing-report',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
  const j=f.state.agentJobs[0];j.completed=[f.speakers[0]];j.status='needs_review';
- assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告不存在/);
+ assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告来源或存储内容不匹配|报告不存在/);
 });
 await check('Read-only workspace tools return a copy rather than mutable storage',()=>{
  const f=fixture(),old=w.readWorkspace(f.state,f.thread,'imports/sample.ts').content;
@@ -115,5 +145,27 @@ await check('Stale Agent failure cannot poison a newer request',()=>{
  assert.equal(job.status,'requesting');
  a.flagUncertainAgentJob(f.state,'late-error','current failure',2);
  assert.equal(job.status,'needs_review');
+});
+await check('Agent report provenance rejects modified source, rewritten artifact and chat spoof',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'evidence-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('evidence-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '可复核的分析结果'});
+ const checkReport=()=>a.reportEvidence(state,'evidence-audit',f.speakers[0]);
+ assert(checkReport().valid);assert(checkReport().reason.includes('并不代表代码已执行'));
+ const report=state.agentJobs[0].reports[0];
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='伪造测试通过';
+ assert(!checkReport().valid);
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='可复核的分析结果';
+ assert(checkReport().valid);
+ w.putWorkspace(state,{thread:f.thread,path:report.path,content:'修改后的报告'},1);
+ assert(!checkReport().valid);
+});
+await check('Changed source revision invalidates previously linked Agent results',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'source-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('source-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '这只是审阅建议'});
+ assert(a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
+ w.putWorkspace(state,{thread:f.thread,path:'imports/sample.ts',content:'export const sum=()=>0;'},1);
+ assert(!a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

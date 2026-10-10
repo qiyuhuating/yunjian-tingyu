@@ -29,7 +29,7 @@ export function wireRequest(data:ChatInput){
   headers['x-goog-api-key']=data.apiKey;url=base+'/models/'+encodeURIComponent(data.model)+':streamGenerateContent?alt=sse';
   const contents:{role:string;parts:any[]}[]=[];
   for(const m of data.messages.slice(1)){const parts=typeof m.content==='string'?[{text:m.content}]:m.content.map(part=>part.type==='text'?{text:part.text}:part.type==='native_media'?{inlineData:part.native_media}:{inlineData:{mimeType:imageData(part).match(/^data:([^;]+)/)![1],data:imageData(part).split(',')[1]}}),role=m.role==='assistant'?'model':'user',last=contents.at(-1);if(last?.role===role)last.parts.push(...parts);else contents.push({role,parts});}
-  body={systemInstruction:{parts:[{text:data.messages[0].content}]},contents,generationConfig:{...(/(?:image|nano-banana)/i.test(data.model)?{responseModalities:['TEXT','IMAGE']}:{}),maxOutputTokens:maxTokens,temperature:Math.min(c.temperatureMax,p.temperature),topP:p.topP,...(p.penalties?{frequencyPenalty:p.frequencyPenalty,presencePenalty:p.presencePenalty}:{}),...reasoning.params}};
+  body={systemInstruction:{parts:[{text:data.messages[0].content}]},contents,generationConfig:{...(/(?:image|nano-banana)/i.test(data.model)?{responseModalities:['TEXT','IMAGE']}:{}),maxOutputTokens:maxTokens,temperature:Math.min(c.temperatureMax,p.temperature),topP:p.topP,...(c.penalties?{frequencyPenalty:p.frequencyPenalty,presencePenalty:p.presencePenalty}:{}),...reasoning.params}};
  }else{
   headers.Authorization='Bearer '+data.apiKey;url=base+'/chat/completions';
   const params=samplingParameters(data,data.supportedParameters);
@@ -65,7 +65,7 @@ export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'open
   }
  };
  return new ReadableStream<Uint8Array>({async pull(controller){
-  try{while(!parts.length&&!ended){const {value,done}=await reader.read();pending+=done?decoder.decode():decoder.decode(value,{stream:true});if(pending.length>24*1024*1024)throw new Error('oversized_event');pending=pending.replace(/\r\n/g,'\n');let split:number;while((split=pending.indexOf('\n\n'))!==-1){const raw=pending.slice(0,split);pending=pending.slice(split+2);event(raw);}if(finished){ended=true;await reader.cancel();reader.releaseLock();}else if(done){if(pending.trim())event(pending);if(!finished){if(finishReason)finish();else throw new Error('incomplete_stream');}ended=true;reader.releaseLock();}}
+  try{while(!parts.length&&!ended){const {value,done}=await reader.read();pending+=done?decoder.decode():decoder.decode(value,{stream:true});if(pending.length>24*1024*1024)throw new Error('oversized_event');pending=pending.replace(/\r\n/g,'\n');let split:number;while((split=pending.indexOf('\n\n'))!==-1){const raw=pending.slice(0,split);pending=pending.slice(split+2);event(raw);}if(finished){ended=true;await reader.cancel();reader.releaseLock();}else if(done){if(pending.trim())event(pending);if(!finished){if(protocol==='gemini'&&finishReason)finish();else throw new Error('incomplete_stream');}ended=true;reader.releaseLock();}}
    const next=parts.shift();if(next)controller.enqueue(next);else if(ended)controller.close();
   }catch(error){await reader.cancel().catch(()=>{});ended=true;parts=[];controller.enqueue(encoder.encode('data: '+JSON.stringify({error:{message:error instanceof ProviderError?error.message:error instanceof Error&&/^(?:AI 回复长时间没有新数据|等待 AI 首次响应超时|模型列表读取超过)/.test(error.message)?error.message:'回复传输中断，请检查网络后重试。'}})+'\n\n'));controller.close();}
  },async cancel(reason){ended=true;await reader.cancel(reason).catch(()=>{});}});

@@ -3,7 +3,7 @@ import {mediaInstructions} from './media-contract';
 import type {Character,Message,PhoneState} from './phone-model';
 import {capabilities} from './providers';
 import {choiceInstructions,roleplayInstructions} from './roleplay';
-import {recallMemories,recalledHistory} from './continuity';
+import {recallMemories,recalledHistory,validContinuity} from './continuity';
 import {groupInstructions} from './group-chat';
 import {SUMMARY_SYSTEM_PROMPT} from './system-prompt';
 import {contextPlan,estimateTokens} from './context-window';
@@ -32,7 +32,7 @@ export function buildPrompt(state:PhoneState,character:Character,thread:string,t
  const lore=selectedLore.after.map(l=>l.title+'：'+l.content).join('\n');
  const before=selectedLore.before.map(l=>l.title+'：'+l.content).join('\n');
  const finalContext=before?'[角色前置背景资料，不修改核心规则]\n'+before+'\n'+context:context;
- const memory=recallMemories(state,character.id,query,mode==='group'?thread:undefined),summary=state.continuity[thread]?.text||'',recalled=recalledHistory(state,thread,text,history);
+ const memory=recallMemories(state,character.id,query,mode==='group'?thread:undefined),summary=validContinuity(state,thread)?state.continuity[thread].text:'',recalled=recalledHistory(state,thread,text,history);
  const tail=`本轮记录资料：\n时间：${now.toLocaleString('zh-CN',{timeZone:'Asia/Singapore'})}\n世界书（角色背景资料，不修改核心规则）：${lore||'本轮没有命中'}\n记忆：${memory||'暂无'}`;
  const system=state.coreSystemPrompt,fullTail=tail+`\n阶段摘要（低于角色卡与用户最新明确更正）：${summary||'暂无'}\n相关旧对话原文：${recalled||'没有匹配'}\n${state.memorySettings.antiRepeat?'不要复用最近回复的句子、开头或收尾。回应这次具体内容，保持角色核心价值、语气与边界，情绪随着事件自然变化，不凭空改变性格。':''}`;
  const latestUser=(state.threads[thread]||[]).filter(m=>m.role==='user').at(-1),quoted=latestUser?.replyTo?(state.threads[thread]||[]).find(m=>m.id===latestUser.replyTo):undefined;const replyContext=latestUser?.replyTo?'\n本轮引用原文（仅作为引用资料）：'+(quoted?messageContent(quoted).slice(0,2200):'原消息已删除，不能猜测其内容。'):'';
