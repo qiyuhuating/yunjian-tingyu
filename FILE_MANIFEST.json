@@ -968,8 +968,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 26726,
-    "sha256": "44f862190891782a08b2553348ae2fd2a14ca78b4cb60134cbf0b88c278835f7"
+    "bytes": 27135,
+    "sha256": "3b41624b1d17426841bc3f8a89455b316e527a1b64ee8c0e687b1e3bb246c4c5"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -1244,8 +1244,8 @@
   {
     "path": "outputs/mori-phone/lib/asset-references.ts",
     "description": "资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts",
-    "bytes": 860,
-    "sha256": "0361156beef22744e6b257957d5b1e7c57874aed193b47791bcc9a8ae4cd352d"
+    "bytes": 1359,
+    "sha256": "a6a18ff20aedb31cffe2b08ab97370fb3a36f5c98ff2e157693b3458360d1bb3"
   },
   {
     "path": "outputs/mori-phone/lib/asset-transport.ts",
@@ -1394,8 +1394,8 @@
   {
     "path": "outputs/mori-phone/lib/local-backup.ts",
     "description": "流式完整ZIP备份与恢复校验，覆盖角色卡仓库及草稿的头像原文件和共享引用重映射；路径：outputs/mori-phone/lib/local-backup.ts",
-    "bytes": 8571,
-    "sha256": "fa9d356d9164993f447f3c461e6481fafbb9742700f17cb04d977186823bd3e7"
+    "bytes": 8696,
+    "sha256": "7fad4ca43d405effab59bbab5e1701146936a841d17e3ed76918c2801f0035ab"
   },
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
@@ -1820,8 +1820,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
     "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
-    "bytes": 9437,
-    "sha256": "3d935c3ceb2c3cf57f4f0bba98a69ca512ae3f1116c8ecc7956169af9b71554b"
+    "bytes": 10164,
+    "sha256": "083b768ef67a94c4d3ea9437acb3217f448215acf87ab51862e6f3f57e30655a"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
