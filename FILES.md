@@ -437,7 +437,7 @@
 | [outputs/mori-phone/scripts/verify-runtime.mjs](outputs/mori-phone/scripts/verify-runtime.mjs) | 核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs | 9437 |
 | [docs/运行时架构治理-2026-10-10.md](docs/运行时架构治理-2026-10-10.md) | 运行时职责边界、数据和费用不变量、风险及下一阶段验收清单；路径：docs/运行时架构治理-2026-10-10.md | 4097 |
 | [outputs/mori-phone/lib/turn-execution.ts](outputs/mori-phone/lib/turn-execution.ts) | 可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts | 9358 |
-| [outputs/mori-phone/scripts/verify-turn.mjs](outputs/mori-phone/scripts/verify-turn.mjs) | 确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs | 8779 |
+| [outputs/mori-phone/scripts/verify-turn.mjs](outputs/mori-phone/scripts/verify-turn.mjs) | 确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs | 10905 |
 | [docs/聊天回合执行器-2026-10-10.md](docs/聊天回合执行器-2026-10-10.md) | 聊天执行器阶段性分层、费用与状态安全不变量及后续验收清单；路径：docs/聊天回合执行器-2026-10-10.md | 2706 |
 | [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1081 |
 | [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 4999 |

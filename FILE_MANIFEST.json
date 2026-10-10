@@ -1820,8 +1820,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
     "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
-    "bytes": 8779,
-    "sha256": "637812e3dabfa44ea22ce1f0d808af7e61418f2d559efae3a2e020e032430398"
+    "bytes": 10905,
+    "sha256": "4d0e4c7ab49b3474545e5f9f53ecbb4055931d752a2a2979d0e5cb9ed7d8f2c1"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
