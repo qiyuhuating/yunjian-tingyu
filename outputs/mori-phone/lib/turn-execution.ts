@@ -156,7 +156,6 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
  }
  return speakers;
 }
-function cName(state:PhoneState,speaker:string){return state.characters.find(c=>c.id===speaker)?.name||'角色';}
 
 /**
  * Only an explicit failed-message retry may enqueue. Scope and deduplicate
