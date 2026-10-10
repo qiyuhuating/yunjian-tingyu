@@ -13,6 +13,7 @@ import {generatedImage,speechFile,transcribeFile} from '../lib/media-client';
 import {visibleReply,type MediaCommand} from '../lib/media-contract';
 import {maintainConversation} from '../lib/chat-maintenance';
 import {executeTurn,PendingTurnQueue,type TurnPhase} from '../lib/turn-execution';
+import {markInterrupted,receiptFor,manualRetryRequiresConfirmation} from '../lib/turn-receipts';
 import RealtimeCall from './realtime-call';
 import {Avatar,GroupAvatar,DockArt,MessageCard,usePhone,downloadJson} from './ui';
 export default function Chat(){
@@ -56,11 +57,18 @@ export default function Chat(){
   const mode=targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat';
   const retry=retrySpeakers.current;
   const speakers=!newTurn&&retry?.thread===targetThread&&retry.userId===turnUserId?retry.speakers:undefined;
+  const receipt=receiptFor(current,turnUserId);
+  if(!newTurn&&manualRetryRequiresConfirmation(current,turnUserId)){
+   if(!window.confirm('上一次请求可能已经计费，但回复尚未完整保存。再次发送可能重复计费。确认重新请求剩余角色吗？'))return;
+  }
+  if(newTurn&&receipt&&manualRetryRequiresConfirmation(current,turnUserId)){
+   toast('上次请求结果不明确，请在聊天记录中手动确认重试。');return;
+  }
   running.current=true;runningThread.current=targetThread;errorThread.current=targetThread;
   runningUserId.current=turnUserId;p.setBusy(true);partial.current='';setPhase('reply');setStream('');setError('');
   abort.current=new AbortController();let replyingAs:string|undefined;
   try{
-   const completed=await executeTurn({thread:targetThread,userId:turnUserId,text,mode,speakers},{
+   const completed=await executeTurn({thread:targetThread,userId:turnUserId,text,mode,speakers,allowManualRetry:!newTurn},{
     snapshot:p.snapshot,commit,requestAI:p.requestAI,upload:p.upload,
     deliverMedia,signal:abort.current.signal,
     onPhase:(step:TurnPhase)=>setPhase(step==='media'?'media':'reply'),
@@ -83,6 +91,7 @@ export default function Chat(){
    await commit(s=>{
     if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
     const original=s.threads[targetThread]?.find(m=>m.id===turnUserId);
+    markInterrupted(s,turnUserId,message);
     if(original&&needsRetry){original.failed=true;original.failureReason=message.slice(0,600);}
    }).catch(()=>{});
   }finally{
