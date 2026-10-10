@@ -39,6 +39,29 @@ function harness({group=false,answer='收到',onRequest=undefined,onUpload=undef
  };
  return {services,signal,thread,speaker,other,remaining,get state(){return state;},get calls(){return calls;},get commits(){return commits;}};
 }
+await check('Durable pending queue survives serialized restart and never autoplays an uncertain provider POST',()=>{
+ const {enqueueDurableTurn,eligibleQueuedTurn,dequeueDurableTurn}=load('durable-turn-queue');
+ let state=freshState(),id='saved-user',thread=state.primary;
+ state.threads[thread].push({id,role:'user',kind:'text',timestamp:10,text:'离线时发送的消息',failed:true});
+ enqueueDurableTurn(state,{userId:id,thread,text:'离线时发送的消息',mode:'chat',queuedAt:10});
+ state=stateSchema.parse(structuredClone(state));
+ assert.equal(eligibleQueuedTurn(state)?.userId,id);
+ const journal=load('turn-receipts');journal.beginTurn(state,{thread,userId:id,mode:'chat',speakers:[thread]});
+ assert.equal(eligibleQueuedTurn(state)?.userId,id);
+ journal.markRequesting(state,id,thread);dequeueDurableTurn(state,id);
+ assert.equal(eligibleQueuedTurn(state),null);
+ state.queuedTurns.push({userId:id,thread,text:'离线时发送的消息',mode:'chat',queuedAt:10});
+ assert.equal(eligibleQueuedTurn(state),null);
+});
+await check('Durable queue requires matching user message and only replays queued receipts',()=>{
+ const {enqueueDurableTurn,eligibleQueuedTurn}=load('durable-turn-queue'),s=freshState(),thread=s.primary;
+ s.threads[thread].push({id:'x',role:'user',kind:'text',timestamp:1,text:'old',failed:true});
+ enqueueDurableTurn(s,{userId:'x',thread,text:'old',mode:'chat',queuedAt:1});
+ s.threads[thread].at(-1).text='edited';
+ assert.equal(eligibleQueuedTurn(s),null);
+ s.threads[thread].at(-1).text='old';
+ assert.equal(eligibleQueuedTurn(s)?.userId,'x');
+});
 await check('Turn queue deduplicates IDs but not intentionally repeated text',()=>{
  const q=new PendingTurnQueue();
  q.enqueue({id:'one',thread:'a',text:'同一段文字'});
@@ -120,7 +143,7 @@ await check('Visible chat routes turn execution exclusively through testable mod
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
  assert(source.includes('await executeTurn('));
  assert(!source.includes('await p.requestAI('));
- assert(source.includes('queued.current.enqueue('));
+ assert(source.includes('enqueueDurableTurn('));
  assert(source.includes('queued.current.take('));
 });
 await check('Composer is cleared only after user message persistence resolves',()=>{

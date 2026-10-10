@@ -1,6 +1,5 @@
 import {z} from 'zod';
 import type {PhoneState} from './phone-model';
-import type {TurnMode} from './turn-execution';
 import {receiptFor} from './turn-receipts';
 
 const id=z.string().min(1).max(100).refine(v=>!Object.prototype.hasOwnProperty.call(Object.prototype,v));

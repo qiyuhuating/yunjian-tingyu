@@ -5,6 +5,7 @@ import {uid,type PhoneState} from './phone-model';
 import {beginTurn,markRequesting,markCommitted,receiptFor,remainingSpeakers} from './turn-receipts';
 import type {MediaCommand} from './media-contract';
 import {queueMedia,beginMediaDelivery,interruptMediaDelivery} from './media-outbox';
+import {enqueueDurableTurn,dequeueDurableTurn} from './durable-turn-queue';
 import type {MediaEffect} from './media-outbox';
 
 export type TurnMode='chat'|'face'|'group'|'live';
@@ -64,7 +65,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    throw new Error('等待期间消息或角色已修改，旧请求没有发送。');
   // Persist uncertainty BEFORE posting. If the app dies here, never auto resend.
   let requestAttempt=0;
-  await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);});
+  await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);dequeueDurableTurn(state,userId);});
   p.onRequest?.(requestAttempt);
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=text; // Run guidance must not change the causal source message.
@@ -92,6 +93,7 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
     });
    }
    target.failed=!complete;if(complete)delete target.failureReason;
+   else enqueueDurableTurn(state,{userId,thread,text,mode,queuedAt:Date.now()});
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
    mediaJobs=queueMedia(state,{thread,userId,speaker},parsed.commands);
   });

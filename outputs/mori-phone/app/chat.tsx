@@ -13,6 +13,7 @@ import {generatedImage,speechFile,transcribeFile} from '../lib/media-client';
 import {visibleReply,type MediaCommand} from '../lib/media-contract';
 import {maintainConversation} from '../lib/chat-maintenance';
 import {executeTurn,PendingTurnQueue,type TurnPhase} from '../lib/turn-execution';
+import {enqueueDurableTurn,dequeueDurableTurn,eligibleQueuedTurn} from '../lib/durable-turn-queue';
 import {markInterrupted,receiptFor,manualRetryRequiresConfirmation} from '../lib/turn-receipts';
 import {putWorkspace} from '../lib/agent-workspace';
 import {planAgentReview,executeAgentReview,flagUncertainAgentJob,authorizeAgentResume,reportEvidence} from '../lib/agent-orchestrator';
@@ -30,10 +31,13 @@ export default function Chat(){
  const thread=detail||(app==='face'||app==='live'?state.primary:'');const group=state.groups.find(g=>g.id===thread),character=state.characters.find(c=>c.id===thread)||state.characters.find(c=>c.id===group?.members[0])||state.characters.find(c=>c.id===state.primary)!;
  view.current={thread,visible:!!p.chatVisible};const lastUser=(state.threads[thread]||[]).filter(m=>m.role==='user').at(-1),error=p.busy&&runningThread.current===thread?'':(errorThread.current===thread?rawError:'')||(lastUser?.failed?lastUser.failureReason||'上次回复未完成，可以重试或检查连接。':'');
  const busyHere=p.busy&&runningThread.current===thread,stream=runningThread.current===thread?rawStream:'';
- useEffect(()=>{if(!p.busy&&!running.current){const next=queued.current.take(thread,item=>!!p.snapshot().threads[item.thread]?.some(m=>m.id===item.id&&m.role==='user'&&m.failed));if(next)void reply(next.text,true,next.id,next.thread);}},[p.busy,thread,state.threads]);
+ useEffect(()=>{if(!p.chatVisible||p.busy||running.current)return;
+  const next=eligibleQueuedTurn(p.snapshot(),thread);
+  if(next)void reply(next.text,true,next.userId,next.thread);
+ },[p.chatVisible,p.busy,thread,state.threads,state.queuedTurns]);
  useEffect(()=>{const back=(event:Event)=>{if(!p.chatVisible)return; if(activeMessage){setActiveMessage('');event.preventDefault();}else if(groupDetails){setGroupDetails(false);event.preventDefault();}else if(menu){setMenu(false);event.preventDefault();}else if(extras){setExtras(false);event.preventDefault();}else if(groupForm){setGroupForm(false);event.preventDefault();}};window.addEventListener('cloudlet-chat-back',back);return()=>window.removeEventListener('cloudlet-chat-back',back);},[p.chatVisible,activeMessage,groupDetails,menu,extras,groupForm]);
  useEffect(()=>{setRealtime(false);},[p.chatVisible,thread]);
- const pendingReply=(id:string)=>(p.busy&&runningUserId.current===id)||queued.current.has(id);
+ const pendingReply=(id:string)=>(p.busy&&runningUserId.current===id)||state.queuedTurns.some(t=>t.userId===id);
  const messages=state.threads[thread]||[],targetIndex=searchTarget?messages.findIndex(m=>m.id===searchTarget):-1;const shown=targetIndex>=0?messages.slice(Math.max(0,targetIndex-30),targetIndex+31):state.longChat?messages.slice(-visibleCount):messages.slice(-6);
  useEffect(()=>{if(searchTarget){follow.current=false;requestAnimationFrame(()=>document.getElementById('message-'+searchTarget)?.scrollIntoView({block:'center'}));}},[searchTarget,thread]);
  useEffect(()=>{if(p.chatVisible&&thread&&follow.current){const frame=requestAnimationFrame(()=>end.current?.scrollIntoView({block:'end'}));return()=>cancelAnimationFrame(frame);}},[p.chatVisible,thread]);
@@ -57,7 +61,8 @@ export default function Chat(){
   const current=p.snapshot(),targetGroup=current.groups.find(g=>g.id===targetThread);
   const turnUserId=userId||(current.threads[targetThread]||[]).filter(m=>m.role==='user').at(-1)?.id;
   if(!turnUserId)return;
-  const mode=targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat';
+  const persistedMode=current.queuedTurns.find(t=>t.userId===turnUserId)?.mode||receiptFor(current,turnUserId)?.mode;
+  const mode=persistedMode??(targetGroup?'group':app==='face'?'face':app==='live'?'live':'chat');
   const retry=retrySpeakers.current;
   const speakers=!newTurn&&retry?.thread===targetThread&&retry.userId===turnUserId?retry.speakers:undefined;
   const receipt=receiptFor(current,turnUserId);
@@ -97,6 +102,7 @@ export default function Chat(){
      if(partial.current&&!targetGroup)(s.threads[targetThread]??=[]).push({id:uid(),role:'assistant',text:visibleReply(splitRoleplayReply(partial.current).text)+'\n\n[这条回复未完成]',timestamp:Date.now(),kind:'text',senderId:replyingAs,read:true,failed:true});
     const original=s.threads[targetThread]?.find(m=>m.id===turnUserId);
     markInterrupted(s,turnUserId,message,activeAttempt);
+    dequeueDurableTurn(s,turnUserId);
     if(original&&needsRetry){original.failed=true;original.failureReason=message.slice(0,600);}
    }).catch(()=>{});
   }finally{
@@ -109,12 +115,12 @@ export default function Chat(){
   if(!text||uploading||!target)return;
   try{
    // Persist before clearing the composer or charging for a model request.
-   await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});delete s.drafts[target];});
+   await commit(s=>{(s.threads[target]??=[]).push({id,role:'user',text,failed:true,timestamp:Date.now(),kind:'text',replyTo:replyTo||undefined,read:true});enqueueDurableTurn(s,{thread:target,userId:id,text,mode:s.groups.some(g=>g.id===target)?'group':app==='face'?'face':app==='live'?'live':'chat',queuedAt:Date.now()});delete s.drafts[target];});
    if(view.current.thread===target&&draftInput.current===submitted){
     setInput('');setReplyTo('');p.setDraft(target,'');
    }
    follow.current=true;
-   if(p.busy||running.current){queued.current.enqueue({thread:target,text,id});return;}
+   if(p.busy||running.current)return;
    await reply(text,true,id,target);
   }catch(e){toast(e instanceof Error?e.message:'消息未保存，请重试。');}
  };
@@ -136,7 +142,7 @@ export default function Chat(){
    });
    let canRead=!audio||p.snapshot().provider==='gemini'&&p.snapshot().mediaSettings.nativeAudio;
    if(audio&&p.snapshot().mediaSettings.transcriptionEnabled){try{const transcript=await transcribeFile(p.ownerId,p.snapshot(),file);await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message){message.extracted=transcript;message.attachmentStatus='已转写；原音频保留。';}});canRead=true;}catch(e){await commit(s=>{const message=s.threads[target]?.find(m=>m.id===id);if(message)message.attachmentStatus=e instanceof Error?e.message:'转写失败，原录音保留。';});toast('语音已保存，转写未成功。');}}
-   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)queued.current.enqueue({thread:target,text,id});else await reply(text,true,id,target);}
+   if(canRead&&(p.apiKey||p.serverAI||p.snapshot().characters.some(c=>!!c.aiConnection&&(c.id===target||p.snapshot().groups.some(g=>g.id===target&&g.members.includes(c.id)))))){await commit(s=>{const m=s.threads[target]?.find(m=>m.id===id);if(m)m.failed=true;});if(p.busy||running.current)return);else await reply(text,true,id,target);}
   }success=true;if(view.current.thread===target&&draftInput.current===submitted){setInput('');p.setDraft(target,'');setReplyTo('');}follow.current=true;toast('附件和记录已保存。');
   }catch(e){toast(e instanceof Error?e.message:'附件发送失败。');}finally{setUploading(false);if(fileInput.current)fileInput.current.value='';}return success;
  };
