@@ -860,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 38956,
-    "sha256": "a93d46c3ecc00656e4c52e52616360f06e9c1c75c310fd14281805a9d5cfcc09"
+    "bytes": 39112,
+    "sha256": "ce71845b55c6a89e6576cded79b47dc798974a10f1d5bb6a1790f048dea1276a"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1826,8 +1826,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
     "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
-    "bytes": 12484,
-    "sha256": "935575b9e141dc319fbeb6964118f0320e0fcc6388afc3b469454effe54f0016"
+    "bytes": 12483,
+    "sha256": "acf17bb3167bf8c0f07cac48c0bb1a6a35d496ffe2689e2f33508365d69a7730"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
