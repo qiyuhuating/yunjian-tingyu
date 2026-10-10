@@ -89,7 +89,9 @@ await check('A repeated group question is not skipped when another member spoke 
 });
 await check('No hidden automatic retry remains in the chat turn',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
- assert.equal((source.match(/await p\.requestAI\(/g)||[]).length,1);
+ assert.equal((source.match(/await p\.requestAI\(/g)||[]).length,0);
+ const executor=fs.readFileSync(path.join(root,'lib/turn-execution.ts'),'utf8');
+ assert.equal((executor.match(/await p\.requestAI\(/g)||[]).length,1);
  assert(!source.includes('[格式修正：'));
  assert(!source.includes('[请重写：'));
 });
