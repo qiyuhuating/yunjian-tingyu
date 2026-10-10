@@ -67,6 +67,6 @@ export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'open
  return new ReadableStream<Uint8Array>({async pull(controller){
   try{while(!parts.length&&!ended){const {value,done}=await reader.read();pending+=done?decoder.decode():decoder.decode(value,{stream:true});if(pending.length>24*1024*1024)throw new Error('oversized_event');pending=pending.replace(/\r\n/g,'\n');let split:number;while((split=pending.indexOf('\n\n'))!==-1){const raw=pending.slice(0,split);pending=pending.slice(split+2);event(raw);}if(finished){ended=true;await reader.cancel();reader.releaseLock();}else if(done){if(pending.trim())event(pending);if(!finished){if(finishReason)finish();else throw new Error('incomplete_stream');}ended=true;reader.releaseLock();}}
    const next=parts.shift();if(next)controller.enqueue(next);else if(ended)controller.close();
-  }catch(error){await reader.cancel().catch(()=>{});ended=true;parts=[];controller.enqueue(encoder.encode('data: '+JSON.stringify({error:{message:error instanceof ProviderError?error.message:'回复传输中断，请检查网络后重试。'}})+'\n\n'));controller.close();}
+  }catch(error){await reader.cancel().catch(()=>{});ended=true;parts=[];controller.enqueue(encoder.encode('data: '+JSON.stringify({error:{message:error instanceof ProviderError?error.message:error instanceof Error&&/^(?:AI 回复长时间没有新数据|等待 AI 首次响应超时|模型列表读取超过)/.test(error.message)?error.message:'回复传输中断，请检查网络后重试。'}})+'\n\n'));controller.close();}
  },async cancel(reason){ended=true;await reader.cancel(reason).catch(()=>{});}});
 }
