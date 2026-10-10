@@ -15,7 +15,7 @@ export function extractModelLimits(provider:ProviderId,body:any){
  const rows=getProvider(provider).protocol==='gemini'?body.models:body.data,result:Record<string,ModelLimit>={};
  if(!Array.isArray(rows))return result;
  const valid=(value:unknown)=>tokens.safeParse(value).success?value as number:undefined;
- for(const row of rows.slice(0,300)){
+ for(const row of rows.slice(0,1200)){
   const id=provider==='gemini'?row.name?.replace(/^models\//,''):row.id;if(typeof id!=='string'||!id.length||id.length>160)continue;
   const supportedParameters=provider==='openrouter'&&Array.isArray(row.supported_parameters)?row.supported_parameters.filter((p:unknown)=>typeof p==='string'&&p.length>0&&p.length<=80).slice(0,80) as string[]:undefined;
   const limit={contextTokens:valid(row.context_window??row.context_length??row.top_provider?.context_length),inputTokens:valid(row.inputTokenLimit??row.max_input_tokens),outputTokens:valid(row.outputTokenLimit??row.max_output_tokens??row.max_tokens??row.top_provider?.max_completion_tokens),...(supportedParameters?{supportedParameters}:{})};
