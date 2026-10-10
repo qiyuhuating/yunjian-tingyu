@@ -1406,8 +1406,8 @@
   {
     "path": "outputs/mori-phone/lib/turn-execution.ts",
     "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
-    "bytes": 7245,
-    "sha256": "d08f0dd0e6a6189bf038c953bd6d60d7a71349bf87268e48e9e9f50a35673afb"
+    "bytes": 7867,
+    "sha256": "229c32ac6faf703447fe13dd96bfb36675db1d225555caf9720959bea5fa2728"
   },
   {
     "path": "outputs/mori-phone/lib/world-info.ts",
@@ -1700,8 +1700,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
     "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
-    "bytes": 7929,
-    "sha256": "672e05d2dd9be5e2eea876ca057d561ffbf2856789a55295527fc33377a373c9"
+    "bytes": 8558,
+    "sha256": "c5dfcc9f03df7acbd9a855e46ae86c34816be244454a21e51f73ec8373a1ec8a"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
