@@ -46,6 +46,14 @@ def wait_ui(predicate, timeout=75):
         try:
             raw, root = hierarchy()
             last = raw
+            # Android's first-use immersive hint belongs to the OS, not the app.
+            if any(n.get("resource-id") == "android:id/immersive_cling_title" for n in root.iter("node")):
+                ok = next((n for n in root.iter("node") if n.get("resource-id") == "android:id/ok" and bounds(n)), None)
+                if ok is not None:
+                    x,y = bounds(ok)
+                    adb("shell", "input", "tap", str(x), str(y))
+                    print("INFO Dismissed Android first-use fullscreen hint", flush=True)
+                    continue
             for n in root.iter("node"):
                 if predicate(n) and bounds(n): return n
             if "先更新一下浏览器内核" in raw:
