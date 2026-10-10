@@ -354,6 +354,12 @@
     "sha256": "ec14e4032cc807a84bdd80a34c77ebeb309c476b4b8439652a41c516fac674a3"
   },
   {
+    "path": "docs/运行时架构治理-2026-10-10.md",
+    "description": "运行时职责边界、数据和费用不变量、风险及下一阶段验收清单；路径：docs/运行时架构治理-2026-10-10.md",
+    "bytes": 3982,
+    "sha256": "20df645d8edcd64609d3cd52e4828a7dc763361703877d2b688df9694cbd6001"
+  },
+  {
     "path": "outputs/0.0.1暗夜聊天预览.png",
     "description": "界面预览或绘图资源：0.0.1暗夜聊天预览.png；目录 outputs；路径：outputs/0.0.1暗夜聊天预览.png",
     "bytes": 83201,
@@ -1136,8 +1142,8 @@
   {
     "path": "outputs/mori-phone/lib/ai-messages.ts",
     "description": "独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts",
-    "bytes": 3617,
-    "sha256": "c1e02211001dedacf7a970f27602079542b5b39d7cf668f50d9fad6f3b30fdb3"
+    "bytes": 3778,
+    "sha256": "5cd6d141e038efb253ad0cbee7883250396aa833ceaf77a8f5bfc5399c58b0f4"
   },
   {
     "path": "outputs/mori-phone/lib/ai-stream.ts",
@@ -1676,8 +1682,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
     "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
-    "bytes": 6403,
-    "sha256": "a7f81dd7f13d5f4a6a545c5f3b0bb1623cfa036a272ce9a8ce2f43f26c69736e"
+    "bytes": 7169,
+    "sha256": "8b0a0bbe5232d4413df5910bc68d6785fab173a68e73c9e88f13acfb6329a46c"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
