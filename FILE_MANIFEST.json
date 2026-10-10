@@ -1226,8 +1226,8 @@
   {
     "path": "outputs/mori-phone/lib/agent-workspace.ts",
     "description": "隔离的版本化文本工作区、乐观并发与权限校验；路径：outputs/mori-phone/lib/agent-workspace.ts",
-    "bytes": 3745,
-    "sha256": "0cb5078dbc330e060e1722a2119848c396005231eecb84e9790966f3275954a8"
+    "bytes": 5939,
+    "sha256": "b26746fca3736d42cff667bf60fb9bd973b2788c0e027a79dbb6a1fb2599979c"
   },
   {
     "path": "outputs/mori-phone/lib/ai-messages.ts",
