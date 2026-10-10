@@ -42,7 +42,7 @@ export function modelsRequest(provider:ChatInput['provider'],apiKey:string,baseU
  if(p.protocol==='anthropic'){headers['x-api-key']=apiKey;headers['anthropic-version']='2023-06-01';}else if(p.protocol==='gemini')headers['x-goog-api-key']=apiKey;else headers.Authorization='Bearer '+apiKey;
  return {url:base+'/models',headers};
 }
-export function extractModels(provider:ChatInput['provider'],body:any){const list=getProvider(provider).protocol==='gemini'?(body.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')).map((m:any)=>m.name?.replace(/^models\//,'')):(body.data||[]).map((m:any)=>m.id);return [...new Set(list.filter((id:unknown)=>typeof id==='string'&&id.length>0&&id.length<=160))].slice(0,300) as string[];}
+export function extractModels(provider:ChatInput['provider'],body:any){const list=getProvider(provider).protocol==='gemini'?(body.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')).map((m:any)=>m.name?.replace(/^models\//,'')):(body.data||[]).map((m:any)=>m.id);return [...new Set(list.filter((id:unknown)=>typeof id==='string'&&id.length>0&&id.length<=160))].slice(0,1200) as string[];}
 
 // Normalize native events without storing a request or response. A completion marker is required for a successful stream.
 export function normalizeStream(source:ReadableStream<Uint8Array>,protocol:'openai'|'anthropic'|'gemini'){
