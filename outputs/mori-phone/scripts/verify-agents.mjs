@@ -158,4 +158,21 @@ await check('Multi-source factual memory requires every cited source to remain v
  assert(continuity.validMemorySource(s,m));
  s.threads[f.thread].pop();assert(!continuity.validMemorySource(s,m));
 });
+await check('Same-version tampering of source or report is rejected by content hash',async()=>{
+ const f=fixture();let state=f.state;
+ const commit=async change=>{const draft=structuredClone(state);change(draft);state=draft;};
+ a.planAgentReview(state,{jobId:'hash-proof',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('hash-proof',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> 'confirmed textual review'});
+ const verify=()=>a.reportEvidence(state,'hash-proof',f.speakers[0]).valid;
+ assert(verify());
+ const report=state.agentJobs[0].reports[0],source=w.readWorkspace(state,f.thread,'imports/sample.ts');
+ source.content='tampered without revision';assert(!verify());
+ source.content='export const sum=(a,b)=>a+b;';assert(verify());
+ const output=w.readWorkspace(state,f.thread,report.path);
+ const original=output.content;output.content='tampered without revision';
+ state.threads[f.thread].find(m=>m.id===report.messageId).text=output.content;
+ assert(!verify());output.content=original;
+ state.threads[f.thread].find(m=>m.id===report.messageId).text=original;
+ assert(verify());
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
