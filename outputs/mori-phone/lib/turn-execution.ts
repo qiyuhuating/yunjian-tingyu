@@ -77,21 +77,39 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
   p.onRemaining?.(speakers.slice(index+1));
   p.onDelta?.('');
   if(current.voiceSettings.autoRead&&parsed.bubbles.length)p.onVoice?.(parsed.bubbles.join('。'));
+  // The conversational answer has already committed. Optional media
+  // failures should not force the user to repay for the same text generation.
+  const mediaFailure=async(error:unknown)=>{
+   if(p.signal.aborted)throw error;
+   await p.commit(state=>{
+    if(!state.threads[thread]?.some(m=>m.id===userId))return;
+    (state.threads[thread]??=[]).push({id:uid(),role:'system',kind:'notice',
+     text:'媒体未发送：'+(error instanceof Error?error.message:'处理失败。'),
+     timestamp:Date.now(),read:true});
+   });
+  };
   if(nativeFiles.length){
    p.onPhase?.('media');
    for(const file of nativeFiles){
-    p.signal.throwIfAborted();const asset=await p.upload(file);
-    if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');
-    p.signal.throwIfAborted();
-    await p.commit(state=>{
-     if(!state.threads[thread]?.some(m=>m.id===userId))throw new Error('原消息已删除，媒体不再写入。');
-     (state.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,sender:cName(state,speaker),senderId:speaker,read:p.isVisible?.(thread)??false,attachmentStatus:'模型原生生成的媒体'});
-    });
+    try{
+     p.signal.throwIfAborted();const asset=await p.upload(file);
+     if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');
+     p.signal.throwIfAborted();
+     await p.commit(state=>{
+      if(!state.threads[thread]?.some(m=>m.id===userId))throw new Error('原消息已删除，媒体不再写入。');
+      (state.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',
+       kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',
+       timestamp:Date.now(),asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,
+       sender:cName(state,speaker),senderId:speaker,read:p.isVisible?.(thread)??false,
+       attachmentStatus:'模型原生生成的媒体'});
+     });
+    }catch(e){await mediaFailure(e);}
    }
   }
   if(parsed.commands.length){
    p.onPhase?.('media');
-   await p.deliverMedia(parsed.commands,speaker,thread,p.signal);
+   try{await p.deliverMedia(parsed.commands,speaker,thread,p.signal);}
+   catch(e){await mediaFailure(e);}
   }
  }
  return speakers;
