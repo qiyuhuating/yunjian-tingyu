@@ -1,2 +1,9 @@
 import type {PhoneState} from './phone-model';
 export function assetReferences(state:PhoneState){const refs=new Set<string>();if(state.wallpaper?.asset)refs.add(state.wallpaper.asset);for(const [key,draft] of Object.entries(state.drafts||{})){if(key.startsWith('editor:characters:')||key.startsWith('editor:cards:'))try{const parsed=JSON.parse(draft),c=key.startsWith('editor:cards:')?parsed?.character:parsed;if(c?.avatar&&/^(local:|\/api\/assets\/)[a-f0-9-]{36}$/.test(c.avatar))refs.add(c.avatar);}catch{}}for(const card of state.characterCards||[])if(card.character.avatar)refs.add(card.character.avatar);for(const c of state.characters)if(c.avatar)refs.add(c.avatar);for(const messages of Object.values(state.threads))for(const m of messages)if(m.asset)refs.add(m.asset);for(const a of [...state.gallery,...state.music])refs.add(a.url);return [...refs];}
+
+/** Cleanup is only allowed for newly staged references not used by the last
+ * successfully persisted snapshot. Never delete pre-existing user assets. */
+export function orphanedStagedAssets(before:PhoneState,staged:PhoneState,persisted:PhoneState){
+ const original=new Set(assetReferences(before)),committed=new Set(assetReferences(persisted));
+ return assetReferences(staged).filter(ref=>ref.startsWith('local:')&&!original.has(ref)&&!committed.has(ref)).map(ref=>ref.slice('local:'.length));
+}
