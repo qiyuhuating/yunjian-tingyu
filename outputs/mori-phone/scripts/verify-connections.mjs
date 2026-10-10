@@ -34,6 +34,13 @@ await check('自定义原生协议拥有独立的地址与角色专属密钥命�
  const one=characterConnection(state,first),two=characterConnection(state,second);
  assert.equal(one.keyScope,'character');
  assert.notEqual(one.keySlot,two.keySlot);
+ first.aiConnection.baseURL=b;
+ assert.notEqual(one.keySlot,characterConnection(state,first).keySlot);
+ first.aiConnection.baseURL='https://relay-a.example/v1/messages/';
+ assert.equal(one.keySlot,characterConnection(state,first).keySlot);
+ first.aiConnection.baseURL='http://localhost:8080';
+ assert.match(characterConnection(state,first).keySlot,/invalid$/);
+ assert.notEqual(one.keySlot,characterConnection(state,first).keySlot);
 });
 await check('429 quota 错误仍分类为限流，错误文本不回显凭据',()=>{const {upstreamFailure}=load('provider-errors');const error=upstreamFailure(429,{message:'quota exceeded sk-fixture-private'},'30');assert.match(error.message,/限流/);assert.match(error.message,/30 秒/);assert(!error.message.includes('sk-fixture-private'));});
 await check('OpenRouter 临时并发额度与 Key 限额分别提示',async()=>{const {fetchModels}=load('provider-transport');const input={provider:'openrouter',baseURL:'',apiKey:'sk-fixture'};for(const [limit,pattern] of [['openrouter_in_flight_budget',/临时并发额度/],['openrouter_key_limit',/Key.*限额/]])await assert.rejects(fetchModels(input,async()=>Response.json({error:{metadata:{limit_source:limit}}},{status:402,headers:{'Retry-After':'20'}})),pattern);});
