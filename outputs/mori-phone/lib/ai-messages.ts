@@ -49,7 +49,7 @@ export async function assembleChatMessages(input:RequestContext):Promise<ChatInp
   }
  }
  // A restored thread may not contain the currently submitted text yet.
- if(prompt.history.at(-1)?.text!==text&&(mode!=='group'||!prompt.history.some(m=>m.role==='user'&&m.text===text)))
+ if(prompt.history.at(-1)?.role!=='user'||prompt.history.at(-1)?.text!==text)
   messages.push({role:'user',content:text});
  signal?.throwIfAborted();
  return messages;
