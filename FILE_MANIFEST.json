@@ -1136,8 +1136,8 @@
   {
     "path": "outputs/mori-phone/lib/context-window.ts",
     "description": "服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts",
-    "bytes": 3986,
-    "sha256": "ca87bbea1a73dcea92ee17e68f5ee28abff7945557f9a092ed04868199dd8e00"
+    "bytes": 3987,
+    "sha256": "1f7cff141af8b08385c1f07d9f65c046ad379ed9e883d367102c4e6ba825659e"
   },
   {
     "path": "outputs/mori-phone/lib/continuity.ts",
@@ -2552,8 +2552,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
     "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 8757,
-    "sha256": "b20ebece74631dcc925b8c09e09be6882003c2083c3d4abb1a330ecae0e0bb97"
+    "bytes": 9098,
+    "sha256": "c6a35a076711fae68121437875ee26af3b0ca6df7a8fb9310e4ae3965459be86"
   },
   {
     "path": "work/qa/connection-ui.mjs",
