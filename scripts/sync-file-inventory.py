@@ -11,6 +11,7 @@ manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
     "outputs/mori-phone/lib/asset-references.ts": "资产引用统计与跨领域文件引用追踪",
+    "outputs/mori-phone/lib/local-thread-store.ts": "线程独立持久化模块、增量写入、删除与事务隔离",
     "outputs/mori-phone/lib/turn-receipts.ts": "持久化回合发送回执、角色游标、显式重试与不确定计费保护",
     "outputs/mori-phone/lib/agent-workspace.ts": "隔离的版本化文本工作区、乐观并发与权限校验",
     "outputs/mori-phone/lib/agent-orchestrator.ts": "有界的多角色文件审阅、交接、角色独立模型和执行记录",
