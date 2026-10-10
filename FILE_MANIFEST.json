@@ -324,6 +324,12 @@
     "sha256": "354d24b3577fb95b6dd21b6bcaed9c6eaab4864dcde15c4fdfee416216215c04"
   },
   {
+    "path": "docs/聊天回合执行器-2026-10-10.md",
+    "description": "聊天执行器阶段性分层、费用与状态安全不变量及后续验收清单；路径：docs/聊天回合执行器-2026-10-10.md",
+    "bytes": 2706,
+    "sha256": "8f7a797ac2e2a092ee2e5b8480095b757eeb104ec2cf6381b4d4082ca295a142"
+  },
+  {
     "path": "docs/自然群聊与内置Via说明.md",
     "description": "自然群聊、Via二进制来源/合包、参考首页回退、系统栏和实际原生验收；路径：docs/自然群聊与内置Via说明.md",
     "bytes": 4326,
@@ -782,8 +788,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 32913,
-    "sha256": "8fce746ad5c5b8451790d250b97b6351a696a1a3ea3e1b07d5f4ce163614f457"
+    "bytes": 30856,
+    "sha256": "86023281dd89438ffa9b6e1f81d87d99465d214479e225c1e4fe57a6e1986001"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1398,6 +1404,12 @@
     "sha256": "47405ca487bb53f28e108df93c3e090c652b0d6352c0409621233176e9962171"
   },
   {
+    "path": "outputs/mori-phone/lib/turn-execution.ts",
+    "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
+    "bytes": 7245,
+    "sha256": "d08f0dd0e6a6189bf038c953bd6d60d7a71349bf87268e48e9e9f50a35673afb"
+  },
+  {
     "path": "outputs/mori-phone/lib/world-info.ts",
     "bytes": 3333,
     "sha256": "9071d453cc9161988928f3e1fdc203f735fdf047e32ffd1ad96a9189644d55b6",
@@ -1682,8 +1694,14 @@
   {
     "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
     "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
-    "bytes": 7319,
-    "sha256": "d362fb6de83715b07ed33d5e617f3dc94859180cae67c0a17f19876eb99ce8a2"
+    "bytes": 7471,
+    "sha256": "ff02ea01605f9d638f750c3eeb7ad4970255c3f0a3cbf6f7092f96dbf38b1b97"
+  },
+  {
+    "path": "outputs/mori-phone/scripts/verify-turn.mjs",
+    "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
+    "bytes": 7929,
+    "sha256": "672e05d2dd9be5e2eea876ca057d561ffbf2856789a55295527fc33377a373c9"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
@@ -2174,8 +2192,8 @@
   {
     "path": "work/check-release.py",
     "description": "聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py",
-    "bytes": 1652,
-    "sha256": "ae98ef6e74d3377d20d5ac4a46becbe7c9d8dd543c9e155f2578e968276bc178"
+    "bytes": 1723,
+    "sha256": "16211da7bfb8d15435b4b5a56970f4f749f27d462016f1c5919f6ddefa6a7a6e"
   },
   {
     "path": "work/package-core-sources.py",
