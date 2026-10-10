@@ -42,6 +42,84 @@
     "sha256": "beb9d263cc8e448749ba61c79f5aad568f7a220bd8cb8b95ad065e9f1800bb41"
   },
   {
+    "path": "docs/api-settings-2026-10-09/build-validation-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/build-validation-results.json",
+    "bytes": 776,
+    "sha256": "139dceabe5e4c5aeecddcb7906a7db1c4dcac595ddf0291913f3326e90cd040a"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/card-library-regression-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/card-library-regression-results.json",
+    "bytes": 1227,
+    "sha256": "97fb7bb14e5c420503126cd733f43d1a28e1994ca8ebee71eca2570951406275"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/chat-recovery.png",
+    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/chat-recovery.png",
+    "bytes": 52700,
+    "sha256": "702ff27bedb12b4f0709d3589c598785a2e1bc59df88611232d70ad5f4022d81"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/connection-error.png",
+    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/connection-error.png",
+    "bytes": 68473,
+    "sha256": "d5f68f33be04b4b611848ab18d73a11f93a1061e1de5515c62b0a2a9445045e2"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/connection-ui-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/connection-ui-results.json",
+    "bytes": 1590,
+    "sha256": "547cdb2f3240fce16e439fe8acee0e4cbb3757a8282d08c5a5647560fc46b46b"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/core-validation-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/core-validation-results.json",
+    "bytes": 16956,
+    "sha256": "db0a7a87e1f00fcdad92f0652725f180cbb5ba123dc020a3719fe05d36d3d292"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/feature-regression-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/feature-regression-results.json",
+    "bytes": 1488,
+    "sha256": "91d41437e30cfdbf21a30bcf3b3190dfd7345e6eece4f9c3e00912cb10cec419"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/p0-reliability-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/p0-reliability-results.json",
+    "bytes": 692,
+    "sha256": "3012b22678017ce76aba01898f71848ddae41df8832338bf4a920fb8664d33d0"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/roleplay-regression-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/roleplay-regression-results.json",
+    "bytes": 1274,
+    "sha256": "098614613a6ec5f1643ba42c7224326f2282b888b0ad8fc7a5eda088607bd810"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/settings-night.png",
+    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-night.png",
+    "bytes": 49913,
+    "sha256": "345236ba6c764e2049f7a4055f79331bd1f3fd1a83220a63d72ee4db17c688fa"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/settings-overview.png",
+    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-overview.png",
+    "bytes": 53737,
+    "sha256": "16c709f503a8610e67bf7acf61f2baf6528df3e2831cefd91f3c5239896ae459"
+  },
+  {
+    "path": "docs/api-settings-2026-10-09/storage-regression-results.json",
+    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/storage-regression-results.json",
+    "bytes": 1095,
+    "sha256": "870b2ba78f5a2f951ddfa090118687b131cebd11f2f5e8b50a1005f049089d81"
+  },
+  {
+    "path": "docs/API连接与设置重设计-2026-10-09.md",
+    "description": "本轮项目分析、缺陷修复、真实软件设计来源与验收边界；路径：docs/API连接与设置重设计-2026-10-09.md",
+    "bytes": 12529,
+    "sha256": "382b73c5ece9578da844e78045e7b3aec3b95619020106c3134427138538efcc"
+  },
+  {
     "path": "docs/build-performance-results.json",
     "description": "相同工具链独立生产构建的逐文件大小与摘要，区别首屏 JS、总产物和未测 APK/FPS；路径：docs/build-performance-results.json",
     "bytes": 3889,
@@ -274,6 +352,12 @@
     "description": "角色独立服务商、专属密钥和群聊路由的产品说明、手工配置流程与验收标准；路径：docs/角色独立AI模型路由.md",
     "bytes": 3892,
     "sha256": "ec14e4032cc807a84bdd80a34c77ebeb309c476b4b8439652a41c516fac674a3"
+  },
+  {
+    "path": "docs/运行时架构治理-2026-10-10.md",
+    "description": "运行时职责边界、数据和费用不变量、风险及下一阶段验收清单；路径：docs/运行时架构治理-2026-10-10.md",
+    "bytes": 4097,
+    "sha256": "cda777fd70e655013d8081acbab657d128618f88c9880b85b1e7a931148f3e41"
   },
   {
     "path": "outputs/0.0.1暗夜聊天预览.png",
@@ -698,8 +782,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 33770,
-    "sha256": "9fb90f72d1968c77b1c86d663a1c9cbe2b2edad4abb3c54575404038adfd91e5"
+    "bytes": 32913,
+    "sha256": "8fce746ad5c5b8451790d250b97b6351a696a1a3ea3e1b07d5f4ce163614f457"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -718,6 +802,12 @@
     "description": "React 界面模块：companion-settings；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/companion-settings.tsx",
     "bytes": 7807,
     "sha256": "c944c1eb00338382d4cebc12ce5648c3cc36ab83db5f95d62a5dd59c067a0b5d"
+  },
+  {
+    "path": "outputs/mori-phone/app/connection-settings.tsx",
+    "description": "连接工作区：独立测试、实时模型、持久诊断和地址凭据隔离；路径：outputs/mori-phone/app/connection-settings.tsx",
+    "bytes": 11282,
+    "sha256": "b9e2b4bab4a89c8a48bf9101935780f7cfce887ef390bf325213f459972b7885"
   },
   {
     "path": "outputs/mori-phone/app/focus-timer.tsx",
@@ -800,8 +890,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 30756,
-    "sha256": "b088a210962f5ca82ca0439d87a14f7c15e4247d205778ddcccde23379bfc410"
+    "bytes": 26692,
+    "sha256": "6c7c0c6e4cfed0a5ce7ddcc30216cf29dbd24bcb7eb1892ecefa62256832b039"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -832,6 +922,18 @@
     "description": "酒馆风格角色扮演预设界面；路径：outputs/mori-phone/app/roleplay-controls.tsx",
     "bytes": 1638,
     "sha256": "bc0ab61c1e3846185cfd902fd7053a4ca5b25767556ac86704d76605d1504c45"
+  },
+  {
+    "path": "outputs/mori-phone/app/setting-controls.tsx",
+    "description": "可搜索选择弹层与支持键盘导航的分段选择控件；路径：outputs/mori-phone/app/setting-controls.tsx",
+    "bytes": 3315,
+    "sha256": "6587737809bd61bab84b9b27351089bca1d6179d1f355f8e4d4dd90c4342bbda"
+  },
+  {
+    "path": "outputs/mori-phone/app/settings.css",
+    "description": "分类设置、连接诊断、暗夜恢复操作及响应布局样式；路径：outputs/mori-phone/app/settings.css",
+    "bytes": 12573,
+    "sha256": "8356ffe397aac1135e2805f6cda1ecd47e681863aaeb1cb8333f81c316e882e1"
   },
   {
     "path": "outputs/mori-phone/app/settings.tsx",
@@ -1038,6 +1140,18 @@
     "sha256": "d89eabd95716ce404f5f7ca2a254220435be8ddce7c899d7ef461ff22ec80454"
   },
   {
+    "path": "outputs/mori-phone/lib/ai-messages.ts",
+    "description": "独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts",
+    "bytes": 3820,
+    "sha256": "b9262df78f61132a58ea373341f4af272b0917dc060717334c3b53a5384f5fcc"
+  },
+  {
+    "path": "outputs/mori-phone/lib/ai-stream.ts",
+    "description": "统一 SSE 增量解码、CRLF 分帧、完成标志与媒体预算，支持取消及错误安全结算；路径：outputs/mori-phone/lib/ai-stream.ts",
+    "bytes": 4041,
+    "sha256": "179d16ca0d6881ae16eb09a6c59913dd01548432a93ef5c59318f243a16304c4"
+  },
+  {
     "path": "outputs/mori-phone/lib/asset-transport.ts",
     "description": "TypeScript 业务或构建模块：asset-transport；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/asset-transport.ts",
     "bytes": 1081,
@@ -1102,6 +1216,12 @@
     "description": "中文与语言切换、角色偏好和编程数学美术教学的质量预设；路径：outputs/mori-phone/lib/companion-capabilities.ts",
     "bytes": 2729,
     "sha256": "7b3f68b3611449b6548e7e55183380a19ba145477f46feb07dacfcc8e5b1e901"
+  },
+  {
+    "path": "outputs/mori-phone/lib/connection-client.ts",
+    "description": "独立连接探测：取消、超时、流结束与非空正文校验；路径：outputs/mori-phone/lib/connection-client.ts",
+    "bytes": 2442,
+    "sha256": "59ea4dcf983bd3cc4f6705d955d421db571988c5a3f120062ca975087cce12a2"
   },
   {
     "path": "outputs/mori-phone/lib/connector-context.ts",
@@ -1234,6 +1354,18 @@
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
     "bytes": 11059,
     "sha256": "a079318a6776a3adc82e638683fd92ae3c0dfea9c1b50485278062e6a9ef96ee"
+  },
+  {
+    "path": "outputs/mori-phone/lib/provider-errors.ts",
+    "description": "安全的服务商错误分类，区分鉴权、余额、并发额度和限流；路径：outputs/mori-phone/lib/provider-errors.ts",
+    "bytes": 2502,
+    "sha256": "e2c1da075da94f9ba941f86adce499598f1ec1b774a2f885af803aba201d2d89"
+  },
+  {
+    "path": "outputs/mori-phone/lib/provider-transport.ts",
+    "description": "网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts",
+    "bytes": 4862,
+    "sha256": "2a58d16bc786ce00a7271d1848b025fed68491fca0cc42d44338b0d8776184aa"
   },
   {
     "path": "outputs/mori-phone/lib/providers.ts",
@@ -1494,6 +1626,12 @@
     "sha256": "b80b68aa81c52c19b64847eeb3702d47bce012da433b93c067efb0330535a023"
   },
   {
+    "path": "outputs/mori-phone/scripts/verify-connections.mjs",
+    "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
+    "bytes": 9098,
+    "sha256": "c6a35a076711fae68121437875ee26af3b0ca6df7a8fb9310e4ae3965459be86"
+  },
+  {
     "path": "outputs/mori-phone/scripts/verify-context.mjs",
     "description": "11 项最大上下文和系统编辑回归，含600条大请求与旧备份迁移；路径：outputs/mori-phone/scripts/verify-context.mjs",
     "bytes": 6151,
@@ -1540,6 +1678,12 @@
     "bytes": 13693,
     "sha256": "b13e9106f6eea0ae9b98f46b16945234568c9eeb7d8e71b5a97bc95b3b3d4650",
     "description": "27项AI片段覆盖、世界书往返、递归、记忆并发与摘要过期回归；路径：outputs/mori-phone/scripts/verify-roleplay.mjs"
+  },
+  {
+    "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
+    "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
+    "bytes": 7319,
+    "sha256": "d362fb6de83715b07ed33d5e617f3dc94859180cae67c0a17f19876eb99ce8a2"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
@@ -2030,8 +2174,8 @@
   {
     "path": "work/check-release.py",
     "description": "聚合151项核心与卡库检查、严格TypeScript和差异空白检查并生成具名验收记录；路径：work/check-release.py",
-    "bytes": 1580,
-    "sha256": "d5d808f9784c9d00f20b21fff6abd1e49c70b4f85be7a78a80d83e8f82acdb95"
+    "bytes": 1652,
+    "sha256": "ae98ef6e74d3377d20d5ac4a46becbe7c9d8dd543c9e155f2578e968276bc178"
   },
   {
     "path": "work/package-core-sources.py",
@@ -2086,6 +2230,12 @@
     "description": "历史专项浏览器检查或开发工具：companion；使用时核对对应版本、路径和端口；路径：work/qa/companion.mjs",
     "bytes": 4883,
     "sha256": "d9336bb524d0ea6c8807b626701874ed91f19d013d1511e2ef7cd6b7ffbd50a6"
+  },
+  {
+    "path": "work/qa/connection-ui.mjs",
+    "description": "23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs",
+    "bytes": 22570,
+    "sha256": "7a5580a2c59a0046ef0ea5438a556249250c2fc72176c95fe6ec677ea82002e8"
   },
   {
     "path": "work/qa/continuity.mjs",
@@ -2434,131 +2584,5 @@
     "description": "汇总发布检查结果与安装信息；路径：work/write-release-report.py",
     "bytes": 5889,
     "sha256": "04e3f4def98f1978164a9674c900508d2cd173cb035661717eb4eda3f786091f"
-  },
-  {
-    "path": "docs/API连接与设置重设计-2026-10-09.md",
-    "description": "本轮项目分析、缺陷修复、真实软件设计来源与验收边界；路径：docs/API连接与设置重设计-2026-10-09.md",
-    "bytes": 12529,
-    "sha256": "382b73c5ece9578da844e78045e7b3aec3b95619020106c3134427138538efcc"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/build-validation-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/build-validation-results.json",
-    "bytes": 776,
-    "sha256": "139dceabe5e4c5aeecddcb7906a7db1c4dcac595ddf0291913f3326e90cd040a"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/card-library-regression-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/card-library-regression-results.json",
-    "bytes": 1227,
-    "sha256": "97fb7bb14e5c420503126cd733f43d1a28e1994ca8ebee71eca2570951406275"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/chat-recovery.png",
-    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/chat-recovery.png",
-    "bytes": 52700,
-    "sha256": "702ff27bedb12b4f0709d3589c598785a2e1bc59df88611232d70ad5f4022d81"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/connection-error.png",
-    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/connection-error.png",
-    "bytes": 68473,
-    "sha256": "d5f68f33be04b4b611848ab18d73a11f93a1061e1de5515c62b0a2a9445045e2"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/connection-ui-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/connection-ui-results.json",
-    "bytes": 1590,
-    "sha256": "547cdb2f3240fce16e439fe8acee0e4cbb3757a8282d08c5a5647560fc46b46b"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/core-validation-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/core-validation-results.json",
-    "bytes": 16956,
-    "sha256": "db0a7a87e1f00fcdad92f0652725f180cbb5ba123dc020a3719fe05d36d3d292"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/feature-regression-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/feature-regression-results.json",
-    "bytes": 1488,
-    "sha256": "91d41437e30cfdbf21a30bcf3b3190dfd7345e6eece4f9c3e00912cb10cec419"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/p0-reliability-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/p0-reliability-results.json",
-    "bytes": 692,
-    "sha256": "3012b22678017ce76aba01898f71848ddae41df8832338bf4a920fb8664d33d0"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/roleplay-regression-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/roleplay-regression-results.json",
-    "bytes": 1274,
-    "sha256": "098614613a6ec5f1643ba42c7224326f2282b888b0ad8fc7a5eda088607bd810"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/settings-night.png",
-    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-night.png",
-    "bytes": 49913,
-    "sha256": "345236ba6c764e2049f7a4055f79331bd1f3fd1a83220a63d72ee4db17c688fa"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/settings-overview.png",
-    "description": "本轮生产界面验收截图；路径：docs/api-settings-2026-10-09/settings-overview.png",
-    "bytes": 53737,
-    "sha256": "16c709f503a8610e67bf7acf61f2baf6528df3e2831cefd91f3c5239896ae459"
-  },
-  {
-    "path": "docs/api-settings-2026-10-09/storage-regression-results.json",
-    "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/storage-regression-results.json",
-    "bytes": 1095,
-    "sha256": "870b2ba78f5a2f951ddfa090118687b131cebd11f2f5e8b50a1005f049089d81"
-  },
-  {
-    "path": "outputs/mori-phone/app/connection-settings.tsx",
-    "description": "连接工作区：独立测试、实时模型、持久诊断和地址凭据隔离；路径：outputs/mori-phone/app/connection-settings.tsx",
-    "bytes": 11282,
-    "sha256": "b9e2b4bab4a89c8a48bf9101935780f7cfce887ef390bf325213f459972b7885"
-  },
-  {
-    "path": "outputs/mori-phone/app/setting-controls.tsx",
-    "description": "可搜索选择弹层与支持键盘导航的分段选择控件；路径：outputs/mori-phone/app/setting-controls.tsx",
-    "bytes": 3315,
-    "sha256": "6587737809bd61bab84b9b27351089bca1d6179d1f355f8e4d4dd90c4342bbda"
-  },
-  {
-    "path": "outputs/mori-phone/app/settings.css",
-    "description": "分类设置、连接诊断、暗夜恢复操作及响应布局样式；路径：outputs/mori-phone/app/settings.css",
-    "bytes": 12573,
-    "sha256": "8356ffe397aac1135e2805f6cda1ecd47e681863aaeb1cb8333f81c316e882e1"
-  },
-  {
-    "path": "outputs/mori-phone/lib/connection-client.ts",
-    "description": "独立连接探测：取消、超时、流结束与非空正文校验；路径：outputs/mori-phone/lib/connection-client.ts",
-    "bytes": 2442,
-    "sha256": "59ea4dcf983bd3cc4f6705d955d421db571988c5a3f120062ca975087cce12a2"
-  },
-  {
-    "path": "outputs/mori-phone/lib/provider-errors.ts",
-    "description": "安全的服务商错误分类，区分鉴权、余额、并发额度和限流；路径：outputs/mori-phone/lib/provider-errors.ts",
-    "bytes": 2502,
-    "sha256": "e2c1da075da94f9ba941f86adce499598f1ec1b774a2f885af803aba201d2d89"
-  },
-  {
-    "path": "outputs/mori-phone/lib/provider-transport.ts",
-    "description": "网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts",
-    "bytes": 4862,
-    "sha256": "2a58d16bc786ce00a7271d1848b025fed68491fca0cc42d44338b0d8776184aa"
-  },
-  {
-    "path": "outputs/mori-phone/scripts/verify-connections.mjs",
-    "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 9098,
-    "sha256": "c6a35a076711fae68121437875ee26af3b0ca6df7a8fb9310e4ae3965459be86"
-  },
-  {
-    "path": "work/qa/connection-ui.mjs",
-    "description": "23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs",
-    "bytes": 22533,
-    "sha256": "e21615831d3136fa47515ddd5fe4e0acc7807c545372e4e0edf378fef726e7b1"
   }
 ]

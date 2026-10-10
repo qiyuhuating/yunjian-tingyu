@@ -5,7 +5,6 @@ import {uid,localDate,type Message} from '../lib/phone-model';
 import {readAttachment} from '../lib/attachment-text';
 import {splitRoleplayReply} from '../lib/roleplay';
 import {groupSpeakers} from '../lib/group-chat';
-import {repeatedReply} from '../lib/continuity';
 import {useVoice} from './use-voice';
 import {useRecorder} from './use-recorder';
 import RecordingPreview from './recording-preview';
@@ -61,18 +60,14 @@ export default function Chat(){
     const speaker=speakers[index],c=p.snapshot().characters.find(v=>v.id===speaker);if(!c)continue;
     replyingAs=speaker;setActiveSpeaker(speaker);if(group){setWaiting(true);await waitForReply(groupDelay(p.snapshot().groupSettings,index,text.length),abort.current.signal);setWaiting(false);}partial.current='';setStream('');const mode=group?'group':app==='face'?'face':app==='live'?'live':'chat';
     const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
-    const nativeFiles:File[]=[];let answer=await p.requestAI(turnText,speaker,thread,mode,value=>{partial.current=value;if(!group)setStream(value);},abort.current.signal,file=>nativeFiles.push(file));
-    let result;
-    try{result=conversationReply(answer,!!group,index>0||nativeFiles.length>0);}catch{answer=await p.requestAI(text+'\n[格式修正：自然聊天正文；群聊用 cloudlet-messages 数组；可选媒体命令放在完整正文之后。不写动作、环境或旁白。]',speaker,thread,mode,undefined,abort.current.signal);result=conversationReply(answer,!!group,index>0||nativeFiles.length>0);}
-    let bubbles=result.bubbles;
-    const latestMessages=p.snapshot().threads[thread]||[],ownMessages=group?latestMessages.filter(m=>m.senderId?m.senderId===speaker:m.sender===c.name):latestMessages;
-    if(!nativeFiles.length&&state.memorySettings.antiRepeat&&repeatedReply(group?bubbles.join('\n'):splitRoleplayReply(answer).text,ownMessages)){
-     answer=await p.requestAI(text+'\n[请重写：上次生成与最近回复过于相似。保留人设和事实，用新的具体回应，不复用句子。]',speaker,thread,mode,undefined,abort.current.signal);result=conversationReply(answer,!!group,index>0||nativeFiles.length>0);bubbles=result.bubbles;
-    }
-    const parsed=result;
+    const nativeFiles:File[]=[];const answer=await p.requestAI(turnText,speaker,thread,mode,value=>{partial.current=value;if(!group)setStream(value);},abort.current.signal,file=>nativeFiles.push(file));
+    // Do not silently resend charged API calls to repair formatting or repetition.
+    // Preserve the original reply; malformed replies remain visible as retryable failures.
+    const parsed=conversationReply(answer,!!group,index>0||nativeFiles.length>0);
+    const bubbles=parsed.bubbles;
     for(const [i,bubble] of bubbles.entries()){if(i){setWaiting(true);await waitForReply(groupDelay(p.snapshot().groupSettings,i,bubble.length,true),abort.current.signal);setWaiting(false);}await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'assistant',text:bubble,suggestions:!group&&state.roleplay.choices?parsed.suggestions:[],timestamp:Date.now(),kind:'text',sender:c.name,senderId:speaker,read:view.current.thread===thread&&view.current.visible});const request=s.threads[thread].find(m=>m.id===turnUserId);if(request){request.failed=false;delete request.failureReason;}if(i===0){const char=s.characters.find(v=>v.id===speaker);if(char){char.affection=Math.min(100,char.affection+1);char.trust=Math.min(100,char.trust+1);}}});}
     for(const file of nativeFiles){abort.current.signal.throwIfAborted();const asset=await p.upload(file);if(!/^(image|audio|video)\//.test(asset.mime))throw new Error('模型返回的媒体文件格式无法确认。');await commit(s=>{(s.threads[thread]??=[]).push({id:uid(),role:'assistant',text:'',timestamp:Date.now(),kind:asset.mime.startsWith('image/')?'image':asset.mime.startsWith('audio/')?'voice':'file',asset:asset.url,mime:asset.mime,fileSize:asset.size,fileName:asset.name,sender:c.name,senderId:speaker,read:view.current.thread===thread&&view.current.visible,attachmentStatus:'模型原生生成的媒体'});});}
-    if(p.snapshot().threads[thread]?.find(m=>m.id===turnUserId)?.failed)await commit(s=>{const m=s.threads[thread]?.find(m=>m.id===turnUserId);if(m){m.failed=false;delete m.failureReason;}});if(group)retrySpeakers.current=speakers.slice(index+1);partial.current='';setStream('');if(state.voiceSettings.autoRead&&bubbles.length)void reader.read(bubbles.join('。'));if(result.commands.length){setPhase('media');await deliverMedia(result.commands,speaker,thread,abort.current.signal);setPhase('reply');}
+    if(p.snapshot().threads[thread]?.find(m=>m.id===turnUserId)?.failed)await commit(s=>{const m=s.threads[thread]?.find(m=>m.id===turnUserId);if(m){m.failed=false;delete m.failureReason;}});if(group)retrySpeakers.current=speakers.slice(index+1);partial.current='';setStream('');if(state.voiceSettings.autoRead&&bubbles.length)void reader.read(bubbles.join('。'));if(parsed.commands.length){setPhase('media');await deliverMedia(parsed.commands,speaker,thread,abort.current.signal);setPhase('reply');}
 
    }
    retrySpeakers.current=null;const maintenanceSignal=maintenanceAbort.current.signal,participants=[...speakers],services={snapshot:p.snapshot,commit,requestAI:p.requestAI,toast};maintenanceQueue.current=maintenanceQueue.current.catch(()=>{}).then(async()=>{setMaintenance(true);try{await maintainConversation(services,participants,thread,maintenanceSignal);}finally{setMaintenance(false);}}).catch(()=>{});
