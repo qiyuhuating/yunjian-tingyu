@@ -79,4 +79,41 @@ await check('Missing saved reviewer output blocks restart rather than rebilling 
  const j=f.state.agentJobs[0];j.completed=[f.speakers[0]];j.status='needs_review';
  assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告不存在/);
 });
+await check('Read-only workspace tools return a copy rather than mutable storage',()=>{
+ const f=fixture(),old=w.readWorkspace(f.state,f.thread,'imports/sample.ts').content;
+ const copy=w.executeWorkspaceTool(f.state,{tool:'workspace.read',thread:f.thread,path:'imports/sample.ts'},{thread:f.thread,write:false});
+ copy.content='unauthorized mutation';
+ assert.equal(w.readWorkspace(f.state,f.thread,'imports/sample.ts').content,old);
+});
+await check('Workspace capacity errors are side-effect free before transaction',()=>{
+ const f=fixture(),entry=w.readWorkspace(f.state,f.thread,'imports/sample.ts'),old=entry.content;
+ f.state.workspaceFiles.push({id:'near-limit',thread:f.thread,path:'other.txt',content:'x'.repeat(1024*1024-250),revision:1,updatedAt:1});
+ assert.throws(()=>w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'edited'},1),/上限/);
+ assert.equal(entry.content,old);assert.equal(entry.revision,1);
+});
+await check('Late agent completion is fenced after a manually retried request',async()=>{
+ const f=fixture();let state=f.state;const held=[];
+ const commit=async fn=>{const copy=structuredClone(state);fn(copy);state=copy;};
+ a.planAgentReview(state,{jobId:'fenced-review',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ const requestAI=async(text,speaker)=>speaker===f.speakers[1]?'verified second':new Promise(resolve=>held.push(resolve));
+ const services={snapshot:()=>state,commit,signal:new AbortController().signal,requestAI};
+ const wait=async n=>{for(let i=0;i<40&&held.length<n;i++)await new Promise(resolve=>setImmediate(resolve));assert.equal(held.length,n);};
+ const stale=a.executeAgentReview('fenced-review',services);await wait(1);
+ await commit(s=>{a.flagUncertainAgentJob(s,'fenced-review','retry');a.authorizeAgentResume(s,'fenced-review');});
+ const fresh=a.executeAgentReview('fenced-review',services);await wait(2);
+ held[0]('stale result');await assert.rejects(stale,/代次/);
+ assert.equal(state.agentJobs[0].completed.length,0);
+ held[1]('fresh result');await fresh;
+ assert.equal(state.agentJobs[0].status,'completed');
+ assert.equal(state.threads[f.thread].filter(m=>m.role==='assistant'&&m.senderId===f.speakers[0]).length,1);
+ assert.equal(w.readWorkspace(state,f.thread,'reviews/fenced-review/'+f.speakers[0]+'.md').content,'fresh result');
+});
+await check('Stale Agent failure cannot poison a newer request',()=>{
+ const f=fixture();a.planAgentReview(f.state,{jobId:'late-error',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ const job=f.state.agentJobs[0];job.status='requesting';job.attempts=2;
+ a.flagUncertainAgentJob(f.state,'late-error','stale failure',1);
+ assert.equal(job.status,'requesting');
+ a.flagUncertainAgentJob(f.state,'late-error','current failure',2);
+ assert.equal(job.status,'needs_review');
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

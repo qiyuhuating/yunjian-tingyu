@@ -22,6 +22,7 @@ export type TurnServices={
  onDelta?:(value:string)=>void;
  onRemaining?:(remaining:string[])=>void;
  onVoice?:(message:string)=>void;
+ onRequest?:(attempt:number)=>void;
  isVisible?:(thread:string)=>boolean;
 };
 
@@ -60,7 +61,9 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    (group&&!latest.groups.find(g=>g.id===thread)?.members.includes(speaker)))
    throw new Error('等待期间消息或角色已修改，旧请求没有发送。');
   // Persist uncertainty BEFORE posting. If the app dies here, never auto resend.
-  await p.commit(state=>markRequesting(state,userId,speaker));
+  let requestAttempt=0;
+  await p.commit(state=>{requestAttempt=markRequesting(state,userId,speaker);});
+  p.onRequest?.(requestAttempt);
   p.onPhase?.('requesting');p.onDelta?.('');
   const turnText=group&&index>0?text+'\n[如果上一位朋友已完整接住话题，且你没有有意义的补充，可以只输出 <cloudlet-messages>[]</cloudlet-messages>；被明确 @ 时仍需回应。]':text;
   const nativeFiles:File[]=[];
@@ -76,6 +79,8 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
    const c=state.characters.find(v=>v.id===speaker);
    if(!c||(group&&!state.groups.find(g=>g.id===thread)?.members.includes(speaker)))
     throw new Error('回复期间群成员已修改，取消旧回复写入。');
+   // Fence before any mutation: late provider responses must not become messages.
+   const complete=markCommitted(state,userId,speaker,requestAttempt);
    for(const bubble of parsed.bubbles){
     (state.threads[thread]??=[]).push({
      id:uid(),role:'assistant',text:bubble,kind:'text',timestamp:Date.now(),sender:c.name,senderId:speaker,
@@ -83,7 +88,6 @@ export async function executeTurn(request:TurnRequest,p:TurnServices):Promise<st
      read:p.isVisible?.(thread)??false
     });
    }
-   const complete=markCommitted(state,userId,speaker);
    target.failed=!complete;if(complete)delete target.failureReason;
    if(parsed.bubbles.length){c.affection=Math.min(100,c.affection+1);c.trust=Math.min(100,c.trust+1);}
   });

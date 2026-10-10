@@ -37,6 +37,7 @@ export type ReviewServices={
  commit:(change:(state:PhoneState)=>void)=>Promise<void>;
  requestAI:(text:string,character:string,thread:string,mode:'compose',delta:undefined,signal:AbortSignal)=>Promise<string>;
  signal:AbortSignal;
+ onRequest?:(attempt:number)=>void;
 };
 export async function executeAgentReview(jobId:string,p:ReviewServices){
  const initial=activeAgentJob(p.snapshot(),jobId);
@@ -56,13 +57,15 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
    continue;
   }
   p.signal.throwIfAborted();
+  let requestAttempt=0;
   await p.commit(state=>{
    const job=activeAgentJob(state,jobId),now=readWorkspace(state,initial.thread,initial.path);
    if(!job||job.status!=='planned'||!now||now.revision!==sourceRevision||
     !state.groups.some(g=>g.id===initial.thread&&g.members.includes(speaker)))
     throw new Error('协作任务已变化，停止外部调用。');
-   job.status='requesting';job.attempts++;job.updatedAt=Date.now();
+   job.status='requesting';job.attempts++;requestAttempt=job.attempts;job.updatedAt=Date.now();
   });
+  p.onRequest?.(requestAttempt);
   const name=p.snapshot().characters.find(c=>c.id===speaker)?.name||speaker;
   // The actual file bytes come from the local, permission-scoped workspace.
   // External text is data, not privileged instructions or runnable code.
@@ -75,8 +78,9 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
   if(!answer||answer.length>18000)throw new Error('协作结果为空或超出安全预算，未保存。');
   await p.commit(state=>{
    const job=activeAgentJob(state,jobId),now=readWorkspace(state,initial.thread,initial.path);
-   if(!job||job.status!=='requesting'||job.completed.includes(speaker)||!now||now.revision!==sourceRevision)
-    throw new Error('源文件或任务版本已经改变，本次结果未保存。');
+   if(!job||job.status!=='requesting'||job.attempts!==requestAttempt||
+    job.speakers[job.completed.length]!==speaker||job.completed.includes(speaker)||!now||now.revision!==sourceRevision)
+    throw new Error('源文件、角色次序或请求代次已经改变，本次结果未保存。');
    const out='reviews/'+jobId+'/'+speaker+'.md';
    putWorkspace(state,{thread:initial.thread,path:out,content:answer},null);
    (state.threads[initial.thread]??=[]).push({id:crypto.randomUUID(),role:'assistant',kind:'text',text:answer,
@@ -87,9 +91,9 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
   previous.push(name+'：'+answer.slice(0,1200));
  }
 }
-export function flagUncertainAgentJob(state:PhoneState,jobId:string,error:string){
+export function flagUncertainAgentJob(state:PhoneState,jobId:string,error:string,expectedAttempt?:number){
  const job=activeAgentJob(state,jobId);
- if(!job||job.status==='completed'||job.status==='cancelled')return;
+ if(!job||job.status==='completed'||job.status==='cancelled'||(expectedAttempt!==undefined&&job.attempts!==expectedAttempt))return;
  job.status='needs_review';job.error=error.slice(0,600);job.updatedAt=Date.now();
 }
 
