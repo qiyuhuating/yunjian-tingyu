@@ -101,7 +101,8 @@ def main():
         report["oldApkSHA256"] = hashlib.sha256(a.old_apk.read_bytes()).hexdigest()
         report["newApkSHA256"] = hashlib.sha256(a.new_apk.read_bytes()).hexdigest()
         assert report["newApkSHA256"] == "295ef6e51a7f953d80e38af827f944c9645a18d07ac9e97fb8e11267c13916e4"
-        assert not adb("shell", "pm", "path", PACKAGE).strip(), "Requires fresh disposable emulator; do not clear an existing installation"
+        installed = adb("shell", "pm", "list", "packages", PACKAGE).splitlines()
+        assert "package:" + PACKAGE not in installed, "Requires fresh disposable emulator; do not clear an existing installation"
         adb("shell", "wm", "size", "1080x1920")
         adb("shell", "wm", "density", "320")
         adb("shell", "svc", "wifi", "disable")
