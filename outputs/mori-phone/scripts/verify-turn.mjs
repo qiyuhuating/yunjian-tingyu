@@ -32,13 +32,36 @@ function harness({group=false,answer='收到',onRequest=undefined,onUpload=undef
    if(group)return '<cloudlet-messages>["'+answer+'"]</cloudlet-messages>';
    return answer;
   },
-  upload:async f=>onUpload?onUpload(f):({url:'local:00000000-0000-0000-0000-000000000000',id:'x',mime:f.type,size:f.size,name:f.name}),
+  prepareUpload:async f=>({result:onUpload?await onUpload(f):({url:'local:00000000-0000-0000-0000-000000000000',id:'x',mime:f.type,size:f.size,name:f.name})}),
   deliverMedia:async()=>{},
   onRemaining:r=>remaining.push([...r]),
   isVisible:()=>true
  };
  return {services,signal,thread,speaker,other,remaining,get state(){return state;},get calls(){return calls;},get commits(){return commits;}};
 }
+await check('Durable pending queue survives serialized restart and never autoplays an uncertain provider POST',()=>{
+ const {enqueueDurableTurn,eligibleQueuedTurn,dequeueDurableTurn}=load('durable-turn-queue');
+ let state=freshState(),id='saved-user',thread=state.primary;
+ state.threads[thread].push({id,role:'user',kind:'text',timestamp:10,text:'离线时发送的消息',failed:true});
+ enqueueDurableTurn(state,{userId:id,thread,text:'离线时发送的消息',mode:'chat',queuedAt:10});
+ state=stateSchema.parse(structuredClone(state));
+ assert.equal(eligibleQueuedTurn(state)?.userId,id);
+ const journal=load('turn-receipts');journal.beginTurn(state,{thread,userId:id,mode:'chat',speakers:[thread]});
+ assert.equal(eligibleQueuedTurn(state)?.userId,id);
+ journal.markRequesting(state,id,thread);dequeueDurableTurn(state,id);
+ assert.equal(eligibleQueuedTurn(state),null);
+ state.queuedTurns.push({userId:id,thread,text:'离线时发送的消息',mode:'chat',queuedAt:10});
+ assert.equal(eligibleQueuedTurn(state),null);
+});
+await check('Durable queue requires matching user message and only replays queued receipts',()=>{
+ const {enqueueDurableTurn,eligibleQueuedTurn}=load('durable-turn-queue'),s=freshState(),thread=s.primary;
+ s.threads[thread].push({id:'x',role:'user',kind:'text',timestamp:1,text:'old',failed:true});
+ enqueueDurableTurn(s,{userId:'x',thread,text:'old',mode:'chat',queuedAt:1});
+ s.threads[thread].at(-1).text='edited';
+ assert.equal(eligibleQueuedTurn(s),null);
+ s.threads[thread].at(-1).text='old';
+ assert.equal(eligibleQueuedTurn(s)?.userId,'x');
+});
 await check('Turn queue deduplicates IDs but not intentionally repeated text',()=>{
  const q=new PendingTurnQueue();
  q.enqueue({id:'one',thread:'a',text:'同一段文字'});
@@ -60,6 +83,7 @@ await check('One-to-one turn persists exactly one reply and one affection increm
  assert.deepEqual(result,[h.speaker.id]);assert.equal(h.calls,1);
  assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,1);
  assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].find(m=>m.role==='assistant').turnId,'turn-1');
  assert.equal(h.state.characters[0].affection,Math.min(100,old+1));
 });
 await check('A saved reply may not be charged for again',async()=>{
@@ -119,8 +143,8 @@ await check('Visible chat routes turn execution exclusively through testable mod
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
  assert(source.includes('await executeTurn('));
  assert(!source.includes('await p.requestAI('));
- assert(source.includes('queued.current.enqueue('));
- assert(source.includes('queued.current.take('));
+ assert(source.includes('enqueueDurableTurn('));
+ assert(source.includes('eligibleQueuedTurn('));
 });
 await check('Composer is cleared only after user message persistence resolves',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
@@ -129,4 +153,100 @@ await check('Composer is cleared only after user message persistence resolves',(
  assert(start>=0&&end>start);
  assert(section.indexOf('await commit(')<section.indexOf("setInput('');"));
 });
+
+await check('A successful text turn persists media work and a result receipt without a second AI call',async()=>{
+ const h=harness();const media=load('media-outbox');
+ h.services.requestAI=async()=> '回复已保存\n<cloudlet-media>[{"type":"sticker","id":"sticker-id"}]</cloudlet-media>';
+ h.services.deliverMedia=async(commands,speaker,thread,signal,id,attempt)=>{
+  assert.equal(commands.length,1);assert.equal(commands[0].type,'sticker');
+  await h.services.commit(state=>{
+   media.assertMediaDelivery(state,id,attempt,thread,speaker);
+   const outputId='output-sticker-1';
+   media.completeMediaDelivery(state,id,attempt,outputId);
+   (state.threads[thread]??=[]).push({id:outputId,role:'assistant',kind:'image',text:'',timestamp:3,senderId:speaker,turnId:'turn-1'});
+  });
+ };
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const job=h.state.mediaOutbox[0];
+ assert.equal(job.phase,'completed');assert.equal(job.outputId,'output-sticker-1');
+ assert.equal(job.userId,'turn-1');
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,2);
+});
+await check('A failed media side effect retains finished text and a recoverable receipt',async()=>{
+ const h=harness(),media=load('media-outbox');
+ h.services.requestAI=async()=> '文字完成\n<cloudlet-media>[{"type":"image","prompt":"一片云"}]</cloudlet-media>';
+ h.services.deliverMedia=async()=>{throw new Error('media provider offline');};
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const job=h.state.mediaOutbox[0];
+ assert.equal(job.phase,'needs_review');
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant'&&m.kind==='text').length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='system'&&m.text.includes('媒体未发送')).length,1);
+ assert.throws(()=>media.beginMediaDelivery(h.state,job.id),/用户确认/);
+ assert.equal(media.beginMediaDelivery(h.state,job.id,true),2);
+});
+await check('Native generated media and text share a single committed reply transaction',async()=>{
+ const h=harness({onRequest:({media})=>{
+  media(new File(['native'], 'native.png',{type:'image/png'}));return '一份文字回复';
+ }});
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ const msgs=h.state.threads[h.thread];
+ assert.equal(h.calls,1);
+ assert.equal(msgs.filter(m=>m.role==='assistant').length,2);
+ assert.equal(msgs.filter(m=>m.kind==='image'&&m.turnId==='turn-1').length,1);
+ assert.equal(msgs.filter(m=>m.role==='system').length,0);
+ assert.equal(msgs[0].failed,false);
+});
+await check('Native upload failed before completion preserves text plus durable notice',async()=>{
+ const h=harness({onRequest:({media})=>{media(new File(['bad'],'x.png',{type:'image/png'}));return '正文';},onUpload:()=>{throw new Error('disk full');}});
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='system'&&m.text.includes('disk full')).length,1);
+ assert.equal(h.state.threads[h.thread][0].failed,false);
+});
+
+await check('Stopping persisted intents preserves other threads and uncertain receipts',()=>{
+ const q=load('durable-turn-queue'),j=load('turn-receipts'),s=freshState(),thread=s.primary,other=s.characters[1].id;
+ for(const [id,t] of [['active',thread],['pending',thread],['elsewhere',other]]){
+  (s.threads[t]??=[]).push({id,role:'user',kind:'text',timestamp:1,text:id,failed:true});
+  q.enqueueDurableTurn(s,{userId:id,thread:t,text:id,mode:'chat',queuedAt:1});
+ }
+ j.beginTurn(s,{userId:'active',thread,mode:'chat',speakers:[thread]});j.markRequesting(s,'active',thread);
+ q.cancelQueuedThread(s,thread);
+ const restored=stateSchema.parse(structuredClone(s));
+ assert.equal(q.eligibleQueuedTurn(restored)?.userId,'elsewhere');
+ assert.equal(j.receiptFor(restored,'active').phase,'in_flight');
+ assert(restored.threads[thread].find(m=>m.id==='pending').failureReason.includes('手动'));
+ const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
+ assert(source.includes('await commit(s=>cancelQueuedThread(s,thread))'));assert(source.includes('running.current||stopping'));
+});
+await check('A group stopped between speakers resumes only the remaining persisted speaker',async()=>{
+ const h=harness({group:true}),q=load('durable-turn-queue');
+ h.services.onRemaining=remaining=>{if(remaining.length===1)h.signal.abort();};
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services));
+ const restored=stateSchema.parse(structuredClone(h.state));
+ assert.equal(q.eligibleQueuedTurn(restored)?.userId,'turn-1');assert.equal(h.calls,1);
+ h.services.signal=new AbortController().signal;h.services.onRemaining=()=>{};
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'group'},h.services);
+ assert.equal(h.calls,2);assert.equal(receiptFor(h.state,'turn-1').phase,'completed');
+ assert.equal(h.state.threads[h.thread].filter(m=>m.senderId===h.speaker.id).length,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.senderId===h.other.id).length,1);
+});
+await check('Native blobs are staged with reply commit; a failed commit cannot mark completion',async()=>{
+ const h=harness({onRequest:({media})=>{media(new File(['PNG'],'native.png',{type:'image/png'}));return 'native reply';}});
+ const blob=new Blob(['PNG'],{type:'image/png'}),id='11111111-1111-1111-1111-111111111111';
+ h.services.prepareUpload=async()=>({result:{id,url:'local:'+id,mime:'image/png',name:'native.png',size:3},asset:{id,blob,mime:'image/png',name:'native.png',size:3}});
+ const commit=h.services.commit;let staged=0;
+ h.services.commit=async(fn,assets=[])=>{
+  if(assets.length){staged++;assert.equal(assets[0].blob,blob);throw new Error('state storage failed');}
+  return commit(fn);
+ };
+ await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat'},h.services),/storage failed/);
+ assert.equal(staged,1);assert.equal(h.calls,1);
+ assert.equal(h.state.threads[h.thread].filter(m=>m.role==='assistant').length,0);
+ assert.equal(receiptFor(h.state,'turn-1').phase,'in_flight');
+ assert.equal(load('durable-turn-queue').eligibleQueuedTurn(h.state),null);
+});
+
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

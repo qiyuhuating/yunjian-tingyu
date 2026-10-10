@@ -77,16 +77,16 @@ jobs:
           root=tree.getroot()
           ns='{http://schemas.android.com/apk/res/android}'
           assert root.get(ns+'versionCode')=='8' and root.get(ns+'versionName')=='0.0.2'
-          root.set(ns+'versionCode','9')
+          root.set(ns+'versionCode','10')
           root.set(ns+'versionName','0.0.3')
           tree.write(path,encoding='unicode',xml_declaration=True)
           PY
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
-          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk > work/apk-candidate/package-info.txt
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk > work/apk-candidate/manifest-tree.txt
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk > work/apk-candidate/package-info.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk > work/apk-candidate/manifest-tree.txt
           grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/package-info.txt
-          grep -F "versionCode='9'" work/apk-candidate/package-info.txt
+          grep -F "versionCode='10'" work/apk-candidate/package-info.txt
           grep -F "versionName='0.0.3'" work/apk-candidate/package-info.txt
           grep -F 'mark.via.phonev02' work/apk-candidate/manifest-tree.txt
       - name: Recover existing v0.0.2 signing key privately, never generate a replacement
@@ -123,8 +123,8 @@ jobs:
           from pathlib import Path
           d=Path('work/apk-candidate')
           old=d/'recovery/yunjian-tingyu-v0.0.2-standalone.apk'
-          source=d/'yunjian-tingyu-v0.0.3-rc1-unsigned.apk'
-          signed=d/'yunjian-tingyu-v0.0.3-rc1-signed.apk'
+          source=d/'yunjian-tingyu-v0.0.3-rc2-unsigned.apk'
+          signed=d/'yunjian-tingyu-v0.0.3-rc2-signed.apk'
           sdk=Path(os.environ['ANDROID_HOME'])/'build-tools/35.0.0'
           signer=sdk/'apksigner'
           signing=d/'signing'
@@ -147,7 +147,7 @@ jobs:
           assert signed.stat().st_size>1000000
           digest=hashlib.sha256(signed.read_bytes()).hexdigest()
           report={'sourceCommit':os.environ['GITHUB_SHA'],'package':'chat.cloudlet.phone.v002',
-                  'versionCode':9,'versionName':'0.0.3','signatureMatchesExistingV002':True,
+                  'versionCode':10,'versionName':'0.0.3','signatureMatchesExistingV002':True,
                   'certificateSHA256':newcert,'apkSHA256':digest,'sizeBytes':signed.stat().st_size,
                   'status':'signed candidate - NOT device accepted or official Release'}
           (d/'candidate-check.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -160,9 +160,9 @@ jobs:
           rm -rf work/apk-candidate/recovery work/apk-candidate/signing
       - uses: actions/upload-artifact@v4
         with:
-          name: yunjian-tingyu-v0.0.3-rc1-SIGNED-CANDIDATE
+          name: yunjian-tingyu-v0.0.3-rc2-SIGNED-CANDIDATE
           path: |
-            work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-signed.apk
+            work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-signed.apk
             work/apk-candidate/SHA256SUMS
             work/apk-candidate/candidate-check.json
             work/apk-candidate/package-info.txt

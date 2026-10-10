@@ -7,6 +7,8 @@ export {assetReferences} from './asset-references';
 const DB_NAME='cloudlet-device',DB_VERSION=3;
 type Snapshot={owner:string;state:PhoneState;version:number;updatedAt:number;legacyArchive?:boolean;threadStorage?:1;assetIds?:string[]};
 export type LocalAsset={id:string;owner:string;blob:Blob;name:string;mime:string;size:number;createdAt?:number;sha256?:string};
+export type StagedAsset=Pick<LocalAsset,'id'|'blob'|'name'|'mime'|'size'|'sha256'>;
+export type PreparedLocalUpload={result:{url:string;id:string;mime:string;size:number;name:string};asset?:StagedAsset};
 let database:Promise<IDBDatabase>|undefined;
 const persisted=new Map<string,{version:number;state:PhoneState}>();
 function db(){
@@ -26,11 +28,23 @@ export async function readLocal(owner:string){
  const [row,threads]=await Promise.all([result(tx.objectStore('states').get(owner)) as Promise<Snapshot|undefined>,result(readStoredThreads(tx,owner))]);await done;if(!row)return null;
  const state=stateSchema.parse({...row.state,threads:row.threadStorage?Object.fromEntries(threads.map(t=>[t.id,t.messages])):row.state.threads,groups:row.state.groups.filter(g=>g.members.length>0)});persisted.set(owner,{version:row.version,state});return {...row,state};
 }
-export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false){
+export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false,stagedAssets:ReadonlyArray<StagedAsset>=[]){
  const parsed=validated?state:stateSchema.parse(state),refs=assetReferences(parsed).map(ref=>ref.replace(/^local:|^\/api\/assets\//,''));
- const d=await db(),tx=d.transaction(['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
+ // State, threads and newly restored blobs must commit or abort as one IndexedDB transaction.
+ const stagedIds=new Set<string>();for(const asset of stagedAssets){
+  if(!/^[a-f0-9-]{36}$/.test(asset.id)||stagedIds.has(asset.id)||!refs.includes(asset.id)||
+   asset.blob.size!==asset.size||asset.size>200*1024*1024||asset.name.length>160||asset.mime.length>160||
+   (asset.sha256!==undefined&&!/^[a-f0-9]{64}$/.test(asset.sha256)))
+   throw new Error('待恢复的附件无效或不被记录引用，未更改设备数据。');
+  stagedIds.add(asset.id);
+ }
+ const d=await db(),tx=d.transaction(stagedAssets.length?['states','threads','assets']:['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
  const request=store.get(owner);request.onsuccess=()=>{
   const old=request.result as Snapshot|undefined;if((old?.version??0)!==version){conflict=true;tx.abort();return;}
+  if(stagedAssets.length){const assets=tx.objectStore('assets');for(const a of stagedAssets){
+   const mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(a.mime)?a.mime:'application/octet-stream';
+   assets.add({owner,id:a.id,blob:a.blob.slice(0,a.size,mime),name:a.name,mime,size:a.size,createdAt:Date.now(),...(a.sha256?{sha256:a.sha256}:{})});
+  }}
   const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null;
   syncStoredThreads(tx,owner,parsed.threads,previous?.threads||old?.state.threads||{},!!previous);
   store.put({owner,state:{...parsed,threads:{}},version:version+1,updatedAt:Date.now(),legacyArchive:legacyArchive??old?.legacyArchive??false,threadStorage:1,assetIds:refs});
@@ -44,12 +58,61 @@ export async function putAsset(owner:string,id:string,blob:Blob,name:string,mime
  const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);const asset={owner,id,blob,name:name.slice(0,160),mime,size:blob.size,createdAt:Date.now(),...(sha256?{sha256}:{})};tx.objectStore('assets').put(asset);await done;return {url:'local:'+id,id,mime,size:blob.size,name:asset.name};
 }
 export async function removeAssets(owner:string,ids:string[]){const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);for(const id of ids)tx.objectStore('assets').delete([owner,id]);await done;}
-export async function uploadLocal(owner:string,file:File){
+
+/** Never collect assets from legacy snapshots lacking a complete reference index.
+ * One readwrite transaction serializes this sweep against other state/asset commits. */
+export async function collectOrphanAssets(owner:string,graceMs=7*24*60*60*1000){
+ if(!Number.isFinite(graceMs)||graceMs<60*60*1000)throw new Error('附件回收宽限期至少为一小时。');
+ const d=await db(),tx=d.transaction(['states','assets'],'readwrite'),done=complete(tx);
+ const store=tx.objectStore('assets'),snapshot=tx.objectStore('states').get(owner);
+ let removed=0;
+ snapshot.onsuccess=()=>{
+  const row=snapshot.result as Snapshot|undefined;
+  if(!row||!Array.isArray(row.assetIds))return;
+  const referenced=new Set(row.assetIds),cutoff=Date.now()-graceMs;
+  const cursorRequest=store.openCursor(IDBKeyRange.bound([owner,''],[owner,'\uffff']));
+  cursorRequest.onsuccess=()=>{
+   const cursor=cursorRequest.result;if(!cursor)return;
+   const asset=cursor.value as LocalAsset;
+   if(!referenced.has(asset.id)&&typeof asset.createdAt==='number'&&asset.createdAt>0&&asset.createdAt<cutoff){
+    cursor.delete();removed++;
+   }
+   cursor.continue();
+  };
+ };
+ await done;return removed;
+}
+/** Compute MIME, checksum and reference before saving; no new Blob is written here.
+ * Message creation can pass the staged asset to writeLocal for an atomic commit. */
+export async function prepareLocalUpload(owner:string,file:File):Promise<PreparedLocalUpload>{
  if(file.size>200*1024*1024)throw new Error('单个附件请控制在 200 MB 以内。');
  const b=new Uint8Array(await file.slice(0,16).arrayBuffer());let mime='application/octet-stream';
- if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';else if(String.fromCharCode(...b.slice(0,5))==='%PDF-')mime='application/pdf';else if(file.type==='video/mp4'&&String.fromCharCode(...b.slice(4,8))==='ftyp')mime='video/mp4';else if(file.type==='video/webm'&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)mime='video/webm';else if(file.type.startsWith('audio/'))mime=file.type;
- const hash=sha256.create();for(let offset=0;offset<file.size;offset+=1024*1024)hash.update(new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer()));const digest=Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join(''),d=await db(),saved=await result(d.transaction('assets').objectStore('assets').index('content').get([owner,digest])) as LocalAsset|undefined;if(saved&&saved.mime===mime)return {url:'local:'+saved.id,id:saved.id,mime,size:saved.size,name:file.name.slice(0,160)};
- const h=digest.slice(0,32),id=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);const collision=await getAsset(owner,'local:'+id);return putAsset(owner,collision&&collision.sha256!==digest?crypto.randomUUID():id,file.slice(0,file.size,mime),file.name,mime,digest);
+ if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';
+ else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';
+ else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';
+ else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';
+ else if(String.fromCharCode(...b.slice(0,5))==='%PDF-')mime='application/pdf';
+ else if(file.type==='video/mp4'&&String.fromCharCode(...b.slice(4,8))==='ftyp')mime='video/mp4';
+ else if(file.type==='video/webm'&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)mime='video/webm';
+ else if(file.type.startsWith('audio/'))mime=file.type;
+ mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(mime)?mime:'application/octet-stream';
+ const hash=sha256.create();for(let offset=0;offset<file.size;offset+=1024*1024)
+  hash.update(new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer()));
+ const digest=Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join('');
+ const d=await db(),saved=await result(d.transaction('assets').objectStore('assets').index('content').get([owner,digest])) as LocalAsset|undefined;
+ if(saved&&saved.mime===mime)return {result:{url:'local:'+saved.id,id:saved.id,mime,size:saved.size,name:file.name.slice(0,160)}};
+ const id=crypto.randomUUID(),name=file.name.slice(0,160),blob=file.slice(0,file.size,mime);
+ return {result:{url:'local:'+id,id,mime,size:file.size,name},asset:{id,blob,name,mime,size:file.size,sha256:digest}};
+}
+export async function uploadLocal(owner:string,file:File){
+ const prepared=await prepareLocalUpload(owner,file);
+ if(!prepared.asset)return prepared.result;
+ const a=prepared.asset,digest=a.sha256!;
+ // Preserve the legacy content-derived identifier for older callers and simultaneous
+ // identical uploads; staged chat uploads use independent IDs until their atomic commit.
+ const h=digest.slice(0,32),id=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+ const collision=await getAsset(owner,'local:'+id);
+ return await putAsset(owner,collision&&collision.sha256!==digest?crypto.randomUUID():id,a.blob,a.name,a.mime,digest);
 }
 async function legacyBlob(ref:string,expected:number){
  const response=await fetch(ref,{cache:'no-store'});if(response.ok){const blob=await response.blob();if(response.status!==204&&(!expected||blob.size===expected))return blob;}

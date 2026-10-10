@@ -1,7 +1,7 @@
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';import ts from 'typescript';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(name){if(loaded.has(name))return loaded.get(name);const m={exports:{}};loaded.set(name,m.exports);const code=ts.transpileModule(fs.readFileSync(path.join(root,'lib',name+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','module','exports',code)(n=>n.startsWith('./')?load(n.slice(2)):native(n),m,m.exports);loaded.set(name,m.exports);return m.exports;}
-const {freshState,stateSchema}=load('phone-model'),journal=load('turn-receipts');
+const {freshState,stateSchema}=load('phone-model'),journal=load('turn-receipts'),media=load('media-outbox');
 const checks=[],test=(name,fn)=>{fn();checks.push(name);};
 const setup=()=>{const state=freshState(),userId='turn-test',thread=state.primary,speakers=[state.characters[0].id,state.characters[1].id];return {state,userId,thread,speakers};};
 test('Legacy state defaults to empty receipts',()=>{const s=freshState();const old={...s};Reflect.deleteProperty(old,'turnReceipts');assert.deepEqual(stateSchema.parse(old).turnReceipts,[]);});
@@ -33,5 +33,26 @@ test('Late error cannot downgrade a newer attempt',()=>{
  journal.markInterrupted(state,userId,'stale failure',old);
  assert.equal(journal.receiptFor(state,userId).phase,'in_flight');
  assert.equal(journal.receiptFor(state,userId).attempts,fresh);
+});
+test('Media outbox persists pending commands with completed chat turn',()=>{
+ const state=freshState(),jobs=media.queueMedia(state,{thread:state.primary,userId:'user-1',speaker:state.primary},[{type:'voice',text:'hello'}]);
+ assert.equal(jobs.length,1);assert.equal(stateSchema.parse(structuredClone(state)).mediaOutbox[0].phase,'queued');
+ const attempt=media.beginMediaDelivery(state,jobs[0].id);
+ media.completeMediaDelivery(state,jobs[0].id,attempt,'out-1');
+ assert.equal(state.mediaOutbox[0].outputId,'out-1');
+ assert.throws(()=>media.beginMediaDelivery(state,jobs[0].id,true),/结束/);
+});
+test('Interrupted media delivery demands approval and fences old responses',()=>{
+ const state=freshState(),jobs=media.queueMedia(state,{thread:state.primary,userId:'user-2',speaker:state.primary},[{type:'image',prompt:'clouds'}]);
+ const id=jobs[0].id,old=media.beginMediaDelivery(state,id);
+ assert.throws(()=>media.beginMediaDelivery(state,id),/用户确认/);
+ media.interruptMediaDelivery(state,id,old,'timeout');
+ assert.throws(()=>media.beginMediaDelivery(state,id),/用户确认/);
+ const current=media.beginMediaDelivery(state,id,true);
+ media.interruptMediaDelivery(state,id,old,'stale');
+ assert.equal(state.mediaOutbox[0].phase,'in_flight');
+ assert.throws(()=>media.completeMediaDelivery(state,id,old,'old-output'),/代次/);
+ media.completeMediaDelivery(state,id,current,'new-output');
+ assert.equal(state.mediaOutbox[0].outputId,'new-output');
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

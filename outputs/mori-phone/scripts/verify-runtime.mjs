@@ -12,7 +12,7 @@ function load(name){
  loaded.set(name,module.exports);return module.exports;
 }
 const {readChatStream}=load('ai-stream'),{assembleChatMessages}=load('ai-messages');
-const {freshState,samplingSchema}=load('phone-model'),{chatInput}=load('provider-adapter');
+const {freshState,samplingSchema}=load('phone-model'),{chatInput,normalizeStream}=load('provider-adapter');
 const encoder=new TextEncoder(),checks=[];
 async function check(name,fn){await fn();checks.push(name);}
 function stream(parts){
@@ -87,6 +87,43 @@ await check('A repeated group question is not skipped when another member spoke 
  assert.equal(messages.at(-1).role,'user');
  assert.equal(messages.at(-1).content,'再解释一下');
 });
+await check('OpenAI truncated upstream after finish_reason must never synthesize DONE',async()=>{
+ const raw=stream([piece(delta('partial')),piece({choices:[{delta:{},finish_reason:'stop'}]})]);
+ const normalized=new Response(normalizeStream(raw.body,'openai'));
+ await assert.rejects(readChatStream(normalized,{started:performance.now()}),/中断/);
+});
+await check('Anthropic message_stop is an explicit terminal event',async()=>{
+ const raw=stream(['data: '+JSON.stringify({type:'content_block_delta',delta:{type:'text_delta',text:'ok'}})+'\n\n','data: {"type":"message_stop"}\n\n']);
+ const normalized=new Response(normalizeStream(raw.body,'anthropic'));
+ assert.equal((await readChatStream(normalized,{started:performance.now()})).answer,'ok');
+});
+await check('Causal user anchor blocks future queued messages and preserves peer evidence',async()=>{
+ const state=freshState(),a=state.characters[0],b=state.characters[1],thread='causal-test';
+ state.groups.push({id:thread,name:'测试',members:[a.id,b.id]});
+ state.threads[thread]=[
+  {id:'A',role:'user',kind:'text',timestamp:1,text:'第一条问题'},
+  {id:'B',role:'user',kind:'text',timestamp:2,text:'未来的秘密'},
+  {id:'peer',role:'assistant',kind:'text',timestamp:3,text:'已经核验过',sender:b.name,senderId:b.id,turnId:'A'}];
+ const args={ownerId:'fixture',state,character:a,thread,text:'第一条问题',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false,causalUserId:'A'};
+ const items=await assembleChatMessages(args);
+ const joined=items.map(m=>typeof m.content==='string'?m.content:'').join('\n');
+ assert(!joined.includes('未来的秘密'));
+ assert(joined.includes('已经核验过'));
+ assert.equal(items.filter(m=>m.role==='user'&&m.content==='第一条问题').length,1);
+ assert.equal(items.at(-1).content,'第一条问题');
+ await assert.rejects(assembleChatMessages({...args,text:'修改后的第一条'}),/修改|不存在/);
+});
+await check('Failed restore cleanup never deletes assets referenced by persisted data',()=>{
+ const state=freshState(),ref='local:11111111-1111-1111-1111-111111111111',added='local:22222222-2222-2222-2222-222222222222';
+ const {orphanedStagedAssets}=load('asset-references');
+ const staged=structuredClone(state);
+ staged.gallery.push({id:'new-gallery',name:'new',url:added});
+ const current=structuredClone(state);current.gallery.push({id:'old-gallery',name:'old',url:ref});
+ staged.gallery.push({id:'old-gallery',name:'old',url:ref});
+ assert.deepEqual(orphanedStagedAssets(current,staged,current),[added.slice(6)]);
+ const saved=structuredClone(staged);
+ assert.deepEqual(orphanedStagedAssets(current,staged,saved),[]);
+});
 await check('No hidden automatic retry remains in the chat turn',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
  assert.equal((source.match(/await p\.requestAI\(/g)||[]).length,0);
@@ -99,5 +136,31 @@ await check('Failed backup commits never delete assets referenced by older recor
  const source=fs.readFileSync(path.join(root,'app/phone.tsx'),'utf8');
  assert(!/catch\(e\)\{[^{}]*removeAssets/.test(source));
  assert(!source.includes('removeAssets(ownerId,assetReferences(restored)'));
+});
+await check('Restoring an archive prepares only referenced blobs and writes nothing before the transaction',async()=>{
+ const {stageBackup}=load('local-backup'),state=freshState();
+ const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',extra='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+ state.wallpaper.asset='local:'+id;
+ const content=new Blob(['abc'],{type:'text/html'});
+ const prepared={state,legacy:false,assets:[
+  {id,blob:content,name:'unsafe.html',mime:'text/html',size:3},
+  {id:extra,blob:new Blob(['other']),name:'unused.txt',mime:'text/plain',size:5}
+ ]};
+ // Node fixtures have no IndexedDB; stageBackup must not touch local storage here.
+ const staged=await stageBackup('fixture',prepared,freshState());
+ assert.equal(staged.assets.length,1);
+ assert.equal(staged.assets[0].blob,content);
+ assert.equal(staged.assets[0].id!==id,true);
+ assert.equal(staged.state.wallpaper.asset,'local:'+staged.assets[0].id);
+ assert.equal(staged.state.provider,freshState().provider);
+});
+await check('A restore uses a single atomic state/threads/assets transaction before publishing React state',()=>{
+ const local=fs.readFileSync(path.join(root,'lib/local-phone.ts'),'utf8');
+ const phone=fs.readFileSync(path.join(root,'app/phone.tsx'),'utf8');
+ assert(local.includes("['states','threads','assets']"));
+ assert(local.includes('assets.add({owner,id:a.id'));
+ assert(phone.includes('writeLocal(ownerId,restored,version.current,undefined,true,staged.assets)'));
+ assert(phone.indexOf('const newVersion=await writeLocal(ownerId,restored')<phone.indexOf('data.current=restored'));
+ assert(!phone.includes('await commit(s=>Object.assign(s,restored))'));
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

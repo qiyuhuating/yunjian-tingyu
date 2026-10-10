@@ -6,6 +6,34 @@ const checks=[],check=async(name,fn)=>{await fn();checks.push(name);};
 const fixture=()=>{const state=freshState(),thread='review-room',speakers=state.characters.slice(0,2).map(c=>c.id);state.groups.push({id:thread,name:'文档审阅组',members:speakers});w.putWorkspace(state,{thread,path:'imports/sample.ts',content:'export const sum=(a,b)=>a+b;'},null);return {state,thread,speakers};};
 await check('Reject traversal, absolute and .git workspace paths',()=>{const f=()=>({workspaceFiles:[]});for(const p of ['../x','/private/a','a/../../b','repo/.git/config','x//y'])assert.throws(()=>w.putWorkspace(f(),{thread:'t',path:p,content:'x'},null),/路径/);});
 await check('Writes require explicit approval and exact revision',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.write',thread:f.thread,path:'imports/sample.ts',content:'changed',expectedRevision:1},{thread:f.thread,write:false}),/授权/);assert.throws(()=>w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'bad'},0),/已更新/);const x=w.putWorkspace(f.state,{thread:f.thread,path:'imports/sample.ts',content:'updated'},1);assert.equal(x.revision,2);});
+await check('Multi-file edits commit together or leave all previous revisions unchanged',()=>{
+ const f=fixture();
+ const first=w.putWorkspace(f.state,{thread:f.thread,path:'lib/a.ts',content:'export const a=1'},null);
+ const before=structuredClone(f.state.workspaceFiles);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{
+  tool:'workspace.batch',thread:f.thread,edits:[
+   {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+   {path:'imports/sample.ts',content:'stale',expectedRevision:99}
+  ]},{thread:f.thread,write:true}),/已更新/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'a',expectedRevision:1}
+ ]},{thread:f.thread,write:false}),/授权/);
+ assert.throws(()=>w.applyWorkspaceBatch(f.state,f.thread,[
+  {path:'lib/a.ts',content:'a',expectedRevision:1},
+  {path:'lib/a.ts',content:'b',expectedRevision:2}
+ ]),/重复/);
+ assert.deepEqual(f.state.workspaceFiles,before);
+ const receipts=w.executeWorkspaceTool(f.state,{tool:'workspace.batch',thread:f.thread,edits:[
+  {path:'lib/a.ts',content:'export const a=2',expectedRevision:first.revision},
+  {path:'lib/b.ts',content:'export const b=3',expectedRevision:null}
+ ]},{thread:f.thread,write:true});
+ assert.equal(receipts.length,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/a.ts').revision,2);
+ assert.equal(w.readWorkspace(f.state,f.thread,'lib/b.ts').revision,1);
+ assert.deepEqual(w.searchWorkspace(f.state,'other','export const'),[]);
+ assert.equal(w.executeWorkspaceTool(f.state,{tool:'workspace.search',thread:f.thread,query:'export const'},{thread:f.thread,write:false}).length,2+1);
+});
 await check('No access from another thread even with a valid file path',()=>{const f=fixture();assert.throws(()=>w.executeWorkspaceTool(f.state,{tool:'workspace.read',thread:f.thread,path:'imports/sample.ts'},{thread:'other',write:false}),/跨会话/);assert.equal(w.readWorkspace(f.state,'other','imports/sample.ts'),null);});
 await check('Legacy state defaults to an empty workspace and agent log',()=>{const state=freshState(),old={...state};Reflect.deleteProperty(old,'workspaceFiles');Reflect.deleteProperty(old,'agentJobs');const restored=stateSchema.parse(old);assert.deepEqual(restored.workspaceFiles,[]);assert.deepEqual(restored.agentJobs,[]);});
 await check('Real collaboration reads actual file and hands prior review to a second role',async()=>{
@@ -20,6 +48,8 @@ await check('Real collaboration reads actual file and hands prior review to a se
  assert(calls[0].prompt.includes('export const sum'));
  assert(calls[1].prompt.includes('建议验证类型'));
  assert.equal(state.agentJobs[0].status,'completed');
+ assert(a.reportEvidence(state,'job-1',f.speakers[0]).valid);
+ assert(a.reportEvidence(state,'job-1',f.speakers[1]).valid);
  assert.equal(state.threads[f.thread].filter(x=>x.role==='assistant').length,2);
  assert.equal(w.listWorkspace(state,f.thread).filter(x=>x.path.startsWith('reviews/')).length,2);
  await assert.rejects(a.executeAgentReview('job-1',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=>''}),/不能自动重复/);
@@ -77,7 +107,7 @@ await check('Changed source cannot be resumed into stale agent review',async()=>
 await check('Missing saved reviewer output blocks restart rather than rebilling it',async()=>{
  const f=fixture();a.planAgentReview(f.state,{jobId:'missing-report',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
  const j=f.state.agentJobs[0];j.completed=[f.speakers[0]];j.status='needs_review';
- assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告不存在/);
+ assert.throws(()=>a.authorizeAgentResume(f.state,'missing-report'),/报告来源或存储内容不匹配|报告不存在/);
 });
 await check('Read-only workspace tools return a copy rather than mutable storage',()=>{
  const f=fixture(),old=w.readWorkspace(f.state,f.thread,'imports/sample.ts').content;
@@ -116,4 +146,109 @@ await check('Stale Agent failure cannot poison a newer request',()=>{
  a.flagUncertainAgentJob(f.state,'late-error','current failure',2);
  assert.equal(job.status,'needs_review');
 });
+await check('Agent report provenance rejects modified source, rewritten artifact and chat spoof',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'evidence-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('evidence-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '可复核的分析结果'});
+ const checkReport=()=>a.reportEvidence(state,'evidence-audit',f.speakers[0]);
+ assert(checkReport().valid);assert(checkReport().reason.includes('并不代表代码已执行'));
+ const report=state.agentJobs[0].reports[0];
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='伪造测试通过';
+ assert(!checkReport().valid);
+ state.threads[f.thread].find(m=>m.id===report.messageId).text='可复核的分析结果';
+ assert(checkReport().valid);
+ w.putWorkspace(state,{thread:f.thread,path:report.path,content:'修改后的报告'},1);
+ assert(!checkReport().valid);
+});
+await check('Changed source revision invalidates previously linked Agent results',async()=>{
+ const f=fixture();let state=f.state;const commit=async change=>{const next=structuredClone(state);change(next);state=next;};
+ a.planAgentReview(state,{jobId:'source-audit',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('source-audit',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> '这只是审阅建议'});
+ assert(a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
+ w.putWorkspace(state,{thread:f.thread,path:'imports/sample.ts',content:'export const sum=()=>0;'},1);
+ assert(!a.reportEvidence(state,'source-audit',f.speakers[0]).valid);
+});
+await check('Transitive summary provenance rejects tampering in earlier summarized intervals',()=>{
+ const continuity=load('continuity'),f=fixture(),s=f.state;
+ const t=f.thread;
+ s.threads[t]=Array.from({length:96},(_,i)=>({id:'row-'+i,role:i%2?'user':'assistant',timestamp:i,text:'记忆原文 '+i,kind:'text'}));
+ const tail=s.threads[t].slice(64,96).map(m=>({id:m.id,role:m.role,timestamp:m.timestamp,excerpt:m.text}));
+ s.continuity[t]={text:'继承了早期事实',through:'row-95',updatedAt:10,sources:tail,sourceDigest:continuity.continuityPrefixDigest(s,t,'row-95')};
+ assert(continuity.validContinuity(s,t));
+ s.threads[t][5].text='更正过的早期事实';
+ assert(!continuity.validContinuity(s,t));
+});
+await check('Ungrounded legacy automatic memory remains stored but is never injected',()=>{
+ const continuity=load('continuity'),f=fixture();
+ const record={id:'old-auto',origin:'auto',text:'没有原文的自动概括',scope:f.speakers[0],date:'2026-10-10',locked:false,revisions:[]};
+ f.state.memories.push(record);
+ assert(!continuity.validMemorySource(f.state,record));
+ assert(!continuity.recallMemories(f.state,f.speakers[0],'自动概括').includes('没有原文'));
+});
+await check('Multi-source factual memory requires every cited source to remain valid',()=>{
+ const continuity=load('continuity'),f=fixture(),s=f.state;
+ s.threads[f.thread]=[{id:'x1',role:'user',kind:'text',timestamp:1,text:'我喜欢雨天'},
+ {id:'x2',role:'user',kind:'text',timestamp:2,text:'雨天我会散步'}];
+ const m={id:'multi',scope:f.speakers[0],text:'雨天习惯',origin:'auto',sourceIds:['x1','x2'],evidence:'雨天',sourceThread:f.thread,date:'2026-10-10',locked:false,revisions:[]};
+ assert(continuity.validMemorySource(s,m));
+ s.threads[f.thread].pop();assert(!continuity.validMemorySource(s,m));
+});
+await check('Same-version tampering of source or report is rejected by content hash',async()=>{
+ const f=fixture();let state=f.state;
+ const commit=async change=>{const draft=structuredClone(state);change(draft);state=draft;};
+ a.planAgentReview(state,{jobId:'hash-proof',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await a.executeAgentReview('hash-proof',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=> 'confirmed textual review'});
+ const verify=()=>a.reportEvidence(state,'hash-proof',f.speakers[0]).valid;
+ assert(verify());
+ const report=state.agentJobs[0].reports[0],source=w.readWorkspace(state,f.thread,'imports/sample.ts');
+ source.content='tampered without revision';assert(!verify());
+ source.content='export const sum=(a,b)=>a+b;';assert(verify());
+ const output=w.readWorkspace(state,f.thread,report.path);
+ const original=output.content;output.content='tampered without revision';
+ state.threads[f.thread].find(m=>m.id===report.messageId).text=output.content;
+ assert(!verify());output.content=original;
+ state.threads[f.thread].find(m=>m.id===report.messageId).text=original;
+ assert(verify());
+});
+
+await check('Summary completion rejects earlier edits, deletions and attachment changes during the request',async()=>{
+ const c=load('continuity'),{maintainConversation}=load('chat-maintenance');
+ for(const change of ['edit','delete','asset']){
+  const f=fixture(),thread=f.thread;let state=f.state;
+  state.memorySettings.autoExtract=false;state.memorySettings.autoSummary=true;state.memorySettings.interval=32;
+  state.threads[thread]=Array.from({length:64},(_,i)=>({id:'hist-'+i,role:'user',kind:'text',timestamp:i,text:'old fact '+i}));
+  state.continuity[thread]={text:'old inherited fact',through:'hist-31',updatedAt:1,sources:state.threads[thread].slice(0,32).map(m=>({id:m.id,role:m.role,timestamp:m.timestamp,excerpt:m.text})),sourceDigest:c.continuityPrefixDigest(state,thread,'hist-31')};
+  const commit=async fn=>{const draft=structuredClone(state);fn(draft);state=draft;};let calls=0;
+  await maintainConversation({snapshot:()=>state,commit,toast:()=>{},requestAI:async prompt=>{
+   calls++;assert(prompt.includes('old inherited fact'));
+   const next=structuredClone(state);
+   if(change==='edit')next.threads[thread][5].text='corrected fact';
+   if(change==='delete')next.threads[thread].splice(5,1);
+   if(change==='asset')next.threads[thread][5].asset='local:11111111-1111-1111-1111-111111111111';
+   state=next;return 'stale inherited fact';
+  }},[f.speakers[0]],thread,new AbortController().signal);
+  assert.equal(calls,1);assert.equal(state.continuity[thread].through,'hist-31');
+  assert(!c.validContinuity(state,thread));assert(!state.continuity[thread].text.includes('stale'));
+ }
+});
+await check('ID-only automatic memories cannot bypass missing evidence, including a zero source timestamp',()=>{
+ const c=load('continuity'),f=fixture(),thread=f.thread;
+ f.state.threads[thread]=[{id:'zero',role:'user',kind:'text',timestamp:0,text:'我喜欢雨天'}];
+ const m={origin:'auto',sourceIds:['zero'],sourceThread:thread,text:'旧事实'};
+ assert(!c.validMemorySource(f.state,m));m.evidence='雨天';m.sourceAt=0;
+ assert(c.validMemorySource(f.state,m));f.state.threads[thread][0].timestamp=1;
+ assert(!c.validMemorySource(f.state,m));m.sourceAt=1;f.state.threads[thread][0].text='我喜欢晴天';
+ assert(!c.validMemorySource(f.state,m));
+});
+await check('Same-revision source mutation during Agent request cannot publish a report',async()=>{
+ const f=fixture();let state=f.state;
+ const commit=async fn=>{const draft=structuredClone(state);fn(draft);state=draft;};
+ a.planAgentReview(state,{jobId:'in-flight-hash',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ await assert.rejects(a.executeAgentReview('in-flight-hash',{snapshot:()=>state,commit,signal:new AbortController().signal,requestAI:async()=>{
+  state=structuredClone(state);w.readWorkspace(state,f.thread,'imports/sample.ts').content='silently changed';return 'obsolete report';
+ }}),/改变|变动/);
+ assert.equal(state.agentJobs[0].reports.length,0);assert.equal(state.agentJobs[0].completed.length,0);
+ assert(!state.threads[f.thread]?.some(m=>m.text==='obsolete report'));
+});
+
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

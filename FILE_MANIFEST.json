@@ -8,8 +8,8 @@
   {
     "path": ".github/workflows/build-agent-v003-candidate.yml",
     "description": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml",
-    "bytes": 9406,
-    "sha256": "a9bfdf1591e035d489b177f0eec91a4c9d2b0da3f5c8b4c0a960bb59f9862522"
+    "bytes": 9409,
+    "sha256": "2bf8f02b3be8675c4cd33493e738035c6569c584952c8935f18a5ae3edf773ea"
   },
   {
     "path": ".github/workflows/release-standalone-v002.yml",
@@ -20,8 +20,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1168,
-    "sha256": "bf2aa765dd09fd8355412391d05a63be2172a380e22c821af902da55447f4b68"
+    "bytes": 1538,
+    "sha256": "563d77c017f0552db593e0e928d818a2db7da7873c8cf95794689eabbd52cf48"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -61,9 +61,15 @@
   },
   {
     "path": "docs/0.0.3-agent-candidate-acceptance.md",
-    "description": "最新聊天与Agent草稿集成、证据等级和可安装候选包的严格验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md",
-    "bytes": 1855,
-    "sha256": "f91282a06a61fc69f010e7db18bffec9eae663a543933e5cf5e364400e9cfcc5"
+    "description": "聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md",
+    "bytes": 1962,
+    "sha256": "1dfa0d86e7fe938c633d648967af83f2654c024669d5ff5e5fc15d53fef684fb"
+  },
+  {
+    "path": "docs/2026-10-10-draft-integration-review.md",
+    "description": "今日草稿质量审查、修复归属、回归证据与真机待验收范围；路径：docs/2026-10-10-draft-integration-review.md",
+    "bytes": 3912,
+    "sha256": "6fac9be8b3fa635d979ce16a2e153ec31d922da2318527047440a6fead3757a3"
   },
   {
     "path": "docs/API连接与设置重设计-2026-10-09.md",
@@ -326,8 +332,8 @@
   {
     "path": "docs/可靠回合与Agent工作区-2026-10-10.md",
     "description": "回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md",
-    "bytes": 4999,
-    "sha256": "e5715fc7543ceb6e75512bb95e42dc65bf32f31570ed1c9ebab86652f99b5d54"
+    "bytes": 10365,
+    "sha256": "66854590c5ffa74785a732842f6962ec0a383990ba1b045dcdb0600f3be2b71a"
   },
   {
     "path": "docs/审计计划落实记录.md",
@@ -854,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/character-ai-settings.tsx",
     "description": "角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx",
-    "bytes": 5217,
-    "sha256": "8864ce3859aa7b1bbc52e0434f5f9804d9fddd3e54e69857b7b45619c9d00a23"
+    "bytes": 5517,
+    "sha256": "a06b201cf9ef000efee729fb8d4c1865de45eb4194cc1b90c14512b6bdd95f1f"
   },
   {
     "path": "outputs/mori-phone/app/character-library.tsx",
@@ -872,8 +878,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 35955,
-    "sha256": "fb0413beae9ca27408e676edf61dfeae38b19763fb3b369581c993ad52cc7e4c"
+    "bytes": 39464,
+    "sha256": "03b2d9a74e2c092db696c66e6a3f5314cc3fa1a767fb0037ac5acb9e1782729f"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -896,8 +902,8 @@
   {
     "path": "outputs/mori-phone/app/connection-settings.tsx",
     "description": "连接工作区：独立测试、实时模型、持久诊断和地址凭据隔离；路径：outputs/mori-phone/app/connection-settings.tsx",
-    "bytes": 11282,
-    "sha256": "b9e2b4bab4a89c8a48bf9101935780f7cfce887ef390bf325213f459972b7885"
+    "bytes": 11409,
+    "sha256": "c52fbdd2880c7c641aa82a2904f32a0c891ff690a03c3f2f43e2f03741c6d0db"
   },
   {
     "path": "outputs/mori-phone/app/focus-timer.tsx",
@@ -980,8 +986,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 26692,
-    "sha256": "6c7c0c6e4cfed0a5ce7ddcc30216cf29dbd24bcb7eb1892ecefa62256832b039"
+    "bytes": 27893,
+    "sha256": "6523f8ee337868966297c616248961bc5c5dfaf1fd4322e79c0dce85c0c298fc"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -1040,8 +1046,8 @@
   {
     "path": "outputs/mori-phone/app/ui.tsx",
     "description": "共用界面、稳定的无障碍字段名称、媒体查看与角色卡AI分类请求上下文契约；路径：outputs/mori-phone/app/ui.tsx",
-    "bytes": 9735,
-    "sha256": "06a0c4f182a875d3d6169657bc99932f3c4fdad4d8f42643855a37287e074e72"
+    "bytes": 9905,
+    "sha256": "ad72c8d82ed380dcb752f82e1efc5301200949385994b1203c3b9a19bb28a42c"
   },
   {
     "path": "outputs/mori-phone/app/use-editor-draft.ts",
@@ -1232,20 +1238,20 @@
   {
     "path": "outputs/mori-phone/lib/agent-orchestrator.ts",
     "description": "有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts",
-    "bytes": 7130,
-    "sha256": "e82fac930bcc67715990fb5f463ba0d101bdd959ba0d9f1f255edf1f082849cb"
+    "bytes": 9718,
+    "sha256": "07e942d6c05fb7574b005f2603f95be960c7398c60e140b7621fd44bd93599b6"
   },
   {
     "path": "outputs/mori-phone/lib/agent-workspace.ts",
     "description": "隔离的版本化文本工作区、乐观并发与权限校验；路径：outputs/mori-phone/lib/agent-workspace.ts",
-    "bytes": 3745,
-    "sha256": "0cb5078dbc330e060e1722a2119848c396005231eecb84e9790966f3275954a8"
+    "bytes": 5939,
+    "sha256": "b26746fca3736d42cff667bf60fb9bd973b2788c0e027a79dbb6a1fb2599979c"
   },
   {
     "path": "outputs/mori-phone/lib/ai-messages.ts",
     "description": "独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts",
-    "bytes": 3820,
-    "sha256": "b9262df78f61132a58ea373341f4af272b0917dc060717334c3b53a5384f5fcc"
+    "bytes": 4167,
+    "sha256": "e979c4762fb388c82629aee53f7a13ecdfeef65f1ba891f48c64a63b13c6cb8f"
   },
   {
     "path": "outputs/mori-phone/lib/ai-stream.ts",
@@ -1256,8 +1262,8 @@
   {
     "path": "outputs/mori-phone/lib/asset-references.ts",
     "description": "资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts",
-    "bytes": 860,
-    "sha256": "0361156beef22744e6b257957d5b1e7c57874aed193b47791bcc9a8ae4cd352d"
+    "bytes": 1359,
+    "sha256": "a6a18ff20aedb31cffe2b08ab97370fb3a36f5c98ff2e157693b3458360d1bb3"
   },
   {
     "path": "outputs/mori-phone/lib/asset-transport.ts",
@@ -1286,8 +1292,8 @@
   {
     "path": "outputs/mori-phone/lib/character-ai.ts",
     "description": "角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts",
-    "bytes": 1424,
-    "sha256": "5cde938a4b1d9228d4081b3a3e72e487b3783159bea79615c62b122d88c5cc2c"
+    "bytes": 1996,
+    "sha256": "1d7db89b2ba2370f68520ed3d4a40463fdbdeb63f0b0c11465872f82858ded94"
   },
   {
     "path": "outputs/mori-phone/lib/character-import.ts",
@@ -1310,14 +1316,14 @@
   {
     "path": "outputs/mori-phone/lib/chat-maintenance.ts",
     "description": "验证每条摘要原消息并拒绝过期、失败或空白结果的后台维护；路径：outputs/mori-phone/lib/chat-maintenance.ts",
-    "bytes": 1854,
-    "sha256": "fb1081116a527994094d033dd43d55f61041edf8a0f467adafb1d44ca5e138b9"
+    "bytes": 2251,
+    "sha256": "3246ca55788213d0be7737c3c3f695b1542243dc94d3ef27090d4562648cade0"
   },
   {
     "path": "outputs/mori-phone/lib/chat-prompt.ts",
     "description": "分类任务隔离及按世界书引擎组装角色前后背景和历史预算；路径：outputs/mori-phone/lib/chat-prompt.ts",
-    "bytes": 8987,
-    "sha256": "27d768cf365ef899f628f8e4ee5971ad524b6ffa6d1453f7e02b2e06c822ecd7"
+    "bytes": 9031,
+    "sha256": "45dd97eea30e66b035abbbc955aefad1d5a7b3459dc88e1036ed75caa5acf21c"
   },
   {
     "path": "outputs/mori-phone/lib/companion-capabilities.ts",
@@ -1370,14 +1376,20 @@
   {
     "path": "outputs/mori-phone/lib/continuity.ts",
     "description": "长期记忆与旧对话检索、重复识别和可验证原消息的阶段摘要任务；路径：outputs/mori-phone/lib/continuity.ts",
-    "bytes": 3901,
-    "sha256": "77e6e9de80e5ad5cf489fd7446bca082e6b63e9d24d9bfc7eccc767a32892e14"
+    "bytes": 5529,
+    "sha256": "822a52f2c1733ec2cf0b61344e23689ec3ef774aa98dc3345d8ac0a76e0df05e"
   },
   {
     "path": "outputs/mori-phone/lib/conversation-reply.ts",
     "description": "统一解析自然短消息、接话选项及真实媒体命令；路径：outputs/mori-phone/lib/conversation-reply.ts",
     "bytes": 767,
     "sha256": "e9542e46a7952e23d45b8bb79d115c36dda4c5309a40db4c2d897a30a4c60016"
+  },
+  {
+    "path": "outputs/mori-phone/lib/durable-turn-queue.ts",
+    "description": "持久化聊天待执行队列、安全恢复与停止隔离；路径：outputs/mori-phone/lib/durable-turn-queue.ts",
+    "bytes": 2413,
+    "sha256": "a7e7fc476614a026545c7d7e9471070495e1baabdb8190ed259895dc9f2ce3a5"
   },
   {
     "path": "outputs/mori-phone/lib/file-export.ts",
@@ -1394,20 +1406,20 @@
   {
     "path": "outputs/mori-phone/lib/group-chat.ts",
     "description": "群成员轮换、@指定、角色身份和短消息格式校验；路径：outputs/mori-phone/lib/group-chat.ts",
-    "bytes": 4523,
-    "sha256": "a0ae7f3cc3b38ab3d6f44d9f690a813d3efbcba5708cfe5cd9345d2dde5373e0"
+    "bytes": 4808,
+    "sha256": "af2d5c198759665f2593e9a998286647b142d4ce4006b12d21897d1c6296ada0"
   },
   {
     "path": "outputs/mori-phone/lib/local-backup.ts",
     "description": "流式完整ZIP备份与恢复校验，覆盖角色卡仓库及草稿的头像原文件和共享引用重映射；路径：outputs/mori-phone/lib/local-backup.ts",
-    "bytes": 8571,
-    "sha256": "fa9d356d9164993f447f3c461e6481fafbb9742700f17cb04d977186823bd3e7"
+    "bytes": 8971,
+    "sha256": "acf4128a14537b7ddab21c5833415ac804d4fa8130966c04746338f85d0f2d22"
   },
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
     "description": "本机状态与会话事务、附件去重清理、库卡及草稿头像引用、旧资源迁移和加密密钥；路径：outputs/mori-phone/lib/local-phone.ts",
-    "bytes": 14140,
-    "sha256": "ca7f6f3fcb778da46813505f177dc732b040b4fd60eb77d4ac4846ac37e5056c"
+    "bytes": 17618,
+    "sha256": "4836e35fbc2290deca10d54447a306e7af888ad97e31e6dc605636fef1a0ffb1"
   },
   {
     "path": "outputs/mori-phone/lib/local-thread-store.ts",
@@ -1436,8 +1448,14 @@
   {
     "path": "outputs/mori-phone/lib/media-contract.ts",
     "description": "媒体设置与有界工具命令，只有实际启用能力和授权表情进入提示词；路径：outputs/mori-phone/lib/media-contract.ts",
-    "bytes": 2536,
-    "sha256": "d4e69711807c35fd668715d1d6ec37b94abe8b9c18139d48d0531531c84dc688"
+    "bytes": 2577,
+    "sha256": "b94c0c967dda7de4b707c0be004bb40804ae02e5edd328ffd5ad321c0157baf8"
+  },
+  {
+    "path": "outputs/mori-phone/lib/media-outbox.ts",
+    "description": "持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts",
+    "bytes": 3009,
+    "sha256": "46f0c5c3f7b73ec51bb2ae5c34d642500033125965acfe317f503fe3f088ff49"
   },
   {
     "path": "outputs/mori-phone/lib/media-validation.ts",
@@ -1460,14 +1478,14 @@
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
     "description": "聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 15909,
-    "sha256": "35ef39289412ef4faf17b4e0a236edb33767a68a8b85431b75b377a509f562fb"
+    "bytes": 16343,
+    "sha256": "3a330d4b3e448bc4e16723127994f344ac9b4f07640e1ef0303bdf14b43290d2"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
-    "bytes": 11059,
-    "sha256": "a079318a6776a3adc82e638683fd92ae3c0dfea9c1b50485278062e6a9ef96ee"
+    "bytes": 11080,
+    "sha256": "750fc5f3893f11c7a67e1f38984e240a8238de518c33cef49266bae4b738af1a"
   },
   {
     "path": "outputs/mori-phone/lib/provider-errors.ts",
@@ -1484,8 +1502,8 @@
   {
     "path": "outputs/mori-phone/lib/providers.ts",
     "description": "服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts",
-    "bytes": 6445,
-    "sha256": "2dd7c0db7d8c05c7c5ed68d7eaaf1763028757b3fd6762bc5af82deff70f5e2a"
+    "bytes": 7301,
+    "sha256": "ab5963bc7a7b25da6e149a3fad4b4e3a7b04c76631d543514c59366104b28475"
   },
   {
     "path": "outputs/mori-phone/lib/reasoning.ts",
@@ -1512,10 +1530,16 @@
     "sha256": "47405ca487bb53f28e108df93c3e090c652b0d6352c0409621233176e9962171"
   },
   {
+    "path": "outputs/mori-phone/lib/turn-causality.ts",
+    "description": "按消息 ID 固定因果边界与同一回合角色发言证据；路径：outputs/mori-phone/lib/turn-causality.ts；路径：outputs/mori-phone/lib/turn-causality.ts",
+    "bytes": 945,
+    "sha256": "0ef7f1a0fb615b8332a8f28c38d8d95ffe6d2fac6d6c39c263ff87611d0b375a"
+  },
+  {
     "path": "outputs/mori-phone/lib/turn-execution.ts",
     "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
-    "bytes": 8675,
-    "sha256": "01a1d80d9f6bb6d0189fd8af0a49e71e70aa6a8090aceefee1ca11ab1e3ca46c"
+    "bytes": 10093,
+    "sha256": "98c257710bf65370cccd6b200d0c3d0f479a3630844b20c0bc36ab16448490af"
   },
   {
     "path": "outputs/mori-phone/lib/turn-receipts.ts",
@@ -1736,8 +1760,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-agents.mjs",
     "description": "文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs",
-    "bytes": 11248,
-    "sha256": "5a9cf3e9ea0e89f4261e071fd2c48e49fc1dd84956a88d5a24aae3a3d37c24b1"
+    "bytes": 21030,
+    "sha256": "4b7c062632ec20a707a46e384843582dec07bfe856e4c1623814117dce75fdaf"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-card-library.mjs",
@@ -1748,14 +1772,14 @@
   {
     "path": "outputs/mori-phone/scripts/verify-companion.mjs",
     "description": "21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs",
-    "bytes": 11645,
-    "sha256": "b80b68aa81c52c19b64847eeb3702d47bce012da433b93c067efb0330535a023"
+    "bytes": 11671,
+    "sha256": "b998797a4bc932b3d95b4504324e460f7b6b7a7c1c35073b5d72d8e54bd34e2d"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
     "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 9098,
-    "sha256": "c6a35a076711fae68121437875ee26af3b0ca6df7a8fb9310e4ae3965459be86"
+    "bytes": 10619,
+    "sha256": "86a5699f83d4ee930056772b4c69bbf36cd4ae22532170e1c1d3ddd63601ee4b"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-context.mjs",
@@ -1766,14 +1790,14 @@
   {
     "path": "outputs/mori-phone/scripts/verify-core.mjs",
     "description": "26 项模型状态、角色导入和提示词核心检查；路径：outputs/mori-phone/scripts/verify-core.mjs",
-    "bytes": 12865,
-    "sha256": "848abe209b274d247eef3bf525c7f475302bcdead7af73423491f75afd7c312f"
+    "bytes": 13409,
+    "sha256": "c953dc2b0b02732b6e5b02ab5784e8af1174e3fd92e42c057b95be7b77f2f9b4"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-group.mjs",
     "description": "20 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者；路径：outputs/mori-phone/scripts/verify-group.mjs",
-    "bytes": 9866,
-    "sha256": "70975050a39ff886e56cdc3f5542cc46c6d0f1c3abcc11a1e4d59a7d3307dc68"
+    "bytes": 10405,
+    "sha256": "0c52dbc39e55a921362b791dbfaa49925ef67e31243e6475779f7bee64ea3463"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-media.mjs",
@@ -1790,14 +1814,14 @@
   {
     "path": "outputs/mori-phone/scripts/verify-providers.mjs",
     "description": "17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs",
-    "bytes": 10337,
-    "sha256": "9a2485306ebe8f0b2213da370e8b16c7c5e6b7cd2c6408d0cede90a8ea9169c7"
+    "bytes": 12554,
+    "sha256": "5c0d7b69c337c563b4ec5c002c36a6855c49b988dfc5c3e91cc472708ea81411"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-receipts.mjs",
     "description": "崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs",
-    "bytes": 5142,
-    "sha256": "22ce3c0fcd980ad58074be07df4eba4f91256f7432f2e02b1e18ebb5058d604a"
+    "bytes": 6631,
+    "sha256": "f064b6bdce36b37c0310bbd81edce9ef331f8580dba5671c76d0f92efc3bb44f"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-review.mjs",
@@ -1814,14 +1838,14 @@
   {
     "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
     "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
-    "bytes": 7471,
-    "sha256": "ff02ea01605f9d638f750c3eeb7ad4970255c3f0a3cbf6f7092f96dbf38b1b97"
+    "bytes": 11809,
+    "sha256": "2fecd6e9d1622df60c4e4d028b9114ab17205ef9c89ad0fd0a79cbed6fabbfd1"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
     "description": "确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs",
-    "bytes": 8691,
-    "sha256": "627e9fed47bbf59082b0564d7e874a07764cc552b7e2965e03a5b052f278e553"
+    "bytes": 16919,
+    "sha256": "9cccc365b1522af8975ef8469383970bd6c9b673c1384049e811e43fdd9db0f6"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-voice.mjs",
@@ -2246,8 +2270,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 3490,
-    "sha256": "1aebff6b68e6b75ca1677ba3ca6ae875e87086661d44a28d39bbb788fd03e9a3"
+    "bytes": 4160,
+    "sha256": "5431f8779e70569629e236cbb7388c00727e76c98ce00e1ed3fc66f060ed8362"
   },
   {
     "path": "scripts/verify-delivery.py",
@@ -2468,8 +2492,8 @@
   {
     "path": "work/qa/p0-storage-scale.mjs",
     "description": "P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/p0-storage-scale.mjs",
-    "bytes": 7780,
-    "sha256": "2a990330c7714c67cca67af86294443f1a0b8d8d21b347482dd9a5e1df502cbf"
+    "bytes": 7845,
+    "sha256": "6a893ef474ca8be4719b016e8ecb3a6f8050ec66b6523fe68ffbbb7cef3c9a9c"
   },
   {
     "path": "work/qa/package-lock.json",
@@ -2570,14 +2594,14 @@
   {
     "path": "work/qa/storage-entry.ts",
     "description": "真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts",
-    "bytes": 412,
-    "sha256": "5852e61962103a63c4a37b43252df7712efd00bf6819a81ec7ee64a7f809e130"
+    "bytes": 627,
+    "sha256": "4e05a478e663a9af32134fcb98664e0af69646466da97af5ce7570698e67c726"
   },
   {
     "path": "work/qa/storage.mjs",
     "description": "13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs",
-    "bytes": 8743,
-    "sha256": "9714b5143f08c5d8509f5944b2f520ef92085a4294eeecdf7d6902fab820fbd2"
+    "bytes": 14491,
+    "sha256": "f723eb9e719d83703be148c96505a5e2e051f0929cfb9792e223cccf32b13ac5"
   },
   {
     "path": "work/qa/ui-group.mjs",
