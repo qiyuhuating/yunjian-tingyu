@@ -860,8 +860,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 35635,
-    "sha256": "92ce4e035ee067f3eab165448a1895a997f6c05c45fc31b6a3827843c668ab14"
+    "bytes": 35955,
+    "sha256": "fb0413beae9ca27408e676edf61dfeae38b19763fb3b369581c993ad52cc7e4c"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1220,8 +1220,8 @@
   {
     "path": "outputs/mori-phone/lib/agent-orchestrator.ts",
     "description": "有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts",
-    "bytes": 6974,
-    "sha256": "07b0ea7d27c9e85f369c589c8c17b8ebf3c49cf629e9dbecd6e12c78d2de9960"
+    "bytes": 7130,
+    "sha256": "e82fac930bcc67715990fb5f463ba0d101bdd959ba0d9f1f255edf1f082849cb"
   },
   {
     "path": "outputs/mori-phone/lib/agent-workspace.ts",
@@ -1502,14 +1502,14 @@
   {
     "path": "outputs/mori-phone/lib/turn-execution.ts",
     "description": "可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts",
-    "bytes": 8606,
-    "sha256": "374fce1292b2809c71546328f7d179e8936a4e2da94f3aefa1d1e6ba1b1b7ee5"
+    "bytes": 8675,
+    "sha256": "01a1d80d9f6bb6d0189fd8af0a49e71e70aa6a8090aceefee1ca11ab1e3ca46c"
   },
   {
     "path": "outputs/mori-phone/lib/turn-receipts.ts",
     "description": "持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts",
-    "bytes": 4575,
-    "sha256": "4f094e72d97e0ed898077155410df38d00c33e8b23971253d7bbced3cc27ae58"
+    "bytes": 4666,
+    "sha256": "b07034e7225e1672041e447b29fb88c88ef3bb871c7a3d074c61f69ebe90a242"
   },
   {
     "path": "outputs/mori-phone/lib/world-info.ts",
