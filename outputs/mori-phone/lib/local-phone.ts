@@ -7,7 +7,8 @@ export {assetReferences} from './asset-references';
 const DB_NAME='cloudlet-device',DB_VERSION=3;
 type Snapshot={owner:string;state:PhoneState;version:number;updatedAt:number;legacyArchive?:boolean;threadStorage?:1;assetIds?:string[]};
 export type LocalAsset={id:string;owner:string;blob:Blob;name:string;mime:string;size:number;createdAt?:number;sha256?:string};
-export type StagedAsset=Pick<LocalAsset,'id'|'blob'|'name'|'mime'|'size'>;
+export type StagedAsset=Pick<LocalAsset,'id'|'blob'|'name'|'mime'|'size'|'sha256'>;
+export type PreparedLocalUpload={result:{url:string;id:string;mime:string;size:number;name:string};asset?:StagedAsset};
 let database:Promise<IDBDatabase>|undefined;
 const persisted=new Map<string,{version:number;state:PhoneState}>();
 function db(){
@@ -32,7 +33,8 @@ export async function writeLocal(owner:string,state:PhoneState,version:number,le
  // State, threads and newly restored blobs must commit or abort as one IndexedDB transaction.
  const stagedIds=new Set<string>();for(const asset of stagedAssets){
   if(!/^[a-f0-9-]{36}$/.test(asset.id)||stagedIds.has(asset.id)||!refs.includes(asset.id)||
-   asset.blob.size!==asset.size||asset.size>200*1024*1024||asset.name.length>160||asset.mime.length>160)
+   asset.blob.size!==asset.size||asset.size>200*1024*1024||asset.name.length>160||asset.mime.length>160||
+   (asset.sha256!==undefined&&!/^[a-f0-9]{64}$/.test(asset.sha256)))
    throw new Error('待恢复的附件无效或不被记录引用，未更改设备数据。');
   stagedIds.add(asset.id);
  }
@@ -41,7 +43,7 @@ export async function writeLocal(owner:string,state:PhoneState,version:number,le
   const old=request.result as Snapshot|undefined;if((old?.version??0)!==version){conflict=true;tx.abort();return;}
   if(stagedAssets.length){const assets=tx.objectStore('assets');for(const a of stagedAssets){
    const mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(a.mime)?a.mime:'application/octet-stream';
-   assets.add({owner,id:a.id,blob:a.blob.slice(0,a.size,mime),name:a.name,mime,size:a.size,createdAt:Date.now()});
+   assets.add({owner,id:a.id,blob:a.blob.slice(0,a.size,mime),name:a.name,mime,size:a.size,createdAt:Date.now(),...(a.sha256?{sha256:a.sha256}:{})});
   }}
   const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null;
   syncStoredThreads(tx,owner,parsed.threads,previous?.threads||old?.state.threads||{},!!previous);
@@ -80,12 +82,32 @@ export async function collectOrphanAssets(owner:string,graceMs=7*24*60*60*1000){
  };
  await done;return removed;
 }
-export async function uploadLocal(owner:string,file:File){
+/** Compute MIME, checksum and reference before saving; no new Blob is written here.
+ * Message creation can pass the staged asset to writeLocal for an atomic commit. */
+export async function prepareLocalUpload(owner:string,file:File):Promise<PreparedLocalUpload>{
  if(file.size>200*1024*1024)throw new Error('单个附件请控制在 200 MB 以内。');
  const b=new Uint8Array(await file.slice(0,16).arrayBuffer());let mime='application/octet-stream';
- if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';else if(String.fromCharCode(...b.slice(0,5))==='%PDF-')mime='application/pdf';else if(file.type==='video/mp4'&&String.fromCharCode(...b.slice(4,8))==='ftyp')mime='video/mp4';else if(file.type==='video/webm'&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)mime='video/webm';else if(file.type.startsWith('audio/'))mime=file.type;
- const hash=sha256.create();for(let offset=0;offset<file.size;offset+=1024*1024)hash.update(new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer()));const digest=Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join(''),d=await db(),saved=await result(d.transaction('assets').objectStore('assets').index('content').get([owner,digest])) as LocalAsset|undefined;if(saved&&saved.mime===mime)return {url:'local:'+saved.id,id:saved.id,mime,size:saved.size,name:file.name.slice(0,160)};
- const h=digest.slice(0,32),id=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);const collision=await getAsset(owner,'local:'+id);return putAsset(owner,collision&&collision.sha256!==digest?crypto.randomUUID():id,file.slice(0,file.size,mime),file.name,mime,digest);
+ if(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71)mime='image/png';
+ else if(b[0]===255&&b[1]===216&&b[2]===255)mime='image/jpeg';
+ else if(String.fromCharCode(...b.slice(0,6)).match(/^GIF8[79]a$/))mime='image/gif';
+ else if(String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP')mime='image/webp';
+ else if(String.fromCharCode(...b.slice(0,5))==='%PDF-')mime='application/pdf';
+ else if(file.type==='video/mp4'&&String.fromCharCode(...b.slice(4,8))==='ftyp')mime='video/mp4';
+ else if(file.type==='video/webm'&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)mime='video/webm';
+ else if(file.type.startsWith('audio/'))mime=file.type;
+ mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(mime)?mime:'application/octet-stream';
+ const hash=sha256.create();for(let offset=0;offset<file.size;offset+=1024*1024)
+  hash.update(new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer()));
+ const digest=Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join('');
+ const d=await db(),saved=await result(d.transaction('assets').objectStore('assets').index('content').get([owner,digest])) as LocalAsset|undefined;
+ if(saved&&saved.mime===mime)return {result:{url:'local:'+saved.id,id:saved.id,mime,size:saved.size,name:file.name.slice(0,160)}};
+ const id=crypto.randomUUID(),name=file.name.slice(0,160),blob=file.slice(0,file.size,mime);
+ return {result:{url:'local:'+id,id,mime,size:file.size,name},asset:{id,blob,name,mime,size:file.size,sha256:digest}};
+}
+export async function uploadLocal(owner:string,file:File){
+ const prepared=await prepareLocalUpload(owner,file);
+ if(!prepared.asset)return prepared.result;
+ const a=prepared.asset;return await putAsset(owner,a.id,a.blob,a.name,a.mime,a.sha256);
 }
 async function legacyBlob(ref:string,expected:number){
  const response=await fetch(ref,{cache:'no-store'});if(response.ok){const blob=await response.blob();if(response.status!==204&&(!expected||blob.size===expected))return blob;}
