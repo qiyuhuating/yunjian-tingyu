@@ -2468,8 +2468,8 @@
   {
     "path": "work/qa/p0-storage-scale.mjs",
     "description": "P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：work/qa/p0-storage-scale.mjs",
-    "bytes": 7780,
-    "sha256": "2a990330c7714c67cca67af86294443f1a0b8d8d21b347482dd9a5e1df502cbf"
+    "bytes": 7845,
+    "sha256": "6a893ef474ca8be4719b016e8ecb3a6f8050ec66b6523fe68ffbbb7cef3c9a9c"
   },
   {
     "path": "work/qa/package-lock.json",
@@ -2570,14 +2570,14 @@
   {
     "path": "work/qa/storage-entry.ts",
     "description": "真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts",
-    "bytes": 412,
-    "sha256": "5852e61962103a63c4a37b43252df7712efd00bf6819a81ec7ee64a7f809e130"
+    "bytes": 451,
+    "sha256": "69e8f7ec1a238df90c79806dcf55054a79d1bd86f468cf7a497404cc56326fad"
   },
   {
     "path": "work/qa/storage.mjs",
     "description": "13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs",
-    "bytes": 8743,
-    "sha256": "9714b5143f08c5d8509f5944b2f520ef92085a4294eeecdf7d6902fab820fbd2"
+    "bytes": 10319,
+    "sha256": "184a3046b3a0eb29976fd0d1660dcdaeaae077b8a09728b2c24645ea8fd85830"
   },
   {
     "path": "work/qa/ui-group.mjs",
