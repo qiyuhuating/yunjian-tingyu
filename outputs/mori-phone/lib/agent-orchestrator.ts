@@ -43,7 +43,7 @@ export function planAgentReview(state:PhoneState,options:{jobId:string;thread:st
   if(index<0)throw new Error('未结束任务过多，请先处理旧任务。');
   state.agentJobs.splice(index,1);
  }
- state.agentJobs.push({id:jobId,thread,path,sourceRevision:source.revision,sourceId:source.id,speakers:[...speakers],completed:[],status:'planned',attempts:0,updatedAt:Date.now()});
+ state.agentJobs.push({id:jobId,thread,path,sourceRevision:source.revision,sourceId:source.id,speakers:[...speakers],completed:[],reports:[],status:'planned',attempts:0,updatedAt:Date.now()});
 }
 export type ReviewServices={
  snapshot:()=>PhoneState;
