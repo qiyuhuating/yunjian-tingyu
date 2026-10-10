@@ -204,7 +204,7 @@
 | [outputs/mori-phone/lib/connector-errors.mts](outputs/mori-phone/lib/connector-errors.mts) | TypeScript 业务或构建模块：connector-errors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-errors.mts | 2717 |
 | [outputs/mori-phone/lib/connector-preview.d.ts](outputs/mori-phone/lib/connector-preview.d.ts) | TypeScript 业务或构建模块：connector-preview.d；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-preview.d.ts | 433 |
 | [outputs/mori-phone/lib/connectors.ts](outputs/mori-phone/lib/connectors.ts) | TypeScript 业务或构建模块：connectors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connectors.ts | 416 |
-| [outputs/mori-phone/lib/context-window.ts](outputs/mori-phone/lib/context-window.ts) | 服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts | 3986 |
+| [outputs/mori-phone/lib/context-window.ts](outputs/mori-phone/lib/context-window.ts) | 服务商模型上限字段解析、按地址隔离元数据、官方回退及输入预算；路径：outputs/mori-phone/lib/context-window.ts | 3987 |
 | [outputs/mori-phone/lib/continuity.ts](outputs/mori-phone/lib/continuity.ts) | 长期记忆与旧对话检索、重复识别和可验证原消息的阶段摘要任务；路径：outputs/mori-phone/lib/continuity.ts | 3324 |
 | [outputs/mori-phone/lib/conversation-reply.ts](outputs/mori-phone/lib/conversation-reply.ts) | 统一解析自然短消息、接话选项及真实媒体命令；路径：outputs/mori-phone/lib/conversation-reply.ts | 767 |
 | [outputs/mori-phone/lib/file-export.ts](outputs/mori-phone/lib/file-export.ts) | 48KiB原生下载块与取消清理，以及网页版OPFS导出，不聚合完整备份；路径：outputs/mori-phone/lib/file-export.ts | 1411 |
@@ -430,5 +430,5 @@
 | [outputs/mori-phone/lib/connection-client.ts](outputs/mori-phone/lib/connection-client.ts) | 独立连接探测：取消、超时、流结束与非空正文校验；路径：outputs/mori-phone/lib/connection-client.ts | 2442 |
 | [outputs/mori-phone/lib/provider-errors.ts](outputs/mori-phone/lib/provider-errors.ts) | 安全的服务商错误分类，区分鉴权、余额、并发额度和限流；路径：outputs/mori-phone/lib/provider-errors.ts | 2502 |
 | [outputs/mori-phone/lib/provider-transport.ts](outputs/mori-phone/lib/provider-transport.ts) | 网页与原生共用的模型发现、聊天传输和连接探测输入；路径：outputs/mori-phone/lib/provider-transport.ts | 4862 |
-| [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 8757 |
+| [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 9098 |
 | [work/qa/connection-ui.mjs](work/qa/connection-ui.mjs) | 23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs | 22533 |
