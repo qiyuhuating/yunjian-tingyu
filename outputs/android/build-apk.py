@@ -68,7 +68,7 @@ if args.independent:
     if root.attrib.get('package') != 'chat.cloudlet.phone':
         raise SystemExit('Unexpected original package identity')
     root.set('package', 'chat.cloudlet.phone.v002')
-    root.find('application').set('{http://schemas.android.com/apk/res/android}label', '云笺听雨 0.0.2 独立版')
+    root.find('application').set('{http://schemas.android.com/apk/res/android}label', '云笺听雨 ' + root.get('{http://schemas.android.com/apk/res/android}versionName', '0.0.2') + ' 独立版')
     manifest_path = build / 'AndroidManifest-standalone.xml'
     manifest.write(manifest_path, encoding='utf-8', xml_declaration=True)
 run([tool('aapt2'), 'compile', '--dir', project / 'res', '-o', build / 'resources.zip'])
