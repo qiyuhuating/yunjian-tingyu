@@ -45,7 +45,7 @@ export async function assembleChatMessages(input:RequestContext):Promise<ChatInp
   if(image&&image.size<=4*1024*1024&&nativeMedia.size===0&&/^image\/(png|jpeg|webp|gif)$/.test(image.mime)){
    messages.push({role,content:[{type:'text',text:content},{type:'image_url',image_url:{url:await blobDataURL(image.blob)}}]});
   }else{
-   messages.push({role,content:content+(m.kind==='image'?\`\n图片内容未发送：\${!vision?'当前未开启模型视觉能力':!images.has(m.id)?'只发送最近两张图片':!image?'原图片不可用':image.size>4*1024*1024?'图片超过 4 MB':'当前图片格式不支持视觉输入'}。不能声称看过图像。\`:'')});
+   messages.push({role,content:content+(m.kind==='image'?`\n图片内容未发送：${!vision?'当前未开启模型视觉能力':!images.has(m.id)?'只发送最近两张图片':!image?'原图片不可用':image.size>4*1024*1024?'图片超过 4 MB':'当前图片格式不支持视觉输入'}。不能声称看过图像。`:'')});
   }
  }
  // A restored thread may not contain the currently submitted text yet.
