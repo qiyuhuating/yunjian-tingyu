@@ -6,6 +6,9 @@ import type {ProviderId} from './providers';
 import type {ChatInput} from './provider-adapter';
 
 type Message=ChatInput['messages'][number];
+const NATIVE_MIMES=['audio/webm','audio/mp4','audio/mpeg','audio/wav','audio/x-wav','audio/ogg','audio/flac','audio/aac','video/mp4','video/webm'] as const;
+function nativeMime(value:string):value is (typeof NATIVE_MIMES)[number]{return NATIVE_MIMES.some(mime=>mime===value);}
+
 type RequestContext={
  ownerId:string;state:PhoneState;character:Character;thread:string;text:string;mode:ChatMode;
  provider:ProviderId;model:string;baseURL:string;vision:boolean;signal?:AbortSignal;
@@ -34,10 +37,10 @@ export async function assembleChatMessages(input:RequestContext):Promise<ChatInp
   if(provider==='gemini'&&nativeMedia.has(m.id)){
    const media=await getAsset(ownerId,m.asset!);
    if(media&&media.size<=8*1024*1024&&mediaBytes+media.size<=12*1024*1024&&
-    /^(audio\/(webm|mp4|mpeg|wav|x-wav|ogg|flac|aac)|video\/(mp4|webm))$/.test(media.mime)){
+    nativeMime(media.mime)){
     mediaBytes+=media.size;
     messages.push({role,content:[{type:'text',text:content},{type:'native_media',native_media:{
-     mimeType:media.mime as 'audio/webm',data:(await blobDataURL(media.blob)).split(',')[1]}}]});
+     mimeType:media.mime,data:(await blobDataURL(media.blob)).split(',')[1]}}]});
     continue;
    }
   }
