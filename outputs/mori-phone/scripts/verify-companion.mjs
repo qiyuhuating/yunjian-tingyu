@@ -43,7 +43,7 @@ await check('自定义角色连接绝不复用其他自定义地址的全局密�
  one.aiConnection={provider:'compatible',model:'local-model',baseURL:'https://role.example/v1',vision:false,keyScope:'provider'};
  const route=characterConnection(state,one);
  assert.equal(route.provider,'compatible');assert.equal(route.baseURL,'https://role.example/v1');
- assert.equal(route.keySlot,characterKeySlot(one.id,'compatible'));assert.equal(route.keyScope,'character');
+ assert.equal(route.keySlot,characterKeySlot(one.id,'compatible','https://role.example/v1'));assert.equal(route.keyScope,'character');
  assert.notEqual(route.keySlot,state.provider);
 });
 await check('测试全局连接能够显式绕过角色专用模型',()=>{

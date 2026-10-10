@@ -4,6 +4,7 @@ on:
     branches:
       - refactor/causal-execution-evidence-20261010
       - fix/atomic-restore-assets-20261010
+      - feat/custom-native-protocols-20261010
   workflow_dispatch:
 permissions:
   contents: write
@@ -12,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inventory:
-    if: github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010' || github.ref == 'refs/heads/fix/atomic-restore-assets-20261010'
+    if: github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010' || github.ref == 'refs/heads/fix/atomic-restore-assets-20261010' || github.ref == 'refs/heads/feat/custom-native-protocols-20261010'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

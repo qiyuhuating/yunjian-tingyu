@@ -1,5 +1,5 @@
 import {z} from 'zod';
-export const providerIds=['deepseek','openai','anthropic','gemini','openrouter','siliconflow','qwen','moonshot','zhipu','xai','compatible'] as const;
+export const providerIds=['deepseek','openai','anthropic','gemini','openrouter','siliconflow','qwen','moonshot','zhipu','xai','compatible','compatible-anthropic','compatible-gemini'] as const;
 export const providerSchema=z.enum(providerIds);
 export type ProviderId=typeof providerIds[number];
 export type ProviderPreset={id:ProviderId;name:string;protocol:'openai'|'anthropic'|'gemini';baseURL:string;model:string;models:string[];vision:boolean;penalties:boolean;repetition:boolean;thinking:boolean;temperatureMax:number;frequency?:boolean;presence?:boolean;keyURL:string;note:string};
@@ -15,12 +15,14 @@ export const providers:ProviderPreset[]=[
  {id:'zhipu',name:'智谱 · GLM',protocol:'openai',baseURL:'https://open.bigmodel.cn/api/paas/v4',model:'glm-4.7-flash',models:['glm-4.7-flash','glm-4.7','glm-4.5-air'],vision:false,penalties:false,repetition:false,thinking:false,temperatureMax:1,keyURL:'https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys',note:'中国平台端点；海外 Z.ai Key 使用其对应端点。'},
  {id:'xai',name:'xAI · Grok',protocol:'openai',baseURL:'https://api.x.ai/v1',model:'grok-4.7',models:['grok-4.7'],vision:true,penalties:false,repetition:false,thinking:false,temperatureMax:2,keyURL:'https://console.x.ai/',note:'使用 xAI 开放平台 Key；Grok App 订阅与 API 分开。'},
  {id:'compatible',name:'自定义 · OpenAI 兼容',protocol:'openai',baseURL:'',model:'',models:[],vision:false,penalties:true,repetition:true,thinking:false,temperatureMax:2,keyURL:'',note:'填写自己的 HTTPS 地址和模型 ID；扩展参数需要服务端支持。'},
+ {id:'compatible-anthropic',name:'自定义 · Anthropic 兼容',protocol:'anthropic',baseURL:'',model:'',models:[],vision:false,penalties:false,repetition:false,thinking:false,temperatureMax:1,keyURL:'',note:'原生 Anthropic Messages 协议：提供公开 HTTPS 基础地址（例如 /v1）和模型 ID；使用 x-api-key 鉴权。不能用于仅提供 OpenAI 兼容接口的站点。'},
+ {id:'compatible-gemini',name:'自定义 · Gemini 兼容',protocol:'gemini',baseURL:'',model:'',models:[],vision:false,penalties:false,repetition:false,thinking:false,temperatureMax:2,keyURL:'',note:'原生 Gemini generateContent 协议：提供公开 HTTPS 基础地址（例如 /v1beta）和模型 ID；使用 x-goog-api-key 鉴权。不能用于仅提供 OpenAI 兼容接口的站点。'},
 ];
 export const getProvider=(id:ProviderId)=>providers.find(p=>p.id===id)!;
 export function capabilities(id:ProviderId,model:string){
  const p=getProvider(id),reasoning=id==='openai'&&/^(o[134]|gpt-5)/.test(model),modernClaude=id==='anthropic'&&/claude-(opus|sonnet)-4-[6-9]/.test(model),kimi=id==='moonshot'&&/^kimi-k2/.test(model),grok=id==='xai'&&/^grok-4/.test(model);
  // The Liquid free endpoint rejects top_p in a live probe despite advertising support.
- return {...p,temperature:!reasoning&&!modernClaude&&!kimi&&!grok,penalties:p.penalties&&!reasoning&&!kimi,frequency:(p.frequency??p.penalties)&&!reasoning&&!kimi,presence:(p.presence??p.penalties)&&!reasoning&&!kimi,topP:!reasoning&&id!=='anthropic'&&!kimi&&!grok&&!(id==='openrouter'&&model==='liquid/lfm-2.5-2.6b:free')};
+ return {...p,temperature:!reasoning&&!modernClaude&&!kimi&&!grok,penalties:p.penalties&&!reasoning&&!kimi,frequency:(p.frequency??p.penalties)&&!reasoning&&!kimi,presence:(p.presence??p.penalties)&&!reasoning&&!kimi,topP:!reasoning&&id!=='anthropic'&&id!=='compatible-anthropic'&&!kimi&&!grok&&!(id==='openrouter'&&model==='liquid/lfm-2.5-2.6b:free')};
 }
 export function providerBase(id:ProviderId,custom=''){
  const base=custom.trim()||getProvider(id).baseURL;let url:URL;try{url=new URL(base);}catch{throw new Error('请输入完整的 HTTPS API 地址。');}
