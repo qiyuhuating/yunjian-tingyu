@@ -53,7 +53,8 @@ export async function readBackup(file:File):Promise<PreparedBackup>{
 export async function stageBackup(owner:string,prepared:PreparedBackup,current?:PhoneState){
  const local=current??(await readLocal(owner))?.state??freshState();
  // Restoring untrusted records must not retarget locally stored keys or replace core rules.
- const restored=stateSchema.parse({...prepared.state,provider:local.provider,model:local.model,baseURL:local.baseURL,vision:local.vision,connections:local.connections,voiceSettings:local.voiceSettings,mediaSettings:{...local.mediaSettings,stickers:prepared.state.mediaSettings.stickers},coreSystemPrompt:local.coreSystemPrompt});
+ // Restored backups are imported data, not an authorization to send an old model request.
+ const restored=stateSchema.parse({...prepared.state,queuedTurns:[],provider:local.provider,model:local.model,baseURL:local.baseURL,vision:local.vision,connections:local.connections,voiceSettings:local.voiceSettings,mediaSettings:{...local.mediaSettings,stickers:prepared.state.mediaSettings.stickers},coreSystemPrompt:local.coreSystemPrompt});
  if(prepared.legacy){for(const ref of assetReferences(restored))if(ref.startsWith('local:')&&!await getAsset(owner,ref))throw new Error('旧 JSON 只有附件引用，缺少原文件。请使用原设备的完整 ZIP 备份。');return await migrateAssets(owner,restored);}
  // New identifiers prevent a failed restore from replacing files belonging to the current snapshot.
  const replacements=new Map<string,string>(),needed=new Set(assetReferences(restored).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')));try{for(const a of prepared.assets){if(!needed.has(a.id))continue;const id=crypto.randomUUID();await putAsset(owner,id,a.blob,a.name,a.mime);replacements.set(a.id,id);}}catch(e){await removeAssets(owner,[...replacements.values()]);throw e;}
