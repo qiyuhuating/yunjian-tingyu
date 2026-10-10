@@ -150,6 +150,13 @@ await check('Transitive summary provenance rejects tampering in earlier summariz
  s.threads[t][5].text='更正过的早期事实';
  assert(!continuity.validContinuity(s,t));
 });
+await check('Ungrounded legacy automatic memory remains stored but is never injected',()=>{
+ const continuity=load('continuity'),f=fixture();
+ const record={id:'old-auto',origin:'auto',text:'没有原文的自动概括',scope:f.speakers[0],date:'2026-10-10',locked:false,revisions:[]};
+ f.state.memories.push(record);
+ assert(!continuity.validMemorySource(f.state,record));
+ assert(!continuity.recallMemories(f.state,f.speakers[0],'自动概括').includes('没有原文'));
+});
 await check('Multi-source factual memory requires every cited source to remain valid',()=>{
  const continuity=load('continuity'),f=fixture(),s=f.state;
  s.threads[f.thread]=[{id:'x1',role:'user',kind:'text',timestamp:1,text:'我喜欢雨天'},
