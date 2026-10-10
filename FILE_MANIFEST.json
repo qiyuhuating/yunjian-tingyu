@@ -14,8 +14,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1162,
-    "sha256": "9669542acc4efe0e9c617d91035711d7e51eab2b240987367f74c9774b69bb57"
+    "bytes": 1276,
+    "sha256": "6b68b0945930916e37932b3194b7bf655245081cb943abbd7fd5f022cf65241d"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -842,8 +842,8 @@
   {
     "path": "outputs/mori-phone/app/character-ai-settings.tsx",
     "description": "角色 AI 服务商与模型编辑、加密专属 Key 的保存/移除和自定义 HTTPS 接口保护；路径：outputs/mori-phone/app/character-ai-settings.tsx",
-    "bytes": 5217,
-    "sha256": "8864ce3859aa7b1bbc52e0434f5f9804d9fddd3e54e69857b7b45619c9d00a23"
+    "bytes": 5517,
+    "sha256": "a06b201cf9ef000efee729fb8d4c1865de45eb4194cc1b90c14512b6bdd95f1f"
   },
   {
     "path": "outputs/mori-phone/app/character-library.tsx",
@@ -884,8 +884,8 @@
   {
     "path": "outputs/mori-phone/app/connection-settings.tsx",
     "description": "连接工作区：独立测试、实时模型、持久诊断和地址凭据隔离；路径：outputs/mori-phone/app/connection-settings.tsx",
-    "bytes": 11282,
-    "sha256": "b9e2b4bab4a89c8a48bf9101935780f7cfce887ef390bf325213f459972b7885"
+    "bytes": 11409,
+    "sha256": "c52fbdd2880c7c641aa82a2904f32a0c891ff690a03c3f2f43e2f03741c6d0db"
   },
   {
     "path": "outputs/mori-phone/app/focus-timer.tsx",
@@ -1274,8 +1274,8 @@
   {
     "path": "outputs/mori-phone/lib/character-ai.ts",
     "description": "角色 AI 覆盖规则、全局默认继承与同服务商独立密钥槽位选择；路径：outputs/mori-phone/lib/character-ai.ts",
-    "bytes": 1424,
-    "sha256": "5cde938a4b1d9228d4081b3a3e72e487b3783159bea79615c62b122d88c5cc2c"
+    "bytes": 1996,
+    "sha256": "1d7db89b2ba2370f68520ed3d4a40463fdbdeb63f0b0c11465872f82858ded94"
   },
   {
     "path": "outputs/mori-phone/lib/character-import.ts",
@@ -1478,8 +1478,8 @@
   {
     "path": "outputs/mori-phone/lib/providers.ts",
     "description": "服务商端点和能力预设；路径：outputs/mori-phone/lib/providers.ts",
-    "bytes": 6445,
-    "sha256": "2dd7c0db7d8c05c7c5ed68d7eaaf1763028757b3fd6762bc5af82deff70f5e2a"
+    "bytes": 7301,
+    "sha256": "ab5963bc7a7b25da6e149a3fad4b4e3a7b04c76631d543514c59366104b28475"
   },
   {
     "path": "outputs/mori-phone/lib/reasoning.ts",
@@ -1754,8 +1754,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
     "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 9098,
-    "sha256": "c6a35a076711fae68121437875ee26af3b0ca6df7a8fb9310e4ae3965459be86"
+    "bytes": 10619,
+    "sha256": "86a5699f83d4ee930056772b4c69bbf36cd4ae22532170e1c1d3ddd63601ee4b"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-context.mjs",
@@ -1790,8 +1790,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-providers.mjs",
     "description": "17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs",
-    "bytes": 10337,
-    "sha256": "9a2485306ebe8f0b2213da370e8b16c7c5e6b7cd2c6408d0cede90a8ea9169c7"
+    "bytes": 12554,
+    "sha256": "5c0d7b69c337c563b4ec5c002c36a6855c49b988dfc5c3e91cc472708ea81411"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-receipts.mjs",
