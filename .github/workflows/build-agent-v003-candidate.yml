@@ -1,0 +1,170 @@
+name: Build signed 0.0.3 Agent candidate (not a release)
+on:
+  push:
+    branches: [release/agent-core-v003-candidate-20261010]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: agent-v003-signed-candidate
+  cancel-in-progress: false
+jobs:
+  verify:
+    name: Full source and browser acceptance gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify manifest and immutable historical assets
+        run: python3 scripts/verify-delivery.py
+      - name: Install locked test dependencies
+        run: |
+          npm ci --prefix outputs/mori-phone
+          npm ci --prefix work/qa
+          cd work/qa && npx playwright install --with-deps chromium
+      - name: Strict TypeScript, execution, receipt, Agent and memory regressions
+        run: |
+          python3 work/check-release.py
+          node outputs/mori-phone/scripts/verify-media.mjs
+          node outputs/mori-phone/scripts/verify-p0.mjs
+      - name: Build Android Web and run full browser and storage suites
+        run: |
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+          node work/qa/features.mjs
+          node work/qa/connection-ui.mjs
+          node work/qa/roleplay.mjs
+          node work/qa/card-library.mjs
+          node work/qa/p0-reliability.mjs
+          node work/qa/storage.mjs
+          node work/qa/p0-storage-scale.mjs
+      - name: Check native Java bridge
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"
+          mkdir -p /tmp/yunjian-agent-native
+          javac --release 8 -classpath "$ANDROID_HOME/platforms/android-35/android.jar" -d /tmp/yunjian-agent-native outputs/android/src/chat/cloudlet/phone/*.java
+  package:
+    name: Build and verify upgrade-signed standalone candidate
+    needs: verify
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned build toolchain
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          npm ci --prefix outputs/mori-phone
+          mkdir -p work/apk-candidate
+          curl --fail --location --retry 2 https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar -o work/apk-candidate/apktool.jar
+          echo 'dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423  work/apk-candidate/apktool.jar' | sha256sum -c -
+      - name: Build complete unsigned v0.0.3 independent package before handling signing secrets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          path=Path('outputs/android/AndroidManifest.xml')
+          tree=ET.parse(path)
+          root=tree.getroot()
+          ns='{http://schemas.android.com/apk/res/android}'
+          assert root.get(ns+'versionCode')=='8' and root.get(ns+'versionName')=='0.0.2'
+          root.set(ns+'versionCode','9')
+          root.set(ns+'versionName','0.0.3')
+          tree.write(path,encoding='unicode',xml_declaration=True)
+          PY
+          node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk > work/apk-candidate/package-info.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-unsigned.apk > work/apk-candidate/manifest-tree.txt
+          grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/package-info.txt
+          grep -F "versionCode='9'" work/apk-candidate/package-info.txt
+          grep -F "versionName='0.0.3'" work/apk-candidate/package-info.txt
+          grep -F 'mark.via.phonev02' work/apk-candidate/manifest-tree.txt
+      - name: Recover existing v0.0.2 signing key privately, never generate a replacement
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p work/apk-candidate/recovery work/apk-candidate/signing
+          gh api -H "Accept: application/vnd.github+json" /repos/${GITHUB_REPOSITORY}/actions/artifacts/11604691649/zip > work/apk-candidate/recovery/key-artifact.zip
+          unzip -qq work/apk-candidate/recovery/key-artifact.zip -d work/apk-candidate/recovery
+          test -s work/apk-candidate/recovery/standalone-signing-recovery.txt
+          gh release download v0.0.2-standalone -p yunjian-v002-signing-backup.tar.gz.enc -p yunjian-tingyu-v0.0.2-standalone.apk --dir work/apk-candidate/recovery
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 250000 \
+            -in work/apk-candidate/recovery/yunjian-v002-signing-backup.tar.gz.enc \
+            -out work/apk-candidate/recovery/plaintext.tar.gz \
+            -pass file:work/apk-candidate/recovery/standalone-signing-recovery.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import tarfile
+          source=Path('work/apk-candidate/recovery/plaintext.tar.gz')
+          destination=Path('work/apk-candidate/signing')
+          with tarfile.open(source,'r:gz') as archive:
+            assert set(archive.getnames())=={'cloudlet-release.p12','signing.json'},'Unexpected archive members'
+            for member in archive.getmembers():
+              assert member.isfile() and member.size < 200000,'Unexpected signing file'
+              dest=destination/member.name
+              dest.write_bytes(archive.extractfile(member).read())
+              dest.chmod(0o600)
+          print('Existing signing materials recovered within runner; private bytes withheld.')
+          PY
+      - name: Sign only after full build; verify previous certificate and APK upgrade identity
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,re,subprocess
+          from pathlib import Path
+          d=Path('work/apk-candidate')
+          old=d/'recovery/yunjian-tingyu-v0.0.2-standalone.apk'
+          source=d/'yunjian-tingyu-v0.0.3-rc1-unsigned.apk'
+          signed=d/'yunjian-tingyu-v0.0.3-rc1-signed.apk'
+          sdk=Path(os.environ['ANDROID_HOME'])/'build-tools/35.0.0'
+          signer=sdk/'apksigner'
+          signing=d/'signing'
+          info=json.loads((signing/'signing.json').read_text())
+          assert info['alias']=='yunjian-v002'
+          env=os.environ.copy()
+          env['CLOUDLET_SIGN_PASSWORD']=info['password']
+          subprocess.run([str(signer),'sign','--ks',str(signing/'cloudlet-release.p12'),
+                          '--ks-key-alias','yunjian-v002','--ks-pass','env:CLOUDLET_SIGN_PASSWORD',
+                          '--key-pass','env:CLOUDLET_SIGN_PASSWORD','--out',str(signed),str(source)],check=True,env=env,capture_output=True)
+          def cert(path):
+            out=subprocess.run([str(signer),'verify','--verbose','--print-certs',str(path)],check=True,capture_output=True,text=True).stdout
+            match=re.search(r'certificate SHA-256 digest:\s*([0-9a-f]+)',out,re.I)
+            assert match,'No certificate SHA-256'
+            assert 'Verified using v2 scheme (APK Signature Scheme v2): true' in out
+            return match.group(1).lower()
+          oldcert=cert(old);newcert=cert(signed)
+          assert oldcert==newcert,'Signing certificate differs; this APK cannot upgrade v0.0.2'
+          assert subprocess.run([str(sdk/'zipalign'),'-c','4',str(signed)],capture_output=True).returncode==0
+          assert signed.stat().st_size>1000000
+          digest=hashlib.sha256(signed.read_bytes()).hexdigest()
+          report={'sourceCommit':os.environ['GITHUB_SHA'],'package':'chat.cloudlet.phone.v002',
+                  'versionCode':9,'versionName':'0.0.3','signatureMatchesExistingV002':True,
+                  'certificateSHA256':newcert,'apkSHA256':digest,'sizeBytes':signed.stat().st_size,
+                  'status':'signed candidate - NOT device accepted or official Release'}
+          (d/'candidate-check.json').write_text(json.dumps(report,indent=2)+'\n')
+          (d/'SHA256SUMS').write_text(digest+'  '+signed.name+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Remove private recovery material before uploading distributable files
+        if: always()
+        run: |
+          rm -rf work/apk-candidate/recovery work/apk-candidate/signing
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yunjian-tingyu-v0.0.3-rc1-SIGNED-CANDIDATE
+          path: |
+            work/apk-candidate/yunjian-tingyu-v0.0.3-rc1-signed.apk
+            work/apk-candidate/SHA256SUMS
+            work/apk-candidate/candidate-check.json
+            work/apk-candidate/package-info.txt
+          if-no-files-found: error
+          retention-days: 30

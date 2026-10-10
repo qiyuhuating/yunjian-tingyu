@@ -10,6 +10,8 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    ".github/workflows/build-agent-v003-candidate.yml": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布",
+    "docs/0.0.3-agent-candidate-acceptance.md": "最新聊天与Agent草稿集成、证据等级和可安装候选包的严格验收边界",
     "outputs/mori-phone/lib/asset-references.ts": "资产引用统计与跨领域文件引用追踪",
     "outputs/mori-phone/lib/local-thread-store.ts": "线程独立持久化模块、增量写入、删除与事务隔离",
     "outputs/mori-phone/lib/turn-receipts.ts": "持久化回合发送回执、角色游标、显式重试与不确定计费保护",
