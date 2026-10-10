@@ -29,7 +29,7 @@ export function wireRequest(data:ChatInput){
   headers['x-goog-api-key']=data.apiKey;url=base+'/models/'+encodeURIComponent(data.model)+':streamGenerateContent?alt=sse';
   const contents:{role:string;parts:any[]}[]=[];
   for(const m of data.messages.slice(1)){const parts=typeof m.content==='string'?[{text:m.content}]:m.content.map(part=>part.type==='text'?{text:part.text}:part.type==='native_media'?{inlineData:part.native_media}:{inlineData:{mimeType:imageData(part).match(/^data:([^;]+)/)![1],data:imageData(part).split(',')[1]}}),role=m.role==='assistant'?'model':'user',last=contents.at(-1);if(last?.role===role)last.parts.push(...parts);else contents.push({role,parts});}
-  body={systemInstruction:{parts:[{text:data.messages[0].content}]},contents,generationConfig:{...(/(?:image|nano-banana)/i.test(data.model)?{responseModalities:['TEXT','IMAGE']}:{}),maxOutputTokens:maxTokens,temperature:Math.min(c.temperatureMax,p.temperature),topP:p.topP,...(p.penalties?{frequencyPenalty:p.frequencyPenalty,presencePenalty:p.presencePenalty}:{}),...reasoning.params}};
+  body={systemInstruction:{parts:[{text:data.messages[0].content}]},contents,generationConfig:{...(/(?:image|nano-banana)/i.test(data.model)?{responseModalities:['TEXT','IMAGE']}:{}),maxOutputTokens:maxTokens,temperature:Math.min(c.temperatureMax,p.temperature),topP:p.topP,...(c.penalties?{frequencyPenalty:p.frequencyPenalty,presencePenalty:p.presencePenalty}:{}),...reasoning.params}};
  }else{
   headers.Authorization='Bearer '+data.apiKey;url=base+'/chat/completions';
   const params=samplingParameters(data,data.supportedParameters);
