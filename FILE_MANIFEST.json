@@ -1298,8 +1298,8 @@
   {
     "path": "outputs/mori-phone/lib/chat-maintenance.ts",
     "description": "验证每条摘要原消息并拒绝过期、失败或空白结果的后台维护；路径：outputs/mori-phone/lib/chat-maintenance.ts",
-    "bytes": 2064,
-    "sha256": "7e8554056c47e373df21873453dd4b16ba41031903366d257ff86ce6fdb60783"
+    "bytes": 2146,
+    "sha256": "d2906cf06fc48bae4a4cad49297fcc662d2799379499f79fd01d1025b47f8b10"
   },
   {
     "path": "outputs/mori-phone/lib/chat-prompt.ts",
@@ -1358,8 +1358,8 @@
   {
     "path": "outputs/mori-phone/lib/continuity.ts",
     "description": "长期记忆与旧对话检索、重复识别和可验证原消息的阶段摘要任务；路径：outputs/mori-phone/lib/continuity.ts",
-    "bytes": 4514,
-    "sha256": "f5b193d130e9744b7d4980d3871cf2c29c387a82a6e7bb5e6b92fccc239dc02e"
+    "bytes": 5495,
+    "sha256": "965c15a122157eb171e3280003707318d75ea8eb754ed1abe51a8b6939e725fc"
   },
   {
     "path": "outputs/mori-phone/lib/conversation-reply.ts",
@@ -1460,8 +1460,8 @@
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
     "description": "聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 16286,
-    "sha256": "5bbf4f8da7452370bbcf2dfc527a027c9fa3e21947fb64a116c5d8333f64df5c"
+    "bytes": 16345,
+    "sha256": "8f53b411f6b3b28cec148d858c42e8c96a7d53edebf471bd8dc92e2fa07bd3da"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -1742,8 +1742,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-agents.mjs",
     "description": "文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs",
-    "bytes": 13228,
-    "sha256": "6461e9bcf4b18ff5702b60b8a95dce0c14424f23631d1ea5113f209c5177f66c"
+    "bytes": 14547,
+    "sha256": "c94a96e53df666f71346eb09735f041359e3b66ad1e26362b402e4b575302edc"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-card-library.mjs",
@@ -1772,8 +1772,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-core.mjs",
     "description": "26 项模型状态、角色导入和提示词核心检查；路径：outputs/mori-phone/scripts/verify-core.mjs",
-    "bytes": 13271,
-    "sha256": "4e507f87def250a1e8bfe9de151c5798b0dd830a1429eff1b2c211cfcbd8e84c"
+    "bytes": 13454,
+    "sha256": "8ffb708e80badc05675f2bccd6d335423ec59428b3bb093f6125c0bdff32304c"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-group.mjs",
