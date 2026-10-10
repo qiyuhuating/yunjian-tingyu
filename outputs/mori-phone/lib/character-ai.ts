@@ -12,6 +12,6 @@ export function characterConnection(state:PhoneState,character:Character,useDefa
  const preset=getProvider(override.provider);
  // A "compatible" role can target an arbitrary HTTPS host. Never reuse the
  // unrelated globally configured compatible key with that host.
- const baseURL=override.baseURL||preset.baseURL,ownKey=override.provider==='compatible'||override.keyScope==='character'||connectionKeySlot(override.provider,baseURL)!==override.provider;
+ const baseURL=override.baseURL||preset.baseURL,ownKey=getProvider(override.provider).baseURL===''||override.keyScope==='character'||connectionKeySlot(override.provider,baseURL)!==override.provider;
  return {provider:override.provider,model:override.model,baseURL,vision:override.vision,keyScope:ownKey?'character' as const:'provider' as const,keySlot:ownKey?characterKeySlot(character.id,override.provider):connectionKeySlot(override.provider,baseURL),inherited:false};
 }
