@@ -15,7 +15,7 @@ import {maintainConversation} from '../lib/chat-maintenance';
 import {executeTurn,PendingTurnQueue,type TurnPhase} from '../lib/turn-execution';
 import {markInterrupted,receiptFor,manualRetryRequiresConfirmation} from '../lib/turn-receipts';
 import {putWorkspace} from '../lib/agent-workspace';
-import {planAgentReview,executeAgentReview,flagUncertainAgentJob} from '../lib/agent-orchestrator';
+import {planAgentReview,executeAgentReview,flagUncertainAgentJob,authorizeAgentResume} from '../lib/agent-orchestrator';
 import RealtimeCall from './realtime-call';
 import {Avatar,GroupAvatar,DockArt,MessageCard,usePhone,downloadJson} from './ui';
 export default function Chat(){
@@ -160,6 +160,25 @@ export default function Chat(){
    setError(reason);toast('协作未完整完成，执行记录已保留，不会自动重复请求。');
   }finally{running.current=false;p.setBusy(false);abort.current=null;setPhase('reply');}
  };
+ const resumeReviewJob=async(jobId:string)=>{
+  const current=p.snapshot(),job=current.agentJobs.find(j=>j.id===jobId&&j.thread===thread);
+  if(!job||job.status==='completed'||job.status==='cancelled'||p.busy||running.current)return;
+  if(job.status==='requesting'||job.status==='needs_review'){
+   if(!window.confirm('上次模型请求可能已经发送并计费。仅未保存结果的角色可能会被重新请求，可能重复计费。明确确认继续吗？'))return;
+  }
+  const target=job.thread,controller=new AbortController();
+  running.current=true;runningThread.current=target;p.setBusy(true);abort.current=controller;
+  setMenu(false);setPhase('reply');setError('');
+  try{
+   await commit(s=>authorizeAgentResume(s,jobId));
+   await executeAgentReview(jobId,{snapshot:p.snapshot,commit,requestAI:p.requestAI,signal:controller.signal});
+   toast('已续接并保存剩余角色的审阅报告。');
+  }catch(e){
+   const reason=e instanceof Error?e.message:'协作任务中断';
+   await commit(s=>flagUncertainAgentJob(s,jobId,reason)).catch(()=>{});
+   setError(reason);toast('协作仍未完成；不会自动再次请求模型。');
+  }finally{running.current=false;p.setBusy(false);abort.current=null;setPhase('reply');}
+ };
  const createGroup=async()=>{if(!groupName.trim()||members.length<2){toast('请填写群名，并选择至少两位角色。');return;}const id=uid();await commit(s=>s.groups.push({id,name:groupName.trim().slice(0,160),members}));open('chat',id);};
  const memory=(m:Message)=>{void commit(s=>s.memories.push({id:uid(),text:group&&m.sender?m.sender+'：'+m.text:m.text,scope:group?.id||character.id,date:localDate(),origin:'manual',locked:true,revisions:[]})).then(()=>toast(group?'已收进这个群的记忆。':'已放进这位角色的记忆。')).catch(()=>{});setActiveMessage('');};
  const sendMoney=async()=>{if(!Number.isInteger(amount)||amount<=0||amount>100000){toast('请输入 1—100000 的整数云币。');return;}if(amount>state.wallet){toast('云币不够，去完成小任务赚一些吧。');return;}await commit(s=>{s.wallet-=amount;s.ledger.unshift({id:uid(),title:`给 ${character.name} 的${packet==='packet'?'红包':packet==='kinship'?'亲属卡':'转账'}`,amount:-amount,date:localDate()});(s.threads[thread]??=[]).push({id:uid(),role:'user',text:'送你一点小心意。',timestamp:Date.now(),kind:packet as 'packet',amount,read:true});});setPacket('');toast('心意已记录。云币仅用于小手机中的互动。');};
@@ -171,7 +190,7 @@ export default function Chat(){
  </div>;
  return <div className={`chat-screen ${app==='face'?'face-chat':''}`}>
   <header className="chat-person"><button className="icon-button" aria-label="返回聊天列表" onClick={()=>open('chat')}><ChevronLeft size={19}/></button><>{group?<GroupAvatar characters={state.characters.filter(c=>group.members.includes(c.id))}/>:<Avatar character={character} size="small"/>}</><span><strong>{group?.name||character.name}</strong><small>{busyHere?`${state.characters.find(c=>c.id===activeSpeaker)?.name||character.name} ${phase==='media'?'正在生成媒体…':waiting?'稍后接话…':'正在输入…'}`:group?`${group.members.length} 位朋友 · 轮流接话`:app==='face'?'面对面 · 角色共演':app==='live'?'弹幕互动 · 私人剧情':character.aiConnection?getProvider(character.aiConnection.provider).name+' · '+character.aiConnection.model:p.apiKey||p.serverAI?'等待你的消息':'尚未连接 AI'}</small></span><button className="icon-button" aria-label="返回桌面" onClick={()=>open('home')}><DockArt name="home"/></button>{!group&&<button className="icon-button" aria-label="实时语音通话" title={group?'群聊使用文字消息':'实时语音通话'} disabled={!!group} onClick={()=>setRealtime(true)}><PhoneCall size={18}/></button>}<button className="icon-button" aria-label="聊天菜单" aria-expanded={menu} onClick={()=>setMenu(v=>!v)}><MoreHorizontal size={20}/></button></header>
-  {menu&&<div className="chat-options"><button onClick={()=>downloadJson(messages,(group?.name||character.name)+'-聊天.json')}><Download size={15}/>导出记录</button>{!group&&<><button onClick={()=>open('characters',character.id)}><Settings size={15}/>编辑人设</button><button onClick={()=>open('face',character.id)}>面对面</button></>}<button onClick={()=>void commit(s=>{s.longChat=!s.longChat;}).catch(()=>{})}>{state.longChat?'只看最近 6 条':'查看完整记录'}</button>{group&&<button onClick={()=>{setGroupTitle(group.name);setGroupDetails(v=>!v);setMenu(false);}}>群成员与群名</button>}</div>}
+  {menu&&<div className="chat-options"><button onClick={()=>downloadJson(messages,(group?.name||character.name)+'-聊天.json')}><Download size={15}/>导出记录</button>{!group&&<><button onClick={()=>open('characters',character.id)}><Settings size={15}/>编辑人设</button><button onClick={()=>open('face',character.id)}>面对面</button></>}<button onClick={()=>void commit(s=>{s.longChat=!s.longChat;}).catch(()=>{})}>{state.longChat?'只看最近 6 条':'查看完整记录'}</button>{group&&<button onClick={()=>{setGroupTitle(group.name);setGroupDetails(v=>!v);setMenu(false);}}>群成员与群名</button>}{group&&state.agentJobs.filter(j=>j.thread===thread&&j.status!=='completed'&&j.status!=='cancelled').slice(-5).map(j=><button key={j.id} disabled={p.busy} onClick={()=>void resumeReviewJob(j.id)}>续接协作 {j.completed.length}/{j.speakers.length} · {j.status==='planned'?'未完成':'需确认'}</button>)}</div>}
   {group&&groupDetails&&<section className="group-details" aria-label="群成员与群名"><form className="inline-form" onSubmit={e=>{e.preventDefault();if(!groupTitle.trim()){toast('给这个群起个名字吧。');return;}void commit(s=>{const g=s.groups.find(v=>v.id===group.id);if(g)g.name=groupTitle.trim().slice(0,160);}).then(()=>toast('群名改好了。')).catch(()=>{});}}><input aria-label="群名称" maxLength={160} value={groupTitle} onChange={e=>setGroupTitle(e.target.value)}/><button className="soft-button" disabled={p.busy}>保存群名</button></form><p className="helper">点名字就能 @；勾选朋友加入这个群。</p><div className="group-member-list">{state.characters.map(c=><div key={c.id}><label><input type="checkbox" aria-label={'群成员 '+c.name} checked={group.members.includes(c.id)} disabled={p.busy||(!group.members.includes(c.id)&&group.members.length>=12)||(group.members.includes(c.id)&&group.members.length===1)} onChange={e=>{const checked=e.target.checked;void commit(s=>{const g=s.groups.find(v=>v.id===group.id);if(g)g.members=checked?[...g.members,c.id]:g.members.filter(id=>id!==c.id);}).catch(()=>{});}}/><Avatar character={c} size="tiny"/></label><button disabled={!group.members.includes(c.id)} onClick={()=>{const next=input+(input&&!/\s$/.test(input)?' ':'')+'@'+c.name+' ';setInput(next);p.setDraft(thread,next);document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus();}}>{c.name}<small>@ 接话</small></button></div>)}</div><button className="text-button" onClick={()=>setGroupDetails(false)}>收起群设置</button></section>}
   {app==='face'&&<div className="scene-caption">窗边的小屋，光线柔和。<br/>你和 {character.name} 坐在一起，慢慢聊。</div>}
   {app==='live'&&<div className="scene-caption">{character.name} 的小小直播间<br/>发送弹幕，聊聊此刻。不连接真实直播平台。</div>}
