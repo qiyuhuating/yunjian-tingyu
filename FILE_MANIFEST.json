@@ -1394,8 +1394,8 @@
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
     "description": "本机状态与会话事务、附件去重清理、库卡及草稿头像引用、旧资源迁移和加密密钥；路径：outputs/mori-phone/lib/local-phone.ts",
-    "bytes": 16381,
-    "sha256": "98ac286ea50cfbc07feb99ca3522898ee94b6b76b590bc29f54679d7be3f649b"
+    "bytes": 17201,
+    "sha256": "d90859d18ff5f61115697e59449f8beaece6f0325a0cb618fbe4b7bdd0e4bf1e"
   },
   {
     "path": "outputs/mori-phone/lib/local-thread-store.ts",
