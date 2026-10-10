@@ -442,10 +442,10 @@
 | [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1099 |
 | [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 7241 |
 | [outputs/mori-phone/app/api/assets/[id]/route.ts](outputs/mori-phone/app/api/assets/[id]/route.ts) | 可选网页服务 API 路由：assets/[id]/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/[id]/route.ts | 1372 |
-| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 9059 |
+| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 9718 |
 | [outputs/mori-phone/lib/agent-workspace.ts](outputs/mori-phone/lib/agent-workspace.ts) | 隔离的版本化文本工作区、乐观并发与权限校验；路径：outputs/mori-phone/lib/agent-workspace.ts | 3745 |
 | [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4666 |
-| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 14547 |
+| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 15717 |
 | [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 6631 |
 | [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 3727 |
 | [outputs/mori-phone/lib/asset-references.ts](outputs/mori-phone/lib/asset-references.ts) | 资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts | 860 |
