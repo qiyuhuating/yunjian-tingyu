@@ -1,4 +1,5 @@
 import {turnReceiptsSchema} from './turn-receipts';
+import {workspaceSchema} from './agent-workspace';
 import { z } from 'zod';
 import {mediaSettingsSchema} from './media-contract';
 import {providerSchema} from './providers';
@@ -30,6 +31,7 @@ export const stateSchema=z.object({
   sampling:samplingSchema.default({}),roleplay:roleplaySchema.default({}),drafts:z.record(z.string().max(12*1024*1024)).default({}),
   continuity:z.record(z.object({text:z.string().max(6000),through:id,updatedAt:z.number().finite().min(0)}).strict()).default({}),
   turnReceipts:turnReceiptsSchema,
+  workspaceFiles:workspaceSchema,
   memoryCursors:z.record(z.record(id)).default({}),memoryWatermarks:z.record(z.record(z.number().finite().min(0))).default({}),groupSettings:z.object({cadence:z.enum(['natural','fast']).default('natural'),maxResponders:z.number().int().min(1).max(4).default(2)}).strict().default({}),
   memorySettings:z.object({autoExtract:z.boolean().default(true),extractEvery:z.number().int().min(1).max(16).default(4),autoSummary:z.boolean().default(true),interval:z.number().int().min(16).max(100).default(32),recall:z.boolean().default(true),antiRepeat:z.boolean().default(true)}).strict().default({}),
   voiceSettings:z.object({engine:z.enum(['browser','openai','custom','gemini']).default('browser'),url:z.string().max(1500).default('https://api.openai.com/v1'),model:short.default('gpt-4o-mini-tts'),voice:short.default('coral'),rate:z.number().min(.5).max(2).default(.92),autoRead:z.boolean().default(false)}).strict().default({}),
