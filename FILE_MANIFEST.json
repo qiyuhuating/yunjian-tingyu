@@ -14,8 +14,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1081,
-    "sha256": "90b19cb227adbf61216043fd6cc983788ab1807d125b0c702438bc7c59fe1eb9"
+    "bytes": 1162,
+    "sha256": "9669542acc4efe0e9c617d91035711d7e51eab2b240987367f74c9774b69bb57"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -968,8 +968,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 26726,
-    "sha256": "44f862190891782a08b2553348ae2fd2a14ca78b4cb60134cbf0b88c278835f7"
+    "bytes": 27763,
+    "sha256": "d9132598ca98e0a42621d1a0f0ca3911809577dcb1c6e6c65cd4661beb5f4afe"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -1388,14 +1388,14 @@
   {
     "path": "outputs/mori-phone/lib/local-backup.ts",
     "description": "流式完整ZIP备份与恢复校验，覆盖角色卡仓库及草稿的头像原文件和共享引用重映射；路径：outputs/mori-phone/lib/local-backup.ts",
-    "bytes": 8571,
-    "sha256": "fa9d356d9164993f447f3c461e6481fafbb9742700f17cb04d977186823bd3e7"
+    "bytes": 8957,
+    "sha256": "00836abf2fc72b6e1a5205019f73dedbbc340fd23eeb8fba835d52c8bf61d53a"
   },
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
     "description": "本机状态与会话事务、附件去重清理、库卡及草稿头像引用、旧资源迁移和加密密钥；路径：outputs/mori-phone/lib/local-phone.ts",
-    "bytes": 14140,
-    "sha256": "ca7f6f3fcb778da46813505f177dc732b040b4fd60eb77d4ac4846ac37e5056c"
+    "bytes": 16381,
+    "sha256": "98ac286ea50cfbc07feb99ca3522898ee94b6b76b590bc29f54679d7be3f649b"
   },
   {
     "path": "outputs/mori-phone/lib/local-thread-store.ts",
@@ -1814,8 +1814,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-runtime.mjs",
     "description": "核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs",
-    "bytes": 9437,
-    "sha256": "3d935c3ceb2c3cf57f4f0bba98a69ca512ae3f1116c8ecc7956169af9b71554b"
+    "bytes": 11082,
+    "sha256": "08b82f9236b31d9202b6659674c5679b0edc8965c54b5ec9644112160a2aae44"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-turn.mjs",
