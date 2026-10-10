@@ -7,6 +7,7 @@ export {assetReferences} from './asset-references';
 const DB_NAME='cloudlet-device',DB_VERSION=3;
 type Snapshot={owner:string;state:PhoneState;version:number;updatedAt:number;legacyArchive?:boolean;threadStorage?:1;assetIds?:string[]};
 export type LocalAsset={id:string;owner:string;blob:Blob;name:string;mime:string;size:number;createdAt?:number;sha256?:string};
+export type StagedAsset=Pick<LocalAsset,'id'|'blob'|'name'|'mime'|'size'>;
 let database:Promise<IDBDatabase>|undefined;
 const persisted=new Map<string,{version:number;state:PhoneState}>();
 function db(){
@@ -26,11 +27,22 @@ export async function readLocal(owner:string){
  const [row,threads]=await Promise.all([result(tx.objectStore('states').get(owner)) as Promise<Snapshot|undefined>,result(readStoredThreads(tx,owner))]);await done;if(!row)return null;
  const state=stateSchema.parse({...row.state,threads:row.threadStorage?Object.fromEntries(threads.map(t=>[t.id,t.messages])):row.state.threads,groups:row.state.groups.filter(g=>g.members.length>0)});persisted.set(owner,{version:row.version,state});return {...row,state};
 }
-export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false){
+export async function writeLocal(owner:string,state:PhoneState,version:number,legacyArchive?:boolean,validated=false,stagedAssets:ReadonlyArray<StagedAsset>=[]){
  const parsed=validated?state:stateSchema.parse(state),refs=assetReferences(parsed).map(ref=>ref.replace(/^local:|^\/api\/assets\//,''));
- const d=await db(),tx=d.transaction(['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
+ // State, threads and newly restored blobs must commit or abort as one IndexedDB transaction.
+ const stagedIds=new Set<string>();for(const asset of stagedAssets){
+  if(!/^[a-f0-9-]{36}$/.test(asset.id)||stagedIds.has(asset.id)||!refs.includes(asset.id)||
+   asset.blob.size!==asset.size||asset.size>200*1024*1024||asset.name.length>160||asset.mime.length>160)
+   throw new Error('待恢复的附件无效或不被记录引用，未更改设备数据。');
+  stagedIds.add(asset.id);
+ }
+ const d=await db(),tx=d.transaction(stagedAssets.length?['states','threads','assets']:['states','threads'],'readwrite'),done=complete(tx),store=tx.objectStore('states');let conflict=false;
  const request=store.get(owner);request.onsuccess=()=>{
   const old=request.result as Snapshot|undefined;if((old?.version??0)!==version){conflict=true;tx.abort();return;}
+  if(stagedAssets.length){const assets=tx.objectStore('assets');for(const a of stagedAssets){
+   const mime=/^application\/pdf$|^video\/(mp4|webm)$|^image\/(png|jpeg|gif|webp)$|^audio\/(mpeg|mp3|wav|x-wav|ogg|mp4|x-m4a|aac|flac|webm|3gpp)$/.test(a.mime)?a.mime:'application/octet-stream';
+   assets.add({owner,id:a.id,blob:a.blob.slice(0,a.size,mime),name:a.name,mime,size:a.size,createdAt:Date.now()});
+  }}
   const cached=persisted.get(owner),previous=cached?.version===version&&old?.threadStorage?cached.state:null;
   syncStoredThreads(tx,owner,parsed.threads,previous?.threads||old?.state.threads||{},!!previous);
   store.put({owner,state:{...parsed,threads:{}},version:version+1,updatedAt:Date.now(),legacyArchive:legacyArchive??old?.legacyArchive??false,threadStorage:1,assetIds:refs});
@@ -44,6 +56,30 @@ export async function putAsset(owner:string,id:string,blob:Blob,name:string,mime
  const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);const asset={owner,id,blob,name:name.slice(0,160),mime,size:blob.size,createdAt:Date.now(),...(sha256?{sha256}:{})};tx.objectStore('assets').put(asset);await done;return {url:'local:'+id,id,mime,size:blob.size,name:asset.name};
 }
 export async function removeAssets(owner:string,ids:string[]){const d=await db(),tx=d.transaction('assets','readwrite'),done=complete(tx);for(const id of ids)tx.objectStore('assets').delete([owner,id]);await done;}
+
+/** Never collect assets from legacy snapshots lacking a complete reference index.
+ * One readwrite transaction serializes this sweep against other state/asset commits. */
+export async function collectOrphanAssets(owner:string,graceMs=7*24*60*60*1000){
+ if(!Number.isFinite(graceMs)||graceMs<60*60*1000)throw new Error('附件回收宽限期至少为一小时。');
+ const d=await db(),tx=d.transaction(['states','assets'],'readwrite'),done=complete(tx);
+ const store=tx.objectStore('assets'),snapshot=tx.objectStore('states').get(owner);
+ let removed=0;
+ snapshot.onsuccess=()=>{
+  const row=snapshot.result as Snapshot|undefined;
+  if(!row||!Array.isArray(row.assetIds))return;
+  const referenced=new Set(row.assetIds),cutoff=Date.now()-graceMs;
+  const cursorRequest=store.openCursor(IDBKeyRange.bound([owner,''],[owner,'\uffff']));
+  cursorRequest.onsuccess=()=>{
+   const cursor=cursorRequest.result;if(!cursor)return;
+   const asset=cursor.value as LocalAsset;
+   if(!referenced.has(asset.id)&&typeof asset.createdAt==='number'&&asset.createdAt>0&&asset.createdAt<cutoff){
+    cursor.delete();removed++;
+   }
+   cursor.continue();
+  };
+ };
+ await done;return removed;
+}
 export async function uploadLocal(owner:string,file:File){
  if(file.size>200*1024*1024)throw new Error('单个附件请控制在 200 MB 以内。');
  const b=new Uint8Array(await file.slice(0,16).arrayBuffer());let mime='application/octet-stream';
