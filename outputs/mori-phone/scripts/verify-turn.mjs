@@ -144,7 +144,7 @@ await check('Visible chat routes turn execution exclusively through testable mod
  assert(source.includes('await executeTurn('));
  assert(!source.includes('await p.requestAI('));
  assert(source.includes('enqueueDurableTurn('));
- assert(source.includes('queued.current.take('));
+ assert(source.includes('eligibleQueuedTurn('));
 });
 await check('Composer is cleared only after user message persistence resolves',()=>{
  const source=fs.readFileSync(path.join(root,'app/chat.tsx'),'utf8');
