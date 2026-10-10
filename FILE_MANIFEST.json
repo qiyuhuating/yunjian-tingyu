@@ -1232,8 +1232,8 @@
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
     "description": "服务商请求与响应协议适配；路径：outputs/mori-phone/lib/provider-adapter.ts",
-    "bytes": 11058,
-    "sha256": "a5eba3302621fc893a37e44af144bfd26ba87196812650a1def8f3468db955cd"
+    "bytes": 11059,
+    "sha256": "a079318a6776a3adc82e638683fd92ae3c0dfea9c1b50485278062e6a9ef96ee"
   },
   {
     "path": "outputs/mori-phone/lib/providers.ts",
@@ -2552,8 +2552,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
     "description": "19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs",
-    "bytes": 8369,
-    "sha256": "8baf1e95055ae71374cf2954265a51bc4bd2cfb6c8a651fa27d527f01e7dbb5c"
+    "bytes": 8757,
+    "sha256": "b20ebece74631dcc925b8c09e09be6882003c2083c3d4abb1a330ecae0e0bb97"
   },
   {
     "path": "work/qa/connection-ui.mjs",
