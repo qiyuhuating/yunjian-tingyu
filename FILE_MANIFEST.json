@@ -1832,8 +1832,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-receipts.mjs",
     "description": "崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs",
-    "bytes": 7623,
-    "sha256": "d7baa320661355f5e686f5c1fb96e52373d1c3329366fd6155ba3016f88e37f7"
+    "bytes": 7710,
+    "sha256": "a07a209b10ebb89b4b3fc13a6e4867957ffe9e976ac55fe77ba39e39e3903d58"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-review.mjs",
@@ -2618,8 +2618,8 @@
   {
     "path": "work/qa/storage.mjs",
     "description": "13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs",
-    "bytes": 18800,
-    "sha256": "23547c4f14c00b33cfcb24fb6b1ec95e27428d6c2a52b2b2ddecdd52c22895a4"
+    "bytes": 18843,
+    "sha256": "6e502c2e31aea8b48f0f0fcb74f2b0cc82ae15882cde20ff2751e559a0e64a0e"
   },
   {
     "path": "work/qa/ui-group.mjs",
