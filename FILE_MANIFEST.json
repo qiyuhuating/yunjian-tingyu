@@ -2396,8 +2396,8 @@
   {
     "path": "work/qa/features.mjs",
     "description": "实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs",
-    "bytes": 23770,
-    "sha256": "4218268339333538cb238484639ba423e21920ac1174b7a1d7c85ad47e0757c3"
+    "bytes": 24344,
+    "sha256": "63a370e3f3f8cf19373de505c20c35cb473737d4e186002a87c94fa005ffd2e4"
   },
   {
     "path": "work/qa/fixtures/encrypted.pdf",
