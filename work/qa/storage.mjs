@@ -61,6 +61,27 @@ try{const result=await page.evaluate(async()=>{
  const commandSaved=(await a.readLocal(commandOwner)).state;
  if(commandSaved.mediaOutbox[0].phase!=='completed'||commandSaved.mediaOutbox[0].outputId!==outputId||!commandSaved.threads[commandThread].some(m=>m.id===outputId)||!await a.getAsset(commandOwner,commandStaged.result.url))throw Error('Command media and receipt were not saved together');
  checks.push('真实 IndexedDB：AI 命令图片、Outbox 回执与消息一次写入；中断后全部回滚');
+ const boundedOwner='budget-persist-29',bounded=a.freshState(),bThread=bounded.primary;
+ bounded.threads[bThread].push({id:'bounded-original',role:'user',kind:'text',text:'bounded request',timestamp:1,failed:true});
+ a.beginTurn(bounded,{userId:'bounded-original',thread:bThread,mode:'chat',speakers:[bThread]});
+ bounded.turnReceipts[0].attempts=a.MAX_TURN_REQUEST_ATTEMPTS;
+ const [boundedMedia]=a.queueMedia(bounded,{userId:'bounded-original',thread:bThread,speaker:bThread},[{type:'image',prompt:'fixture'}]);
+ boundedMedia.attempts=a.MAX_MEDIA_REQUEST_ATTEMPTS;
+ const agentThread='bounded-group',agentSpeakers=bounded.characters.slice(0,2).map(c=>c.id);
+ bounded.groups.push({id:agentThread,name:'Budget group',members:agentSpeakers});
+ a.putWorkspace(bounded,{thread:agentThread,path:'imports/budget.txt',content:'review budget'},null);
+ a.planAgentReview(bounded,{jobId:'bounded-agent',thread:agentThread,path:'imports/budget.txt',speakers:agentSpeakers});
+ bounded.agentJobs[0].attempts=a.MAX_AGENT_REQUEST_ATTEMPTS;
+ await a.writeLocal(boundedOwner,bounded,0);
+ const boundedReload=(await a.readLocal(boundedOwner)).state;
+ const beforeBudget=JSON.stringify(boundedReload);
+ for(const attempt of [
+  ()=>a.markRequesting(boundedReload,'bounded-original',bThread),
+  ()=>a.beginMediaDelivery(boundedReload,boundedMedia.id),
+  ()=>a.authorizeAgentResume(boundedReload,'bounded-agent')
+ ]){let prevented=false;try{attempt();}catch(error){prevented=/上限/.test(String(error));}if(!prevented)throw Error('Persisted budget ceiling did not block another request');}
+ if(JSON.stringify(boundedReload)!==beforeBudget)throw Error('Rejected request modified persisted state');
+ checks.push('真实 IndexedDB 重新读取后，聊天/媒体/Agent 计数上限阻止重复请求且不更改状态');
  const queueOwner='durable-queue-24',queueState=a.freshState(),queueThread=queueState.primary;
  queueState.threads[queueThread].push({id:'queued-intent',role:'user',kind:'text',text:'queued-intent',timestamp:1,failed:true});
  a.enqueueDurableTurn(queueState,{userId:'queued-intent',thread:queueThread,text:'queued-intent',mode:'chat',queuedAt:1});
