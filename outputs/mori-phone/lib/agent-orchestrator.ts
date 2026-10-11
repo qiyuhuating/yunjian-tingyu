@@ -3,6 +3,8 @@ import {sha256} from '@noble/hashes/sha2.js';
 import {readWorkspace,putWorkspace} from './agent-workspace';
 import type {PhoneState} from './phone-model';
 
+/** Includes first attempts and human-authorized retries, across process restarts. */
+export const MAX_AGENT_REQUEST_ATTEMPTS=12;
 const digest=z.string().regex(/^[0-9a-f]{64}$/);
 const hashText=(text:string)=>Array.from(sha256(new TextEncoder().encode(text)),v=>v.toString(16).padStart(2,'0')).join('');
 const id=z.string().min(1).max(100).refine(v=>!Object.prototype.hasOwnProperty.call(Object.prototype,v));
@@ -79,6 +81,7 @@ export async function executeAgentReview(jobId:string,p:ReviewServices){
    if(!job||job.status!=='planned'||!now||now.revision!==sourceRevision||
     !state.groups.some(g=>g.id===initial.thread&&g.members.includes(speaker))||now.id!==job.sourceId||hashText(now.content)!==job.sourceHash)
     throw new Error('协作任务已变化，停止外部调用。');
+   if(job.attempts>=MAX_AGENT_REQUEST_ATTEMPTS)throw new Error('协作任务 API 请求次数已达到安全上限，请新建任务，避免重复计费。');
    job.status='requesting';job.attempts++;requestAttempt=job.attempts;job.updatedAt=Date.now();
   });
   p.onRequest?.(requestAttempt);
@@ -119,6 +122,7 @@ export function flagUncertainAgentJob(state:PhoneState,jobId:string,error:string
 export function authorizeAgentResume(state:PhoneState,jobId:string){
  const job=activeAgentJob(state,jobId);
  if(!job||job.status==='completed'||job.status==='cancelled')throw new Error('任务已完成或取消，无法重新执行。');
+ if(job.attempts>=MAX_AGENT_REQUEST_ATTEMPTS)throw new Error('协作任务 API 请求次数已达安全上限，请新建任务。');
  if(job.status==='planned')return;
  if(job.status!=='requesting'&&job.status!=='needs_review')throw new Error('任务尚未进入可恢复状态。');
  const file=readWorkspace(state,job.thread,job.path);

@@ -1,5 +1,7 @@
 import {z} from 'zod';
 import {mediaCommandSchema,type MediaCommand} from './media-contract';
+/** A single generated-media side effect may be retried only a bounded number of times. */
+export const MAX_MEDIA_REQUEST_ATTEMPTS=6;
 const id=z.string().min(1).max(100).refine(v=>!Object.prototype.hasOwnProperty.call(Object.prototype,v));
 export const mediaEffectSchema=z.object({
  id,thread:id,userId:id,speaker:id,command:mediaCommandSchema,
@@ -29,6 +31,7 @@ export function beginMediaDelivery(state:MediaState,id:string,manual=false){
  if(!effect||effect.phase==='completed'||effect.phase==='cancelled')throw new Error('媒体任务已经结束或不存在。');
  if(effect.phase!=='queued'&&!(manual&&(effect.phase==='needs_review'||effect.phase==='in_flight')))
   throw new Error('媒体可能已经发送。只有用户确认后才允许再次执行。');
+ if(effect.attempts>=MAX_MEDIA_REQUEST_ATTEMPTS)throw new Error('该媒体任务重试次数已达上限，请创建新任务以免重复计费。');
  effect.phase='in_flight';effect.attempts++;effect.updatedAt=Date.now();delete effect.error;
  return effect.attempts;
 }

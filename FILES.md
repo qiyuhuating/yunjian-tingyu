@@ -393,8 +393,8 @@
 | [work/qa/roleplay.mjs](work/qa/roleplay.mjs) | 角色卡AI拆分、原卡下载、世界书请求、移动布局及取消的10项浏览器流程；路径：work/qa/roleplay.mjs | 12756 |
 | [work/qa/security-library.ts](work/qa/security-library.ts) | 边界回归注入的源辅助库：实际备份、文件读取与请求构造，无真实Key；路径：work/qa/security-library.ts | 672 |
 | [work/qa/security-regressions.mjs](work/qa/security-regressions.mjs) | 六组本机恢复和ZIP读取回归；保留修复前失败证据，检查正常文件完整性；路径：work/qa/security-regressions.mjs | 8186 |
-| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 739 |
-| [work/qa/storage.mjs](work/qa/storage.mjs) | 13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs | 17001 |
+| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 1141 |
+| [work/qa/storage.mjs](work/qa/storage.mjs) | 13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs | 18843 |
 | [work/qa/ui-group.mjs](work/qa/ui-group.mjs) | 25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口；路径：work/qa/ui-group.mjs | 23991 |
 | [work/qa/update-csp.py](work/qa/update-csp.py) | 历史测试维护脚本：update-csp；记录当时测试代码的调整；路径：work/qa/update-csp.py | 671 |
 | [work/qa/update-repair-tests.py](work/qa/update-repair-tests.py) | 历史测试维护脚本：update-repair-tests；记录当时测试代码的调整；路径：work/qa/update-repair-tests.py | 2256 |
@@ -439,18 +439,18 @@
 | [outputs/mori-phone/lib/turn-execution.ts](outputs/mori-phone/lib/turn-execution.ts) | 可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts | 10093 |
 | [outputs/mori-phone/scripts/verify-turn.mjs](outputs/mori-phone/scripts/verify-turn.mjs) | 确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs | 16919 |
 | [docs/聊天回合执行器-2026-10-10.md](docs/聊天回合执行器-2026-10-10.md) | 聊天执行器阶段性分层、费用与状态安全不变量及后续验收清单；路径：docs/聊天回合执行器-2026-10-10.md | 2706 |
-| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1658 |
-| [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 10365 |
+| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1794 |
+| [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 11734 |
 | [outputs/mori-phone/app/api/assets/[id]/route.ts](outputs/mori-phone/app/api/assets/[id]/route.ts) | 可选网页服务 API 路由：assets/[id]/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/[id]/route.ts | 1372 |
-| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 9718 |
+| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 10142 |
 | [outputs/mori-phone/lib/agent-workspace.ts](outputs/mori-phone/lib/agent-workspace.ts) | 隔离的版本化文本工作区、乐观并发与权限校验；路径：outputs/mori-phone/lib/agent-workspace.ts | 5939 |
-| [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4666 |
-| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 21030 |
-| [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 6631 |
+| [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4968 |
+| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 21954 |
+| [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 7710 |
 | [scripts/sync-file-inventory.py](scripts/sync-file-inventory.py) | 自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py | 4571 |
 | [outputs/mori-phone/lib/asset-references.ts](outputs/mori-phone/lib/asset-references.ts) | 资产引用统计与跨领域文件引用追踪；路径：outputs/mori-phone/lib/asset-references.ts | 1359 |
 | [outputs/mori-phone/lib/local-thread-store.ts](outputs/mori-phone/lib/local-thread-store.ts) | 线程独立持久化模块、增量写入、删除与事务隔离；路径：outputs/mori-phone/lib/local-thread-store.ts | 996 |
-| [outputs/mori-phone/lib/media-outbox.ts](outputs/mori-phone/lib/media-outbox.ts) | 持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts | 3009 |
+| [outputs/mori-phone/lib/media-outbox.ts](outputs/mori-phone/lib/media-outbox.ts) | 持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts | 3293 |
 | [outputs/mori-phone/lib/turn-causality.ts](outputs/mori-phone/lib/turn-causality.ts) | 按消息 ID 固定因果边界与同一回合角色发言证据；路径：outputs/mori-phone/lib/turn-causality.ts；路径：outputs/mori-phone/lib/turn-causality.ts | 945 |
 
 | [outputs/mori-phone/lib/durable-turn-queue.ts](outputs/mori-phone/lib/durable-turn-queue.ts) | 持久化聊天待执行队列、安全恢复与停止隔离；路径：outputs/mori-phone/lib/durable-turn-queue.ts | 2413 |
