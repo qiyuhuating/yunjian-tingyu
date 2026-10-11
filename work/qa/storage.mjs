@@ -66,7 +66,7 @@ try{const result=await page.evaluate(async()=>{
  a.beginTurn(bounded,{userId:'bounded-original',thread:bThread,mode:'chat',speakers:[bThread]});
  bounded.turnReceipts[0].attempts=a.MAX_TURN_REQUEST_ATTEMPTS;
  const [boundedMedia]=a.queueMedia(bounded,{userId:'bounded-original',thread:bThread,speaker:bThread},[{type:'image',prompt:'fixture'}]);
- boundedMedia.attempts=a.MAX_MEDIA_REQUEST_ATTEMPTS;
+ bounded.mediaOutbox.find(row=>row.id===boundedMedia.id).attempts=a.MAX_MEDIA_REQUEST_ATTEMPTS;
  const agentThread='bounded-group',agentSpeakers=bounded.characters.slice(0,2).map(c=>c.id);
  bounded.groups.push({id:agentThread,name:'Budget group',members:agentSpeakers});
  a.putWorkspace(bounded,{thread:agentThread,path:'imports/budget.txt',content:'review budget'},null);

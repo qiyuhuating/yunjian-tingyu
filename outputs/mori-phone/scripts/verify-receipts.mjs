@@ -68,10 +68,11 @@ test('Per-turn provider cap blocks further calls without consuming an attempt',(
 test('Per-media-effect cap blocks repeated billed calls and preserves state',()=>{
  const {state,userId,thread,speakers}=setup();
  const [effect]=media.queueMedia(state,{userId,thread,speaker:speakers[0]},[{type:'image',prompt:'hello'}]);
- effect.attempts=media.MAX_MEDIA_REQUEST_ATTEMPTS;
- const before=structuredClone(effect);
+ const storedEffect=state.mediaOutbox.find(row=>row.id===effect.id);
+ storedEffect.attempts=media.MAX_MEDIA_REQUEST_ATTEMPTS;
+ const before=structuredClone(storedEffect);
  assert.throws(()=>media.beginMediaDelivery(state,effect.id),/上限/);
- assert.deepEqual(effect,before);
+ assert.deepEqual(storedEffect,before);
  assert(stateSchema.safeParse(state).success);
 });
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
