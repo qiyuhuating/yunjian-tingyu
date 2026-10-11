@@ -357,7 +357,7 @@
 | [work/qa/continuity.mjs](work/qa/continuity.mjs) | 长期记忆与摘要游标控制；路径：work/qa/continuity.mjs | 3603 |
 | [work/qa/contrast-home.mjs](work/qa/contrast-home.mjs) | 历史专项浏览器检查或开发工具：contrast-home；使用时核对对应版本、路径和端口；路径：work/qa/contrast-home.mjs | 3335 |
 | [work/qa/current-previews.mjs](work/qa/current-previews.mjs) | 历史专项浏览器检查或开发工具：current-previews；使用时核对对应版本、路径和端口；路径：work/qa/current-previews.mjs | 1622 |
-| [work/qa/features.mjs](work/qa/features.mjs) | 实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs | 23770 |
+| [work/qa/features.mjs](work/qa/features.mjs) | 实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs | 24344 |
 | [work/qa/fixtures/encrypted.pdf](work/qa/fixtures/encrypted.pdf) | 自行生成的密码保护 PDF，验证解析失败结算而非悬挂；路径：work/qa/fixtures/encrypted.pdf | 1785 |
 | [work/qa/fixtures/reading.pdf](work/qa/fixtures/reading.pdf) | 自行生成的一页明文 PDF，验证实际文字读取与 Android 文件选择器；路径：work/qa/fixtures/reading.pdf | 1356 |
 | [work/qa/fixtures/unknown.bin](work/qa/fixtures/unknown.bin) | 五字节未知格式资料，验证任何扩展名的本地附件保存及诚实状态；路径：work/qa/fixtures/unknown.bin | 5 |
@@ -439,7 +439,7 @@
 | [outputs/mori-phone/lib/turn-execution.ts](outputs/mori-phone/lib/turn-execution.ts) | 可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts | 10093 |
 | [outputs/mori-phone/scripts/verify-turn.mjs](outputs/mori-phone/scripts/verify-turn.mjs) | 确定性验证回合原子提交、排队消息、取消、媒体失败和重试边界；路径：outputs/mori-phone/scripts/verify-turn.mjs | 16919 |
 | [docs/聊天回合执行器-2026-10-10.md](docs/聊天回合执行器-2026-10-10.md) | 聊天执行器阶段性分层、费用与状态安全不变量及后续验收清单；路径：docs/聊天回合执行器-2026-10-10.md | 2706 |
-| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1794 |
+| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1906 |
 | [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 11734 |
 | [outputs/mori-phone/app/api/assets/[id]/route.ts](outputs/mori-phone/app/api/assets/[id]/route.ts) | 可选网页服务 API 路由：assets/[id]/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/app/api/assets/[id]/route.ts | 1372 |
 | [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 10142 |
@@ -454,9 +454,9 @@
 | [outputs/mori-phone/lib/turn-causality.ts](outputs/mori-phone/lib/turn-causality.ts) | 按消息 ID 固定因果边界与同一回合角色发言证据；路径：outputs/mori-phone/lib/turn-causality.ts；路径：outputs/mori-phone/lib/turn-causality.ts | 945 |
 
 | [outputs/mori-phone/lib/durable-turn-queue.ts](outputs/mori-phone/lib/durable-turn-queue.ts) | 持久化聊天待执行队列、安全恢复与停止隔离；路径：outputs/mori-phone/lib/durable-turn-queue.ts | 2413 |
-| [.github/workflows/build-agent-v003-candidate.yml](.github/workflows/build-agent-v003-candidate.yml) | 0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml | 9409 |
-| [docs/0.0.3-agent-candidate-acceptance.md](docs/0.0.3-agent-candidate-acceptance.md) | 聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md | 1962 |
+| [.github/workflows/build-agent-v003-candidate.yml](.github/workflows/build-agent-v003-candidate.yml) | 0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml | 13646 |
+| [docs/0.0.3-agent-candidate-acceptance.md](docs/0.0.3-agent-candidate-acceptance.md) | 聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md | 2989 |
 | [docs/2026-10-10-draft-integration-review.md](docs/2026-10-10-draft-integration-review.md) | 今日草稿质量审查、修复归属、回归证据与真机待验收范围；路径：docs/2026-10-10-draft-integration-review.md | 5212 |
 | [.github/workflows/android-upgrade-acceptance.yml](.github/workflows/android-upgrade-acceptance.yml) | 原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收；路径：.github/workflows/android-upgrade-acceptance.yml | 3499 |
-| [work/qa/android-upgrade-smoke.py](work/qa/android-upgrade-smoke.py) | 仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py | 7962 |
+| [work/qa/android-upgrade-smoke.py](work/qa/android-upgrade-smoke.py) | 仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py | 9854 |
 | [docs/0.0.3-rc2-android-emulator-acceptance.md](docs/0.0.3-rc2-android-emulator-acceptance.md) | 固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界；路径：docs/0.0.3-rc2-android-emulator-acceptance.md | 1462 |
