@@ -2,14 +2,26 @@ import type {Message,PhoneState} from './phone-model';
 import {sha256} from '@noble/hashes/sha2.js';
 function terms(value:string){const v=value.toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu,' '),result=new Set(v.match(/[a-z0-9]{2,}/g)||[]);for(const run of v.match(/[\u3400-\u9fff]+/g)||[])for(let i=0;i<run.length-1;i++)result.add(run.slice(i,i+2));return result;}
 export function relevance(query:string,text:string){const q=terms(query),t=terms(text);let score=0;for(const k of q)if(t.has(k))score++;return score/Math.sqrt(Math.max(1,t.size));}
+/** Full immutable source snapshot digest for newly extracted memories.
+ * A retained quote alone cannot detect a changed prefix, negation or context.
+ */
+export function memorySourceDigest(messages:readonly Pick<Message,'id'|'role'|'timestamp'|'text'>[]){
+ const hash=sha256.create(),encoder=new TextEncoder();
+ for(const m of messages)hash.update(encoder.encode(JSON.stringify([m.id,m.role,m.timestamp,m.text])+'\n'));
+ return Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join('');
+}
 // Provenance must remain verifiable before automatic memories enter the prompt.
 // Manual/legacy memories continue to work; the user may explicitly revise them.
 export function validMemorySource(state:PhoneState,m:PhoneState['memories'][number]){
  if(m.origin!=='auto')return true;
  if(!m.sourceIds?.length||!m.sourceThread||!m.evidence?.trim())return false;
  const source=state.threads[m.sourceThread]||[];
- return m.sourceIds.every(id=>source.some(v=>v.id===id&&v.role==='user'&&!v.failed&&
+ const matches=m.sourceIds.map(id=>source.find(v=>v.id===id&&v.role==='user'&&!v.failed&&
   v.text.includes(m.evidence!)&&(m.sourceAt===undefined||v.timestamp===m.sourceAt)));
+ if(matches.some(v=>!v))return false;
+ // Legacy memories had only quote evidence. Preserve their previous behavior,
+ // while requiring complete source equality for every newly generated digest.
+ return !m.sourceDigest||memorySourceDigest(matches as Message[])===m.sourceDigest;
 }
 export function recallMemories(state:PhoneState,character:string,query:string,group?:string){return state.memories.filter(m=>validMemorySource(state,m)&& (m.scope==='global'||m.scope===character||(!!group&&m.scope===group))).map((m,i)=>({m,i,score:state.memorySettings.recall?relevance(query,m.text):0})).sort((a,b)=>b.score-a.score||Number(b.m.locked)-Number(a.m.locked)||b.i-a.i).slice(0,12).map(v=>v.m).sort((a,b)=>a.id.localeCompare(b.id)).map(m=>m.text+(m.evidence?'（可核对原话：'+m.evidence+'）':'')).join('\n').slice(0,5000);}
 export function recalledHistory(state:PhoneState,thread:string,query:string,recent:Message[]){if(!state.memorySettings.recall)return '';const ids=new Set(recent.map(m=>m.id));return (state.threads[thread]||[]).filter(m=>!ids.has(m.id)&&m.role!=='system'&&!m.failed&&m.kind==='text').map(m=>({m,score:relevance(query,m.text)})).filter(v=>v.score>.12).sort((a,b)=>b.score-a.score).slice(0,4).sort((a,b)=>a.m.timestamp-b.m.timestamp).map(v=>`${v.m.role==='user'?'用户':v.m.sender||'角色'}：${v.m.text.slice(0,700)}`).join('\n');}

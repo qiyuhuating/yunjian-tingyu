@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import {uid,localDate,type PhoneState,type Message} from './phone-model';
+import {memorySourceDigest} from './continuity';
 const candidate=z.object({key:z.string().min(1).max(100),category:z.enum(['preference','fact','commitment']),text:z.string().min(1).max(600),sourceId:z.string().min(1).max(100),quote:z.string().min(4).max(1000),replaces:z.string().max(100).optional()}).strict();
 export type MemoryTask={character:string;thread:string;through:string;sources:Message[];prompt:string;cursor?:string;watermark?:number;baseline:string};
 export function memoryTask(state:PhoneState,character:string,thread:string):MemoryTask|null{
@@ -26,7 +27,7 @@ export function applyMemoryResult(state:PhoneState,task:MemoryTask,answer:string
   if(previous&&sourceAt<previousAt)continue;
   if(previous&&previous.evidence!==entry.quote&&!entry.replaces)continue;
   if(next.some(m=>m.scope===task.character&&m.text==='用户明确说过：'+entry.quote))continue;
-  const record={text:'用户明确说过：'+entry.quote,key:entry.key,category:entry.category,scope:task.character,date:localDate(),origin:'auto' as const,sourceThread:task.thread,sourceIds:[entry.sourceId],sourceAt,evidence:entry.quote,locked:false};
+  const record={text:'用户明确说过：'+entry.quote,key:entry.key,category:entry.category,scope:task.character,date:localDate(),origin:'auto' as const,sourceThread:task.thread,sourceIds:[entry.sourceId],sourceAt,evidence:entry.quote,sourceDigest:memorySourceDigest([task.sources.find(m=>m.id===entry.sourceId)!]),locked:false};
   if(previous){previous.revisions=[...previous.revisions,{text:previous.text,date:previous.date}].slice(-5);Object.assign(previous,record);}
   else {if(next.length>=300)throw new Error('记忆库已满，请整理旧记忆后重试。');next.push({id:uid(),...record,revisions:[]});}
  }
