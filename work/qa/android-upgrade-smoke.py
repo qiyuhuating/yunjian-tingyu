@@ -84,6 +84,27 @@ def type_text(text):
     tap(lambda n: n.get("class") == "android.widget.EditText")
     adb("shell", "input", "text", text)
 
+def verify_saved_note():
+    # The notes card may be outside the visible WebView accessibility window.
+    # Scroll the real UI instead of accepting the home card's count as proof.
+    observations = []
+    for attempt in range(6):
+        raw, root = hierarchy()
+        nodes = list(root.iter("node"))
+        matches = [n for n in nodes if NOTE in label(n) and n.get("class") != "android.widget.EditText"]
+        if matches:
+            print("PASS actual saved note text is present in notes UI after", attempt, "scroll(s)", flush=True)
+            # Return composer to the top so the next draft input is reachable.
+            for _ in range(attempt):
+                adb("shell", "input", "swipe", "550", "550", "550", "1490", "350")
+            return
+        observations.extend(label(n)[:120] for n in nodes if "CLOUDLET" in label(n) or "纸条" in label(n))
+        if attempt < 5:
+            adb("shell", "input", "swipe", "550", "1510", "550", "610", "420")
+            time.sleep(1)
+    raise RuntimeError("Saved note is not accessible after scrolling all visible notes; labels: " + repr(observations[-25:]))
+
+
 def snapshot(name, output):
     r = subprocess.run(["adb", "exec-out", "screencap", "-p"], capture_output=True, check=True, timeout=30)
     (output / (name + ".png")).write_bytes(r.stdout)
@@ -140,7 +161,7 @@ def main():
             report.setdefault("observations", []).append("v0.0.2 note submission navigated to home; checked reopened note contents")
             open_notes()
         # Reopened note content itself must be present; a changed count is not sufficient.
-        wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
+        verify_saved_note()
         check("Synthetic note committed by original application UI")
         type_text(DRAFT)
         time.sleep(2)
@@ -149,7 +170,7 @@ def main():
         launch()
         open_notes()
         wait_ui(lambda n: DRAFT in label(n) and n.get("class") == "android.widget.EditText")
-        wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
+        verify_saved_note()
         check("Old application cold-start retained saved note and editor draft")
         adb("shell", "am", "force-stop", PACKAGE)
         result = adb("install", "--no-streaming", "-r", str(a.new_apk), timeout=120)
@@ -158,14 +179,14 @@ def main():
         check(f"Exact delivered 0.0.3 upgraded in place, versionCode {a.expected_code}, no uninstall or data clear")
         launch()
         open_notes()
-        wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
+        verify_saved_note()
         wait_ui(lambda n: DRAFT in label(n) and n.get("class") == "android.widget.EditText")
         snapshot("after-upgrade", a.output)
         check("Offline new WebView UI retained old note and unsent draft")
         adb("shell", "am", "force-stop", PACKAGE)
         launch()
         open_notes()
-        wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
+        verify_saved_note()
         wait_ui(lambda n: DRAFT in label(n) and n.get("class") == "android.widget.EditText")
         snapshot("after-cold-start", a.output)
         check("Force-stop and offline cold-start retained upgraded application data")
