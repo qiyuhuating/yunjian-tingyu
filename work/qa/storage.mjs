@@ -40,6 +40,27 @@ try{const result=await page.evaluate(async()=>{
  const isolated=a.freshState(),only=a.makeSavedCard({...isolated.characters[0],avatar:staged.wallpaper.asset},isolated.lore);isolated.characterCards=[only];await a.writeLocal(owner,isolated,5);if(!await a.getAsset(owner,only.character.avatar))throw Error('Only library avatar was collected');checks.push('删除聊天角色后，仅仓库引用的头像仍被保留');a.removeSavedCard(isolated,only.id,only.revision);await a.writeLocal(owner,isolated,6);if(!await a.getAsset(owner,only.character.avatar))throw Error('Original library avatar was destructively collected');checks.push('删除库卡保留原头像附件，避免销毁未提交的新引用');
  const raceOwner='pending-dedup',raceState=a.freshState(),original=new File(['pending original'],'original.txt',{type:'text/plain'}),first=await a.uploadLocal(raceOwner,original);raceState.threads[raceState.primary].push({id:'first-use',role:'user',kind:'file',text:'原件',timestamp:1,asset:first.url});await a.writeLocal(raceOwner,raceState,0);const pending=await a.uploadLocal(raceOwner,original);const removed=structuredClone(raceState);removed.threads[removed.primary]=[];await a.writeLocal(raceOwner,removed,1);const attached=structuredClone(removed);attached.threads[attached.primary].push({id:'new-use',role:'user',kind:'file',text:'再次引用',timestamp:2,asset:pending.url});await a.writeLocal(raceOwner,attached,2);if(await (await a.getAsset(raceOwner,pending.url))?.blob.text()!=='pending original')throw Error('Pending deduplicated upload lost its original');checks.push('删除旧用途时不销毁待提交去重附件，新引用仍有完整原件');
 
+ const commandOwner='command-media-atomic',commandState=a.freshState(),commandThread=commandState.primary;
+ commandState.threads[commandThread].push({id:'command-source',role:'user',kind:'text',text:'生成一张测试图片',timestamp:1});
+ const [effect]=a.queueMedia(commandState,{thread:commandThread,userId:'command-source',speaker:commandThread},[{type:'image',prompt:'test fixture'}]);
+ await a.writeLocal(commandOwner,commandState,0);
+ const commandPng=new File([new Uint8Array([137,80,78,71,13,10,26,10,0,0,0,0])],'generated.png',{type:'image/png'});
+ const commandStaged=await a.prepareLocalUpload(commandOwner,commandPng);
+ if(!commandStaged.asset||await a.getAsset(commandOwner,commandStaged.result.url))throw Error('Generated command media leaked before the state transaction');
+ const requesting=structuredClone(commandState),attempt=a.beginMediaDelivery(requesting,effect.id);
+ await a.writeLocal(commandOwner,requesting,1);
+ const delivered=structuredClone(requesting),outputId='command-output';
+ a.completeMediaDelivery(delivered,effect.id,attempt,outputId);
+ delivered.threads[commandThread].push({id:outputId,role:'assistant',kind:'image',text:'',timestamp:2,asset:commandStaged.result.url,mime:commandStaged.result.mime,senderId:commandThread,turnId:'command-source'});
+ let mediaAbort=false;
+ IDBObjectStore.prototype.put=function(value,...args){const request=put.call(this,value,...args);if(this.name==='states')this.transaction.abort();return request;};
+ try{await a.writeLocal(commandOwner,delivered,2,undefined,false,[commandStaged.asset]);}catch{mediaAbort=true;}finally{IDBObjectStore.prototype.put=put;}
+ const commandFailed=(await a.readLocal(commandOwner)).state;
+ if(!mediaAbort||commandFailed.mediaOutbox[0].phase!=='in_flight'||commandFailed.threads[commandThread].some(m=>m.id===outputId)||await a.getAsset(commandOwner,commandStaged.result.url))throw Error('Aborted command media left an orphan, message or completed receipt');
+ await a.writeLocal(commandOwner,delivered,2,undefined,false,[commandStaged.asset]);
+ const commandSaved=(await a.readLocal(commandOwner)).state;
+ if(commandSaved.mediaOutbox[0].phase!=='completed'||commandSaved.mediaOutbox[0].outputId!==outputId||!commandSaved.threads[commandThread].some(m=>m.id===outputId)||!await a.getAsset(commandOwner,commandStaged.result.url))throw Error('Command media and receipt were not saved together');
+ checks.push('真实 IndexedDB：AI 命令图片、Outbox 回执与消息一次写入；中断后全部回滚');
  const queueOwner='durable-queue-24',queueState=a.freshState(),queueThread=queueState.primary;
  queueState.threads[queueThread].push({id:'queued-intent',role:'user',kind:'text',text:'queued-intent',timestamp:1,failed:true});
  a.enqueueDurableTurn(queueState,{userId:'queued-intent',thread:queueThread,text:'queued-intent',mode:'chat',queuedAt:1});
