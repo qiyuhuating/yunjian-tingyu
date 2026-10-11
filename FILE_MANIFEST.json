@@ -2336,8 +2336,8 @@
   {
     "path": "work/qa/android-upgrade-smoke.py",
     "description": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py",
-    "bytes": 8234,
-    "sha256": "3606ed79a8a43e65eeca27c3245de2a1e210b2b80d4588151a8e692793a6005e"
+    "bytes": 8985,
+    "sha256": "8bde804d1a651b40ee7c06e2f4b995637d9116d5cbd4c125ef73c0522dd49c29"
   },
   {
     "path": "work/qa/android.mjs",
