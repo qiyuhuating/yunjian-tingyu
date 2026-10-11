@@ -100,6 +100,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--old-apk", type=Path, required=True)
     p.add_argument("--new-apk", type=Path, required=True)
+    p.add_argument("--expected-sha256", default="295ef6e51a7f953d80e38af827f944c9645a18d07ac9e97fb8e11267c13916e4")
+    p.add_argument("--expected-code", type=int, default=10)
     p.add_argument("--output", type=Path, required=True)
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=True)
@@ -115,7 +117,7 @@ def main():
         report["webView"] = adb("shell", "dumpsys", "webviewupdate")
         report["oldApkSHA256"] = hashlib.sha256(a.old_apk.read_bytes()).hexdigest()
         report["newApkSHA256"] = hashlib.sha256(a.new_apk.read_bytes()).hexdigest()
-        assert report["newApkSHA256"] == "295ef6e51a7f953d80e38af827f944c9645a18d07ac9e97fb8e11267c13916e4"
+        assert re.fullmatch(r"[0-9a-f]{64}",a.expected_sha256) and report["newApkSHA256"] == a.expected_sha256, "New APK differs from expected candidate SHA-256"
         installed = adb("shell", "pm", "list", "packages", PACKAGE).splitlines()
         assert "package:" + PACKAGE not in installed, "Requires fresh disposable emulator; do not clear an existing installation"
         adb("shell", "wm", "size", "1080x1920")
@@ -144,8 +146,8 @@ def main():
         adb("shell", "am", "force-stop", PACKAGE)
         result = adb("install", "--no-streaming", "-r", str(a.new_apk), timeout=120)
         (a.output / "upgrade-install.txt").write_text(result)
-        assert "Success" in result and version(10) == 10
-        check("Exact delivered 0.0.3 upgraded in place, versionCode 10, no uninstall or data clear")
+        assert "Success" in result and version(a.expected_code) == a.expected_code
+        check(f"Exact delivered 0.0.3 upgraded in place, versionCode {a.expected_code}, no uninstall or data clear")
         launch()
         open_notes()
         wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
