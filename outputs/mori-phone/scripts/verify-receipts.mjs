@@ -55,4 +55,23 @@ test('Interrupted media delivery demands approval and fences old responses',()=>
  media.completeMediaDelivery(state,id,current,'new-output');
  assert.equal(state.mediaOutbox[0].outputId,'new-output');
 });
+test('Per-turn provider cap blocks further calls without consuming an attempt',()=>{
+ const {state,userId,thread,speakers}=setup();
+ journal.beginTurn(state,{userId,thread,mode:'group',speakers});
+ const record=journal.receiptFor(state,userId);
+ record.attempts=journal.MAX_TURN_REQUEST_ATTEMPTS;
+ const before=structuredClone(record);
+ assert.throws(()=>journal.markRequesting(state,userId,speakers[0]),/安全上限/);
+ assert.deepEqual(record,before);
+ assert(stateSchema.safeParse(state).success);
+});
+test('Per-media-effect cap blocks repeated billed calls and preserves state',()=>{
+ const {state,userId,thread,speakers}=setup();
+ const [effect]=media.queueMedia(state,{userId,thread,speaker:speakers[0]},[{type:'image',prompt:'hello'}]);
+ effect.attempts=media.MAX_MEDIA_REQUEST_ATTEMPTS;
+ const before=structuredClone(effect);
+ assert.throws(()=>media.beginMediaDelivery(state,effect.id),/上限/);
+ assert.deepEqual(effect,before);
+ assert(stateSchema.safeParse(state).success);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
