@@ -262,7 +262,7 @@
 | [outputs/mori-phone/scripts/sites-env.mjs](outputs/mori-phone/scripts/sites-env.mjs) | 工程支持文件：outputs/mori-phone/scripts/sites-env.mjs | 906 |
 | [outputs/mori-phone/scripts/sites-env.sh](outputs/mori-phone/scripts/sites-env.sh) | 工程支持文件：outputs/mori-phone/scripts/sites-env.sh | 1530 |
 | [outputs/mori-phone/scripts/verify-card-library.mjs](outputs/mori-phone/scripts/verify-card-library.mjs) | 19项独立角色卡核心验收，包含语义去重、反复复用、关系隔离、满库与过期任务拒绝；路径：outputs/mori-phone/scripts/verify-card-library.mjs | 10566 |
-| [outputs/mori-phone/scripts/verify-companion.mjs](outputs/mori-phone/scripts/verify-companion.mjs) | 21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs | 12266 |
+| [outputs/mori-phone/scripts/verify-companion.mjs](outputs/mori-phone/scripts/verify-companion.mjs) | 21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs | 12290 |
 | [outputs/mori-phone/scripts/verify-context.mjs](outputs/mori-phone/scripts/verify-context.mjs) | 11 项最大上下文和系统编辑回归，含600条大请求与旧备份迁移；路径：outputs/mori-phone/scripts/verify-context.mjs | 6151 |
 | [outputs/mori-phone/scripts/verify-core.mjs](outputs/mori-phone/scripts/verify-core.mjs) | 26 项模型状态、角色导入和提示词核心检查；路径：outputs/mori-phone/scripts/verify-core.mjs | 13409 |
 | [outputs/mori-phone/scripts/verify-group.mjs](outputs/mori-phone/scripts/verify-group.mjs) | 20 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者；路径：outputs/mori-phone/scripts/verify-group.mjs | 10405 |

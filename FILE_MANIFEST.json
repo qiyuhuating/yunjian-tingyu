@@ -1784,8 +1784,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-companion.mjs",
     "description": "21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs",
-    "bytes": 12266,
-    "sha256": "6616987ed69867939047a4b2e77ed636f43d97e6cff392347629be842aea5a6b"
+    "bytes": 12290,
+    "sha256": "844802c3b921e76ff67e6b010219bde9311682588f82173d8f37f02e116e9ebe"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-connections.mjs",
