@@ -131,7 +131,15 @@ def main():
         open_notes()
         type_text(NOTE)
         tap(has("贴上小纸条"))
-        # Look for the rendered saved note, not merely its input field.
+        # UI may navigate back to the home card after saving. That card only
+        # reports a count; never mistake it for proof that the note text exists.
+        saved_or_home = wait_ui(lambda n: (NOTE in label(n) and n.get("class") != "android.widget.EditText") or
+                              (n.get("class") == "android.widget.Button" and "小纸条" in label(n) and "2 张心意" in label(n)))
+        if NOTE not in label(saved_or_home):
+            print("OBSERVED: v0.0.2 returned home after note submission; reopening to verify actual stored note", flush=True)
+            report.setdefault("observations", []).append("v0.0.2 note submission navigated to home; checked reopened note contents")
+            open_notes()
+        # Reopened note content itself must be present; a changed count is not sufficient.
         wait_ui(lambda n: NOTE in label(n) and n.get("class") != "android.widget.EditText")
         check("Synthetic note committed by original application UI")
         type_text(DRAFT)
