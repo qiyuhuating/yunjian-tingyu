@@ -31,9 +31,9 @@
   },
   {
     "path": ".github/workflows/verify.yml",
-    "description": "持续集成的文件清单、角色卡仓库与角色扮演浏览器、媒体存储和Android编译门禁；路径：.github/workflows/verify.yml",
-    "bytes": 4818,
-    "sha256": "9ab4e85ff1f34c70dda9099e0631c55db03e3edb993e44fd0200ab3ad423f661"
+    "description": "自动执行源码与签名交付门槛，并新增晴空蓝视觉及升级持久化回归；路径：.github/workflows/verify.yml",
+    "bytes": 4860,
+    "sha256": "61a22ed4d7d393af036cffa7e53e0e7b6e393011eecaeb4050ba8873981d5f77"
   },
   {
     "path": ".gitignore",
@@ -316,6 +316,12 @@
     "description": "P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：docs/p0-storage-scale-results.json",
     "bytes": 2586,
     "sha256": "6e11505006913bbe7ca98fcb4b5e39ceca0cefba6b917699181f698e3c227f05"
+  },
+  {
+    "path": "docs/reference-sky-restoration-2026-10-13.md",
+    "description": "晴空蓝截图及历史出处、恢复范围、升级策略、验证和 APK 安装边界；路径：docs/reference-sky-restoration-2026-10-13.md",
+    "bytes": 2751,
+    "sha256": "39bd1e37d4ad96be7daabe0c6a51d6955554edec45f607bd99a78e4d413ca1d6"
   },
   {
     "path": "docs/roleplay-browser-results.json",
@@ -781,9 +787,9 @@
   },
   {
     "path": "outputs/mori-phone/android-web/main.tsx",
-    "description": "React 界面模块：main；位于 outputs/mori-phone/android-web；路径：outputs/mori-phone/android-web/main.tsx",
-    "bytes": 481,
-    "sha256": "df7031e9673a923e1dd56ba821311e6ea92fd730309391e22f9a79ce7ff8c567"
+    "description": "Android 网页入口，最后加载晴空蓝参考主题以固定样式覆盖顺序；路径：outputs/mori-phone/android-web/main.tsx",
+    "bytes": 519,
+    "sha256": "a42868b2201186484e23f247042042011ee8dd1d877928430a4e147e7e433dc2"
   },
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
@@ -931,9 +937,9 @@
   },
   {
     "path": "outputs/mori-phone/app/layout.tsx",
-    "description": "React 界面模块：layout；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/layout.tsx",
-    "bytes": 787,
-    "sha256": "e39dc4160bbdfb748809774d9409db50ce86bbfaf1a8917036a3718962d5ba20"
+    "description": "网页文档与主题入口，晴空蓝参考层在共享样式之后加载；路径：outputs/mori-phone/app/layout.tsx",
+    "bytes": 818,
+    "sha256": "ab5f040fd11d1ccfae377ca282179fd12d966bf70a38f74abc94a1b8c3312ccb"
   },
   {
     "path": "outputs/mori-phone/app/local-media.tsx",
@@ -1012,6 +1018,12 @@
     "description": "原录音试听与对象 URL 生命周期；路径：outputs/mori-phone/app/recording-preview.tsx",
     "bytes": 350,
     "sha256": "507f153bd9ea9831656c9108bee945f729682c136e050469f13dbf1f6903d27d"
+  },
+  {
+    "path": "outputs/mori-phone/app/reference-sky.css",
+    "description": "按历史源码和截图恢复晴空蓝配色，并确保小屏及横屏首页入口可见；路径：outputs/mori-phone/app/reference-sky.css",
+    "bytes": 5943,
+    "sha256": "c17a06b51f2f408d503640e5b1d63a579bec0d11c9635e4c8e6b550b3e4bc45a"
   },
   {
     "path": "outputs/mori-phone/app/refinement.css",
@@ -1429,9 +1441,9 @@
   },
   {
     "path": "outputs/mori-phone/lib/local-phone.ts",
-    "description": "本机状态与会话事务、附件去重清理、库卡及草稿头像引用、旧资源迁移和加密密钥；路径：outputs/mori-phone/lib/local-phone.ts",
-    "bytes": 17618,
-    "sha256": "4836e35fbc2290deca10d54447a306e7af888ad97e31e6dc605636fef1a0ffb1"
+    "description": "本机持久化与附件存储，在原子版本校验下迁移一次性主题选择；路径：outputs/mori-phone/lib/local-phone.ts",
+    "bytes": 18133,
+    "sha256": "8b581fd64fcdae4468538664939b8bdf58a267b74e11271b8e30b3586428332f"
   },
   {
     "path": "outputs/mori-phone/lib/local-thread-store.ts",
@@ -1489,9 +1501,9 @@
   },
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
-    "description": "聊天、卡片与世界书严格契约，200张及12MB仓库预算、源卡修订和旧状态默认值；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 16343,
-    "sha256": "3a330d4b3e448bc4e16723127994f344ac9b4f07640e1ef0303bdf14b43290d2"
+    "description": "手机状态契约，加入可选的主题恢复版本以兼容旧备份和升级数据；路径：outputs/mori-phone/lib/phone-model.ts",
+    "bytes": 16387,
+    "sha256": "f086db2226b1306c91330b3c97fbebb409d23de61b57b01c9b539b7724109d20"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -1522,6 +1534,12 @@
     "description": "思考强度与模型能力转换；路径：outputs/mori-phone/lib/reasoning.ts",
     "bytes": 5898,
     "sha256": "d6c747c63245804f7b4c9fa63fe2000d3ae8611a430c464b96b177a79c719d7e"
+  },
+  {
+    "path": "outputs/mori-phone/lib/reference-appearance.ts",
+    "description": "一次性恢复旧状态的晴空蓝选择，保留用户数据和后续主动主题选择；路径：outputs/mori-phone/lib/reference-appearance.ts",
+    "bytes": 313,
+    "sha256": "e8790b2115d6c1b2d3ea0f369162ce189e224af4915c8a5d4c052db97609bba3"
   },
   {
     "path": "outputs/mori-phone/lib/roleplay.ts",
@@ -2536,6 +2554,18 @@
     "description": "历史专项浏览器检查或开发工具：probe-local；使用时核对对应版本、路径和端口；路径：work/qa/probe-local.mjs",
     "bytes": 1559,
     "sha256": "6db25fc707e1ff64a87a646ab913c14799922e4f608df5ceca1c3f44c12276a6"
+  },
+  {
+    "path": "work/qa/reference-sky-entry.ts",
+    "description": "浏览器配色恢复验收所需的实际状态和 IndexedDB 模块入口；路径：work/qa/reference-sky-entry.ts",
+    "bytes": 197,
+    "sha256": "4a1d71cd3bd6c61169909b24cb53d831530ab5d85007453760f8838945a65890"
+  },
+  {
+    "path": "work/qa/reference-sky.mjs",
+    "description": "五组真实浏览器验收：原配色、旧数据保留、小屏入口和主题冷启动持久化；路径：work/qa/reference-sky.mjs",
+    "bytes": 7902,
+    "sha256": "47965245e95f8cfa35a94366d34d1259f11e8f511b8d9cec510a8c1f937fd361"
   },
   {
     "path": "work/qa/repair-companion.mjs",

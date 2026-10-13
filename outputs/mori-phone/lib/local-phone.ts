@@ -1,5 +1,6 @@
 import {sha256} from '@noble/hashes/sha2.js';
 import {freshState,stateSchema,type PhoneState} from './phone-model';
+import {restoreReferenceAppearance} from './reference-appearance';
 import {assetReferences} from './asset-references';
 import {readStoredThreads,syncStoredThreads} from './local-thread-store';
 export {assetReferences} from './asset-references';
@@ -131,10 +132,15 @@ export async function migrateAssets(owner:string,state:PhoneState,extra: {id:str
  const local=structuredClone(state);local.wallpaper.asset=rewrite(local.wallpaper.asset);for(const [key,draft] of Object.entries(local.drafts)){if(key.startsWith('editor:characters:')||key.startsWith('editor:cards:'))try{const parsed=JSON.parse(draft),c=key.startsWith('editor:cards:')?parsed?.character:parsed;if(c?.avatar){c.avatar=rewrite(c.avatar);local.drafts[key]=JSON.stringify(parsed);}}catch{}}for(const card of local.characterCards)card.character.avatar=rewrite(card.character.avatar);for(const c of local.characters)c.avatar=rewrite(c.avatar);for(const messages of Object.values(local.threads))for(const m of messages)if(m.asset)m.asset=rewrite(m.asset);for(const a of [...local.gallery,...local.music])a.url=rewrite(a.url);return local;
 }
 export async function initializeLocal(owner:string,progress?:(text:string)=>void){
- const stored=await readLocal(owner);if(stored)return stored;
+ const stored=await readLocal(owner);if(stored){
+  const restored=restoreReferenceAppearance(stored.state);if(restored===stored.state)return stored;
+  // Use the existing state/thread transaction and version fence; never overwrite a competing tab.
+  try{await writeLocal(owner,restored,stored.version);}catch(e){if(!(e instanceof LocalConflict))throw e;}
+  const saved=await readLocal(owner);if(!saved||saved.state.appearanceRevision!==1)throw new LocalConflict();return saved;
+ }
  progress?.('正在检查旧版记录…');const response=await fetch('/api/state',{cache:'no-store'});const body=await response.json() as {state?:unknown;assets?:{id:string;name:string;mime:string;size:number}[];hasLegacyKey?:boolean;legacyBaseURL?:string;error?:string};if(!response.ok)throw new Error(body.error||'旧记录检查失败，请重试。');
  const state=body.state?stateSchema.parse(body.state):freshState();if(state.provider==='compatible'&&!state.baseURL&&body.legacyBaseURL)state.baseURL=body.legacyBaseURL;
- const initial=await migrateAssets(owner,state,body.assets||[],progress);
+ const initial=restoreReferenceAppearance(await migrateAssets(owner,state,body.assets||[],progress));
  if(body.hasLegacyKey&&!await readDeviceKey(owner,initial.provider)){progress?.('正在迁入你的原密钥…');const response=await fetch('/api/connection',{method:'POST'});const legacy=await response.json() as {apiKey?:string};if(!response.ok)throw new Error('原密钥尚未迁入，请重试。');if(legacy.apiKey){await saveDeviceKey(owner,initial.provider,legacy.apiKey);if(await readDeviceKey(owner,initial.provider)!==legacy.apiKey)throw new Error('原密钥落盘校验失败。');}}
  // Complete the state only after all referenced files are durably stored. Concurrent first-open tabs must not overwrite one another.
  try{await writeLocal(owner,initial,0,!!body.state||!!body.assets?.length||!!body.hasLegacyKey);}catch(e){if(!(e instanceof LocalConflict))throw e;}
@@ -156,3 +162,4 @@ export async function saveDeviceKey(owner:string,provider:string,value:string){
  const key=await encryptionKey(owner),iv=crypto.getRandomValues(new Uint8Array(12)),ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:new TextEncoder().encode(owner+':'+provider)},key,new TextEncoder().encode(value));const tx=d.transaction('keys','readwrite'),done=complete(tx);tx.objectStore('keys').put({owner,provider,iv,ciphertext});await done;
 }
 export async function blobDataURL(blob:Blob){return await new Promise<string>((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=()=>reject(new Error('图片读取失败。'));r.readAsDataURL(blob);});}
+
