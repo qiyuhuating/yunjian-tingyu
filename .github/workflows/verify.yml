@@ -25,6 +25,7 @@ jobs:
           node outputs/mori-phone/scripts/verify-p0.mjs
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
           node work/qa/features.mjs
+          node work/qa/reference-sky.mjs
           node work/qa/connection-ui.mjs
           node work/qa/roleplay.mjs
           node work/qa/card-library.mjs
@@ -80,3 +81,4 @@ jobs:
             work/apk-candidate/package-info.txt
           if-no-files-found: error
           retention-days: 30
+
