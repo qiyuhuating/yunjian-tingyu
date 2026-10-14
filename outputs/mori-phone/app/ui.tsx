@@ -22,6 +22,15 @@ const dockCrops:Record<string,[number,number,number,number]>={home:[91,100,430,5
 function SpriteArt({name,dock=false}:{name:string;dock?:boolean}){const [x,y,w,h]=(dock?dockCrops:buttonCrops)[name],side=Math.max(w,h),width=dock?2172:1774,height=dock?724:887;return <span aria-hidden="true" className={dock?'dock-art':'button-art'}><span className="illustration-crop" style={{width:w/side*100+'%',height:h/side*100+'%'}}><img alt="" draggable={false} src={dock?'/dock-sprite.webp':'/button-sprite.webp'} style={{width:width/w*100+'%',height:height/h*100+'%',left:-x/w*100+'%',top:-y/h*100+'%'}}/></span></span>;}
 export function ButtonArt({name}:{name:string}){if(name==='browser')return <span aria-hidden="true" className="button-art"><span className="illustration-crop" style={{width:'100%',height:824/976*100+'%'}}><img alt="" draggable={false} src="/via-browser.webp" style={{width:1280/976*100+'%',height:1280/824*100+'%',left:-160/976*100+'%',top:-225/824*100+'%'}}/></span></span>;return <SpriteArt name={name}/>;}
 export function DockArt({name}:{name:string}){return <SpriteArt name={name} dock/>;}
+const paintedButtonNames=new Set(["chat","forum","browser","diary","moments","gallery","shop","all"]);
+const paintedDockNames=new Set(["home","calendar","memories","settings"]);
+const additionalPaintedAssets:Record<string,string>={"music":"/app-illustrations/music.svg","work":"/app-illustrations/work.svg","weibo":"/app-illustrations/weibo.svg","live":"/app-illustrations/live.svg","face":"/app-illustrations/face.svg","wallet":"/app-illustrations/wallet.svg","pet":"/app-illustrations/pet.svg","tasks":"/app-illustrations/tasks.svg","focus":"/app-illustrations/focus.svg","weather":"/app-illustrations/weather.svg","notes":"/app-illustrations/notes.svg","lore":"/app-illustrations/lore.svg","characters":"/app-illustrations/characters.svg","favorites":"/app-illustrations/favorites.svg"};
+export function LauncherArt({name}:{name:string}){
+ if(paintedButtonNames.has(name))return <ButtonArt name={name}/>;
+ if(paintedDockNames.has(name))return <DockArt name={name}/>;
+ if(additionalPaintedAssets[name])return <span className="button-art" aria-hidden="true"><img className="launcher-art-image" src={additionalPaintedAssets[name]} alt="" draggable={false}/></span>;
+ const Icon=icons[name];return Icon?<Icon size={28} strokeWidth={1.6}/>:null;
+}
 export function ImagePreview({url,name,children}:{url:string|undefined;name:string;children:React.ReactNode}){
  const [open,setOpen]=useState(false),dialog=useRef<HTMLDialogElement>(null);
  useEffect(()=>{const node=dialog.current;if(!node)return;if(open&&!node.open)node.showModal();else if(!open&&node.open)node.close();return()=>{if(node.open)node.close();};},[open]);

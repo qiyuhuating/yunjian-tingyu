@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>面对面</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#bcd6f0"/><stop offset=".52" stop-color="#bcd6f0"/><stop offset="1" stop-color="#c9b8f3"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M25 42c0-11 9-20 20-20h23c11 0 20 9 20 20v29c0 11-9 20-20 20H50l-15 11V88c-6-3-10-9-10-17Z" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <circle cx="57" cy="47" r="12" fill="#fff3de"/>
+  <path d="M37 78c1-20 40-20 41 0" fill="#eaf5ff" stroke="#fff" stroke-width="2.5"/>
+  <path d="M72 84c8 3 16 2 21-2l11 8V74c4-3 6-8 6-14V46" stroke="#d7bce7" stroke-width="5"/>
+  <path d="M43 41c4-12 22-13 28-3" stroke="#a8a4cf" stroke-width="5"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

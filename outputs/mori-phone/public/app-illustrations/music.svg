@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>一起听 · 音乐</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#acc8fd"/><stop offset=".52" stop-color="#acc8fd"/><stop offset="1" stop-color="#9e94df"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M32 72V62c0-22 14-37 32-37s32 15 32 37v10" stroke="#eef7ff" stroke-width="12"/>
+  <path d="M32 72V62c0-22 14-37 32-37s32 15 32 37v10" stroke="#87a7df" stroke-width="7"/>
+  <rect x="25" y="62" width="20" height="30" rx="10" fill="url(#paint)" stroke="#fff" stroke-width="3"/>
+  <rect x="83" y="62" width="20" height="30" rx="10" fill="url(#paint)" stroke="#fff" stroke-width="3"/>
+  <path d="M62 49v27c-3-3-13-2-15 4-3 8 13 13 20 5V62l18-5v-9L62 54Z" fill="#fffaf1" stroke="#f7e3af" stroke-width="2.5"/>
+  <path d="M34 68v14M92 68v14" stroke="#fff" stroke-width="3" opacity=".68"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

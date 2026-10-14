@@ -95,4 +95,14 @@ await check('修改角色 AI 配置不改变聊天、角色记忆、世界书和
  assert.equal(JSON.stringify({threads:restored.threads,memories:restored.memories,lore:restored.lore,coreSystemPrompt:restored.coreSystemPrompt}),baseline);
 });
 
+await check('新自动记忆全文哈希拒绝引文外修改，旧记忆继续读取完整原文',()=>{
+ const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));
+ const m=s.memories.at(-1);assert.match(m.sourceDigest,/^[0-9a-f]{64}$/);
+ s.threads[s.primary][0].text+='这段只是假设。';
+ assert(!recallMemories(s,s.primary,'奶茶').includes('这段只是假设。'));
+ delete m.sourceDigest;
+ assert(recallMemories(s,s.primary,'奶茶').includes(s.threads[s.primary][0].text));
+ m.locked=true;m.text='用户锁定的手动修订';
+ assert(recallMemories(s,s.primary,'奶茶').includes(m.text));
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

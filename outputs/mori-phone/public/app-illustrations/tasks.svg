@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <title>任务</title>
+  <defs>
+    <linearGradient id="paint" x1="23" y1="19" x2="105" y2="107" gradientUnits="userSpaceOnUse"><stop stop-color="#b6ddce"/><stop offset=".52" stop-color="#b6ddce"/><stop offset="1" stop-color="#94c4b7"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#fff4ba"/><stop offset=".56" stop-color="#f9d779"/><stop offset="1" stop-color="#e9b65f"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e4f2ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#486b95" flood-opacity=".22"/></filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="32" y="27" width="71" height="78" rx="14" fill="url(#paint)" stroke="#fff" stroke-width="3.5"/>
+  <rect x="50" y="21" width="34" height="17" rx="8.5" fill="#f2e4a6" stroke="#fff" stroke-width="2.5"/>
+  <rect x="43" y="46" width="48" height="46" rx="7" fill="#f7fffc" opacity=".85"/>
+  <path d="m49 59 6 6 10-12M49 79l6 6 10-12" stroke="#80b9a5" stroke-width="4"/>
+  <path d="M72 59h13M72 79h13" stroke="#a2c4b9" stroke-width="3.5"/>
+</g>
+  <g fill="url(#gold)" stroke="#fffaf0" stroke-width="2" stroke-linejoin="round"><path transform="translate(102 29)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/><path transform="translate(23 100) scale(.62)" d="M0-12 3.4-3.4 12 0 3.4 3.4 0 12-3.4 3.4-12 0-3.4-3.4Z"/></g>
+</svg>

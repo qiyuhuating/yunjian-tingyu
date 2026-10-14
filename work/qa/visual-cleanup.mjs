@@ -51,7 +51,7 @@ try{
      results[version].push({key,...record});
     };
     await capture('home');
-    await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();await page.locator('.chat-screen').waitFor();await capture('chat');
+    await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.locator('.contact-row').filter({hasText:'云汐'}).click();await page.locator('.chat-screen').waitFor();await capture('chat');
     await page.reload();await page.locator('.home-screen').waitFor();await page.locator('.home-screen').getByRole('button',{name:'设置',exact:true}).click();await page.getByText('数据与备份',{exact:true}).waitFor();await capture('settings');
     await page.reload();await page.locator('.home-screen').waitFor();await page.getByRole('button',{name:'全部应用',exact:true}).first().click();await page.locator('.launcher-grid').waitFor();await capture('launcher');
    }finally{await context.close();}

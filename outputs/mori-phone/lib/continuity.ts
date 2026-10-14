@@ -2,14 +2,23 @@ import type {Message,PhoneState} from './phone-model';
 import {sha256} from '@noble/hashes/sha2.js';
 function terms(value:string){const v=value.toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu,' '),result=new Set(v.match(/[a-z0-9]{2,}/g)||[]);for(const run of v.match(/[\u3400-\u9fff]+/g)||[])for(let i=0;i<run.length-1;i++)result.add(run.slice(i,i+2));return result;}
 export function relevance(query:string,text:string){const q=terms(query),t=terms(text);let score=0;for(const k of q)if(t.has(k))score++;return score/Math.sqrt(Math.max(1,t.size));}
+/** Full immutable source snapshot digest for newly extracted memories.
+ * A retained quote alone cannot detect a changed prefix, negation or context.
+ */
+export function memorySourceDigest(messages:readonly Pick<Message,'id'|'role'|'timestamp'|'text'>[]){
+ const hash=sha256.create(),encoder=new TextEncoder();
+ for(const m of messages)hash.update(encoder.encode(JSON.stringify([m.id,m.role,m.timestamp,m.text])+'\n'));
+ return Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join('');
+}
 // Provenance must remain verifiable before automatic memories enter the prompt.
 // Manual/legacy memories continue to work; the user may explicitly revise them.
 export function validMemorySource(state:PhoneState,m:PhoneState['memories'][number]){
  if(m.origin!=='auto'||m.locked)return true;
  if(!m.sourceIds?.length||!m.sourceThread||!m.evidence?.trim())return false;
  const source=state.threads[m.sourceThread]||[];
- return m.sourceIds.every(id=>{const matches=source.filter(v=>v.id===id);return matches.length===1&&matches[0].role==='user'&&!matches[0].failed&&
-  matches[0].text.includes(m.evidence!)&&(m.sourceAt===undefined||matches[0].timestamp===m.sourceAt);});
+ const matches=m.sourceIds.map(id=>source.filter(v=>v.id===id));
+ if(matches.some(rows=>rows.length!==1||rows[0].role!=='user'||rows[0].failed||!rows[0].text.includes(m.evidence!)||(m.sourceAt!==undefined&&rows[0].timestamp!==m.sourceAt)))return false;
+ return !m.sourceDigest||memorySourceDigest(matches.map(rows=>rows[0]))===m.sourceDigest;
 }
 export function recallMemories(state:PhoneState,character:string,query:string,group?:string){
  const selected=state.memories.filter(m=>validMemorySource(state,m)&&(m.scope==='global'||m.scope===character||(!!group&&m.scope===group))).map((m,i)=>{

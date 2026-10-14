@@ -40,6 +40,22 @@ function harness({group=false,answer='收到',onRequest=undefined,onUpload=undef
  };
  return {services,signal,thread,speaker,other,remaining,get state(){return state;},get calls(){return calls;},get commits(){return commits;}};
 }
+await check('Full persisted request budget leaves the entire turn unchanged at the execution entry',async()=>{
+ for(const phase of ['queued','needs_review','in_flight'])for(const attempts of [48,49]){
+  const h=harness();
+  h.state.turnReceipts=[{userId:'turn-1',thread:h.thread,mode:'chat',speakers:[h.speaker.id],completed:[],phase,attempts,updatedAt:1,error:'Previous POST result unknown'}];
+  Object.assign(h.state,stateSchema.parse(JSON.parse(JSON.stringify(h.state))));
+  const before=structuredClone(h.state);
+  await assert.rejects(executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat',allowManualRetry:true},h.services),/上限/);
+  assert.equal(h.calls,0);assert.equal(h.commits,0);assert.deepEqual(h.state,before);
+ }
+});
+await check('The last permitted request can finish after a manually confirmed retry',async()=>{
+ const h=harness();
+ h.state.turnReceipts=[{userId:'turn-1',thread:h.thread,mode:'chat',speakers:[h.speaker.id],completed:[],phase:'needs_review',attempts:47,updatedAt:1,error:'Previous POST result unknown'}];
+ await executeTurn({thread:h.thread,userId:'turn-1',text:'今天好吗',mode:'chat',allowManualRetry:true},h.services);
+ assert.equal(h.calls,1);assert.equal(h.state.turnReceipts[0].attempts,48);assert.equal(h.state.turnReceipts[0].phase,'completed');
+});
 await check('Durable pending queue survives serialized restart and never autoplays an uncertain provider POST',()=>{
  const {enqueueDurableTurn,eligibleQueuedTurn,dequeueDurableTurn}=load('durable-turn-queue');
  let state=freshState(),id='saved-user',thread=state.primary;

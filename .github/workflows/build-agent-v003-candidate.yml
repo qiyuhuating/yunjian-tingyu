@@ -1,7 +1,7 @@
 name: Build signed 0.0.3 Agent candidate (not a release)
 on:
   push:
-    branches: [release/agent-core-v003-candidate-20261010]
+    branches: [release/agent-core-v003-candidate-20261010, release/agent-core-v003-rc3-20261011]
   workflow_dispatch:
 permissions:
   contents: read
@@ -77,17 +77,17 @@ jobs:
           root=tree.getroot()
           ns='{http://schemas.android.com/apk/res/android}'
           assert root.get(ns+'versionCode')=='8' and root.get(ns+'versionName')=='0.0.2'
-          root.set(ns+'versionCode','10')
-          root.set(ns+'versionName','0.0.3')
+          root.set(ns+'versionCode','14')
+          root.set(ns+'versionName','0.0.3.2')
           tree.write(path,encoding='unicode',xml_declaration=True)
           PY
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts
-          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk > work/apk-candidate/package-info.txt
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-unsigned.apk > work/apk-candidate/manifest-tree.txt
+          python3 outputs/android/build-apk.py --sdk "$ANDROID_HOME" --java "$JAVA_HOME" --independent --unsigned --apktool work/apk-candidate/apktool.jar --output work/apk-candidate/yunjian-tingyu-v0.0.3-rc3-unsigned.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging work/apk-candidate/yunjian-tingyu-v0.0.3-rc3-unsigned.apk > work/apk-candidate/package-info.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump xmltree --file AndroidManifest.xml work/apk-candidate/yunjian-tingyu-v0.0.3-rc3-unsigned.apk > work/apk-candidate/manifest-tree.txt
           grep -F "name='chat.cloudlet.phone.v002'" work/apk-candidate/package-info.txt
-          grep -F "versionCode='10'" work/apk-candidate/package-info.txt
-          grep -F "versionName='0.0.3'" work/apk-candidate/package-info.txt
+          grep -F "versionCode='14'" work/apk-candidate/package-info.txt
+          grep -F "versionName='0.0.3.2'" work/apk-candidate/package-info.txt
           grep -F 'mark.via.phonev02' work/apk-candidate/manifest-tree.txt
       - name: Recover existing v0.0.2 signing key privately, never generate a replacement
         run: |
@@ -123,8 +123,8 @@ jobs:
           from pathlib import Path
           d=Path('work/apk-candidate')
           old=d/'recovery/yunjian-tingyu-v0.0.2-standalone.apk'
-          source=d/'yunjian-tingyu-v0.0.3-rc2-unsigned.apk'
-          signed=d/'yunjian-tingyu-v0.0.3-rc2-signed.apk'
+          source=d/'yunjian-tingyu-v0.0.3-rc3-unsigned.apk'
+          signed=d/'yunjian-tingyu-v0.0.3-rc3-signed.apk'
           sdk=Path(os.environ['ANDROID_HOME'])/'build-tools/35.0.0'
           signer=sdk/'apksigner'
           signing=d/'signing'
@@ -147,7 +147,7 @@ jobs:
           assert signed.stat().st_size>1000000
           digest=hashlib.sha256(signed.read_bytes()).hexdigest()
           report={'sourceCommit':os.environ['GITHUB_SHA'],'package':'chat.cloudlet.phone.v002',
-                  'versionCode':10,'versionName':'0.0.3','signatureMatchesExistingV002':True,
+                  'versionCode':14,'versionName':'0.0.3.2','signatureMatchesExistingV002':True,
                   'certificateSHA256':newcert,'apkSHA256':digest,'sizeBytes':signed.stat().st_size,
                   'status':'signed candidate - NOT device accepted or official Release'}
           (d/'candidate-check.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -160,11 +160,83 @@ jobs:
           rm -rf work/apk-candidate/recovery work/apk-candidate/signing
       - uses: actions/upload-artifact@v4
         with:
-          name: yunjian-tingyu-v0.0.3-rc2-SIGNED-CANDIDATE
+          name: yunjian-tingyu-v0.0.3-rc3-SIGNED-CANDIDATE
           path: |
-            work/apk-candidate/yunjian-tingyu-v0.0.3-rc2-signed.apk
+            work/apk-candidate/yunjian-tingyu-v0.0.3-rc3-signed.apk
             work/apk-candidate/SHA256SUMS
             work/apk-candidate/candidate-check.json
             work/apk-candidate/package-info.txt
+          if-no-files-found: error
+          retention-days: 30
+  android-upgrade:
+    name: Emulated Android upgrade using this run's signed candidate
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/download-artifact@v4
+        with:
+          name: yunjian-tingyu-v0.0.3-rc3-SIGNED-CANDIDATE
+          path: work/android-acceptance/packages/candidate
+      - name: Verify current signed artifact and original release SHA and certificates
+        run: |
+          set -euo pipefail
+          mkdir -p work/android-acceptance/packages/old work/android-acceptance/evidence
+          gh release download v0.0.2-standalone -p yunjian-tingyu-v0.0.2-standalone.apk -p SHA256SUMS --dir work/android-acceptance/packages/old
+          (cd work/android-acceptance/packages/candidate && sha256sum -c SHA256SUMS)
+          (cd work/android-acceptance/packages/old && sha256sum -c SHA256SUMS)
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/android-acceptance/packages/old/yunjian-tingyu-v0.0.2-standalone.apk > work/android-acceptance/evidence/old-signature.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs work/android-acceptance/packages/candidate/yunjian-tingyu-v0.0.3-rc3-signed.apk > work/android-acceptance/evidence/new-signature.txt
+          python3 - <<'PY'
+          import hashlib,json,os,re
+          from pathlib import Path
+          root=Path('work/android-acceptance')
+          candidate=root/'packages/candidate'
+          info=json.loads((candidate/'candidate-check.json').read_text())
+          package=candidate/'yunjian-tingyu-v0.0.3-rc3-signed.apk'
+          assert info['sourceCommit']==os.environ['GITHUB_SHA']
+          assert info['versionCode']==14 and info['versionName']=='0.0.3.2'
+          assert info['package']=='chat.cloudlet.phone.v002'
+          assert info['apkSHA256']==hashlib.sha256(package.read_bytes()).hexdigest()
+          def cert(name):
+              data=(root/'evidence'/name).read_text()
+              match=re.search(r'certificate SHA-256 digest:\s*([a-f0-9]{64})',data,re.I)
+              assert match and 'Verified using v2 scheme (APK Signature Scheme v2): true' in data
+              return match.group(1).lower()
+          assert cert('old-signature.txt')==cert('new-signature.txt')==info['certificateSHA256']
+          (root/'evidence/candidate-check.json').write_text(json.dumps(info,indent=2)+'\n')
+          print('PASS exact signed rc3 artifact and 0.0.2 upgrade certificate')
+          PY
+      - name: Enable KVM for disposable Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Offline Android upgrade smoke from old release to signed rc3
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          ram-size: 2048M
+          emulator-boot-timeout: 600
+          disable-animations: true
+          disable-spellchecker: true
+          script: |
+            python3 work/qa/android-upgrade-smoke.py --old-apk work/android-acceptance/packages/old/yunjian-tingyu-v0.0.2-standalone.apk --new-apk work/android-acceptance/packages/candidate/yunjian-tingyu-v0.0.3-rc3-signed.apk --expected-sha256 "$(cut -d ' ' -f1 work/android-acceptance/packages/candidate/SHA256SUMS)" --expected-code 14 --output work/android-acceptance/evidence
+      - name: Preserve synthetic test evidence, never signing material
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-api35-rc3-this-run-upgrade-evidence
+          path: work/android-acceptance/evidence/
           if-no-files-found: error
           retention-days: 30

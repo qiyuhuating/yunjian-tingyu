@@ -4,6 +4,7 @@ import RenderRecovery from '../app/render-recovery';
 import '../app/globals.css';
 import '../app/refinement.css';
 import '../app/comfort.css';
+import '../app/polish.css';
 import '../app/settings.css';
 import '../app/reference-sky.css';
 import {installAndroidRuntime} from './runtime';

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./refinement.css";
 import "./comfort.css";
+import "./polish.css";
 import "./settings.css";
 import "./reference-sky.css";
 

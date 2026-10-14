@@ -35,6 +35,8 @@ jobs:
           node work/qa/p0-reliability.mjs
           node work/qa/storage.mjs
           node work/qa/save-recovery.mjs
+          node work/qa/media-save-retry.mjs
+          node work/qa/draft-ui.mjs
           node work/qa/p0-storage-scale.mjs
       - name: Compile Android source without signing or modifying bundled assets
         run: |

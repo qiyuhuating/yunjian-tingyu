@@ -55,6 +55,8 @@ try{
  });
  if(await page.locator('.mobile-save-recovery').isVisible())await page.locator('.mobile-save-recovery').getByRole('button',{name:'重试保存',exact:true}).click();
  await page.locator('.mobile-save-recovery').waitFor({state:'hidden'});
+ // The error banner also disappears while saving; wait for durable success before reload.
+ await page.waitForFunction(async()=>{const row=await window.recoveryQA.readLocal('personal-device');return Object.values(row.state.threads).flat().filter(m=>m.fileName==='recovery.txt').length===1;},{},{timeout:5000});
  await page.reload();await page.locator('.home-screen').waitFor();await qa();
  await check('UI retry and reload preserve attachment reference and exact bytes',async()=>{
   const saved=await page.evaluate(async()=>{const row=await window.recoveryQA.readLocal('personal-device');const messages=Object.values(row.state.threads).flat().filter(m=>m.fileName==='recovery.txt');const asset=messages[0]?.asset?await window.recoveryQA.getAsset('personal-device',messages[0].asset):null;return {count:messages.length,bytes:asset?Array.from(new Uint8Array(await asset.blob.arrayBuffer())):null};});
