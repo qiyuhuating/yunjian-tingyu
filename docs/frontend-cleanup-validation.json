@@ -1,0 +1,55 @@
+{
+  "coreProtocolChecks": 303,
+  "existingBrowserChecks": 52,
+  "visualCleanup": {
+    "states": 48,
+    "themes": [
+      "sky",
+      "night",
+      "rose"
+    ],
+    "viewports": [
+      "320x640",
+      "390x844",
+      "844x390",
+      "1440x1000"
+    ],
+    "screens": [
+      "home",
+      "chat",
+      "settings",
+      "launcher"
+    ],
+    "computedStylesAndGeometryUnchanged": true,
+    "singleGraphicPerAppSlot": true,
+    "visibleIllustrationsDecoded": true,
+    "pageErrors": []
+  },
+  "pixelComparison": {
+    "pairs": 48,
+    "identical": 34,
+    "different": 14,
+    "pixelIdenticalClaim": false,
+    "note": "Some captures have local pixel differences; computed styles and geometry match. Representative home and launcher screenshots were visually inspected. No claim of exact pixel equivalence."
+  },
+  "cleanPackage": {
+    "files": 136,
+    "previousPackageFiles": 290,
+    "crcAndEveryFileHash": "passed",
+    "duplicateArchivePaths": false,
+    "instructionPromptsAndHistoricalMaterialsExcluded": true,
+    "runtimePromptsAndLicensesPreserved": true,
+    "extractedSourceTypecheck": "passed",
+    "extractedSourceProductionBuild": "passed",
+    "extractedBuildVisualStates": 48,
+    "extractedBuildMatchesOriginalComputedStylesAndGeometry": true,
+    "pageErrors": [],
+    "dependencyInstall": "Reused locked installed dependencies; npm ci was not rerun."
+  },
+  "limits": [
+    "No physical Android verification",
+    "No paid provider requests",
+    "No signed APK release",
+    "No claim of pixel-identical screenshots"
+  ]
+}

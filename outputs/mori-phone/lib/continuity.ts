@@ -5,13 +5,21 @@ export function relevance(query:string,text:string){const q=terms(query),t=terms
 // Provenance must remain verifiable before automatic memories enter the prompt.
 // Manual/legacy memories continue to work; the user may explicitly revise them.
 export function validMemorySource(state:PhoneState,m:PhoneState['memories'][number]){
- if(m.origin!=='auto')return true;
+ if(m.origin!=='auto'||m.locked)return true;
  if(!m.sourceIds?.length||!m.sourceThread||!m.evidence?.trim())return false;
  const source=state.threads[m.sourceThread]||[];
- return m.sourceIds.every(id=>source.some(v=>v.id===id&&v.role==='user'&&!v.failed&&
-  v.text.includes(m.evidence!)&&(m.sourceAt===undefined||v.timestamp===m.sourceAt)));
+ return m.sourceIds.every(id=>{const matches=source.filter(v=>v.id===id);return matches.length===1&&matches[0].role==='user'&&!matches[0].failed&&
+  matches[0].text.includes(m.evidence!)&&(m.sourceAt===undefined||matches[0].timestamp===m.sourceAt);});
 }
-export function recallMemories(state:PhoneState,character:string,query:string,group?:string){return state.memories.filter(m=>validMemorySource(state,m)&& (m.scope==='global'||m.scope===character||(!!group&&m.scope===group))).map((m,i)=>({m,i,score:state.memorySettings.recall?relevance(query,m.text):0})).sort((a,b)=>b.score-a.score||Number(b.m.locked)-Number(a.m.locked)||b.i-a.i).slice(0,12).map(v=>v.m).sort((a,b)=>a.id.localeCompare(b.id)).map(m=>m.text+(m.evidence?'（可核对原话：'+m.evidence+'）':'')).join('\n').slice(0,5000);}
+export function recallMemories(state:PhoneState,character:string,query:string,group?:string){
+ const selected=state.memories.filter(m=>validMemorySource(state,m)&&(m.scope==='global'||m.scope===character||(!!group&&m.scope===group))).map((m,i)=>{
+  // Re-read complete sources for legacy automatic memories too: a stored excerpt
+  // may have dropped a negation or a roleplay disclaimer from the original.
+  const text=m.origin==='auto'?(m.locked?m.text:m.sourceIds!.map(id=>state.threads[m.sourceThread!]!.find(v=>v.id===id)!.text).join('\n')):m.text+(m.evidence?'（可核对原话：'+m.evidence+'）':'');
+  return {m,i,text,score:state.memorySettings.recall?relevance(query,text):0};
+ }).sort((a,b)=>b.score-a.score||Number(b.m.locked)-Number(a.m.locked)||b.i-a.i).slice(0,12).sort((a,b)=>a.m.id.localeCompare(b.m.id));
+ let result='';for(const {m,text} of selected){const separator=result?'\n':'',remaining=5000-result.length-separator.length;if(remaining<=0)break;if(m.origin==='auto'&&!m.locked&&text.length>remaining)continue;result+=separator+text.slice(0,remaining);}return result;
+}
 export function recalledHistory(state:PhoneState,thread:string,query:string,recent:Message[]){if(!state.memorySettings.recall)return '';const ids=new Set(recent.map(m=>m.id));return (state.threads[thread]||[]).filter(m=>!ids.has(m.id)&&m.role!=='system'&&!m.failed&&m.kind==='text').map(m=>({m,score:relevance(query,m.text)})).filter(v=>v.score>.12).sort((a,b)=>b.score-a.score).slice(0,4).sort((a,b)=>a.m.timestamp-b.m.timestamp).map(v=>`${v.m.role==='user'?'用户':v.m.sender||'角色'}：${v.m.text.slice(0,700)}`).join('\n');}
 export function repeatedReply(answer:string,messages:Message[]){const clean=(s:string)=>s.toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu,'');const a=clean(answer);if(a.length<14)return false;return messages.filter(m=>m.role==='assistant'&&!m.failed).slice(-4).some(m=>{const b=clean(m.text);if(a===b)return true;const x=terms(a),y=terms(b);let same=0;for(const k of x)if(y.has(k))same++;return same/Math.max(1,x.size+y.size-same)>.86;});}
 /**

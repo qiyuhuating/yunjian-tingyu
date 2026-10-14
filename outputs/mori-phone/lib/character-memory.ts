@@ -25,8 +25,11 @@ export function applyMemoryResult(state:PhoneState,task:MemoryTask,answer:string
   const sourceAt=task.sources.find(m=>m.id===entry.sourceId)!.timestamp,previousAt=previous?.sourceAt??state.threads[previous?.sourceThread||'']?.find(m=>previous?.sourceIds?.includes(m.id))?.timestamp??0;
   if(previous&&sourceAt<previousAt)continue;
   if(previous&&previous.evidence!==entry.quote&&!entry.replaces)continue;
-  if(next.some(m=>m.scope===task.character&&m.text==='用户明确说过：'+entry.quote))continue;
-  const record={text:'用户明确说过：'+entry.quote,key:entry.key,category:entry.category,scope:task.character,date:localDate(),origin:'auto' as const,sourceThread:task.thread,sourceIds:[entry.sourceId],sourceAt,evidence:entry.quote,locked:false};
+  // A substring can omit negation, conditions or a preceding roleplay disclaimer.
+  // Keep the complete source instead of treating the model's excerpt as a fact.
+  const sourceText=task.sources.find(m=>m.id===entry.sourceId)!.text;
+  if(!previous&&next.some(m=>m.scope===task.character&&m.text===sourceText))continue;
+  const record={text:sourceText,key:entry.key,category:entry.category,scope:task.character,date:localDate(),origin:'auto' as const,sourceThread:task.thread,sourceIds:[entry.sourceId],sourceAt,evidence:entry.quote,locked:false};
   if(previous){previous.revisions=[...previous.revisions,{text:previous.text,date:previous.date}].slice(-5);Object.assign(previous,record);}
   else {if(next.length>=300)throw new Error('记忆库已满，请整理旧记忆后重试。');next.push({id:uid(),...record,revisions:[]});}
  }
@@ -34,4 +37,3 @@ export function applyMemoryResult(state:PhoneState,task:MemoryTask,answer:string
  (state.memoryCursors[task.character]??={})[task.thread]=task.through;
  (state.memoryWatermarks[task.character]??={})[task.thread]=Math.max(task.watermark??0,...task.sources.map(m=>m.timestamp));
 }
-

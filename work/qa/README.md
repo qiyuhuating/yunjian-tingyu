@@ -1,5 +1,7 @@
 # 浏览器测试说明
 
+2026-10-13 新增 `save-recovery.mjs`：从当前生产源码构建真实界面，注入两次附件事务失败，验证失败时紧急备份、再次重试及冷重载后的原文件字节。使用本地 Chromium 与合成数据，无真实服务商调用。分段备份、原文记忆及输出上限的完整验证见 [本轮记录](../../docs/reliability-fixes-2026-10-13.md)。
+
 2026-10-09 API 与设置重设计的生产构建验收：
 
 - `connection-ui.mjs`：23 项设置分类、搜索、模型列表与手填、凭据隔离、独立测试、HTTP/SSE 错误、取消、草稿、聊天恢复、暗夜对比度、响应布局和原生桥接检查。默认自建本地服务；支持 `CONNECTION_BUILD_DIR`、`CONNECTION_OUTPUT_DIR` 与 `CONNECTION_BASE_URL`。
