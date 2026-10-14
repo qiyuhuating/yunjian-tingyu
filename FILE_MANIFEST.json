@@ -1052,8 +1052,8 @@
   {
     "path": "outputs/mori-phone/app/music.tsx",
     "description": "一起听、本地音乐、歌词及外部音乐链接；路径：outputs/mori-phone/app/music.tsx",
-    "bytes": 5236,
-    "sha256": "a4be34bb873d739ad73ff367f11f731a36c236bf079d4f6b32d106dc749e4378"
+    "bytes": 5235,
+    "sha256": "4e35f53d78a3e5a9f535ddb4e59f70242a7e648825a292d1dac546e83785921e"
   },
   {
     "path": "outputs/mori-phone/app/page.tsx",
@@ -1580,8 +1580,8 @@
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
     "description": "手机状态契约，加入可选的主题恢复版本以兼容旧备份和升级数据；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 14373,
-    "sha256": "69ae52108fe9b84298f6a5ef2ca6fc974d186775294b32dd6727aa070197bcb7"
+    "bytes": 14371,
+    "sha256": "44bc038455ac7019e27d3fa84dad85f56a5fc2c0f74524ed0fe43a54f22083e6"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -1958,8 +1958,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-agents.mjs",
     "description": "文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs",
-    "bytes": 22039,
-    "sha256": "b21e79ce9da62377bb82bc46080710fb30fbf829bbdfec6e400e9096dcda78a5"
+    "bytes": 22038,
+    "sha256": "897d26c604234a57b208ca9987bd2818b616ea66aadd549da0993707cd0849aa"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-backup.mjs",
@@ -2000,8 +2000,8 @@
   {
     "path": "outputs/mori-phone/scripts/verify-group.mjs",
     "description": "20 项群聊回归，包含稳定缓存前缀、作用域与摘要发言者；路径：outputs/mori-phone/scripts/verify-group.mjs",
-    "bytes": 10490,
-    "sha256": "d97b0d1f20a78e6b392d95f37d197dc14fc0f26c1617e1de68f87304f5371fa3"
+    "bytes": 10489,
+    "sha256": "921d97a894bb494057e3f863c5382376578eac550b30705ceccfdb9456017bd5"
   },
   {
     "path": "outputs/mori-phone/scripts/verify-media.mjs",
@@ -2035,8 +2035,8 @@
   },
   {
     "path": "outputs/mori-phone/scripts/verify-roleplay.mjs",
-    "bytes": 13916,
-    "sha256": "4e2882692dbd16abe9525318f642d351a52be9d4f4b1f5486823c7df9dcbdb98",
+    "bytes": 13915,
+    "sha256": "7d81ab459e37e1ea6167d2483941de66e55ed297705e7ea476c5c7f867f8ad5e",
     "description": "27项AI片段覆盖、世界书往返、递归、记忆并发与摘要过期回归；路径：outputs/mori-phone/scripts/verify-roleplay.mjs"
   },
   {
