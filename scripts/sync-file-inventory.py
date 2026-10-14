@@ -10,6 +10,12 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "outputs/android/stage-assets.py": "按新鲜 Vite 资源图暂存 Android 页面与动态模块，排除未引用和测试文件",
+    "outputs/android/res/drawable/cloud_pet.webp": "原生启动器宠物图的像素无损 WebP 版本",
+    "outputs/mori-phone/scripts/test-characters.mjs": "仅测试用的临时角色夹具，不进入应用默认数据",
+    "work/verify-apk-assets.py": "验证 APK 资源白名单、动态模块与测试文件排除",
+    "work/qa/apk-assets.mjs": "生产构建首页、音乐、启动器图片和延迟模块浏览器检查",
+    "docs/apk-trim-2026-10-14.md": "默认角色与 APK 资源精简、升级保留和本地验收证据",
     "scripts/export-frontend.py": "按真实前端导入关系生成不含优化提示词和历史材料的独立 UI 包",
     "work/qa/visual-cleanup.mjs": "三种主题四种尺寸的图标单一渲染、插画加载和清理前后样式回归",
     "docs/frontend-cleanup-2026-10-13.md": "前端包精简、不可达图形删除依据和验证边界",
@@ -65,7 +71,9 @@ for path in sorted(tracked):
         before = lines[pos].rsplit(" | ",1)[0]
         lines[pos] = before + " | " + str(item["bytes"]) + " |"
 for path in set(by_path) - tracked:
-    raise RuntimeError("Stale manifest entry: " + path)
+    del by_path[path]
+    prefix = "| [" + path + "](" + path + ") | "
+    lines = [line for line in lines if not line.startswith(prefix)]
 rows = [by_path[p] for p in sorted(by_path)]
 if len({r["description"] for r in rows}) != len(rows):
     raise RuntimeError("Duplicate descriptions")

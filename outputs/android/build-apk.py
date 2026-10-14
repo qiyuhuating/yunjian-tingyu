@@ -8,6 +8,8 @@ parser = argparse.ArgumentParser()
 for name in ('sdk', 'java', 'output', 'apktool'):
     parser.add_argument('--' + name, required=True)
 parser.add_argument('--signing')
+parser.add_argument('--web-build', help='Fresh independent Vite build; defaults to assets/web')
+parser.add_argument('--public-dir', help='Frontend public source; defaults to sibling mori-phone/public')
 parser.add_argument('--independent', action='store_true', help='Separate 0.0.2 app, package and certificate')
 parser.add_argument('--unsigned', action='store_true', help='Build an aligned, non-installable APK for verification only')
 args = parser.parse_args()
@@ -61,6 +63,11 @@ if build.exists():
     shutil.rmtree(build)
 for directory in ('generated', 'classes', 'dex'):
     (build / directory).mkdir(parents=True, exist_ok=True)
+spec = spec_from_file_location('stage_assets', project / 'stage-assets.py')
+asset_module = module_from_spec(spec)
+spec.loader.exec_module(asset_module)
+asset_report = asset_module.stage_assets(project, args.web_build or project / 'assets/web', args.public_dir or project.parent / 'mori-phone/public', build / 'assets')
+(build / 'asset-report.json').write_text(json.dumps(asset_report, indent=2) + '\n', encoding='utf-8')
 manifest_path = project / 'AndroidManifest.xml'
 if args.independent:
     manifest = ET.parse(manifest_path)
@@ -72,7 +79,7 @@ if args.independent:
     manifest_path = build / 'AndroidManifest-standalone.xml'
     manifest.write(manifest_path, encoding='utf-8', xml_declaration=True)
 run([tool('aapt2'), 'compile', '--dir', project / 'res', '-o', build / 'resources.zip'])
-run([tool('aapt2'), 'link', '-o', build / 'unsigned.apk', '--manifest', manifest_path, '-I', android, '--java', build / 'generated', '--auto-add-overlay', '-R', build / 'resources.zip', '-A', project / 'assets', '--min-sdk-version', '24', '--target-sdk-version', '35'])
+run([tool('aapt2'), 'link', '-o', build / 'unsigned.apk', '--manifest', manifest_path, '-I', android, '--java', build / 'generated', '--auto-add-overlay', '-R', build / 'resources.zip', '-A', build / 'assets', '--min-sdk-version', '24', '--target-sdk-version', '35'])
 sources = [*project.glob('src/**/*.java'), *build.glob('generated/**/*.java')]
 run([jdk('javac'), '-encoding', 'UTF-8', '--release', '8', '-classpath', android, '-d', build / 'classes', *sources])
 run([jdk('java'), '-cp', tools / 'lib/d8.jar', 'com.android.tools.r8.D8', '--lib', android, '--min-api', '24', '--output', build / 'dex', *build.glob('classes/**/*.class')])
@@ -85,7 +92,7 @@ local_aapt = build / ('aapt2' + suffix)
 shutil.copy2(tool('aapt2'), local_aapt)
 if os.name != 'nt':
     local_aapt.chmod(local_aapt.stat().st_mode | 0o111)
-module.merge_via(project, build, via, apktool, jdk('java'), local_aapt, env, manifest_path)
+module.merge_via(project, build, via, apktool, jdk('java'), local_aapt, env, manifest_path, build / 'assets')
 run([tool('zipalign'), '-f', '4', build / 'unsigned.apk', build / 'aligned.apk'])
 output = pathlib.Path(args.output).resolve()
 output.parent.mkdir(parents=True, exist_ok=True)
@@ -99,7 +106,7 @@ with zipfile.ZipFile(output) as archive:
     assert archive.testzip() is None
     assert len(archive.namelist()) == len(set(archive.namelist()))
     assert archive.read('classes2.dex') == (build / 'dex/classes.dex').read_bytes()
-    for file in (project / 'assets').rglob('*'):
+    for file in (build / 'assets').rglob('*'):
         if file.is_file():
-            assert archive.read(file.relative_to(project).as_posix()) == file.read_bytes()
+            assert archive.read('assets/' + file.relative_to(build / 'assets').as_posix()) == file.read_bytes()
 print(json.dumps({'apk':str(output), 'bytes':output.stat().st_size, 'sha256':hashlib.sha256(output.read_bytes()).hexdigest(), 'signature':'unsigned; not installable' if args.unsigned else ('independent certificate verified' if args.independent else 'original certificate verified'), 'package':'chat.cloudlet.phone.v002' if args.independent else 'chat.cloudlet.phone', 'alignment':'verified', 'crc':'verified', 'bundledAssets':'exact', 'nativeDex':'exact'}, ensure_ascii=False))

@@ -3,6 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import ts from 'typescript';
+import {ensureTestCharacters} from './test-characters.mjs';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(name){
  if(loaded.has(name))return loaded.get(name);
@@ -15,7 +16,7 @@ const {freshState,stateSchema}=load('phone-model'),{executeTurn,PendingTurnQueue
 const {receiptFor,remainingSpeakers,markInterrupted,manualRetryRequiresConfirmation}=load('turn-receipts');
 const checks=[];async function check(name,fn){await fn();checks.push(name);}
 function harness({group=false,answer='收到',onRequest=undefined,onUpload=undefined,onCommit=undefined}={}){
- let state=freshState();const speaker=state.characters[0],other=state.characters[1],thread=group?'test-group':speaker.id;
+ let state=ensureTestCharacters(freshState(),2);const speaker=state.characters[0],other=state.characters[1],thread=group?'test-group':speaker.id;
  if(group){state.groups.push({id:thread,name:'群聊',members:[speaker.id,other.id]});state.groupSettings.cadence='fast';state.groupSettings.maxResponders=2;}
  state.threads[thread]=[{id:'turn-1',role:'user',kind:'text',timestamp:1,text:'今天好吗',failed:true}];
  let calls=0,commits=0;const remaining=[];
@@ -207,7 +208,7 @@ await check('Native upload failed before completion preserves text plus durable 
 });
 
 await check('Stopping persisted intents preserves other threads and uncertain receipts',()=>{
- const q=load('durable-turn-queue'),j=load('turn-receipts'),s=freshState(),thread=s.primary,other=s.characters[1].id;
+ const q=load('durable-turn-queue'),j=load('turn-receipts'),s=ensureTestCharacters(freshState(),2),thread=s.primary,other=s.characters[1].id;
  for(const [id,t] of [['active',thread],['pending',thread],['elsewhere',other]]){
   (s.threads[t]??=[]).push({id,role:'user',kind:'text',timestamp:1,text:id,failed:true});
   q.enqueueDurableTurn(s,{userId:id,thread:t,text:id,mode:'chat',queuedAt:1});
