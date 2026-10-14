@@ -18,6 +18,11 @@ outputs/android/build/
 
 work/feature-build/
 work/storage-build/
+work/save-recovery-build/
+work/save-recovery-emergency.zip
+work/save-recovery-results.json
+work/visual-cleanup-build/
+work/visual-cleanup-evidence/
 work/feature-test-failure.png
 
 work/card-library/

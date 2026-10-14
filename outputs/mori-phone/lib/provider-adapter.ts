@@ -4,18 +4,20 @@ import {samplingSchema} from './phone-model';
 import {samplingParameters} from './chat-prompt';
 import {capabilities,getProvider,providerBase,providerSchema} from './providers';
 import {reasoningPlan} from './reasoning';
+import {MAX_CONTEXT_TOKENS} from './context-window';
 import {ProviderError,upstreamFailure} from './provider-errors';
 const image=z.object({type:z.literal('image_url'),image_url:z.object({url:z.string().max(5700000).regex(/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const nativeMedia=z.object({type:z.literal('native_media'),native_media:z.object({mimeType:z.enum(['audio/webm','audio/mp4','audio/mpeg','audio/wav','audio/x-wav','audio/ogg','audio/flac','audio/aac','video/mp4','video/webm']),data:z.string().max(11200000).regex(/^[A-Za-z0-9+/]+=*$/)}).strict()}).strict();
 const text=z.object({type:z.literal('text'),text:z.string().max(200000)}).strict();
-export const chatInput=z.object({provider:providerSchema,model:z.string().min(1).max(160),apiKey:z.string().min(8).max(2048),baseURL:z.string().max(1500).default(''),sampling:samplingSchema,supportedParameters:z.array(z.string().min(1).max(80)).max(80).optional(),messages:z.array(z.object({role:z.enum(['system','user','assistant']),content:z.union([z.string().max(200000),z.array(z.union([image,text,nativeMedia])).max(3)])}).strict()).min(2).max(100010)}).strict().superRefine((data,ctx)=>{
+export const chatInput=z.object({provider:providerSchema,model:z.string().min(1).max(160),apiKey:z.string().min(8).max(2048),baseURL:z.string().max(1500).default(''),sampling:samplingSchema,outputTokenLimit:z.number().int().min(1).max(MAX_CONTEXT_TOKENS).optional(),supportedParameters:z.array(z.string().min(1).max(80)).max(80).optional(),messages:z.array(z.object({role:z.enum(['system','user','assistant']),content:z.union([z.string().max(200000),z.array(z.union([image,text,nativeMedia])).max(3)])}).strict()).min(2).max(100010)}).strict().superRefine((data,ctx)=>{
  let images=0,chars=0;for(const m of data.messages){if(typeof m.content==='string')chars+=m.content.length;else for(const p of m.content){if(p.type==='image_url')images++;else if(p.type==='native_media'){images++;if(data.provider!=='gemini')ctx.addIssue({code:'custom',message:'当前适配器不支持原生音视频，请使用转写文本。'});}else chars+=p.text.length;}if(m.role==='system'&&typeof m.content!=='string')ctx.addIssue({code:'custom',message:'系统背景只能包含文字'});}
  if(images>2||chars>16777216||data.messages[0].role!=='system'||data.messages.slice(1).some(m=>m.role==='system'))ctx.addIssue({code:'custom',message:'对话上下文格式不正确或过大'});
 });
 export type ChatInput=z.infer<typeof chatInput>;
 function imageData(part:z.infer<typeof image>|z.infer<typeof text>|z.infer<typeof nativeMedia>){if(part.type!=='image_url')throw new Error('此服务商不支持原生音视频。');return part.image_url.url;}
 export function wireRequest(data:ChatInput){
- const preset=getProvider(data.provider),base=providerBase(data.provider,data.baseURL),p=data.sampling,c=capabilities(data.provider,data.model),reasoning=reasoningPlan(data.provider==='openrouter'&&(data.supportedParameters?!data.supportedParameters.includes('reasoning'):data.model.endsWith(':free')||data.model==='openrouter/free')?'compatible':data.provider,data.model,p.thinking,p.reasoningEffort),thinking=reasoning.budget>0,maxTokens=p.maxTokens+reasoning.budget;
+ const preset=getProvider(data.provider),base=providerBase(data.provider,data.baseURL),p=data.sampling,c=capabilities(data.provider,data.model),reasoning=reasoningPlan(data.provider==='openrouter'&&(data.supportedParameters?!data.supportedParameters.includes('reasoning'):data.model.endsWith(':free')||data.model==='openrouter/free')?'compatible':data.provider,data.model,p.thinking,p.reasoningEffort),thinking=reasoning.budget>0,maxTokens=Math.min(p.maxTokens+reasoning.budget,data.outputTokenLimit??Infinity);
+ if(maxTokens-reasoning.budget<128)throw new Error('模型输出上限不足以容纳当前思考和正文预算，请降低思考强度或关闭思考。');
  const headers:Record<string,string>={'Content-Type':'application/json','Accept':'text/event-stream'};
  let url:string,body:Record<string,unknown>;
  if(preset.protocol==='anthropic'){

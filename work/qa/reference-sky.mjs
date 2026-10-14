@@ -73,7 +73,7 @@ try {
  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();
  await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();
  assert.equal(await color('.chat-screen','background-color'),'rgb(242, 246, 248)');
- assert.equal(await color('.role-assistant .message-card','background-color'),'rgb(253, 254, 253)');
+ assert.equal(await color('.role-assistant .message-card','background-color'),'rgb(255, 255, 253)');
  await page.evaluate(async()=>{
   await window.NativeFlush();const api=await import('/qa.js');const saved=await api.readLocal('personal-device');
   saved.state.threads['char-1'].push({id:'reference-user-bubble',role:'user',text:'验收：浅蓝气泡',timestamp:Date.now(),kind:'text',read:true});
@@ -83,7 +83,7 @@ try {
  await loadFont();
  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();
  await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();
- assert.equal(await color('.role-user .message-card','background-color'),'rgb(228, 237, 243)');
+ assert.equal(await color('.role-user .message-card','background-color'),'rgb(225, 236, 244)');
  await page.screenshot({path:path.join(output,'chat.png')});
  checks.push('Chat restores cool paper background, milk-white assistant bubble and pale-blue user bubble');
  await page.getByRole('button',{name:'返回聊天列表',exact:true}).first().click();
@@ -101,6 +101,23 @@ try {
   assert.notEqual(await color('main','--soft'),'#f2f6f8');
  }
  checks.push('Night and rose themes still apply after a deliberate choice and a cold reload');
+ await page.setViewportSize({width:390,height:844});
+ for(const theme of ['sky','night','rose']){
+  await page.evaluate(async theme=>{await window.NativeFlush();const api=await import('/qa.js'),saved=await api.readLocal('personal-device');saved.state.theme=theme;await api.writeLocal('personal-device',saved.state,saved.version);},theme);
+  await page.reload();await page.locator('.home-greeting').waitFor();
+  await page.locator('.home-screen').getByRole('button',{name:'设置',exact:true}).click();
+  await page.locator('.settings-title-row h2').waitFor();
+  const values=await page.evaluate(()=>{const main=document.querySelector('main'),probe=document.createElement('span');probe.hidden=true;main.append(probe);const variable=name=>{probe.style.color='var('+name+')';return getComputedStyle(probe).color;};const read=selector=>getComputedStyle(document.querySelector(selector));const result={title:read('.settings-title-row h2').color,ink:variable('--ink'),secondary:read('.settings-destination small').color,muted:variable('--muted'),border:read('.settings-directory').borderColor,line:variable('--line'),inputBorder:read('.settings-search input').borderWidth};probe.remove();return result;});
+  if(theme!=='sky')assert.equal(values.title,values.ink);
+  assert.equal(values.secondary,values.muted);assert.equal(values.border,values.line);assert.equal(values.inputBorder,'0px');
+  await page.locator('.settings-search input').focus();assert.equal(await page.locator('.settings-search').evaluate(el=>getComputedStyle(el).outlineStyle),'solid');
+  if(theme==='night')await page.screenshot({path:path.join(output,'night-settings.png')});
+  await page.reload();await page.locator('.home-greeting').waitFor();
+  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();await page.mouse.move(0,0);
+  assert(Number(await page.locator('.message-meta button').first().evaluate(el=>getComputedStyle(el).opacity))>=.8);
+ }
+ checks.push('Sky, night and rose settings retain theme text and border colors with a single search border and visible focus');
+ checks.push('Mobile message actions remain discoverable in all three themes');
  assert.deepEqual(errors,[]);
  fs.writeFileSync(path.join(output,'results.json'),JSON.stringify({passed:checks.length,checks,errors},null,2)+'\n');
  console.log(JSON.stringify({passed:checks.length,checks}));

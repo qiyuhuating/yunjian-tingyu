@@ -17,8 +17,8 @@
 .theme-sky .home-greeting h2 > span { color: #234865; font-weight: 600; }
 .theme-sky .home-screen .glass {
   background: linear-gradient(145deg, #fffffff0, #f5f9fbe8);
-  border-color: #ffffffe0;
-  box-shadow: 0 5px 14px #325c7c0e, inset 0 1px 0 #ffffff80;
+  border-color: #ffffffc8;
+  box-shadow: 0 8px 24px #325c7c12, inset 0 1px 0 #fff;
 }
 .theme-sky .home-screen .date-widget > b { color: #264b6a; }
 .theme-sky .home-screen :is(.date-widget b small, .date-widget > span, .listen-widget > span:not(.music-mini)) { color: #45627a; }
@@ -29,20 +29,22 @@
 .theme-sky .home-screen .home-apps::before { content: none; }
 .theme-sky .home-screen .app-button { color: #29465d; font-weight: 600; }
 .theme-sky .home-apps .app-button > span:last-child {
-  background: #f7fbffeb;
-  border-radius: 7px;
-  padding: 1px 5px;
+  background: #f7fbffc2;
+  border-radius: 9px;
+  padding: 2px 8px;
+  font-weight: 500;
+  letter-spacing: .06em;
   box-shadow: 0 1px 4px #3156740c;
   text-shadow: none;
 }
 .theme-sky .home-screen .badge { background: #ac425c; box-shadow: none; }
-.theme-sky .home-screen .pet-peek > span:nth-child(2) { background: #ffffffd9; border-color: #ffffffe0; }
+.theme-sky .home-screen .pet-peek > span:nth-child(2) { background: #ffffffd9; border-color: #ffffffe0; border-radius: 18px 18px 18px 6px; box-shadow: 0 6px 18px #325c7c14; }
 .theme-sky .home-screen .pet-peek strong { color: #43637c; }
 .theme-sky .home-screen .pet-message { color: var(--ink); }
 .theme-sky :is(.app-window, .app-header, .chat-person, .composer-area) { background: var(--surface); color: var(--ink); border-color: var(--line); }
 .theme-sky :is(.chat-screen, .scroll-panel, .composer textarea) { background: var(--soft); }
-.theme-sky .message-card { color: var(--ink); background: var(--surface); border-color: var(--line); }
-.theme-sky .role-user .message-card { background: #e4edf3; color: #3c556a; border-color: #d6e3eb; }
+.theme-sky .message-card { color: var(--ink); background: #fffffd; border-color: #e4ebf0; }
+.theme-sky .role-user .message-card { background: #e1ecf4; color: #3c556a; border-color: #d3e2ec; }
 .theme-sky :is(.primary, .send-button) { background: var(--blue-dark); color: #fff; }
 .theme-sky :is(.message-meta, .chat-timestamp, .chat-person small) { color: var(--muted); }
 .theme-sky .toast { background: #fffffff5; color: #45627a; border-color: #d0dfe7; }
@@ -88,3 +90,51 @@
   .theme-sky .home-screen .home-apps .app-button { gap: 3px; font-size: 12px; }
   .theme-sky .home-screen .phone-dock { grid-area: 4 / 2; margin: 0; align-self: center; }
 }
+
+/* Selected polish: keep shared geometry, with colors following each theme. */
+.theme-sky .chat-screen{background-color:var(--soft);background-image:linear-gradient(180deg,#eef4f9 0,#f3f6f8 38%,#f6f5f0 100%)}
+.theme-sky .chat-person{border-bottom-color:#e6edf2;box-shadow:0 1px 0 #ffffffb0,0 6px 18px #3c52630a}
+.theme-sky .chat-person strong{font-size:1.0625rem;font-weight:600;color:#2f4658}
+.theme-sky .chat-person>span.avatar{border-radius:15px;box-shadow:0 2px 8px #4a6c8714}
+.theme-sky .chat-person .icon-button{color:#5a7488;border-radius:14px}
+.theme-sky .chat-person .icon-button>.dock-art{opacity:.85}
+.message-flow{padding:22px 18px 16px}
+.chat-timestamp{margin:6px 0 20px;letter-spacing:.06em;color:var(--muted)}
+.message-row{margin-bottom:12px}
+.message-wrap{max-width:min(calc(100% - 38px),34rem)}
+.message-card{line-height:1.8;padding:11px 16px;border-radius:6px 18px 18px 18px;box-shadow:0 1px 2px #3c526308,0 6px 16px #3c52630a}
+.role-user .message-card{border-radius:18px 6px 18px 18px}
+.composer-area{border-top:0;box-shadow:0 -8px 22px #3c52630a;padding-top:4px}
+.composer-tools{color:var(--muted)}
+.composer-tools .icon-button{border-radius:14px}
+.composer textarea{border-radius:22px;padding:12px 18px;border:1px solid var(--line);transition:border-color .15s,background .15s}
+.theme-sky .composer textarea:focus{background:#fff;border-color:#9bb8cd}
+.send-button{border-radius:50%;transition:background .15s,transform .15s}
+.theme-sky .send-button:disabled{background:#b8c8d4;opacity:1}
+
+.settings-search{padding:0 14px;border-radius:15px;border-color:var(--line)}
+.settings-search input,.settings-workspace .settings-search input{border:0!important;background:transparent!important;box-shadow:none!important;outline:none!important;border-radius:0}
+.settings-top{padding:22px 0 12px}
+.settings-title-row h2{font-size:24px;font-weight:600;color:var(--ink)}
+.theme-sky .settings-title-row h2{color:#2f4658}
+.settings-title-row .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--muted)}
+.settings-title-mark{border-color:var(--line);border-radius:50%;box-shadow:0 2px 8px #3c52630a}
+.settings-connection-summary{border-radius:20px;padding:18px 16px;box-shadow:0 6px 20px #3c52630a}
+.settings-directory{border-radius:20px;border-color:var(--line);box-shadow:0 4px 16px #3c526306}
+.settings-destination{padding:15px 16px;min-height:72px;transition:background .15s}
+.settings-destination+.settings-destination{border-top-color:var(--line)}
+.settings-destination-icon{width:40px;height:40px;border-radius:14px}
+.settings-destination strong{font-size:15px}
+.settings-destination small{font-size:12px;color:var(--muted)}
+.settings-group-label{font-size:12px;letter-spacing:.12em;margin:26px 6px 10px;color:var(--muted)}
+.settings-workspace .settings-section{border-radius:20px;border-color:var(--line)}
+
+.home-screen .home-greeting h2>svg{left:148px;bottom:14px;width:20px;height:20px;opacity:.9}
+.theme-sky .home-screen .note-widget{border-radius:22px}
+.theme-sky .home-screen .phone-dock{border-radius:26px}
+.theme-sky .home-screen .home-greeting p{letter-spacing:.06em}
+.home-apps .app-icon{filter:drop-shadow(0 4px 8px #3c52632b)}
+.app-button,.phone-dock .dock-app{transition:transform .16s ease}
+.app-button:active,.phone-dock .dock-app:active{transform:scale(.96)}
+.settings-workspace .settings-section>h3{letter-spacing:.04em}
+@media(prefers-reduced-motion:reduce){.app-button,.phone-dock .dock-app{transition:none}.app-button:active,.phone-dock .dock-app:active{transform:none}.composer textarea,.send-button,.settings-destination{transition:none}}
