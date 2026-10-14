@@ -480,8 +480,8 @@
 | [outputs/mori-phone/scripts/test-characters.mjs](outputs/mori-phone/scripts/test-characters.mjs) | 仅测试用的临时角色夹具，不进入应用默认数据；路径：outputs/mori-phone/scripts/test-characters.mjs | 287 |
 | [work/qa/apk-assets.mjs](work/qa/apk-assets.mjs) | 生产构建首页、音乐、启动器图片和延迟模块浏览器检查；路径：work/qa/apk-assets.mjs | 2920 |
 | [work/verify-apk-assets.py](work/verify-apk-assets.py) | 验证 APK 资源白名单、动态模块与测试文件排除；路径：work/verify-apk-assets.py | 2871 |
-| [docs/2026-10-14-draft-integration-review.md](docs/2026-10-14-draft-integration-review.md) | 全部开放草稿与开发分支逐项审核、兼容整合取舍、本次回归和签名候选边界；路径：docs/2026-10-14-draft-integration-review.md | 33655 |
-| [docs/README-AI-experience.md](docs/README-AI-experience.md) | 本次AI调用思路、关键取舍、实际问题解决及可复用经验；路径：docs/README-AI-experience.md | 7088 |
+| [docs/2026-10-14-draft-integration-review.md](docs/2026-10-14-draft-integration-review.md) | 全部开放草稿与开发分支逐项审核、兼容整合取舍、本次回归和签名候选边界；路径：docs/2026-10-14-draft-integration-review.md | 34055 |
+| [docs/README-AI-experience.md](docs/README-AI-experience.md) | 本次AI调用思路、关键取舍、实际问题解决及可复用经验；路径：docs/README-AI-experience.md | 7488 |
 | [docs/launcher-illustration-design.md](docs/launcher-illustration-design.md) | 14个启动器插画的设计归属和原素材保留方式；路径：docs/launcher-illustration-design.md | 1928 |
 | [docs/yunjian-build-workflow.md](docs/yunjian-build-workflow.md) | 适用于本项目的独立APK标准构建流程、工具链、签名和升级验收使用方法；路径：docs/yunjian-build-workflow.md | 9639 |
 | [outputs/mori-phone/app/polish.css](outputs/mori-phone/app/polish.css) | 同时接入网页和Android入口并服从reference-sky最终覆盖的视觉精修层；路径：outputs/mori-phone/app/polish.css | 5988 |

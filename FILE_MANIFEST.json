@@ -86,8 +86,8 @@
   {
     "path": "docs/2026-10-14-draft-integration-review.md",
     "description": "全部开放草稿与开发分支逐项审核、兼容整合取舍、本次回归和签名候选边界；路径：docs/2026-10-14-draft-integration-review.md",
-    "bytes": 33655,
-    "sha256": "caa20a5506c69dd56077fa4bce83fe7ac1231fe50f0c2fc1ab5508c3169d74dd"
+    "bytes": 34055,
+    "sha256": "c0d9a82a074431eb41fb435d05b367957ffd6a8f9bd8d1168ae8f82bb783678e"
   },
   {
     "path": "docs/API连接与设置重设计-2026-10-09.md",
@@ -104,8 +104,8 @@
   {
     "path": "docs/README-AI-experience.md",
     "description": "本次AI调用思路、关键取舍、实际问题解决及可复用经验；路径：docs/README-AI-experience.md",
-    "bytes": 7088,
-    "sha256": "6e0df9cc7928ccd6ce24bfe79b6bff7d457ef4fafbf1d95c6fa0197350d88c31"
+    "bytes": 7488,
+    "sha256": "73c9dd92faadff65f0ec4cd19741d1aef5de631e402a22c3594449893d5f3e10"
   },
   {
     "path": "docs/UI-UX与图片优化计划-2026-10-08.md",
