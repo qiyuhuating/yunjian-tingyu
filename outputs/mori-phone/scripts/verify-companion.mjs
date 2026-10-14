@@ -1,10 +1,11 @@
 import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';import assert from 'node:assert/strict';import ts from 'typescript';
+import {ensureTestCharacters} from './test-characters.mjs';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(file){if(loaded.has(file))return loaded.get(file);const m={exports:{}};loaded.set(file,m.exports);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,'lib',file+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
 const {characterConnection,characterKeySlot}=load('character-ai');
 const {freshState,stateSchema}=load('phone-model'),{memoryTask,applyMemoryResult}=load('character-memory'),{recallMemories}=load('continuity'),{buildPrompt}=load('chat-prompt'),{CORE_SYSTEM_PROMPT}=load('system-prompt'),{groupSpeakers,parseGroupReply}=load('group-chat'),{groupDelay,waitForReply}=load('group-cadence');const checks=[];
 async function check(name,run){await run();checks.push(name);}
-function fixture(){const s=freshState();s.memorySettings.extractEvery=1;s.threads[s.primary]=[{id:'user-fact',role:'user',text:'我喜欢喝不加糖的奶茶，讲数学时请先给例子。',kind:'text',timestamp:1}];return s;}
+function fixture(){const s=ensureTestCharacters(freshState(),3);s.groups=[{id:'group-cloud',name:'测试群',members:s.characters.map(c=>c.id)}];s.memorySettings.extractEvery=1;s.threads[s.primary]=[{id:'user-fact',role:'user',text:'我喜欢喝不加糖的奶茶，讲数学时请先给例子。',kind:'text',timestamp:1}];return s;}
 function proposal(task,changes={}){return JSON.stringify([{key:'饮食.甜度',category:'preference',text:'用户喜欢无糖奶茶',sourceId:task.sources[0].id,quote:'我喜欢喝不加糖的奶茶',...changes}]);}
 await check('旧备份补齐设置且不修改已保存的系统提示词',()=>{const s=fixture();delete s.groupSettings;delete s.memoryCursors;delete s.memorySettings.autoExtract;delete s.memorySettings.extractEvery;s.coreSystemPrompt='我保存的核心';const parsed=stateSchema.parse(s);assert.equal(parsed.coreSystemPrompt,'我保存的核心');assert.equal(parsed.groupSettings.cadence,'natural');assert(parsed.memorySettings.autoExtract);});
 await check('自动记忆有角色归属、原话证据与持久化游标',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const m=s.memories.at(-1);assert.equal(m.scope,s.primary);assert.equal(m.origin,'auto');assert.equal(m.evidence,'我喜欢喝不加糖的奶茶');assert(m.text.includes(m.evidence));assert.equal(memoryTask(s,s.primary,s.primary),null);assert(stateSchema.safeParse(s).success);});
@@ -64,7 +65,7 @@ await check('旧角色不设独立连接，仍继承原全局服务商且保持�
  assert.equal(routing.provider,state.provider);assert.equal(routing.model,state.model);assert.equal(routing.keySlot,state.provider);assert.equal(routing.inherited,true);assert(stateSchema.safeParse(state).success);
 });
 await check('不同角色在同一个群各自选择 OpenAI 和 OpenRouter 模型',()=>{
- const state=freshState(),one=state.characters[0],two=state.characters[1];
+ const state=ensureTestCharacters(freshState(),2),one=state.characters[0],two=state.characters[1];state.groups=[{id:'group-cloud',name:'测试群',members:[one.id,two.id]}];
  one.aiConnection={provider:'openai',model:'gpt-4.1-mini',baseURL:'',vision:true,keyScope:'provider'};
  two.aiConnection={provider:'openrouter',model:'google/gemini-2.5-flash',baseURL:'',vision:false,keyScope:'character'};
  const a=characterConnection(state,one),b=characterConnection(state,two);

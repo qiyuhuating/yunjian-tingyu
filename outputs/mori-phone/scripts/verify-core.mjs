@@ -8,6 +8,7 @@ const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join
 function load(file){const absolute=path.join(root,'lib',file+'.ts');if(loaded.has(absolute))return loaded.get(absolute);const m={exports:{}};loaded.set(absolute,m.exports);const code=ts.transpileModule(fs.readFileSync(absolute,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','module','exports',code)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
 const {freshState,stateSchema,samplingSchema}=load('phone-model'),{buildPrompt,samplingParameters,parseUsage,selectHistory}=load('chat-prompt'),{splitRoleplayReply}=load('roleplay'),{parseCharacter,exportCharacter,crc32}=load('character-import');
 const checks=[];function check(name,fn){fn();checks.push(name);}
+check('全新安装只预置云汐并保留欢迎内容',()=>{const s=freshState();assert.deepEqual(s.characters.map(c=>c.name),['云汐']);assert.equal(s.groups.length,0);assert(s.threads[s.primary][0].text.includes('窗边的云'));assert.equal(s.notes[0].from,'云汐');assert.equal(s.memories[0].scope,s.primary);assert.equal(s.lore[0].title,'云朵小镇');});
 const s=freshState(),c=s.characters[0],first=buildPrompt(s,c,c.id,'早上好','chat',new Date('2026-10-06T00:00:00Z'));
 s.memories.push({id:'test-memory',scope:c.id,text:'不喜欢甜茶',date:'2026-10-06'});s.threads[c.id].push({id:'test-user',role:'user',text:'晚上好',kind:'text',timestamp:1});
 const second=buildPrompt(s,c,c.id,'晚上好','chat',new Date('2026-10-06T12:00:00Z'));

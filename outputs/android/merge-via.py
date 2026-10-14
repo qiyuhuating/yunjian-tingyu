@@ -6,7 +6,7 @@ VIA_SHA256 = 'c64c71458df03ef98bac3acdecafcab6bf9fd930a53fca5d72b284383ed03985'
 ANDROID = 'http://schemas.android.com/apk/res/android'
 ET.register_namespace('android', ANDROID)
 
-def merge_via(project, build, via, apktool, java, aapt, env, manifest_path=None):
+def merge_via(project, build, via, apktool, java, aapt, env, manifest_path=None, assets_path=None):
     assert hashlib.sha256(via.read_bytes()).hexdigest() == VIA_SHA256, 'Unexpected Via binary'
     decoded = build / 'via'
     subprocess.run([str(java), '-jar', str(apktool), 'd', '-s', '-f', str(via), '-o', str(decoded)], env=env, check=True)
@@ -70,7 +70,7 @@ def merge_via(project, build, via, apktool, java, aapt, env, manifest_path=None)
             assert not target.exists(), 'Resource path collision'
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(file, target)
-    shutil.copytree(project / 'assets', decoded / 'assets', dirs_exist_ok=True)
+    shutil.copytree(assets_path or project / 'assets', decoded / 'assets', dirs_exist_ok=True)
     # Via embeds its FileProvider authority as a literal. Keep the string width and
     # every DEX offset unchanged, and update only that authority plus DEX checksums.
     dex_path = decoded / 'classes.dex'

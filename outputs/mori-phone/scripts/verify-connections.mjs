@@ -3,6 +3,7 @@ import path from 'node:path';
 import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
+import {ensureTestCharacters} from './test-characters.mjs';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(file){if(loaded.has(file))return loaded.get(file);const m={exports:{}};loaded.set(file,m.exports);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,'lib',file+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
 const {providerBase}=load('providers'),{modelsRequest,wireRequest,chatInput,normalizeStream}=load('provider-adapter'),{samplingSchema}=load('phone-model'),checks=[];
@@ -28,7 +29,7 @@ await check('自定义原生协议拥有独立的地址与角色专属密钥命�
  assert.notEqual(connectionKeySlot('compatible',a),connectionKeySlot('compatible-anthropic',a));
  assert.notEqual(connectionKeySlot('compatible-anthropic',a),connectionKeySlot('compatible-gemini',a));
  assert.notEqual(connectionKeySlot('compatible-anthropic',a),connectionKeySlot('compatible-anthropic',b));
- const state=freshState(),first=state.characters[0],second=state.characters[1];
+ const state=ensureTestCharacters(freshState(),2),first=state.characters[0],second=state.characters[1];
  first.aiConnection={provider:'compatible-anthropic',model:'custom-claude',baseURL:a,vision:false,keyScope:'provider'};
  second.aiConnection={provider:'compatible-anthropic',model:'custom-claude',baseURL:a,vision:false,keyScope:'provider'};
  const one=characterConnection(state,first),two=characterConnection(state,second);

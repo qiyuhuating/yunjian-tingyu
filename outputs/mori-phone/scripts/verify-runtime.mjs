@@ -3,6 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import ts from 'typescript';
+import {ensureTestCharacters} from './test-characters.mjs';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(name){
  if(loaded.has(name))return loaded.get(name);
@@ -72,7 +73,7 @@ await check('Plain chat uses one real last user message and a single system enve
  chatInput.parse({provider:'deepseek',model:'deepseek-flash',apiKey:'fixture-only-key',baseURL:'',sampling:samplingSchema.parse({}),messages});
 });
 await check('Group chat preserves other-speaker identity but not fabricated user turn',async()=>{
- const state=freshState(),a=state.characters[0],b=state.characters[1],thread='group-fixture';
+ const state=ensureTestCharacters(freshState(),2),a=state.characters[0],b=state.characters[1],thread='group-fixture';
  state.groups.push({id:thread,name:'测试群',members:[a.id,b.id]});
  state.threads[thread]=[{id:'assistant-b',role:'assistant',kind:'text',timestamp:1,text:'B说的话',sender:b.name,senderId:b.id},{id:'user-new',role:'user',kind:'text',timestamp:2,text:'@'+a.name+' 你好'}];
  const messages=await assembleChatMessages({ownerId:'fixture',state,character:a,thread,text:'@'+a.name+' 你好',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false});
@@ -80,7 +81,7 @@ await check('Group chat preserves other-speaker identity but not fabricated user
  assert.equal(messages.at(-1).content,'@'+a.name+' 你好');
 });
 await check('A repeated group question is not skipped when another member spoke last',async()=>{
- const state=freshState(),a=state.characters[0],b=state.characters[1],thread='group-repeat';
+ const state=ensureTestCharacters(freshState(),2),a=state.characters[0],b=state.characters[1],thread='group-repeat';
  state.groups.push({id:thread,name:'测试群',members:[a.id,b.id]});
  state.threads[thread]=[{id:'user-1',role:'user',kind:'text',timestamp:1,text:'再解释一下'},{id:'assistant-b',role:'assistant',kind:'text',timestamp:2,text:'我刚说过',sender:b.name,senderId:b.id}];
  const messages=await assembleChatMessages({ownerId:'fixture',state,character:a,thread,text:'再解释一下',mode:'group',provider:'deepseek',model:'deepseek-flash',baseURL:'',vision:false});
@@ -98,7 +99,7 @@ await check('Anthropic message_stop is an explicit terminal event',async()=>{
  assert.equal((await readChatStream(normalized,{started:performance.now()})).answer,'ok');
 });
 await check('Causal user anchor blocks future queued messages and preserves peer evidence',async()=>{
- const state=freshState(),a=state.characters[0],b=state.characters[1],thread='causal-test';
+ const state=ensureTestCharacters(freshState(),2),a=state.characters[0],b=state.characters[1],thread='causal-test';
  state.groups.push({id:thread,name:'测试',members:[a.id,b.id]});
  state.threads[thread]=[
   {id:'A',role:'user',kind:'text',timestamp:1,text:'第一条问题'},
