@@ -11,7 +11,3 @@ export function runWithConnectorBinding<T>(
 ): T {
   return bindings.run(binding, run);
 }
-
-export function getConnectorBinding(): ConnectorBinding | undefined {
-  return bindings.getStore();
-}

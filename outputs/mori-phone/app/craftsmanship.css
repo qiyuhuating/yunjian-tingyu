@@ -22,7 +22,6 @@
   background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface) 28%, transparent), transparent 260px);
   scrollbar-color: var(--line) transparent;
 }
-.app-window .app-header { box-shadow: 0 2px 10px var(--finish-shade); }
 .app-window .scroll-panel > .eyebrow:first-child {
   display: flex;
   align-items: center;
@@ -39,18 +38,18 @@
 .app-window :is(.music-screen, .focus-screen) > .eyebrow:first-child { justify-content: center; }
 .app-window .panel-title { margin-block: 9px 14px; }
 .app-window .section-heading { margin-block: 28px 14px; }
-.app-window :is(.settings-section, .form-card, .memory-card, .journal-card, .social-post, .task-reward) {
+.app-window :is(.settings-section, .form-card, .memory-card, .journal-card, .task-reward) {
   border-color: var(--line);
   box-shadow: var(--finish-inset), var(--finish-shadow);
 }
-.app-window :is(.memory-card, .journal-card, .social-post) { padding: 20px; }
+.app-window :is(.memory-card, .journal-card) { padding: 20px; }
 .app-window :is(.memory-card, .journal-card) footer {
   border-top: 1px solid var(--line);
   padding-top: 8px;
   margin-top: 16px;
   gap: 8px;
 }
-.app-window :is(.memory-card, .paper-note, .journal-card, .social-post) p { overflow-wrap: anywhere; }
+.app-window :is(.memory-card, .paper-note, .journal-card) p { overflow-wrap: anywhere; }
 .app-window :is(.memory-card header, .memory-card footer, .paper-note footer) > span { min-width: 0; overflow-wrap: anywhere; }
 .app-window :is(.memory-card footer, .paper-note footer) .icon-button { flex-shrink: 0; }
 .app-window .tiny-tag { border: 1px solid color-mix(in srgb, var(--line) 65%, transparent); }
@@ -61,7 +60,6 @@
 }
 .app-window .primary { box-shadow: inset 0 1px 0 #ffffff20, 0 3px 8px var(--finish-shade); }
 .app-window .primary:disabled { box-shadow: none; }
-.app-window .soft-button { box-shadow: var(--finish-inset); }
 .app-window :is(.primary, .soft-button) > svg { flex-shrink: 0; }
 .app-window .button-row { align-items: stretch; }
 .app-window :is(.primary, .soft-button):active:not(:disabled) { box-shadow: inset 0 1px 3px #00000012; }
@@ -156,7 +154,6 @@
   border-radius: 38px;
   border: 1px solid var(--line);
   background: radial-gradient(ellipse at 50% 28%, var(--surface), var(--soft));
-  box-shadow: var(--finish-inset), var(--finish-shadow);
   filter: none;
 }
 .app-window .music-cover img { filter: drop-shadow(0 5px 6px var(--finish-shade)); }
@@ -191,11 +188,9 @@
 .app-window .goods-grid p { margin-bottom: 14px; }
 .app-window .goods-grid button { min-height: 44px; margin-top: auto; }
 .app-window .shop-banner { box-shadow: var(--finish-inset); }
-.app-window .wallet-card { box-shadow: inset 0 1px 0 #ffffff25, 0 10px 25px var(--finish-shade); }
 .app-window .wallet-card p { border-top: 1px solid #ffffff26; padding-top: 14px; margin-top: 14px; }
 .app-window .ledger-line { padding-inline: 6px; }
 .app-window .social-cover { box-shadow: var(--finish-inset); }
-.app-window .social-post > header { gap: 10px; }
 .app-window .gallery-grid figure { box-shadow: var(--finish-inset), var(--finish-shadow); overflow: hidden; }
 .app-window .pet-stats { gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--finish-inset); }
 .app-window .pet-emotions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -209,10 +204,7 @@
 .app-window .empty > svg { display: block; width: 56px; height: 56px; padding: 12px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--blue-dark); box-shadow: var(--finish-inset); }
 .app-window .empty p:empty { display: none; }
 .app-window .empty h3 { text-wrap: balance; }
-.app-window .message-card { box-shadow: 0 1px 2px var(--finish-shade), 0 4px 12px var(--finish-shade); }
-.theme-night .app-window .message-card { box-shadow: none; }
 .app-window .message-meta button { border-radius: 12px; }
-.app-window .composer textarea { box-shadow: inset 0 1px 3px var(--finish-shade); }
 .desktop .toast { box-shadow: var(--finish-inset), 0 8px 24px #14283826; }
 .desktop :is(.companion-card, .today-card) { box-shadow: var(--finish-inset), var(--finish-shadow); }
 
@@ -230,7 +222,7 @@
   .app-window .mood-picker { gap: 2px; }
   .app-window .mood-picker button { border-radius: 12px; }
   .app-window .calendar-grid { gap: 2px; padding-inline: 4px; }
-  .app-window :is(.memory-card, .journal-card, .social-post) { padding: 16px; }
+  .app-window :is(.memory-card, .journal-card) { padding: 16px; }
   .app-window .duration-picker button { padding-inline: 10px; }
   .app-window .goods-emoji { width: 76px; height: 76px; }
 }
@@ -284,8 +276,7 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
 .message-row.consecutive{margin-top:-10px}
 .message-row>.avatar.tiny{flex:0 0 32px;width:32px;height:32px;border-radius:50%;margin-top:2px;box-shadow:0 2px 8px -2px #3a5a7433}
 .message-wrap{max-width:min(calc(100% - 44px),32rem)}
-.app-window .message-card{font-size:.96875rem;line-height:1.85;letter-spacing:.015em;padding:12px 17px;border-radius:7px 20px 20px 20px;text-wrap:pretty;
-  box-shadow:0 1px 1px #3a5a7408,0 8px 22px -12px #3a5a7447,inset 0 1px 0 #ffffffb3}
+.app-window .message-card{font-size:.96875rem;line-height:1.85;letter-spacing:.015em;padding:12px 17px;border-radius:7px 20px 20px 20px;text-wrap:pretty}
 .app-window .role-user .message-card{border-radius:20px 7px 20px 20px;box-shadow:0 1px 1px #3a5a7406,0 8px 20px -14px #3a5a7440,inset 0 1px 0 #ffffff66}
 .message-card p+p{margin-top:.6em}
 .theme-sky .message-card{background:#fffffe;border-color:#e7edf1}
@@ -340,7 +331,7 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
 .desktop.theme-night{--glaze-hi:#ffffff06;--glaze-lo:#00000018;--glaze-rim:#ffffff0c;--glaze-foot:#00000028;--glaze-edge:#ffffff0e;--glaze-drop:#00000048;--cobalt-hi:#527597;--cobalt-lo:#3f6384}
 
 /* 器面：卡片、目录、表单 */
-.app-window :is(.settings-section,.form-card,.memory-card,.journal-card,.social-post,.task-reward,.settings-directory,.settings-connection-summary,.contact-empty,.empty,.goods-grid article,.pet-stats,.browser-mark,.duration-picker,.recorder-panel,.disclosure){
+.app-window :is(.settings-section,.form-card,.memory-card,.journal-card,.task-reward,.settings-directory,.settings-connection-summary,.contact-empty,.empty,.goods-grid article,.pet-stats,.browser-mark,.duration-picker,.recorder-panel,.disclosure){
   background-image:var(--glaze);
   box-shadow:var(--glaze-spec),0 12px 26px -22px var(--glaze-drop);
 }

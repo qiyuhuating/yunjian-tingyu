@@ -53,7 +53,6 @@ export const stateSchema=z.object({
 export type PhoneState=z.infer<typeof stateSchema>;
 export const uid=()=>crypto.randomUUID();
 export const localDate=()=>new Date().toLocaleDateString('sv-SE');
-export const timeLabel=()=>new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
 const roster=[
  ['云汐','温柔但有自己的想法，记得小事，尊重彼此的生活。喜欢云朵、植物和一起听歌。','☁️','blue','窗边的云又变了形状。今天想和我一起做些什么？'],
 ];
@@ -65,4 +64,3 @@ export function freshState():PhoneState{
  bookmarks:[{id:'book-st',name:'SillyTavern 角色与世界书',url:'https://docs.sillytavern.app/usage/characters/'},{id:'book-cloud',name:'Small Cloud 小手机',url:'https://github.com/Guaizai-s/small-cloud'}],claimed:[],workDate:'',focusMinutes:0,focusSession:{duration:25,remaining:1500,running:false,deadline:0},longChat:true,provider:'deepseek',model:'deepseek-flash'});
 }
 export const APP_NAMES:Record<string,string>={home:'首页',chat:'聊天',forum:'论坛',browser:'浏览器',diary:'日记',moments:'朋友圈',music:'一起听',calendar:'日历',gallery:'相册',shop:'云朵商店',work:'工作',weibo:'小镇微博',live:'直播',face:'面对面',wallet:'钱包',pet:'小云',tasks:'任务',focus:'专注',weather:'天气',notes:'小纸条',memories:'记忆',lore:'世界书',characters:'角色设定',settings:'设置',all:'全部应用',favorites:'收藏'};
-

@@ -10,6 +10,7 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "docs/dead-code-cleanup-2026-10-15.md": "死模块、孤立函数和无效样式的删除依据及前后布局一致性验证",
     "outputs/mori-phone/app/craftsmanship.css": "v6页面材质与布局精修，保留消息操作和焦点并适配三主题的渐变对比",
     "work/qa/v6-ui.mjs": "144个生产页面状态的布局、三主题、真实搜索焦点、渐变对比和减少动态效果回归",
     "work/qa/v6-ui-interactions.mjs": "真实音乐文件选择、歌词跳转持久化及专注与日记选择交互回归",

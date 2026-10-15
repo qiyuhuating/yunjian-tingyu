@@ -234,6 +234,12 @@
     "sha256": "0ad3ab01e133a1b09161058d108695e0d9837c8eaef528363f29231886e2221f"
   },
   {
+    "path": "docs/dead-code-cleanup-2026-10-15.md",
+    "description": "死模块、孤立函数和无效样式的删除依据及前后布局一致性验证；路径：docs/dead-code-cleanup-2026-10-15.md",
+    "bytes": 4395,
+    "sha256": "161d4b0047fade3dd8e8b3969110f974e5886650284f276f47e3632bbd7492cb"
+  },
+  {
     "path": "docs/feature-browser-results.json",
     "description": "17项当前源码页面、录音、多模型、媒体与Android二进制桥接的浏览器结果；路径：docs/feature-browser-results.json",
     "bytes": 1488,
@@ -980,14 +986,14 @@
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
     "description": "TypeScript 业务或构建模块：chatgpt-auth；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/chatgpt-auth.ts",
-    "bytes": 2550,
-    "sha256": "4265a2e7c2dcb3a6f4b7026f762bf5b6e4caec76cc13c0a45987ee9a9f2e42cc"
+    "bytes": 2354,
+    "sha256": "638510d0ffb28ba3c88ddf529e77b64483a2f9e9e727b8bd4fb93e31e0f9bed6"
   },
   {
     "path": "outputs/mori-phone/app/comfort.css",
     "description": "聊天导航、群头像、短消息、触控、图片对话框和横屏布局样式；路径：outputs/mori-phone/app/comfort.css",
-    "bytes": 9906,
-    "sha256": "c77a766bc99826ac9ac0cbba5368b196265aab38a12c857b1d2ffcaabca07550"
+    "bytes": 9829,
+    "sha256": "2a9c1294aa9e0f9442c4fa171962f9e70fa3c3278452c8a4cdd39cca1e0efe19"
   },
   {
     "path": "outputs/mori-phone/app/companion-settings.tsx",
@@ -1004,8 +1010,8 @@
   {
     "path": "outputs/mori-phone/app/craftsmanship.css",
     "description": "v6页面材质与布局精修，保留消息操作和焦点并适配三主题的渐变对比；路径：outputs/mori-phone/app/craftsmanship.css",
-    "bytes": 28020,
-    "sha256": "34373dd9cba51f790191d181f8e8b57ed9a8b499e39529d4f99cd198bacd3f70"
+    "bytes": 27277,
+    "sha256": "265820f74061aa7191c76435b934093547c2665d83f1dd089214f6cbb42cd897"
   },
   {
     "path": "outputs/mori-phone/app/focus-timer.tsx",
@@ -1016,8 +1022,8 @@
   {
     "path": "outputs/mori-phone/app/globals.css",
     "description": "全局字体、布局和浅暗主题样式；路径：outputs/mori-phone/app/globals.css",
-    "bytes": 53830,
-    "sha256": "8e9cfe565efda0bc71fde39debed6e79138902ff17c5d9a24be270c2b7aae9de"
+    "bytes": 51711,
+    "sha256": "0bd841154cfb7dad80334ff83476e2015fccd43f2cf54292e57f263ef9c9d3ba"
   },
   {
     "path": "outputs/mori-phone/app/layout.tsx",
@@ -1094,8 +1100,8 @@
   {
     "path": "outputs/mori-phone/app/polish.css",
     "description": "同时接入网页和Android入口并服从reference-sky最终覆盖的视觉精修层；路径：outputs/mori-phone/app/polish.css",
-    "bytes": 5988,
-    "sha256": "2baac6f53ed6e576f0b82203e95881afd91aef3a309bda3f49bc6e725441fc6d"
+    "bytes": 5975,
+    "sha256": "27d974cfd5227eed631394e6a9a421d283c1f1dfb919e1aae7e2d7408110061f"
   },
   {
     "path": "outputs/mori-phone/app/realtime-call.tsx",
@@ -1118,8 +1124,8 @@
   {
     "path": "outputs/mori-phone/app/refinement.css",
     "description": "精细界面间距、对比度与交互状态样式；路径：outputs/mori-phone/app/refinement.css",
-    "bytes": 31630,
-    "sha256": "dcbcf57bb220a16cd7326f2f5a3eb20acd4d793f109cc57d9187cbfa2ed4cdee"
+    "bytes": 30582,
+    "sha256": "77103739dc71af6ed23a4a2e75fc58a4e060f14830f8c60800e021b6d80e7624"
   },
   {
     "path": "outputs/mori-phone/app/render-recovery.tsx",
@@ -1454,32 +1460,20 @@
   {
     "path": "outputs/mori-phone/lib/connector-context.ts",
     "description": "TypeScript 业务或构建模块：connector-context；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-context.ts",
-    "bytes": 612,
-    "sha256": "bbddff68689cb0f6926fecd4b8b96f12f2054277c296e97b0df07d4ad5ece24e"
+    "bytes": 509,
+    "sha256": "eec562742185ed08bb82310c8598b0a5d8808c45d25a5a5d85df782ca5db8979"
   },
   {
     "path": "outputs/mori-phone/lib/connector-contract.mts",
     "description": "TypeScript 业务或构建模块：connector-contract；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-contract.mts",
-    "bytes": 5362,
-    "sha256": "e1a7b24a8793af34b595690d9b1300c897c7321c14f215cedf58ad95799d7c3e"
-  },
-  {
-    "path": "outputs/mori-phone/lib/connector-errors.mts",
-    "description": "TypeScript 业务或构建模块：connector-errors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-errors.mts",
-    "bytes": 2717,
-    "sha256": "a22edf13d6873ae832c4a2a0d579fc666c73ec996ef0722d39172649d38f0871"
+    "bytes": 1809,
+    "sha256": "bb208a44d012d1027b53614db6706f7f4827828f34c948f389f4cba4eaf15841"
   },
   {
     "path": "outputs/mori-phone/lib/connector-preview.d.ts",
     "description": "TypeScript 业务或构建模块：connector-preview.d；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connector-preview.d.ts",
     "bytes": 433,
     "sha256": "abd69a94f7f61f1359063bb557574faae35e8ff5a028cc4c04b9ee248ef52642"
-  },
-  {
-    "path": "outputs/mori-phone/lib/connectors.ts",
-    "description": "TypeScript 业务或构建模块：connectors；位于 outputs/mori-phone/lib；路径：outputs/mori-phone/lib/connectors.ts",
-    "bytes": 416,
-    "sha256": "1c93d747e384c8e17e3e3dd5361b24412babf5eba2a11d2ae7a75f4e0924112c"
   },
   {
     "path": "outputs/mori-phone/lib/context-window.ts",
@@ -1592,8 +1586,8 @@
   {
     "path": "outputs/mori-phone/lib/phone-model.ts",
     "description": "手机状态契约，加入可选的主题恢复版本以兼容旧备份和升级数据；路径：outputs/mori-phone/lib/phone-model.ts",
-    "bytes": 14371,
-    "sha256": "44bc038455ac7019e27d3fa84dad85f56a5fc2c0f74524ed0fe43a54f22083e6"
+    "bytes": 14269,
+    "sha256": "b342c8d65e332121486ff1addc45fb2b1315c46d172184f491a07616f4a6563d"
   },
   {
     "path": "outputs/mori-phone/lib/provider-adapter.ts",
@@ -2492,8 +2486,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 10134,
-    "sha256": "f179ec185c97b4ee722a6fed07743dc341d772a4831e3becfee860d164bd9cfe"
+    "bytes": 10266,
+    "sha256": "97d916d58c5ab996a4ddf61e866c33ab686038f88c67058bb61b766ad43d297e"
   },
   {
     "path": "scripts/verify-delivery.py",

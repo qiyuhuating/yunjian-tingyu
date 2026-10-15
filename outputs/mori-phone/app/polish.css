@@ -23,7 +23,7 @@ input:not([type=checkbox]):not([type=range]):focus,textarea:focus,select:focus{b
 .panel-title{margin:8px 0 12px}.section-heading{margin:28px 0 12px}
 .eyebrow,.setting-heading .eyebrow{font-size:11px}
 .tiny-tag{border-radius:8px;letter-spacing:.02em}
-.settings-section,.form-card,.memory-card,.journal-card,.social-post,.task-reward{
+.settings-section,.form-card,.memory-card,.journal-card,.task-reward{
   border-color:var(--polish-hairline);border-radius:var(--polish-radius-lg);
   box-shadow:var(--polish-shadow-sm);margin:16px 0
 }
