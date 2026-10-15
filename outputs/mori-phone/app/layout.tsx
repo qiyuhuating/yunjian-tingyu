@@ -5,6 +5,7 @@ import "./comfort.css";
 import "./polish.css";
 import "./settings.css";
 import "./reference-sky.css";
+import "./craftsmanship.css";
 
 export const metadata: Metadata = {
   title: "云朵小手机 · 我们的小小世界",

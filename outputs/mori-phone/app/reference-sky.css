@@ -138,3 +138,110 @@
 .app-button:active,.phone-dock .dock-app:active{transform:scale(.96)}
 .settings-workspace .settings-section>h3{letter-spacing:.04em}
 @media(prefers-reduced-motion:reduce){.app-button,.phone-dock .dock-app{transition:none}.app-button:active,.phone-dock .dock-app:active{transform:none}.composer textarea,.send-button,.settings-destination{transition:none}}
+
+/* 2026-10-14: quiet refinements, not a new skin. Keep all existing type and art. */
+/* A single search boundary, with room for the clear action even at 320px. */
+:is(.contact-search, .settings-search) {
+  gap: 8px;
+  padding-inline: 12px 4px;
+  min-height: 48px;
+  transition: border-color .16s ease;
+}
+:is(.contact-search, .settings-search) > svg { flex-shrink: 0; }
+:is(.contact-search, .settings-search) > input { flex: 1; width: 0; }
+:is(.contact-search, .settings-search) > .icon-button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+.contact-search input::-webkit-search-cancel-button { display: none; }
+.contact-search input:focus-visible { outline: none; }
+:is(.contact-search, .settings-search):focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-color: var(--blue);
+}
+/* The outer focus ring covers text entry, not the separately focusable action. */
+:is(.contact-search, .settings-search) > button:focus-visible { outline-offset: -5px; }
+
+/* Soft row edges and inset hairlines; the entire row remains a touch target. */
+.contact-screen .contact-row {
+  position: relative;
+  gap: 12px;
+  padding-inline: 10px;
+  border-bottom-color: transparent;
+  border-radius: 14px;
+  transition: background-color .16s ease;
+}
+.contact-screen .contact-row::after {
+  content: '';
+  position: absolute;
+  inset: auto 10px -1px 70px;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+.contact-screen .contact-row strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contact-screen .contact-time { flex-shrink: 0; }
+.contact-screen .contact-row:focus-visible { outline-offset: -3px; }
+.contact-screen > .wide { margin-top: 18px; }
+.contact-search-status {
+  margin: 12px 10px;
+  color: var(--muted);
+  font-size: .75rem;
+  line-height: 1.7;
+}
+.contact-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 26px 12px 20px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+.contact-empty-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: var(--blue-dark);
+  background: var(--soft);
+}
+.contact-empty strong { color: var(--ink); }
+.contact-empty p { color: var(--muted); font-size: .8125rem; line-height: 1.8; }
+.contact-empty .text-button { margin-top: 2px; }
+
+/* Inset focus stays visible inside the directory's rounded clipping boundary. */
+.settings-destination:focus-visible { outline-offset: -4px; }
+.settings-destination:first-child { border-start-start-radius: 19px; border-start-end-radius: 19px; }
+.settings-destination:last-child { border-end-start-radius: 19px; border-end-end-radius: 19px; }
+.settings-destination > svg { flex-shrink: 0; }
+.settings-destination small { line-height: 1.65; }
+.settings-connection-summary { transition: border-color .16s ease, box-shadow .16s ease; }
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-screen .contact-row:hover { background: var(--surface); }
+  .settings-connection-summary:hover { border-color: var(--blue); box-shadow: 0 4px 14px #3c52630a; }
+}
+.contact-screen .contact-row:active { background: var(--surface); }
+.settings-destination:active { background: var(--soft); }
+/* Don't leave a selected-looking row under a finger after navigating back. */
+@media (hover: none) {
+  .settings-destination:hover:not(:active) { background: transparent; }
+  :is(.contact-search, .settings-search) > .icon-button:hover:not(:active) { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.contact-search, .settings-search), .contact-screen .contact-row,
+  .settings-connection-summary { transition: none; }
+}
+/* Long companion names must truncate inside the music card, never widen the grid. */
+.home-screen .listen-widget { min-width: 0; }
