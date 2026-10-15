@@ -6,16 +6,17 @@
 
 ## 当前状态
 
-更新于 **2026-10-15**。当前整合源码已采用 v6 UI，并完成死代码清理；源码更新在 `integration/v6-ui-verified-20261015` 分支，尚未合入 main 或发布新 Release。
+更新于 **2026-10-15**。当前整合源码已采用 v6 UI，并完成死代码清理；源码更新在 `integration/v6-ui-verified-20261015` 分支，尚未合入 main；已从该分支源码发布 [0.0.3 正式版](https://github.com/qiyuhuating/yunjian-tingyu/releases/tag/v0.0.3)。
 
 | 对象 | 状态与范围 |
 |---|---|
 | 当前源码 | 草稿兼容整合、可靠性修复、v6 UI 与死代码清理已完成；最近产品代码提交为 `5827cbe` |
-| 本地签名候选 APK | 2026-10-14 构建，版本 0.0.3.2 / versionCode 14，独立包名 `chat.cloudlet.phone.v002`；**不包含后续 v6 UI 和死代码清理** |
+| 0.0.3 正式 APK | 2026-10-15 构建，versionCode 15，包名 `chat.cloudlet.phone.v002`；包含 v6 UI 与死代码清理，沿用原独立版签名 |
+| 历史本地签名候选 APK | 2026-10-14 构建，版本 0.0.3.2 / versionCode 14，独立包名 `chat.cloudlet.phone.v002`；**不包含后续 v6 UI 和死代码清理** |
 | 仓库历史 APK | 下方 0.0.1 下载及随包页面为历史交付，不代表当前源码 |
 | 源码版本模板 | package.json 与 AndroidManifest 保留 0.0.2 / code 8；正式候选在暂存目录设置新版本，不能据模板判断已交付 APK 版本 |
 
-现有安装不会自动获得新界面。要使用最新源码效果，需要重新构建、签名和安装，并单独验收覆盖升级。
+现有安装不会自动获得新界面。请从下方 Release 下载并安装 0.0.3；安装前导出完整备份。本包尚未完成实际覆盖升级验收。
 
 ## 当前功能
 
@@ -44,11 +45,15 @@ v6 页面精修已整合，统一材质、间距、聊天输入区与按钮细�
 - 音乐文件选择、歌词跳转和持久化、专注与日记选择等 6 项交互检查通过。
 - 清理前后 48 组页面的计算样式、几何、图标数量及可见插画解码结果一致。严格截图像素对比存在少量差异，同一未修改页面重复绘制也有差异，因此不宣称截图像素全等。
 
-这些结果来自本地锁定依赖、Chromium 与合成数据。未调用真实付费 API，未验收本次新源码的物理设备表现，也未为 v6 UI / 清理后的源码重新打包 APK。
+这些结果来自本地锁定依赖、Chromium 与合成数据。未调用真实付费 API，未验收本次新源码的物理设备表现，已将 v6 UI / 清理后的源码打包为 0.0.3，并在最终入包页面上重跑上述 UI 和交互检查；实际覆盖安装仍待独立验收。
 
 详细依据：[UI 验收与合并](docs/v6-ui-validation-2026-10-15.md) · [死代码清理记录](docs/dead-code-cleanup-2026-10-15.md) · [草稿逐项审核与整合](docs/2026-10-14-draft-integration-review.md)。
 
 ## 下载与安装
+
+**[下载 0.0.3 正式版 APK](https://github.com/qiyuhuating/yunjian-tingyu/releases/download/v0.0.3/yunjian-tingyu-0.0.3.apk)** · [Release 与校验附件](https://github.com/qiyuhuating/yunjian-tingyu/releases/tag/v0.0.3)
+
+版本 0.0.3 / versionCode 15，10,572,220 字节。SHA256：`79086f7d6bdf244e97f06b47d0caa1fa2db888ce845e54d46bc416f5221ead7a`。从源码 `92fc65d` 构建；签名 v2/v3、包身份、对齐、CRC、DEX 与 35 项入包资源字节核对通过，未完成实际覆盖安装或真机验收。
 
 [历史 0.0.1 系统隔离 APK](outputs/云笺听雨-0.0.1-系统隔离版.apk) · [历史安装说明](outputs/APK安装说明.md) · [历史签名与完整性报告](outputs/云笺听雨系统隔离签名与完整性报告.md)
 
@@ -128,7 +133,7 @@ python scripts/verify-delivery.py
 完整步骤见 [独立构建工作流](docs/yunjian-build-workflow.md)，其中包括 ASCII 暂存、版本设置、签名、资源裁剪、包身份检查和升级验收。使用该文档中的示例时，替换本机路径、未来版本和实际产物摘要。
 
 1. 准备完整 JDK、Android platform 35 / Build Tools 35.0.0、经摘要校验的 Apktool 3.0.3，以及既有独立版签名材料。Windows 使用 ASCII 构建与 SDK 路径，避免 aapt2 中文路径问题。
-2. 从最终源码生成新鲜 Vite 构建，将原生工程复制到本任务独立暂存目录。新发布的 versionCode 必须大于所有已交付候选；不要直接复用历史示例 code 14。
+2. 从最终源码生成新鲜 Vite 构建，将原生工程复制到本任务独立暂存目录。新发布的 versionCode 必须大于所有已交付候选；当前正式版为 code 15，不要直接复用历史示例 code 14 或已发布的 code 15。
 3. 在暂存目录调用 `build-apk.py`，显式传入新鲜网页目录、公共资源目录、SDK/JDK、签名和 Apktool。独立版使用 `--independent`，包名为 `chat.cloudlet.phone.v002`。
 4. 核对 APK 签名证书与旧独立版一致，检查包名、版本、zipalign、资源摘要和裁剪后页面。无原签名时可用 `--unsigned` 做结构验证，不能作为可安装更新交付。
 5. 在可丢弃模拟器中用合成数据进行覆盖安装、数据保留与离线冷启动验收。不得清空旧数据后将全新安装说成升级通过。
