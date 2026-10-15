@@ -10,6 +10,10 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "outputs/mori-phone/app/craftsmanship.css": "v6页面材质与布局精修，保留消息操作和焦点并适配三主题的渐变对比",
+    "work/qa/v6-ui.mjs": "144个生产页面状态的布局、三主题、真实搜索焦点、渐变对比和减少动态效果回归",
+    "work/qa/v6-ui-interactions.mjs": "真实音乐文件选择、歌词跳转持久化及专注与日记选择交互回归",
+    "docs/v6-ui-validation-2026-10-15.md": "用户v6源码包的视觉效果判断、三处退化修复和本地合并验收范围",
     "docs/2026-10-14-draft-integration-review.md": "全部开放草稿与开发分支逐项审核、兼容整合取舍、本次回归和签名候选边界",
     "docs/README-AI-experience.md": "本次AI调用思路、关键取舍、实际问题解决及可复用经验",
     "docs/yunjian-build-workflow.md": "适用于本项目的独立APK标准构建流程、工具链、签名和升级验收使用方法",

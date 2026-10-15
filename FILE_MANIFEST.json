@@ -32,20 +32,20 @@
   {
     "path": ".github/workflows/verify.yml",
     "description": "自动执行源码与签名交付门槛，并新增晴空蓝视觉及升级持久化回归；路径：.github/workflows/verify.yml",
-    "bytes": 5178,
-    "sha256": "e058d6e7927a7ea66796160451179bdef3fcc290fbf9ab6f63e7e7796e17295f"
+    "bytes": 5257,
+    "sha256": "58173f11bfc2b5226295bec90b6fd3c63eb701e332e2503e0a43a83c07abba2d"
   },
   {
     "path": ".gitignore",
     "description": "排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore",
-    "bytes": 630,
-    "sha256": "7b2450b42ce43f6fdfd7d284b8adc69641bec549c8129f3c399a54b17311d17d"
+    "bytes": 652,
+    "sha256": "6b98ce7eeef3df696c1a4616347e212125e878a32ef4a8c4eb9b25565128bdd5"
   },
   {
     "path": "README.md",
     "description": "项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md",
-    "bytes": 11366,
-    "sha256": "0e7a838629c005cd91c3ff75210fcfc40c1ef0188522ea778005b80288439506"
+    "bytes": 11599,
+    "sha256": "56e3909ce0dac5cfa5726b1b914890248c7861a2f5a512d53065766e50e19196"
   },
   {
     "path": "docs/0.0.1.md",
@@ -400,6 +400,12 @@
     "description": "本次 UI 合并的主题、布局、交互和附件恢复浏览器验证结果；路径：docs/ui-selective-merge-results.json",
     "bytes": 4842,
     "sha256": "4dcc3f4a3cb65d7dd090be0bde373acefcb49ea8a0d37d8a94ed267c6af08bdd"
+  },
+  {
+    "path": "docs/v6-ui-validation-2026-10-15.md",
+    "description": "用户v6源码包的视觉效果判断、三处退化修复和本地合并验收范围；路径：docs/v6-ui-validation-2026-10-15.md",
+    "bytes": 11699,
+    "sha256": "0296b58197565863ed8bc63a73d86df7f7bf8de7eb41496299c818502491c314"
   },
   {
     "path": "docs/yunjian-build-workflow.md",
@@ -860,8 +866,8 @@
   {
     "path": "outputs/mori-phone/android-web/main.tsx",
     "description": "Android 网页入口，最后加载晴空蓝参考主题以固定样式覆盖顺序；路径：outputs/mori-phone/android-web/main.tsx",
-    "bytes": 546,
-    "sha256": "1de29f9ed4f1a4aae7576111ac4235b50f4e4a523b0945833a5d9a8d1ef3c97b"
+    "bytes": 580,
+    "sha256": "2acf5299fb0bfef2bf418feb7fa76a4109bc50d6e05fcc086b8176ceb96febdb"
   },
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
@@ -962,14 +968,14 @@
   {
     "path": "outputs/mori-phone/app/characters.tsx",
     "description": "聊天角色编辑、角色卡原始档案、AI分类、默认归档卡库及独立复用/定向更新预览；路径：outputs/mori-phone/app/characters.tsx",
-    "bytes": 14174,
-    "sha256": "84b6f873eee6e5b83367fcf2318b2d94b2014a20eeced352c0f899ee7ea10dec"
+    "bytes": 14192,
+    "sha256": "14829d3fb6ec3b85492cd9b5f14acc4560ec417a6d47e7fcb60c89bcb67e2286"
   },
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 39966,
-    "sha256": "ed5254edaacf066b967f35e49555dbbefbf6df946c2b58241ac5014bcd40990c"
+    "bytes": 41113,
+    "sha256": "d8d993c4bdad84bb4e205dd93ec90afd6d7c56f91038ca051423399a18a5e66d"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -996,10 +1002,16 @@
     "sha256": "c52fbdd2880c7c641aa82a2904f32a0c891ff690a03c3f2f43e2f03741c6d0db"
   },
   {
+    "path": "outputs/mori-phone/app/craftsmanship.css",
+    "description": "v6页面材质与布局精修，保留消息操作和焦点并适配三主题的渐变对比；路径：outputs/mori-phone/app/craftsmanship.css",
+    "bytes": 28020,
+    "sha256": "34373dd9cba51f790191d181f8e8b57ed9a8b499e39529d4f99cd198bacd3f70"
+  },
+  {
     "path": "outputs/mori-phone/app/focus-timer.tsx",
     "description": "React 界面模块：focus-timer；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/focus-timer.tsx",
-    "bytes": 2709,
-    "sha256": "673e7e61959a2eb358b98f09adf3012a65ef1ffcd5f731c99e4cd40b38e26cb7"
+    "bytes": 2739,
+    "sha256": "12ff21d6fa24554fc70aa7d593758f0a8867baf5d97e34412bede2e779ccf7d7"
   },
   {
     "path": "outputs/mori-phone/app/globals.css",
@@ -1010,8 +1022,8 @@
   {
     "path": "outputs/mori-phone/app/layout.tsx",
     "description": "网页文档与主题入口，晴空蓝参考层在共享样式之后加载；路径：outputs/mori-phone/app/layout.tsx",
-    "bytes": 841,
-    "sha256": "e3e97cdbf741ab273c534dbe3576ee4e4e4751304351383cf499792238703a8f"
+    "bytes": 871,
+    "sha256": "ced67ae2a4164924ae142a9f7a5518920ae0f2b7697cbc98af587daf69e80ea1"
   },
   {
     "path": "outputs/mori-phone/app/local-media.tsx",
@@ -1046,14 +1058,14 @@
   {
     "path": "outputs/mori-phone/app/modules.tsx",
     "description": "React 界面模块：modules；位于 outputs/mori-phone/app；路径：outputs/mori-phone/app/modules.tsx",
-    "bytes": 25474,
-    "sha256": "25176521f7b7b8d6eab212f2136e1e7a4105706ce248675e7a262c9036603300"
+    "bytes": 25754,
+    "sha256": "f0f6f4e412f698e55992396239f248327cae63a3c32de27fe84d4e879e199087"
   },
   {
     "path": "outputs/mori-phone/app/music.tsx",
     "description": "一起听、本地音乐、歌词及外部音乐链接；路径：outputs/mori-phone/app/music.tsx",
-    "bytes": 5235,
-    "sha256": "4e35f53d78a3e5a9f535ddb4e59f70242a7e648825a292d1dac546e83785921e"
+    "bytes": 5503,
+    "sha256": "be7b1bd65cda923a0e7ca6ffcf03f4915e5a2ad3e5ad9cfe3e421c9444913a15"
   },
   {
     "path": "outputs/mori-phone/app/page.tsx",
@@ -1076,8 +1088,8 @@
   {
     "path": "outputs/mori-phone/app/phone.tsx",
     "description": "设备提交、模型连接与聊天任务宿主，按UTF-8字节保护大型编辑草稿并拒绝超长输入；路径：outputs/mori-phone/app/phone.tsx",
-    "bytes": 28898,
-    "sha256": "143db6b28b73a728bc7f438d7920b69a6d2b7c5d0405bae03b1e9880a2abce88"
+    "bytes": 28913,
+    "sha256": "0513ba0c0906b180ca938eff1bf59576578ec0c2bd5ebfabca531973828db6d8"
   },
   {
     "path": "outputs/mori-phone/app/polish.css",
@@ -1100,8 +1112,8 @@
   {
     "path": "outputs/mori-phone/app/reference-sky.css",
     "description": "按历史源码和截图恢复晴空蓝配色，并确保小屏及横屏首页入口可见；路径：outputs/mori-phone/app/reference-sky.css",
-    "bytes": 9618,
-    "sha256": "0a757075d75bf23f58e9f14aaf54ec9713219911a12363030782064a3bcb4032"
+    "bytes": 13508,
+    "sha256": "41f11570f74eb788a36938621ad8bc56e07128fa69cf70611570dc820a28914c"
   },
   {
     "path": "outputs/mori-phone/app/refinement.css",
@@ -1136,8 +1148,8 @@
   {
     "path": "outputs/mori-phone/app/settings.tsx",
     "description": "全局默认 AI 连接设置与明确的全局连接测试，不受角色专用模型覆盖；路径：outputs/mori-phone/app/settings.tsx",
-    "bytes": 13765,
-    "sha256": "ed586e6598170845594ec04c19ea87e20bd1a4dcfb71fa9f73ed684cfbd7dcd5"
+    "bytes": 13948,
+    "sha256": "da5a799e9ac2c87811cfdc03be3c0e1dd737d350801de91d76d37f74ef0f8488"
   },
   {
     "path": "outputs/mori-phone/app/system-prompt-editor.tsx",
@@ -2480,8 +2492,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 9594,
-    "sha256": "5dcfe44965050d83c40c8f6b03a7287b060603000f6ffd2bd878ab36e9ce3170"
+    "bytes": 10134,
+    "sha256": "f179ec185c97b4ee722a6fed07743dc341d772a4831e3becfee860d164bd9cfe"
   },
   {
     "path": "scripts/verify-delivery.py",
@@ -2884,6 +2896,18 @@
     "description": "历史测试维护脚本：update-theme；记录当时测试代码的调整；路径：work/qa/update-theme.py",
     "bytes": 294,
     "sha256": "bfd867937d3f02bae74ba229930fb71ef5586237c5c6aa81096317d91ac99a91"
+  },
+  {
+    "path": "work/qa/v6-ui-interactions.mjs",
+    "description": "真实音乐文件选择、歌词跳转持久化及专注与日记选择交互回归；路径：work/qa/v6-ui-interactions.mjs",
+    "bytes": 5019,
+    "sha256": "f711a0903f81445a20398a14ae2a851488ccc5ca7b1f8043eea02f91d7552a23"
+  },
+  {
+    "path": "work/qa/v6-ui.mjs",
+    "description": "144个生产页面状态的布局、三主题、真实搜索焦点、渐变对比和减少动态效果回归；路径：work/qa/v6-ui.mjs",
+    "bytes": 12068,
+    "sha256": "5c5f969db97c64482d097df76dec8920967e43f38cfd3723f7389d10e84b9852"
   },
   {
     "path": "work/qa/visual-cleanup.mjs",

@@ -1,5 +1,7 @@
 # 云笺听雨 · 0.0.2
 
+2026-10-15 本地前端UI验收合并：采用v6页面精修，修正三处可用性退化；见[验收与合并](docs/v6-ui-validation-2026-10-15.md)。本次仅源码与预览更新，既有签名APK未更新，未推送GitHub。
+
 本地整合候选（2026-10-14）：基于main32bd064，选择性纳入未合并草稿，已构建0.0.3.2/code14原证书独立APK。逐项结论见[本次审核](docs/2026-10-14-draft-integration-review.md)，[AI调用经验](docs/README-AI-experience.md)，[独立构建工作流](docs/yunjian-build-workflow.md)。本轮未推送/发布，未完成新APK实际覆盖升级；下文和仓库历史APK保留原版本含义。
 
 2026-10-13 本地 UI 合并：采用新稿的浅色气泡、单层搜索框和布局细节，保留暗夜/玫瑰主题配色及手机消息菜单可见性。见 [选择合入与验证](docs/ui-selective-merge-2026-10-13.md)。
