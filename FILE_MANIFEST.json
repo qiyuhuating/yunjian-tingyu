@@ -32,8 +32,8 @@
   {
     "path": ".github/workflows/verify.yml",
     "description": "自动执行源码与签名交付门槛，并新增晴空蓝视觉及升级持久化回归；路径：.github/workflows/verify.yml",
-    "bytes": 5257,
-    "sha256": "58173f11bfc2b5226295bec90b6fd3c63eb701e332e2503e0a43a83c07abba2d"
+    "bytes": 5393,
+    "sha256": "3ad0dc11d754d32aa505f0196e740bc314603ad30ed3fa517f1a6e2b5151fb81"
   },
   {
     "path": ".gitignore",
@@ -44,8 +44,8 @@
   {
     "path": "README.md",
     "description": "项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md",
-    "bytes": 13112,
-    "sha256": "ae6cf8e67d6daed028efa77491205c4eddc790c102ec1ecbe482f14797a93f6a"
+    "bytes": 13981,
+    "sha256": "b7e155866d05e97936585b0106f822a5f6c1cf659838e3baf5c41c79f8443d8d"
   },
   {
     "path": "docs/0.0.1.md",
@@ -196,6 +196,12 @@
     "description": "本轮本地自动化验收的结构化结果；路径：docs/api-settings-2026-10-09/storage-regression-results.json",
     "bytes": 1095,
     "sha256": "870b2ba78f5a2f951ddfa090118687b131cebd11f2f5e8b50a1005f049089d81"
+  },
+  {
+    "path": "docs/apk-review-hardening-2026-10-15.md",
+    "description": "0.0.3 APK 代码评审修复清单、有意保留项、行为变化与验证边界；路径：docs/apk-review-hardening-2026-10-15.md",
+    "bytes": 8514,
+    "sha256": "b60f89bb4df174097e07b988e899c60bfcb24a1763f43dae5376f09ec349b891"
   },
   {
     "path": "docs/apk-trim-2026-10-14.md",
@@ -764,8 +770,8 @@
   {
     "path": "outputs/android/merge-via.py",
     "description": "保留Via资源ID，合并清单/资产/双DEX，迁移共享authority并校验DEX顺序；路径：outputs/android/merge-via.py",
-    "bytes": 6657,
-    "sha256": "1953f1aa2ef43e7dd33bab9df317dc758ee06d02768b76d05ecb0641c8aff20e"
+    "bytes": 6793,
+    "sha256": "88888baf3bca2ac42e5cf06a1c3a427e10d77c0fcb076898e25e88245cfa898d"
   },
   {
     "path": "outputs/android/res/drawable/cloud_pet.webp",
@@ -792,22 +798,40 @@
     "sha256": "466bf045a7ed8fde4f007a11031ebc33e026e5a8ecdcc2648fcd77f1fd63c2a2"
   },
   {
+    "path": "outputs/android/runtime/browser-agent-dom.js",
+    "description": "Via网页只读快照与固定DOM操作，不向外部网页注入原生桥接；路径：outputs/android/runtime/browser-agent-dom.js",
+    "bytes": 3634,
+    "sha256": "eaf1649de92d0627963ba9b04c07a9c78acf969104c9f9e37526b5cb69bbe377"
+  },
+  {
+    "path": "outputs/android/src/chat/cloudlet/phone/BrowserAgent.java",
+    "description": "会话隔离的Via控制、原生操作确认、系统下载与真实状态回执；路径：outputs/android/src/chat/cloudlet/phone/BrowserAgent.java",
+    "bytes": 12400,
+    "sha256": "8ab1e936739347b5ee3901319fb711c853556217dbe0eb3b1ada0cfb42cf3e85"
+  },
+  {
     "path": "outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java",
     "description": "内置Via字体、独立返回位置、状态栏/系统导航隐藏与生命周期接入；路径：outputs/android/src/chat/cloudlet/phone/BrowserIntegration.java",
-    "bytes": 4488,
-    "sha256": "a20584a4204be5469417b070e96a1223011d87d52e3b12765540f33e8f854200"
+    "bytes": 4560,
+    "sha256": "e546db5caf1712138c458a694b973d982e6ad6fe65826717fdd09ed9a09a07de"
   },
   {
     "path": "outputs/android/src/chat/cloudlet/phone/MainActivity.java",
     "description": "保留受信来源和网络边界的 Android 文件/权限/语音桥接，增加二进制 multipart 请求；路径：outputs/android/src/chat/cloudlet/phone/MainActivity.java",
-    "bytes": 28087,
-    "sha256": "53d1c294fbe5c2fa107f562965cb0c521976a6effbb2f91b84892059db98ad48"
+    "bytes": 29734,
+    "sha256": "4d1c20f93110c983e0d9e19f925704c823ac387f78254c9eae4e6c4769aa5b75"
+  },
+  {
+    "path": "outputs/android/src/chat/cloudlet/phone/SpeechChunker.java",
+    "description": "设备朗读的超长文本按句分段，避开系统输入长度上限；路径：outputs/android/src/chat/cloudlet/phone/SpeechChunker.java",
+    "bytes": 1342,
+    "sha256": "f7bc5fe163b09853430529541ae91da0efc1c52104da33dd3f9f446d0d4129f1"
   },
   {
     "path": "outputs/android/stage-assets.py",
     "description": "按新鲜 Vite 资源图暂存 Android 页面与动态模块，排除未引用和测试文件；路径：outputs/android/stage-assets.py",
-    "bytes": 3830,
-    "sha256": "446aa68f58d4d062992e89529a4556b86ee81e2a161651f0eba799e2e0e0eeb7"
+    "bytes": 4187,
+    "sha256": "814e2c0f683fe2e6a52f4eac9dba7f48ed65d04148bb7734b40c5257ba0741a1"
   },
   {
     "path": "outputs/android/vendor/via-release-cn.apk",
@@ -878,8 +902,8 @@
   {
     "path": "outputs/mori-phone/android-web/runtime.ts",
     "description": "APK 内原生网络、导出与朗读的前端桥接；路径：outputs/mori-phone/android-web/runtime.ts",
-    "bytes": 10418,
-    "sha256": "7e3a5e8ac433ae79b98452aa5d0f0df8fc20ac41c1a14192b660dc8d7ea07ce7"
+    "bytes": 10558,
+    "sha256": "6bf5fa550709af0651beb2f533ff5394e15b6f6fb5d38b20c1a832b7f94cff64"
   },
   {
     "path": "outputs/mori-phone/android-web/vite.config.ts",
@@ -954,6 +978,12 @@
     "sha256": "97b05caa441d0c1248f02e4429b94c79dc60ea6fa92663cee1aeac6f91350a30"
   },
   {
+    "path": "outputs/mori-phone/app/browser-agent-panel.tsx",
+    "description": "聊天中的浏览器Agent任务入口、取消和操作记录；路径：outputs/mori-phone/app/browser-agent-panel.tsx",
+    "bytes": 2590,
+    "sha256": "4141a360063693a1f0cbc77a9cdfc83f1489d34e1c132a2107f153870d7b24d0"
+  },
+  {
     "path": "outputs/mori-phone/app/card-analysis-preview.tsx",
     "bytes": 2809,
     "sha256": "cca0c8d234c48a8896f23e225f9b2046c940948e404d7dde0cd3301882877cbc",
@@ -980,8 +1010,8 @@
   {
     "path": "outputs/mori-phone/app/chat.tsx",
     "description": "聊天与群聊发送、原生媒体收发及附件跟进；允许角色级模型独立连接；路径：outputs/mori-phone/app/chat.tsx",
-    "bytes": 41113,
-    "sha256": "d8d993c4bdad84bb4e205dd93ec90afd6d7c56f91038ca051423399a18a5e66d"
+    "bytes": 41413,
+    "sha256": "5c568c19555176b7938c6bc4ad9382ef8cdb0019853e083f5eb048f72b9176ae"
   },
   {
     "path": "outputs/mori-phone/app/chatgpt-auth.ts",
@@ -1402,6 +1432,12 @@
     "description": "限制每次压缩输入的共用解码器和ZIP文件头/尾目录完整性校验；路径：outputs/mori-phone/lib/bounded-zip.ts",
     "bytes": 1456,
     "sha256": "d0a5758810d4fa5a6066ec6c62d5d30a4700e063f6310647fcdd648d48b4c5be"
+  },
+  {
+    "path": "outputs/mori-phone/lib/browser-agent.ts",
+    "description": "有界浏览器任务循环、参数校验、原生回执和取消保护；路径：outputs/mori-phone/lib/browser-agent.ts",
+    "bytes": 6317,
+    "sha256": "daeb1b69ddd1a05dfe7d314970debb954a5cc05ac048e5bf6ae912de0e961747"
   },
   {
     "path": "outputs/mori-phone/lib/card-analysis.ts",
@@ -2486,8 +2522,8 @@
   {
     "path": "scripts/sync-file-inventory.py",
     "description": "自动维护 FILES.md 与 SHA256 严格源文件清单；路径：scripts/sync-file-inventory.py",
-    "bytes": 10266,
-    "sha256": "97d916d58c5ab996a4ddf61e866c33ab686038f88c67058bb61b766ad43d297e"
+    "bytes": 11426,
+    "sha256": "abc7c50a8fd1a75a0444af50a7f1789c635f42fb9b769266dd811d26eeccd9e3"
   },
   {
     "path": "scripts/verify-delivery.py",
@@ -2532,10 +2568,22 @@
     "sha256": "2a88709418251d8ca764d79a2897cb4ccd34ce267776fa220972346e41ba3e61"
   },
   {
+    "path": "work/qa/android-browser-agent.mjs",
+    "description": "仅可丢弃调试模拟器的真实Via读取点击填表下载及桥接隔离验收；路径：work/qa/android-browser-agent.mjs",
+    "bytes": 11079,
+    "sha256": "ef99fc115d9384291fe6280b82a501f0e3e7008b220cb3015f7f68b519915304"
+  },
+  {
     "path": "work/qa/android-diagnose.mjs",
     "description": "历史专项浏览器检查或开发工具：android-diagnose；使用时核对对应版本、路径和端口；路径：work/qa/android-diagnose.mjs",
     "bytes": 467,
     "sha256": "46eda04b3d69a6108af0cc3f3d29fff6fe069fb20ca65b15eb2db4d042f48f47"
+  },
+  {
+    "path": "work/qa/android-speech.py",
+    "description": "直接编译运行Java语音分段器的长度、原文和Unicode边界回归；路径：work/qa/android-speech.py",
+    "bytes": 2215,
+    "sha256": "e42178d5559fea1ee3e197c4d767bd8df01f85b6650764e87b538ca5106d9ecb"
   },
   {
     "path": "work/qa/android-upgrade-smoke.py",
@@ -2560,6 +2608,12 @@
     "description": "七组真实回归：50MiB ZIP往返、桥接取消、排队导航、菜单返回、渲染恢复及图片重试；路径：work/qa/audit-regressions.mjs",
     "bytes": 11085,
     "sha256": "398836316bdea0b87648b161475f7fbefb0bc7de1386ddb0267e3858185996c3"
+  },
+  {
+    "path": "work/qa/browser-agent.mjs",
+    "description": "真实DOM填表点击、过期控件拒绝、请求上限及下载回执回归；路径：work/qa/browser-agent.mjs",
+    "bytes": 7293,
+    "sha256": "047f23a2f4ecb63b3dd7cb6cdfc7308f0e93beb7e8f40e27c4b601a63c128cba"
   },
   {
     "path": "work/qa/card-library.mjs",
@@ -2930,8 +2984,8 @@
   {
     "path": "work/verify-apk-assets.py",
     "description": "验证 APK 资源白名单、动态模块与测试文件排除；路径：work/verify-apk-assets.py",
-    "bytes": 2871,
-    "sha256": "3c747e329b320425a2d433b52c8cf137cd3ee7910a89349535a669cbadb1debe"
+    "bytes": 3052,
+    "sha256": "2646da87fb393f5c1e2648c320e184277df640e671a67f6a7d7bf258fc14cb1f"
   },
   {
     "path": "work/verify-core-apk.py",

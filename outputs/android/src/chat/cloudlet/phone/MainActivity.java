@@ -19,15 +19,18 @@ import java.util.concurrent.*;
 public final class MainActivity extends Activity {
     private static final String HOST="appassets.androidplatform.net";
     private WebView web;
+    private final BrowserAgent browserAgent=new BrowserAgent(this);
     private ValueCallback<Uri[]> picker;
     private PermissionRequest mediaPermission;
-    private final ExecutorService workers=Executors.newFixedThreadPool(4);
+    private static final String PART="\u0001p";
+    private final ExecutorService workers=Executors.newFixedThreadPool(2);
+    private final ExecutorService netWorkers=Executors.newFixedThreadPool(8);
     private final ConcurrentHashMap<String,HttpsJob> jobs=new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String,File> downloads=new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String,String[]> downloadInfo=new ConcurrentHashMap<>();
     private final ArrayDeque<String> readyExports=new ArrayDeque<>();
     private File exportFile; private String exportId; private boolean recoveringPicker;
-    private TextToSpeech tts; private volatile boolean ttsReady;
+    private TextToSpeech tts; private volatile boolean ttsReady; private String speechId;
     private static final class HttpsJob { volatile boolean cancelled; volatile HttpURLConnection connection; }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -73,7 +76,7 @@ public final class MainActivity extends Activity {
                 try{startActivityForResult(intent,100);}catch(ActivityNotFoundException e){picker.onReceiveValue(null);picker=null;notice("未找到系统文件选择器。");}return true;
             }
             @Override public void onPermissionRequest(PermissionRequest request){runOnUiThread(()->{
-                if(!trustedOrigin(request.getOrigin())){request.deny();return;}mediaPermission=request;
+                if(!trustedOrigin(request.getOrigin())){request.deny();return;}if(mediaPermission!=null&&mediaPermission!=request)mediaPermission.deny();mediaPermission=request;
                 List<String> missing=new ArrayList<>();for(String resource:request.getResources()){
                     String permission=PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(resource)?Manifest.permission.RECORD_AUDIO:PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(resource)?Manifest.permission.CAMERA:null;
                     if(permission==null){request.deny();mediaPermission=null;return;}
@@ -84,7 +87,7 @@ public final class MainActivity extends Activity {
             @Override public void onPermissionRequestCanceled(PermissionRequest request){if(mediaPermission==request)mediaPermission=null;}
         });
         tts=new TextToSpeech(this,status->{ttsReady=status==TextToSpeech.SUCCESS;if(ttsReady)tts.setLanguage(Locale.SIMPLIFIED_CHINESE);});
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){public void onStart(String id){}public void onDone(String id){speechEnd(id,false);}public void onError(String id){notice("设备朗读失败，请安装中文语音或改用云端TTS。");speechEnd(id,true);}});
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){public void onStart(String id){}public void onDone(String id){if(id!=null&&id.contains(PART))return;runOnUiThread(()->{if(id!=null&&id.equals(speechId)){speechId=null;speechEnd(id,false);}});}public void onError(String id){String base=id!=null&&id.contains(PART)?id.substring(0,id.indexOf(PART)):id;runOnUiThread(()->{if(base==null||!base.equals(speechId))return;speechId=null;if(tts!=null)tts.stop();notice("设备朗读失败，请安装中文语音或改用云端TTS。");speechEnd(base,true);});}});
         recoveringPicker=state!=null&&state.getBoolean("picker-pending");recoverExport();cleanOldDownloads();web.loadUrl("https://"+HOST+"/");
         if(state==null&&exportFile!=null)showExportRecovery();
     }
@@ -140,13 +143,17 @@ public final class MainActivity extends Activity {
         if(bytes.length==4)return first!=0&&first<224&&!(first==100&&second>=64&&second<=127)&&!(first==198&&(second==18||second==19));
         return bytes.length==16&&(first&0xe0)==0x20&&!(first==0x20&&second==0x01&&(bytes[2]&255)==0x0d&&(bytes[3]&255)==0xb8);
     }
+    void browserResult(String id,String result){js("window.NativeBrowserResult&&window.NativeBrowserResult("+JSONObject.quote(id)+","+result+")");}
     private final class Bridge {
+        @JavascriptInterface public String beginBrowserSession(){return browserAgent.begin();}
+        @JavascriptInterface public void browserCommand(String token,String id,String operation){browserAgent.command(token,id,operation);}
+        @JavascriptInterface public void endBrowserSession(String token){browserAgent.end(token);}
         @JavascriptInterface public void request(String id,String target,String method,String headerJSON,String body){
             requestBody(id,target,method,headerJSON,body,false);
         }
         @JavascriptInterface public void requestBase64(String id,String target,String method,String headerJSON,String body){requestBody(id,target,method,headerJSON,body,true);}
         private void requestBody(String id,String target,String method,String headerJSON,String body,boolean encoded){
-            HttpsJob job=new HttpsJob();jobs.put(id,job);workers.execute(()->{try{
+            HttpsJob job=new HttpsJob();jobs.put(id,job);netWorkers.execute(()->{try{
                 URL url=new URL(target);if(!allowed(url))throw new IOException();
                 HttpURLConnection connection=(HttpURLConnection)url.openConnection();job.connection=connection;
                 if(job.cancelled)return;connection.setInstanceFollowRedirects(false);connection.setConnectTimeout(30000);connection.setReadTimeout(300000);connection.setRequestMethod(method);
@@ -164,8 +171,14 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public void openUrl(String url){openExternal(url);}
         @JavascriptInterface public void openBrowser(String value){runOnUiThread(()->{try{Intent browser=new Intent();browser.setClassName(getPackageName(),"mark.via.Shell");if(!value.isEmpty()){Uri uri=Uri.parse(value);if(!Arrays.asList("https","http").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null)throw new IllegalArgumentException();browser.setAction(Intent.ACTION_VIEW);browser.setData(uri);}startActivity(browser);}catch(Exception e){notice("内置 Via 未能打开，请重新安装完整 APK。");}});}
         @JavascriptInterface public void copyText(String text){runOnUiThread(()->((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("云笺听雨",text)));}
-        @JavascriptInterface public void speak(String text,float rate,String id){runOnUiThread(()->{if(!ttsReady){notice("设备语音尚未就绪，请稍后再试。");speechEnd(id,true);return;}int result=tts.setLanguage(Locale.SIMPLIFIED_CHINESE);if(result<0){notice("设备缺少中文语音，请安装中文音色或选择云端TTS。");speechEnd(id,true);return;}tts.setSpeechRate(rate);if(tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,id)==TextToSpeech.ERROR)speechEnd(id,true);});}
-        @JavascriptInterface public void stopSpeech(){runOnUiThread(()->{if(tts!=null)tts.stop();});}
+        @JavascriptInterface public void speak(String text,float rate,String id){runOnUiThread(()->{if(!ttsReady){notice("设备语音尚未就绪，请稍后再试。");speechEnd(id,true);return;}int result=tts.setLanguage(Locale.SIMPLIFIED_CHINESE);if(result<0){notice("设备缺少中文语音，请安装中文音色或选择云端TTS。");speechEnd(id,true);return;}tts.setSpeechRate(rate);speechId=id;
+            // Android rejects text longer than getMaxSpeechInputLength(); speak long replies in sentence-sized parts.
+            List<String> parts=SpeechChunker.split(text,Math.max(500,Math.min(3900,TextToSpeech.getMaxSpeechInputLength()-100)));
+            if(parts.isEmpty()){speechEnd(id,false);return;}
+            for(int i=0;i<parts.size();i++){String utterance=i==parts.size()-1?id:id+PART+i;
+                if(tts.speak(parts.get(i),i==0?TextToSpeech.QUEUE_FLUSH:TextToSpeech.QUEUE_ADD,null,utterance)==TextToSpeech.ERROR){speechId=null;tts.stop();speechEnd(id,true);return;}}
+        });}
+        @JavascriptInterface public void stopSpeech(){runOnUiThread(()->{speechId=null;if(tts!=null)tts.stop();});}
         @JavascriptInterface public boolean startDownload(String id,String name,String mime){if(downloads.size()>=32||downloads.containsKey(id))return false;try{File file=File.createTempFile("cloudlet-",".download",getCacheDir());downloads.put(id,file);downloadInfo.put(id,new String[]{name,mime});return true;}catch(IOException e){notice("附件导出空间不足。");return false;}}
         @JavascriptInterface public boolean downloadChunk(String id,String chunk){File file=downloads.get(id);if(file==null)return false;try(OutputStream out=new FileOutputStream(file,true)){out.write(Base64.decode(chunk,Base64.DEFAULT));return true;}catch(Exception e){cancelDownload(id);notice("附件导出失败，请检查空间。");return false;}}
         @JavascriptInterface public void cancelDownload(String id){runOnUiThread(()->{if(id.equals(exportId)||readyExports.contains(id))return;File file=downloads.remove(id);downloadInfo.remove(id);if(file!=null)file.delete();});}
@@ -202,6 +215,6 @@ public final class MainActivity extends Activity {
     @Override public void onWindowFocusChanged(boolean focused){super.onWindowFocusChanged(focused);if(focused&&web!=null)BrowserIntegration.hideSystemBars(this);}
     @Override protected void onNewIntent(Intent intent){super.onNewIntent(intent);if(intent.getBooleanExtra("browser-return",false))js("window.dispatchEvent(new Event(\"cloudlet-browser-return\"))");}
     @Override protected void onResume(){super.onResume();if(web!=null)web.onResume();}
-    @Override protected void onDestroy(){for(HttpsJob job:jobs.values()){job.cancelled=true;if(job.connection!=null)job.connection.disconnect();}workers.shutdownNow();if(picker!=null){picker.onReceiveValue(null);picker=null;}if(tts!=null){tts.stop();tts.shutdown();}if(web!=null){web.removeJavascriptInterface("Android");web.destroy();web=null;}super.onDestroy();}
+    @Override protected void onDestroy(){browserAgent.end();for(HttpsJob job:jobs.values()){job.cancelled=true;if(job.connection!=null)job.connection.disconnect();}workers.shutdownNow();netWorkers.shutdownNow();if(picker!=null){picker.onReceiveValue(null);picker=null;}if(tts!=null){tts.stop();tts.shutdown();}if(web!=null){web.removeJavascriptInterface("Android");web.destroy();web=null;}super.onDestroy();}
 }
 

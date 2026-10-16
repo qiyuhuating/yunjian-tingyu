@@ -26,6 +26,7 @@ final class BrowserIntegration implements Application.ActivityLifecycleCallbacks
     }
     public void onActivityResumed(Activity activity){
         if(!isVia(activity))return;
+        BrowserAgent.resumed(activity);
         hideSystemBars(activity);
         FrameLayout content=activity.findViewById(android.R.id.content);
         if(content==null||content.findViewWithTag("cloudlet-return")!=null)return;
@@ -49,5 +50,5 @@ final class BrowserIntegration implements Application.ActivityLifecycleCallbacks
     public void onActivityPaused(Activity activity){}
     public void onActivityStopped(Activity activity){}
     public void onActivitySaveInstanceState(Activity activity,Bundle state){}
-    public void onActivityDestroyed(Activity activity){}
+    public void onActivityDestroyed(Activity activity){BrowserAgent.destroyed(activity);}
 }

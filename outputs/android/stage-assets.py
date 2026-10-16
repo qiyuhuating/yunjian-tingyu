@@ -67,5 +67,10 @@ def stage_assets(project, web, public, destination):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
         copied.append({'path': 'assets/' + name, 'bytes': source.stat().st_size, 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
+    source = project / 'runtime/browser-agent-dom.js'
+    target = destination / 'native/browser-agent-dom.js'
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, target)
+    copied.append({'path': 'assets/native/browser-agent-dom.js', 'bytes': source.stat().st_size, 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
     ignored = sorted(path.relative_to(web).as_posix() for path in web.rglob('*') if path.is_file() and path.relative_to(web).as_posix() not in selected)
     return {'files': copied, 'ignoredWebBuildFiles': ignored}

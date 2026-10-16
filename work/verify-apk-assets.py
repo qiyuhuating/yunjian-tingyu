@@ -28,6 +28,8 @@ with tempfile.TemporaryDirectory(prefix='apk-assets-') as tmp:
     assert 'assets/web/music-listen.webp' in staged
     assert 'assets/fonts/SourceSerif4Variable-Roman.ttf' in staged
     assert 'assets/licenses/Source-Serif-OFL.txt' in staged
+    assert 'assets/native/browser-agent-dom.js' in staged
+    assert (root/'assets/native/browser-agent-dom.js').read_bytes()==(project/'runtime/browser-agent-dom.js').read_bytes()
     checks.append('PDF worker, lazy PDF/3D modules, music art, native font and licenses preserved')
     assert all('assets/web/'+name not in staged for name in ['favicon.svg','icon-192.png','icon-512.png','manifest.webmanifest'])
     checks.append('Unreferenced PWA manifest and icons excluded from native APK; public sources retained')

@@ -10,6 +10,13 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "outputs/android/runtime/browser-agent-dom.js": "Via网页只读快照与固定DOM操作，不向外部网页注入原生桥接",
+    "outputs/android/src/chat/cloudlet/phone/BrowserAgent.java": "会话隔离的Via控制、原生操作确认、系统下载与真实状态回执",
+    "outputs/mori-phone/app/browser-agent-panel.tsx": "聊天中的浏览器Agent任务入口、取消和操作记录",
+    "outputs/mori-phone/lib/browser-agent.ts": "有界浏览器任务循环、参数校验、原生回执和取消保护",
+    "work/qa/browser-agent.mjs": "真实DOM填表点击、过期控件拒绝、请求上限及下载回执回归",
+    "work/qa/android-browser-agent.mjs": "仅可丢弃调试模拟器的真实Via读取点击填表下载及桥接隔离验收",
+    "work/qa/android-speech.py": "直接编译运行Java语音分段器的长度、原文和Unicode边界回归",
     "docs/dead-code-cleanup-2026-10-15.md": "死模块、孤立函数和无效样式的删除依据及前后布局一致性验证",
     "outputs/mori-phone/app/craftsmanship.css": "v6页面材质与布局精修，保留消息操作和焦点并适配三主题的渐变对比",
     "work/qa/v6-ui.mjs": "144个生产页面状态的布局、三主题、真实搜索焦点、渐变对比和减少动态效果回归",
@@ -55,6 +62,8 @@ descriptions = {
     "docs/reliability-validation-2026-10-13.json": "本轮本地核心、协议与真实浏览器故障恢复测试结果及验证边界",
     ".github/workflows/android-upgrade-acceptance.yml": "原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收",
     "work/qa/android-upgrade-smoke.py": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归",
+    "outputs/android/src/chat/cloudlet/phone/SpeechChunker.java": "设备朗读的超长文本按句分段，避开系统输入长度上限",
+    "docs/apk-review-hardening-2026-10-15.md": "0.0.3 APK 代码评审修复清单、有意保留项、行为变化与验证边界",
     "docs/0.0.3-rc2-android-emulator-acceptance.md": "固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界",
     ".github/workflows/build-agent-v003-candidate.yml": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布",
     "docs/0.0.3-agent-candidate-acceptance.md": "聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界",

@@ -46,7 +46,7 @@ def merge_via(project, build, via, apktool, java, aapt, env, manifest_path=None,
     for key in ['firebase_analytics_collection_enabled', 'firebase_crashlytics_collection_enabled', 'google_analytics_adid_collection_enabled']:
         ET.SubElement(app, 'meta-data', {attribute('name'): key, attribute('value'): 'false'})
     for permission in list(manifest.findall('uses-permission')):
-        if permission.get(attribute('name')) in {'android.permission.QUERY_ALL_PACKAGES', 'com.google.android.gms.permission.AD_ID', 'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE'}:
+        if permission.get(attribute('name')) in {'android.permission.QUERY_ALL_PACKAGES', 'com.google.android.gms.permission.AD_ID', 'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_BACKGROUND_LOCATION'}:
             manifest.remove(permission)
     original.write(decoded / 'AndroidManifest.xml', encoding='utf-8', xml_declaration=True)
     # Apktool's metadata controls version and min/target SDK at link time.

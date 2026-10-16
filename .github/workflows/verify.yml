@@ -39,11 +39,13 @@ jobs:
           node work/qa/draft-ui.mjs
           node work/qa/v6-ui.mjs
           node work/qa/v6-ui-interactions.mjs
+          node --experimental-strip-types work/qa/browser-agent.mjs
           node work/qa/p0-storage-scale.mjs
       - name: Compile Android source without signing or modifying bundled assets
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"
           mkdir -p /tmp/cloudlet-native-classes
+          python3 work/qa/android-speech.py --java-dir "$JAVA_HOME"
           javac --release 8 -classpath "$ANDROID_HOME/platforms/android-35/android.jar" -d /tmp/cloudlet-native-classes outputs/android/src/chat/cloudlet/phone/*.java
   build-apk:
     name: Build 0.0.2 APK candidate
