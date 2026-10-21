@@ -1,0 +1,92 @@
+{
+  "scope": "Local selective UI merge; no business logic, API, database or asset changes",
+  "browserChecks": 52,
+  "browser": {
+    "reference-sky": {
+      "passed": 7,
+      "checks": [
+        "Legacy upgrade changes only theme and revision; state and wallpaper bytes survive; deliberate later theme choice persists",
+        "390×844 home restores blue title, white label pills and original wallpaper without a fog overlay",
+        "Chat restores cool paper background, milk-white assistant bubble and pale-blue user bubble",
+        "320×640, 844×390 and desktop dock remains visible",
+        "Night and rose themes still apply after a deliberate choice and a cold reload",
+        "Sky, night and rose settings retain theme text and border colors with a single search border and visible focus",
+        "Mobile message actions remain discoverable in all three themes"
+      ],
+      "errors": []
+    },
+    "features": {
+      "passed": 17,
+      "checks": [
+        "旧 v1 数据库无损升级并保留 1201 条消息",
+        "日记与角色编辑离开、刷新后恢复且核心不被改写",
+        "模型预设真实显示、存储申请只有一个入口、设置草稿恢复",
+        "壁纸上传、完整显示、刷新、恢复默认及附件原字节保存",
+        "重复图片只存一份原 Blob，表情包授权保留",
+        "搜索真正定位到很早的消息，页面按需渲染",
+        "真实 MediaRecorder 录音可试听、取消、发送并持久化原音频",
+        "320–1440 宽度下录音与聊天没有水平溢出",
+        "聊天模型通过真实媒体适配生成图片并保存，而不是文本占位",
+        "媒体服务权限失败显示未发送，不制造成功图片",
+        "音频转写后真实进入聊天上下文，原音频继续保留",
+        "未发送录音离开确认能保留预览，确认后才丢弃",
+        "授权表情与两条自然短消息是真实消息，原图不复制",
+        "Gemini 原生图片和 PCM 语音真实保存；原始音频发送原生上下文",
+        "角色独立选 DeepSeek，群聊之外真实请求不依赖全局 Gemini 模型",
+        "各应用导航无崩溃；本地虚拟功能有明确范围",
+        "Android multipart 桥接保留音频原字节，旧 APK 明确拒绝而非假转写"
+      ],
+      "pageErrors": [],
+      "providerCalls": "local fixtures",
+      "realMicrophone": "Chromium fake audio capture; actual MediaRecorder Blob",
+      "realDevice": false
+    },
+    "connection-ui": {
+      "passed": 23,
+      "checks": [
+        "设置首页分类直达，初始不展开全部表单",
+        "搜索服务商、生日和壁纸能定位分类",
+        "Key 不触发自动请求，模型和地址始终可编辑",
+        "连接测试只发送当前全局模型及两条独立消息",
+        "模型列表 404 保留提示，手填模型仍可成功测试",
+        "实时模型列表支持搜索和选择",
+        "OpenRouter 切换不会继承 DeepSeek Key",
+        "HTTP 402 余额错误持续显示，重试成功后更新",
+        "SSE 429 限流错误显示原因，不能标记成功",
+        "测试可取消并能再次发起",
+        "修改域名后不自动携带已有凭据，完整路径保存后不重复",
+        "切回官方地址可恢复该地址的已保存 Key",
+        "记忆开关与分段按钮立即保存，并支持方向键",
+        "主题和壁纸采用直接选择，并在暗夜下正确显示",
+        "高级参数和系统提示词草稿切换分类后保留，未保存时不改配置",
+        "刷新后连接与 Key 恢复，且凭据不写入状态",
+        "320/390/768/1440 宽度下设置与弹层均无横向溢出",
+        "切换分类会取消旧模型读取，不污染新页面",
+        "聊天失败原因可见并写入本机，刷新后仍可查看",
+        "暗夜错误操作文字对比度达到 4.5，触控高度至少 44px",
+        "聊天错误直达 API 页面，重试后清除失败状态",
+        "原生桥接保留鉴权与流中错误，取消会终止原生请求",
+        "未出现页面运行错误"
+      ],
+      "pageErrors": [],
+      "fixtureRequests": 13,
+      "realProviderCalls": 0
+    },
+    "save-recovery": {
+      "checks": [
+        "Real UI upload transaction abort leaves durable state unchanged",
+        "Emergency UI backup contains unsaved attachment bytes",
+        "A second failed retry retains recovery controls and aborts the full transaction",
+        "UI retry and reload preserve attachment reference and exact bytes",
+        "No uncaught page errors"
+      ],
+      "failures": [],
+      "pageErrors": [],
+      "passed": 5
+    }
+  },
+  "productionBuild": "passed",
+  "typescript": "passed",
+  "remoteActions": "not run",
+  "physicalAndroid": "not run"
+}

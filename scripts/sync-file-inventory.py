@@ -10,6 +10,17 @@ index_path = root / "FILES.md"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 by_path = {record["path"]: record for record in manifest}
 descriptions = {
+    "scripts/export-frontend.py": "按真实前端导入关系生成不含优化提示词和历史材料的独立 UI 包",
+    "work/qa/visual-cleanup.mjs": "三种主题四种尺寸的图标单一渲染、插画加载和清理前后样式回归",
+    "docs/frontend-cleanup-2026-10-13.md": "前端包精简、不可达图形删除依据和验证边界",
+    "docs/frontend-cleanup-validation.json": "前端清理的本地编译、图形和包完整性验收结果",
+    "docs/ui-selective-merge-2026-10-13.md": "选择合入 UI 打磨、主题与交互保护及本地验证边界",
+    "docs/ui-selective-merge-results.json": "本次 UI 合并的主题、布局、交互和附件恢复浏览器验证结果",
+    "outputs/mori-phone/scripts/verify-backup.mjs": "分段备份往返、旧格式兼容、文件数量与损坏输入边界回归",
+    "work/qa/save-recovery.mjs": "真实界面的附件保存失败、紧急备份、重复重试与冷重载回归",
+    "work/qa/save-recovery-entry.ts": "附件恢复回归使用的本地存储与备份读取入口",
+    "docs/reliability-fixes-2026-10-13.md": "附件恢复、备份往返、记忆语境和模型输出上限的修复与验收边界",
+    "docs/reliability-validation-2026-10-13.json": "本轮本地核心、协议与真实浏览器故障恢复测试结果及验证边界",
     ".github/workflows/android-upgrade-acceptance.yml": "原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收",
     "work/qa/android-upgrade-smoke.py": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归",
     "docs/0.0.3-rc2-android-emulator-acceptance.md": "固定 APK 身份的 Android 模拟器验收方法、证据与物理设备边界",
@@ -58,6 +69,6 @@ for path in set(by_path) - tracked:
 rows = [by_path[p] for p in sorted(by_path)]
 if len({r["description"] for r in rows}) != len(rows):
     raise RuntimeError("Duplicate descriptions")
-manifest_path.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-index_path.write_text("\n".join(lines)+"\n",encoding="utf-8")
+manifest_path.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
+index_path.write_text("\n".join(lines)+"\n",encoding="utf-8",newline="\n")
 print(json.dumps({"files":len(rows),"updated":True}))
