@@ -2,10 +2,21 @@ import fs from 'node:fs';import path from 'node:path';import {createRequire} fro
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(file){if(loaded.has(file))return loaded.get(file);const m={exports:{}};loaded.set(file,m.exports);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,'lib',file+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name.startsWith('./')?load(name.slice(2)):native(name),m,m.exports);return m.exports;}
 const {characterConnection,characterKeySlot}=load('character-ai');
-const {freshState,stateSchema}=load('phone-model'),{memoryTask,applyMemoryResult}=load('character-memory'),{recallMemories}=load('continuity'),{buildPrompt}=load('chat-prompt'),{CORE_SYSTEM_PROMPT}=load('system-prompt'),{groupSpeakers,parseGroupReply}=load('group-chat'),{groupDelay,waitForReply}=load('group-cadence');const checks=[];
+const {freshState,stateSchema}=load('phone-model'),{memoryTask,applyMemoryResult}=load('character-memory'),{recallMemories,validMemorySource}=load('continuity'),{buildPrompt}=load('chat-prompt'),{CORE_SYSTEM_PROMPT}=load('system-prompt'),{groupSpeakers,parseGroupReply}=load('group-chat'),{groupDelay,waitForReply}=load('group-cadence');const checks=[];
 async function check(name,run){await run();checks.push(name);}
 function fixture(){const s=freshState();s.memorySettings.extractEvery=1;s.threads[s.primary]=[{id:'user-fact',role:'user',text:'我喜欢喝不加糖的奶茶，讲数学时请先给例子。',kind:'text',timestamp:1}];return s;}
 function proposal(task,changes={}){return JSON.stringify([{key:'饮食.甜度',category:'preference',text:'用户喜欢无糖奶茶',sourceId:task.sources[0].id,quote:'我喜欢喝不加糖的奶茶',...changes}]);}
+await check('自动记忆保存完整来源哈希，改写后拒绝召回',()=>{
+ const state=fixture(),task=memoryTask(state,state.primary,state.primary);
+ applyMemoryResult(state,task,proposal(task));
+ const record=state.memories.at(-1);
+ assert.match(record.sourceDigest,/^[0-9a-f]{64}$/);
+ assert(validMemorySource(state,record));
+ state.threads[state.primary][0].text+='不过我已经改变了想法。';
+ assert(state.threads[state.primary][0].text.includes(record.evidence));
+ assert(!validMemorySource(state,record));
+ assert(!recallMemories(state,state.primary,'奶茶').includes('我喜欢喝不加糖的奶茶'));
+});
 await check('旧备份补齐设置且不修改已保存的系统提示词',()=>{const s=fixture();delete s.groupSettings;delete s.memoryCursors;delete s.memorySettings.autoExtract;delete s.memorySettings.extractEvery;s.coreSystemPrompt='我保存的核心';const parsed=stateSchema.parse(s);assert.equal(parsed.coreSystemPrompt,'我保存的核心');assert.equal(parsed.groupSettings.cadence,'natural');assert(parsed.memorySettings.autoExtract);});
 await check('自动记忆有角色归属、原话证据与持久化游标',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const m=s.memories.at(-1);assert.equal(m.scope,s.primary);assert.equal(m.origin,'auto');assert.equal(m.evidence,'我喜欢喝不加糖的奶茶');assert(m.text.includes(m.evidence));assert.equal(memoryTask(s,s.primary,s.primary),null);assert(stateSchema.safeParse(s).success);});
 await check('编造来源、非逐字证据和密钥记忆被拒绝',()=>{for(const changes of [{sourceId:'missing'},{quote:'我爱吃甜糖'},{text:'api key sk-secret123456'}]){const s=fixture(),task=memoryTask(s,s.primary,s.primary),before=JSON.stringify(s);assert.throws(()=>applyMemoryResult(s,task,proposal(task,changes)));assert.equal(JSON.stringify(s),before);}});

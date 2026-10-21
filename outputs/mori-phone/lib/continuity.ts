@@ -2,14 +2,28 @@ import type {Message,PhoneState} from './phone-model';
 import {sha256} from '@noble/hashes/sha2.js';
 function terms(value:string){const v=value.toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu,' '),result=new Set(v.match(/[a-z0-9]{2,}/g)||[]);for(const run of v.match(/[\u3400-\u9fff]+/g)||[])for(let i=0;i<run.length-1;i++)result.add(run.slice(i,i+2));return result;}
 export function relevance(query:string,text:string){const q=terms(query),t=terms(text);let score=0;for(const k of q)if(t.has(k))score++;return score/Math.sqrt(Math.max(1,t.size));}
+/** SHA-256 of exact source metadata and full text; excerpt matches are insufficient. */
+export function memorySourceDigest(messages:readonly Pick<Message,'id'|'role'|'timestamp'|'text'>[]){
+ const hash=sha256.create(),encoder=new TextEncoder();
+ for(const m of messages)hash.update(encoder.encode(JSON.stringify([m.id,m.role,m.timestamp,m.text])+'\n'));
+ return Array.from(hash.digest(),v=>v.toString(16).padStart(2,'0')).join('');
+}
 // Provenance must remain verifiable before automatic memories enter the prompt.
 // Manual/legacy memories continue to work; the user may explicitly revise them.
 export function validMemorySource(state:PhoneState,m:PhoneState['memories'][number]){
  if(m.origin!=='auto'||m.locked)return true;
  if(!m.sourceIds?.length||!m.sourceThread||!m.evidence?.trim())return false;
  const source=state.threads[m.sourceThread]||[];
- return m.sourceIds.every(id=>{const matches=source.filter(v=>v.id===id);return matches.length===1&&matches[0].role==='user'&&!matches[0].failed&&
-  matches[0].text.includes(m.evidence!)&&(m.sourceAt===undefined||matches[0].timestamp===m.sourceAt);});
+ const matches=m.sourceIds.map(id=>{
+  const found=source.filter(v=>v.id===id);
+  if(found.length!==1)return null;
+  const item=found[0];
+  return item.role==='user'&&!item.failed&&item.text.includes(m.evidence!)&&(m.sourceAt===undefined||item.timestamp===m.sourceAt)?item:null;
+ });
+ if(matches.some(item=>!item))return false;
+ // Preserve duplicate-ID, role, timestamp and excerpt checks, then verify
+ // full original content for memories written with a source digest.
+ return !m.sourceDigest||memorySourceDigest(matches as Message[])===m.sourceDigest;
 }
 export function recallMemories(state:PhoneState,character:string,query:string,group?:string){
  const selected=state.memories.filter(m=>validMemorySource(state,m)&&(m.scope==='global'||m.scope===character||(!!group&&m.scope===group))).map((m,i)=>{

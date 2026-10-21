@@ -5,3 +5,5 @@ export {makeBackup,readBackup,stageBackup} from '../../outputs/mori-phone/lib/lo
 export {makeSavedCard,addSavedCard,removeSavedCard} from '../../outputs/mori-phone/lib/character-library';
 export {executeTurn} from '../../outputs/mori-phone/lib/turn-execution';
 export {enqueueDurableTurn,eligibleQueuedTurn} from '../../outputs/mori-phone/lib/durable-turn-queue';
+
+export {queueMedia,beginMediaDelivery,completeMediaDelivery} from '../../outputs/mori-phone/lib/media-outbox';
