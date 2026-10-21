@@ -8,7 +8,7 @@
 | [.github/workflows/android-upgrade-acceptance.yml](.github/workflows/android-upgrade-acceptance.yml) | 原签名 0.0.2 至 0.0.3 候选的 Android 模拟器覆盖安装与离线冷启动验收；路径：.github/workflows/android-upgrade-acceptance.yml | 3499 |
 | [.github/workflows/build-agent-v003-candidate.yml](.github/workflows/build-agent-v003-candidate.yml) | 0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml | 9409 |
 | [.github/workflows/release-standalone-v002.yml](.github/workflows/release-standalone-v002.yml) | 独立版签名 APK 的全自动构建、完整回归、加密密钥备份与一次性 Release 发布；路径：.github/workflows/release-standalone-v002.yml | 9891 |
-| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1658 |
+| [.github/workflows/sync-inventory.yml](.github/workflows/sync-inventory.yml) | 架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml | 1794 |
 | [.github/workflows/verify.yml](.github/workflows/verify.yml) | 自动执行源码与签名交付门槛，并新增晴空蓝视觉及升级持久化回归；路径：.github/workflows/verify.yml | 4942 |
 | [.gitignore](.gitignore) | 排除依赖、私钥与可复现 QA 构建、失败截图等临时文件；路径：.gitignore | 584 |
 | [README.md](README.md) | 项目能力、可复用角色卡仓库操作、完整备份迁移和当前草稿与既有APK的发布范围；路径：README.md | 10570 |
@@ -62,7 +62,7 @@
 | [docs/roleplay-core-results.json](docs/roleplay-core-results.json) | 151项核心、协议、独立记忆、角色卡分析、世界书与可复用卡库的具名自动检查结果；路径：docs/roleplay-core-results.json | 11578 |
 | [docs/storage-regression-results.json](docs/storage-regression-results.json) | 5000条历史、跨窗口与原子性、模板草稿备份恢复和头像引用回收的13项存储结果；路径：docs/storage-regression-results.json | 1073 |
 | [docs/优化实施与验收-2026-10-08.md](docs/优化实施与验收-2026-10-08.md) | 图片画质、存储架构、真实多模态、壁纸、自然对话、功能真实性及发布余项的完整执行验收；路径：docs/优化实施与验收-2026-10-08.md | 13545 |
-| [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 10365 |
+| [docs/可靠回合与Agent工作区-2026-10-10.md](docs/可靠回合与Agent工作区-2026-10-10.md) | 回合持久化、Agent 工具边界和真实验收范围；路径：docs/可靠回合与Agent工作区-2026-10-10.md | 11734 |
 | [docs/审计计划落实记录.md](docs/审计计划落实记录.md) | 外部审计建议逐项核实、适用修复、未证实判断、延期范围和本轮验收边界；路径：docs/审计计划落实记录.md | 9555 |
 | [docs/本机记录与接口边界修复.md](docs/本机记录与接口边界修复.md) | 本轮问题证据、修复计划、停止红队后的功能验收与未覆盖边界；路径：docs/本机记录与接口边界修复.md | 6620 |
 | [docs/核心提示词隔离说明.md](docs/核心提示词隔离说明.md) | 用户明确保存的系统核心、角色资料隔离、模型最大窗口、迁移与验证证据；路径：docs/核心提示词隔离说明.md | 7151 |
@@ -214,7 +214,7 @@
 | [outputs/mori-phone/eslint.config.mjs](outputs/mori-phone/eslint.config.mjs) | 工程支持文件：outputs/mori-phone/eslint.config.mjs | 846 |
 | [outputs/mori-phone/examples/d1/app/api/notes/route.ts](outputs/mori-phone/examples/d1/app/api/notes/route.ts) | 可选网页服务 API 路由：notes/route.ts；APK 使用原生直连接口；路径：outputs/mori-phone/examples/d1/app/api/notes/route.ts | 1700 |
 | [outputs/mori-phone/examples/d1/db/schema.ts](outputs/mori-phone/examples/d1/db/schema.ts) | TypeScript 业务或构建模块：schema；位于 outputs/mori-phone/examples/d1/db；路径：outputs/mori-phone/examples/d1/db/schema.ts | 370 |
-| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 9718 |
+| [outputs/mori-phone/lib/agent-orchestrator.ts](outputs/mori-phone/lib/agent-orchestrator.ts) | 有界的多角色文件审阅、交接、角色独立模型和执行记录；路径：outputs/mori-phone/lib/agent-orchestrator.ts | 10142 |
 | [outputs/mori-phone/lib/agent-workspace.ts](outputs/mori-phone/lib/agent-workspace.ts) | 隔离的版本化文本工作区、乐观并发与权限校验；路径：outputs/mori-phone/lib/agent-workspace.ts | 5939 |
 | [outputs/mori-phone/lib/ai-messages.ts](outputs/mori-phone/lib/ai-messages.ts) | 独立角色/历史/附件消息组装，将应用配置置于系统信封，保留真实用户消息角色；路径：outputs/mori-phone/lib/ai-messages.ts | 4167 |
 | [outputs/mori-phone/lib/ai-stream.ts](outputs/mori-phone/lib/ai-stream.ts) | 统一 SSE 增量解码、CRLF 分帧、完成标志与媒体预算，支持取消及错误安全结算；路径：outputs/mori-phone/lib/ai-stream.ts | 4041 |
@@ -250,7 +250,7 @@
 | [outputs/mori-phone/lib/media-adapter.ts](outputs/mori-phone/lib/media-adapter.ts) | Web/Android 共用的 OpenAI 生图/转写与 Gemini Interactions 图像/语音协议；路径：outputs/mori-phone/lib/media-adapter.ts | 4047 |
 | [outputs/mori-phone/lib/media-client.ts](outputs/mori-phone/lib/media-client.ts) | 真实生成文件和转写客户端，独立服务 Key 与官方地址复用规则；路径：outputs/mori-phone/lib/media-client.ts | 3479 |
 | [outputs/mori-phone/lib/media-contract.ts](outputs/mori-phone/lib/media-contract.ts) | 媒体设置与有界工具命令，只有实际启用能力和授权表情进入提示词；路径：outputs/mori-phone/lib/media-contract.ts | 2577 |
-| [outputs/mori-phone/lib/media-outbox.ts](outputs/mori-phone/lib/media-outbox.ts) | 持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts | 3009 |
+| [outputs/mori-phone/lib/media-outbox.ts](outputs/mori-phone/lib/media-outbox.ts) | 持久化媒体任务、代次隔离、人工续接与交付结果回执；路径：outputs/mori-phone/lib/media-outbox.ts；路径：outputs/mori-phone/lib/media-outbox.ts | 3293 |
 | [outputs/mori-phone/lib/media-validation.ts](outputs/mori-phone/lib/media-validation.ts) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：outputs/mori-phone/lib/media-validation.ts | 1555 |
 | [outputs/mori-phone/lib/native-media.ts](outputs/mori-phone/lib/native-media.ts) | 有界原生图片/音频文件解码与 Gemini 24 kHz PCM 的 WAV 包装；路径：outputs/mori-phone/lib/native-media.ts | 2245 |
 | [outputs/mori-phone/lib/pdf-reading.ts](outputs/mori-phone/lib/pdf-reading.ts) | 随包 PDF.js worker 读取 PDF 文字，提示页数、截断、扫描件及加密失败；路径：outputs/mori-phone/lib/pdf-reading.ts | 1178 |
@@ -266,7 +266,7 @@
 | [outputs/mori-phone/lib/system-prompt.ts](outputs/mori-phone/lib/system-prompt.ts) | 用户聊天核心与后台事实整理器的隔离指令；记忆任务按JSON契约输出，摘要按普通条目输出；路径：outputs/mori-phone/lib/system-prompt.ts | 3315 |
 | [outputs/mori-phone/lib/turn-causality.ts](outputs/mori-phone/lib/turn-causality.ts) | 按消息 ID 固定因果边界与同一回合角色发言证据；路径：outputs/mori-phone/lib/turn-causality.ts；路径：outputs/mori-phone/lib/turn-causality.ts | 945 |
 | [outputs/mori-phone/lib/turn-execution.ts](outputs/mori-phone/lib/turn-execution.ts) | 可重用聊天回合执行与待办队列，单发言人原子提交、消息 ID 去重、媒体失败隔离；路径：outputs/mori-phone/lib/turn-execution.ts | 10093 |
-| [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4666 |
+| [outputs/mori-phone/lib/turn-receipts.ts](outputs/mori-phone/lib/turn-receipts.ts) | 持久化回合发送回执、角色游标、显式重试与不确定计费保护；路径：outputs/mori-phone/lib/turn-receipts.ts | 4968 |
 | [outputs/mori-phone/lib/world-info.ts](outputs/mori-phone/lib/world-info.ts) | 作用域、四类关键词逻辑、完整条目预算、模板和有界递归的世界书引擎；路径：outputs/mori-phone/lib/world-info.ts | 3333 |
 | [outputs/mori-phone/next.config.ts](outputs/mori-phone/next.config.ts) | TypeScript 业务或构建模块：next.config；位于 outputs/mori-phone；路径：outputs/mori-phone/next.config.ts | 133 |
 | [outputs/mori-phone/package-lock.json](outputs/mori-phone/package-lock.json) | 可重复安装依赖的版本锁定清单：outputs/mori-phone；路径：outputs/mori-phone/package-lock.json | 397678 |
@@ -302,7 +302,7 @@
 | [outputs/mori-phone/scripts/run-framework.mjs](outputs/mori-phone/scripts/run-framework.mjs) | 工程支持文件：outputs/mori-phone/scripts/run-framework.mjs | 993 |
 | [outputs/mori-phone/scripts/sites-env.mjs](outputs/mori-phone/scripts/sites-env.mjs) | 工程支持文件：outputs/mori-phone/scripts/sites-env.mjs | 906 |
 | [outputs/mori-phone/scripts/sites-env.sh](outputs/mori-phone/scripts/sites-env.sh) | 工程支持文件：outputs/mori-phone/scripts/sites-env.sh | 1530 |
-| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 21030 |
+| [outputs/mori-phone/scripts/verify-agents.mjs](outputs/mori-phone/scripts/verify-agents.mjs) | 文件工作区、工具权限、多角色交接和记忆来源回归；路径：outputs/mori-phone/scripts/verify-agents.mjs | 21954 |
 | [outputs/mori-phone/scripts/verify-card-library.mjs](outputs/mori-phone/scripts/verify-card-library.mjs) | 19项独立角色卡核心验收，包含语义去重、反复复用、关系隔离、满库与过期任务拒绝；路径：outputs/mori-phone/scripts/verify-card-library.mjs | 10566 |
 | [outputs/mori-phone/scripts/verify-companion.mjs](outputs/mori-phone/scripts/verify-companion.mjs) | 21项独立角色连接、锁定记忆、原文更正、群聊节奏及权限回归；路径：outputs/mori-phone/scripts/verify-companion.mjs | 16708 |
 | [outputs/mori-phone/scripts/verify-connections.mjs](outputs/mori-phone/scripts/verify-connections.mjs) | 19 项连接回归：地址、协议、凭据、错误与独立探测；路径：outputs/mori-phone/scripts/verify-connections.mjs | 10619 |
@@ -312,7 +312,7 @@
 | [outputs/mori-phone/scripts/verify-media.mjs](outputs/mori-phone/scripts/verify-media.mjs) | 11 项媒体协议、能力提示、原生媒体与后台摘要并发检查；路径：outputs/mori-phone/scripts/verify-media.mjs | 9150 |
 | [outputs/mori-phone/scripts/verify-p0.mjs](outputs/mori-phone/scripts/verify-p0.mjs) | P0 复验、真实接口/角色持续对话的可复现源码或验收证据；路径：outputs/mori-phone/scripts/verify-p0.mjs | 4956 |
 | [outputs/mori-phone/scripts/verify-providers.mjs](outputs/mori-phone/scripts/verify-providers.mjs) | 17 项服务商参数及协议检查；路径：outputs/mori-phone/scripts/verify-providers.mjs | 12554 |
-| [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 6631 |
+| [outputs/mori-phone/scripts/verify-receipts.mjs](outputs/mori-phone/scripts/verify-receipts.mjs) | 崩溃恢复、重复请求保护、持久化发言人游标回归；路径：outputs/mori-phone/scripts/verify-receipts.mjs | 7710 |
 | [outputs/mori-phone/scripts/verify-review.mjs](outputs/mori-phone/scripts/verify-review.mjs) | 7 项审查缺陷修复回归检查；路径：outputs/mori-phone/scripts/verify-review.mjs | 4486 |
 | [outputs/mori-phone/scripts/verify-roleplay.mjs](outputs/mori-phone/scripts/verify-roleplay.mjs) | 27项AI片段覆盖、世界书往返、递归、记忆并发与摘要过期回归；路径：outputs/mori-phone/scripts/verify-roleplay.mjs | 13831 |
 | [outputs/mori-phone/scripts/verify-runtime.mjs](outputs/mori-phone/scripts/verify-runtime.mjs) | 核心运行时专属回归：分块流、错误、上下文身份、取消、禁用隐形重试与备份安全；路径：outputs/mori-phone/scripts/verify-runtime.mjs | 11809 |
@@ -444,8 +444,8 @@
 | [work/qa/roleplay.mjs](work/qa/roleplay.mjs) | 角色卡AI拆分、原卡下载、世界书请求、移动布局及取消的10项浏览器流程；路径：work/qa/roleplay.mjs | 12756 |
 | [work/qa/security-library.ts](work/qa/security-library.ts) | 边界回归注入的源辅助库：实际备份、文件读取与请求构造，无真实Key；路径：work/qa/security-library.ts | 672 |
 | [work/qa/security-regressions.mjs](work/qa/security-regressions.mjs) | 六组本机恢复和ZIP读取回归；保留修复前失败证据，检查正常文件完整性；路径：work/qa/security-regressions.mjs | 8186 |
-| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 739 |
-| [work/qa/storage.mjs](work/qa/storage.mjs) | 13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs | 17001 |
+| [work/qa/storage-entry.ts](work/qa/storage-entry.ts) | 真实存储回归的状态附件、ZIP及仓库模板捕获与删除测试导出入口；路径：work/qa/storage-entry.ts | 1141 |
+| [work/qa/storage.mjs](work/qa/storage.mjs) | 13项IndexedDB与备份回归，验证卡片草稿头像重映射和最后引用删除后的附件回收；路径：work/qa/storage.mjs | 18843 |
 | [work/qa/ui-group.mjs](work/qa/ui-group.mjs) | 25 类群聊与真实界面流程的浏览器回归，覆盖 24 个应用入口；路径：work/qa/ui-group.mjs | 23991 |
 | [work/qa/update-csp.py](work/qa/update-csp.py) | 历史测试维护脚本：update-csp；记录当时测试代码的调整；路径：work/qa/update-csp.py | 671 |
 | [work/qa/update-repair-tests.py](work/qa/update-repair-tests.py) | 历史测试维护脚本：update-repair-tests；记录当时测试代码的调整；路径：work/qa/update-repair-tests.py | 2256 |

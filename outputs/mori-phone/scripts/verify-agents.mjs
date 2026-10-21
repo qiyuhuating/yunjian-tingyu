@@ -251,4 +251,20 @@ await check('Same-revision source mutation during Agent request cannot publish a
  assert(!state.threads[f.thread]?.some(m=>m.text==='obsolete report'));
 });
 
+await check('Agent provider request cap rejects before external call and preserves persisted task',async()=>{
+ const f=fixture();let current=f.state,requests=0;
+ a.planAgentReview(current,{jobId:'budget-blocked',thread:f.thread,path:'imports/sample.ts',speakers:f.speakers});
+ current.agentJobs[0].attempts=a.MAX_AGENT_REQUEST_ATTEMPTS;
+ const before=structuredClone(current.agentJobs[0]);
+ await assert.rejects(a.executeAgentReview('budget-blocked',{
+  snapshot:()=>current,signal:new AbortController().signal,
+  commit:async fn=>{const draft=structuredClone(current);fn(draft);current=draft;},
+  requestAI:async()=>{requests++;return 'unexpected';}
+ }),/安全上限/);
+ assert.equal(requests,0);
+ assert.deepEqual(current.agentJobs[0],before);
+ current.agentJobs[0].status='needs_review';
+ assert.throws(()=>a.authorizeAgentResume(current,'budget-blocked'),/上限/);
+ assert(stateSchema.safeParse(current).success);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

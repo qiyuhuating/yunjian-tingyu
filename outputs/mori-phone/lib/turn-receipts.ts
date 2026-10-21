@@ -5,6 +5,8 @@ import {z} from 'zod';
  * "in_flight" means an external provider might already have charged a POST.
  * Neither it nor "needs_review" may ever be silently retried after a crash.
  */
+/** Per-user-message circuit breaker; this is a request-count cap, not a currency limit. */
+export const MAX_TURN_REQUEST_ATTEMPTS=48;
 const id=z.string().min(1).max(100).refine(v=>!Object.prototype.hasOwnProperty.call(Object.prototype,v));
 export const turnReceiptSchema=z.object({
  userId:id,thread:id,mode:z.enum(['chat','face','group','live']),
@@ -53,6 +55,7 @@ export function markRequesting(state:JournalState,userId:string,speaker:string){
  const receipt=receiptFor(state,userId);
  if(!receipt||receipt.phase!=='queued'||receipt.completed.includes(speaker)||remainingSpeakers(receipt)[0]!==speaker)
   throw new Error('执行顺序已经改变，请停止调用模型。');
+ if(receipt.attempts>=MAX_TURN_REQUEST_ATTEMPTS)throw new Error('本轮 API 请求次数已达到安全上限。请另起一轮对话，避免继续重复计费。');
  receipt.phase='in_flight';receipt.currentSpeaker=speaker;
  receipt.attempts++;receipt.updatedAt=Date.now();
  return receipt.attempts;
