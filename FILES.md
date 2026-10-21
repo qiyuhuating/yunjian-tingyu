@@ -468,7 +468,7 @@
 | [docs/reliability-validation-2026-10-13.json](docs/reliability-validation-2026-10-13.json) | 本轮本地核心、协议与真实浏览器故障恢复测试结果及验证边界；路径：docs/reliability-validation-2026-10-13.json | 38896 |
 | [outputs/mori-phone/scripts/verify-backup.mjs](outputs/mori-phone/scripts/verify-backup.mjs) | 分段备份往返、旧格式兼容、文件数量与损坏输入边界回归；路径：outputs/mori-phone/scripts/verify-backup.mjs | 7352 |
 | [work/qa/save-recovery-entry.ts](work/qa/save-recovery-entry.ts) | 附件恢复回归使用的本地存储与备份读取入口；路径：work/qa/save-recovery-entry.ts | 207 |
-| [work/qa/save-recovery.mjs](work/qa/save-recovery.mjs) | 真实界面的附件保存失败、紧急备份、重复重试与冷重载回归；路径：work/qa/save-recovery.mjs | 6692 |
+| [work/qa/save-recovery.mjs](work/qa/save-recovery.mjs) | 真实界面的附件保存失败、紧急备份、重复重试与冷重载回归；路径：work/qa/save-recovery.mjs | 7192 |
 | [docs/ui-selective-merge-2026-10-13.md](docs/ui-selective-merge-2026-10-13.md) | 选择合入 UI 打磨、主题与交互保护及本地验证边界；路径：docs/ui-selective-merge-2026-10-13.md | 2144 |
 | [docs/ui-selective-merge-results.json](docs/ui-selective-merge-results.json) | 本次 UI 合并的主题、布局、交互和附件恢复浏览器验证结果；路径：docs/ui-selective-merge-results.json | 4842 |
 | [docs/frontend-cleanup-2026-10-13.md](docs/frontend-cleanup-2026-10-13.md) | 前端包精简、不可达图形删除依据和验证边界；路径：docs/frontend-cleanup-2026-10-13.md | 2801 |
