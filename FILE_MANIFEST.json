@@ -2636,8 +2636,8 @@
   {
     "path": "work/qa/reference-sky.mjs",
     "description": "五组真实浏览器验收：原配色、旧数据保留、小屏入口和主题冷启动持久化；路径：work/qa/reference-sky.mjs",
-    "bytes": 10133,
-    "sha256": "9285decf75fdac8e331b0090fac6f1def3d5d60555317a5f1b1375030c1acad4"
+    "bytes": 10124,
+    "sha256": "5a5481578500c6478552e2f0b8f392d22eaeaedae6e46f18c8146ef09e3b691e"
   },
   {
     "path": "work/qa/repair-companion.mjs",
