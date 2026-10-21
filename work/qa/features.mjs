@@ -6,7 +6,21 @@ const build=path.resolve(process.env.FEATURE_BUILD_DIR||path.join(repo,'work/fea
 const server=createServer((req,res)=>{try{const requested=decodeURIComponent(req.url.split('?')[0]),p=path.resolve(build,'.'+(requested==='/'?'/index.html':requested));if(!p.startsWith(build+path.sep))throw Error();const b=fs.readFileSync(p);res.setHeader('Content-Type',({js:'text/javascript',mjs:'text/javascript',css:'text/css',html:'text/html',webp:'image/webp',png:'image/png',woff2:'font/woff2'})[path.extname(p).slice(1)]||'application/octet-stream');res.end(b);}catch{res.statusCode=404;res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const port=server.address().port,browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined,headless:true,args:['--no-sandbox','--disable-webgl','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']}),context=await browser.newContext({viewport:{width:390,height:844},permissions:['microphone']}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
 const state=load('phone-model').freshState();state.memorySettings.autoExtract=false;state.memorySettings.autoSummary=false;state.threads[state.primary].push(...Array.from({length:1200},(_,i)=>({id:'old-'+i,role:i%2?'assistant':'user',text:i===3?'很早以前的紫色雨伞':'历史消息 '+i,timestamp:10000+i*1000,kind:'text',read:true})));const originalCore=state.coreSystemPrompt;
-await context.addInitScript(initial=>{if(sessionStorage.getItem('seeded'))return;sessionStorage.setItem('seeded','1');window.__seedDone=false;const r=indexedDB.open('cloudlet-device',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('states',{keyPath:'owner'});d.createObjectStore('assets',{keyPath:['owner','id']});d.createObjectStore('keys',{keyPath:['owner','provider']});d.createObjectStore('crypto',{keyPath:'owner'});};r.onsuccess=()=>{const tx=r.result.transaction('states','readwrite');const old={...initial};delete old.wallpaper;delete old.mediaSettings;tx.objectStore('states').put({owner:'personal-device',state:old,version:1,updatedAt:1});tx.oncomplete=()=>{r.result.close();window.__seedDone=true;};};},state);
+// Seed the legacy schema to completion before loading the application bundle.
+// addInitScript previously started this upgrade concurrently with the app's
+// IndexedDB opener and could intermittently leave the startup UI unresolved.
+await page.goto('http://127.0.0.1:'+port+'/__fixture_seed__');
+await page.evaluate(initial=>new Promise((resolve,reject)=>{
+ const r=indexedDB.open('cloudlet-device',1);
+ r.onerror=()=>reject(r.error);
+ r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('states',{keyPath:'owner'});d.createObjectStore('assets',{keyPath:['owner','id']});d.createObjectStore('keys',{keyPath:['owner','provider']});d.createObjectStore('crypto',{keyPath:'owner'});};
+ r.onsuccess=()=>{const tx=r.result.transaction('states','readwrite'),old={...initial};delete old.wallpaper;delete old.mediaSettings;
+  tx.objectStore('states').put({owner:'personal-device',state:old,version:1,updatedAt:1});
+  tx.oncomplete=()=>{r.result.close();resolve();};
+  tx.onerror=()=>{r.result.close();reject(tx.error);};
+  tx.onabort=()=>{r.result.close();reject(tx.error||new Error('Legacy fixture initialization aborted'));};
+ };
+}),state);
 let reply='收到，我把这件小事记在心里。',imageFail=false;const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGOoWXvnPwAGswMFHbh7QQAAAABJRU5ErkJggg==','base64');
 function wav(){const b=Buffer.alloc(44+4800);b.write('RIFF');b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(24000,24);b.writeUInt32LE(48000,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(4800,40);return b;}
 await context.route('https://api.deepseek.com/**',async r=>{if(r.request().url().endsWith('/models'))return r.fulfill({json:{data:[{id:'deepseek-flash'}]}});requests.push(JSON.parse(r.request().postData()));return r.fulfill({contentType:'text/event-stream',body:'data: '+JSON.stringify({choices:[{delta:{content:reply},finish_reason:'stop'}]})+'\n\ndata: [DONE]\n\n'});});
@@ -18,7 +32,7 @@ const appOpen=async name=>{await home();const button=page.locator('.home-screen'
 async function persist(){await page.evaluate(()=>window.NativeFlush());}
 async function configure(patch){await persist();await page.evaluate(async patch=>{const db=await new Promise(resolve=>{const r=indexedDB.open('cloudlet-device');r.onsuccess=()=>resolve(r.result);});const tx=db.transaction('states','readwrite'),store=tx.objectStore('states'),r=store.get('personal-device');r.onsuccess=()=>{const row=r.result;Object.assign(row.state,patch);row.version++;store.put(row);};await new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onabort=reject;});db.close();},patch);await page.reload();await page.locator('.home-screen').waitFor();}
 try{
- await page.goto('http://127.0.0.1:'+port);await page.waitForFunction(()=>window.__seedDone);await page.locator('.home-screen').waitFor();
+ await page.goto('http://127.0.0.1:'+port);await page.locator('.home-screen').waitFor();
 
 async function settingsCategory(name){await appOpen('设置');await page.locator('.settings-workspace').getByRole('button',{name:new RegExp('^'+name)}).click();}
  await check('旧 v1 数据库无损升级并保留 1201 条消息',async()=>{assert.equal((await read()).state.threads[state.primary].length,1201);await settingsCategory('API 连接');await page.getByLabel('API Key',{exact:true}).fill('fixture-chat-key');await page.getByRole('button',{name:'保存连接',exact:true}).click();await page.locator('.key-caption').getByText('已保存在本机',{exact:true}).waitFor();assert.equal((await read()).threadStorage,1);assert.equal((await read()).state.threads[state.primary].length,1201);});
@@ -63,4 +77,4 @@ async function settingsCategory(name){await appOpen('设置');await page.locator
  assert.deepEqual(errors,[]);fs.mkdirSync(path.dirname(report),{recursive:true});fs.writeFileSync(report,JSON.stringify({passed:checks.length,checks,pageErrors:errors,providerCalls:'local fixtures',realMicrophone:'Chromium fake audio capture; actual MediaRecorder Blob',realDevice:false},null,2));
  await page.locator('.message-flow').evaluate(n=>n.scrollTop=n.scrollHeight);await page.waitForTimeout(250);
  await page.screenshot({path:path.join(path.dirname(report),'feature-chat-preview.png')});console.log(JSON.stringify({passed:checks.length,pageErrors:errors}));
-}catch(e){await page.screenshot({path:path.join(repo,'work/feature-test-failure.png')});throw e;}finally{await context.close();await browser.close();await new Promise(r=>server.close(r));}
+}catch(e){const diagnostic=await page.evaluate(()=>({url:location.href,body:document.body?.innerText.slice(0,1500)})).catch(()=>({}));console.error('FEATURE_BROWSER_DIAGNOSTIC',JSON.stringify({diagnostic,errors}));await page.screenshot({path:path.join(repo,'work/feature-test-failure.png')}).catch(()=>{});throw e;}finally{await context.close();await browser.close();await new Promise(r=>server.close(r));}

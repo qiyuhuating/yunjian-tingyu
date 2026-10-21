@@ -9,6 +9,7 @@ on:
       - feat/custom-native-protocols-20261010
       - fix/v003-media-memory-hardening-20261011
       - hardening/v003-bounded-request-recovery-20261011
+      - release/agent-core-v003-rc3-20261011
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inventory:
-    if: github.ref == 'refs/heads/refactor/recovery-memory-agent-integrity-20261010' || github.ref == 'refs/heads/release/agent-core-v003-candidate-20261010' || github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010' || github.ref == 'refs/heads/fix/atomic-restore-assets-20261010' || github.ref == 'refs/heads/feat/custom-native-protocols-20261010' || github.ref == 'refs/heads/fix/v003-media-memory-hardening-20261011' || github.ref == 'refs/heads/hardening/v003-bounded-request-recovery-20261011'
+    if: github.ref == 'refs/heads/refactor/recovery-memory-agent-integrity-20261010' || github.ref == 'refs/heads/release/agent-core-v003-candidate-20261010' || github.ref == 'refs/heads/refactor/causal-execution-evidence-20261010' || github.ref == 'refs/heads/fix/atomic-restore-assets-20261010' || github.ref == 'refs/heads/feat/custom-native-protocols-20261010' || github.ref == 'refs/heads/fix/v003-media-memory-hardening-20261011' || github.ref == 'refs/heads/hardening/v003-bounded-request-recovery-20261011' || github.ref == 'refs/heads/release/agent-core-v003-rc3-20261011'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

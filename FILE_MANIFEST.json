@@ -14,8 +14,8 @@
   {
     "path": ".github/workflows/build-agent-v003-candidate.yml",
     "description": "0.0.3 独立包完整回归、复用既有签名并校验升级一致性的候选构建；不自动发布；路径：.github/workflows/build-agent-v003-candidate.yml",
-    "bytes": 9409,
-    "sha256": "2bf8f02b3be8675c4cd33493e738035c6569c584952c8935f18a5ae3edf773ea"
+    "bytes": 13646,
+    "sha256": "fbecd59acfd0b9adfb6f174c5761d21d3f82ac11a0c63645e29398b1b5a59182"
   },
   {
     "path": ".github/workflows/release-standalone-v002.yml",
@@ -26,8 +26,8 @@
   {
     "path": ".github/workflows/sync-inventory.yml",
     "description": "架构开发分支自动同步严格文件清单的安全工作流；路径：.github/workflows/sync-inventory.yml",
-    "bytes": 1794,
-    "sha256": "ec9c78ad889afcc67672a02715fddd237df3da7d8de108b85dbacef6b353ea69"
+    "bytes": 1906,
+    "sha256": "2e56ebcb43de413b348021d8854978b5271af78707e70b6053da48bc3fcbfacf"
   },
   {
     "path": ".github/workflows/verify.yml",
@@ -68,8 +68,8 @@
   {
     "path": "docs/0.0.3-agent-candidate-acceptance.md",
     "description": "聊天与Agent完整祖先链、证据等级和可升级签名候选的验收边界；路径：docs/0.0.3-agent-candidate-acceptance.md",
-    "bytes": 1962,
-    "sha256": "1dfa0d86e7fe938c633d648967af83f2654c024669d5ff5e5fc15d53fef684fb"
+    "bytes": 2989,
+    "sha256": "37c60cbb014857f052e265957dae7bb2cb4b29abf5f590ba776f354e75a3ae05"
   },
   {
     "path": "docs/0.0.3-rc2-android-emulator-acceptance.md",
@@ -2402,8 +2402,8 @@
   {
     "path": "work/qa/android-upgrade-smoke.py",
     "description": "仅合成数据的 Android UI 升级、纸条与草稿保留及 force-stop 回归；路径：work/qa/android-upgrade-smoke.py",
-    "bytes": 7962,
-    "sha256": "2ec2cd76f528b3a55338ddc29c3693c2b759664770b5133630d5d6ee9cf9783c"
+    "bytes": 9854,
+    "sha256": "61da3db488fc07d5125721904214e05675b6a3c261e2201f0f823a518da48bcf"
   },
   {
     "path": "work/qa/android.mjs",
@@ -2462,8 +2462,8 @@
   {
     "path": "work/qa/features.mjs",
     "description": "实际页面与媒体17项回归，刷新前验证持久化并定位已保存的流式消息；路径：work/qa/features.mjs",
-    "bytes": 23770,
-    "sha256": "4218268339333538cb238484639ba423e21920ac1174b7a1d7c85ad47e0757c3"
+    "bytes": 24344,
+    "sha256": "63a370e3f3f8cf19373de505c20c35cb473737d4e186002a87c94fa005ffd2e4"
   },
   {
     "path": "work/qa/fixtures/encrypted.pdf",
