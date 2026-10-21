@@ -42,8 +42,8 @@ try {
  const preserved=await page.evaluate(async()=>{
   const api=await import('/qa.js');
   const old=api.freshState();old.theme='night';delete old.appearanceRevision;
-  old.profile.name='配色恢复验收';old.notes[0].text='验收：纸条仍在';old.drafts['chat:char-1']='验收：草稿仍在';
-  old.threads['char-1'].push({id:'reference-user',role:'user',text:'验收：原消息仍在',timestamp:Date.now(),kind:'text',read:true});
+  old.profile.name='配色恢复验收';old.notes[0].text='验收：纸条仍在';old.drafts['chat:char-0']='验收：草稿仍在';
+  old.threads['char-0'].push({id:'reference-user',role:'user',text:'验收：原消息仍在',timestamp:Date.now(),kind:'text',read:true});
   await api.writeLocal('reference-upgrade',old,0);
   const image=await api.uploadLocal('reference-upgrade',new File(['wallpaper fixture bytes'],'wallpaper.png',{type:'image/png'}));
   old.wallpaper={asset:image.url,fit:'contain'};
@@ -71,18 +71,18 @@ try {
  await page.screenshot({path:path.join(output,'home.png')});
  checks.push('390×844 home restores blue title, white label pills and original wallpaper without a fog overlay');
  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();
- await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();
+ await page.locator('.contact-row').filter({hasText:'云汐'}).click();
  assert.equal(await color('.chat-screen','background-color'),'rgb(242, 246, 248)');
  assert.equal(await color('.role-assistant .message-card','background-color'),'rgb(255, 255, 253)');
  await page.evaluate(async()=>{
   await window.NativeFlush();const api=await import('/qa.js');const saved=await api.readLocal('personal-device');
-  saved.state.threads['char-1'].push({id:'reference-user-bubble',role:'user',text:'验收：浅蓝气泡',timestamp:Date.now(),kind:'text',read:true});
+  saved.state.threads['char-0'].push({id:'reference-user-bubble',role:'user',text:'验收：浅蓝气泡',timestamp:Date.now(),kind:'text',read:true});
   await api.writeLocal('personal-device',saved.state,saved.version);
  });
  await page.reload();await page.locator('.home-greeting').waitFor();
  await loadFont();
  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();
- await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();
+ await page.locator('.contact-row').filter({hasText:'云汐'}).click();
  assert.equal(await color('.role-user .message-card','background-color'),'rgb(225, 236, 244)');
  await page.screenshot({path:path.join(output,'chat.png')});
  checks.push('Chat restores cool paper background, milk-white assistant bubble and pale-blue user bubble');
@@ -113,7 +113,7 @@ try {
   await page.locator('.settings-search input').focus();assert.equal(await page.locator('.settings-search').evaluate(el=>getComputedStyle(el).outlineStyle),'solid');
   if(theme==='night')await page.screenshot({path:path.join(output,'night-settings.png')});
   await page.reload();await page.locator('.home-greeting').waitFor();
-  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.locator('.contact-row').filter({hasText:'林晚晴'}).click();await page.mouse.move(0,0);
+  await page.locator('.home-screen').getByRole('button',{name:'聊天',exact:true}).click();await page.locator('.contact-row').filter({hasText:'云汐'}).click();await page.mouse.move(0,0);
   assert(Number(await page.locator('.message-meta button').first().evaluate(el=>getComputedStyle(el).opacity))>=.8);
  }
  checks.push('Sky, night and rose settings retain theme text and border colors with a single search border and visible focus');
