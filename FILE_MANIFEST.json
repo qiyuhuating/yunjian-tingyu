@@ -2462,8 +2462,8 @@
   {
     "path": "work/qa/connection-ui.mjs",
     "description": "23 项生产界面连接与设置验收，含原生桥接与聊天恢复；路径：work/qa/connection-ui.mjs",
-    "bytes": 22776,
-    "sha256": "6b26a7c42ef7a015064bac21d1b723ea1224a5bf2973d1eb38ae979dfa8d6f15"
+    "bytes": 23136,
+    "sha256": "aeb79772a4eb3378b604ee0ada31cb274bce9dc28c816951c0be16c7e7b47695"
   },
   {
     "path": "work/qa/continuity.mjs",
