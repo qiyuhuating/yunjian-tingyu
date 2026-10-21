@@ -473,7 +473,7 @@
 | [docs/frontend-cleanup-2026-10-13.md](docs/frontend-cleanup-2026-10-13.md) | 前端包精简、不可达图形删除依据和验证边界；路径：docs/frontend-cleanup-2026-10-13.md | 2801 |
 | [docs/frontend-cleanup-validation.json](docs/frontend-cleanup-validation.json) | 前端清理的本地编译、图形和包完整性验收结果；路径：docs/frontend-cleanup-validation.json | 1553 |
 | [scripts/export-frontend.py](scripts/export-frontend.py) | 按真实前端导入关系生成不含优化提示词和历史材料的独立 UI 包；路径：scripts/export-frontend.py | 4782 |
-| [work/qa/visual-cleanup.mjs](work/qa/visual-cleanup.mjs) | 三种主题四种尺寸的图标单一渲染、插画加载和清理前后样式回归；路径：work/qa/visual-cleanup.mjs | 6468 |
+| [work/qa/visual-cleanup.mjs](work/qa/visual-cleanup.mjs) | 三种主题四种尺寸的图标单一渲染、插画加载和清理前后样式回归；路径：work/qa/visual-cleanup.mjs | 6465 |
 | [docs/apk-trim-2026-10-14.md](docs/apk-trim-2026-10-14.md) | 默认角色与 APK 资源精简、升级保留和本地验收证据；路径：docs/apk-trim-2026-10-14.md | 2315 |
 | [outputs/android/res/drawable/cloud_pet.webp](outputs/android/res/drawable/cloud_pet.webp) | 原生启动器宠物图的像素无损 WebP 版本；路径：outputs/android/res/drawable/cloud_pet.webp | 706622 |
 | [outputs/android/stage-assets.py](outputs/android/stage-assets.py) | 按新鲜 Vite 资源图暂存 Android 页面与动态模块，排除未引用和测试文件；路径：outputs/android/stage-assets.py | 3830 |
