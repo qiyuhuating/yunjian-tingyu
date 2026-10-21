@@ -24,6 +24,8 @@ jobs:
           node outputs/mori-phone/scripts/verify-media.mjs
           node outputs/mori-phone/scripts/verify-p0.mjs
           node outputs/mori-phone/node_modules/vite/bin/vite.js build --config outputs/mori-phone/android-web/vite.config.ts --outDir ../../../work/feature-build
+          FEATURE_BUILD_DIR=work/feature-build python3 work/verify-apk-assets.py
+          FEATURE_BUILD_DIR=work/feature-build node work/qa/apk-assets.mjs
           node work/qa/features.mjs
           node work/qa/reference-sky.mjs
           node work/qa/visual-cleanup.mjs

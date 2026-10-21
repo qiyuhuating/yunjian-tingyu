@@ -88,7 +88,7 @@ def snapshot(name, output):
     r = subprocess.run(["adb", "exec-out", "screencap", "-p"], capture_output=True, check=True, timeout=30)
     (output / (name + ".png")).write_bytes(r.stdout)
     raw, _ = hierarchy()
-    (output / (name + ".xml")).write_text(raw)
+    (output / (name + ".xml")).write_text(raw, encoding="utf-8")
 
 def version(expected):
     data = adb("shell", "dumpsys", "package", PACKAGE)
@@ -167,9 +167,8 @@ def main():
         except Exception: pass
         raise
     finally:
-        (a.output / "android-upgrade-check.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+        (a.output / "android-upgrade-check.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 if __name__ == "__main__":
     main()
-

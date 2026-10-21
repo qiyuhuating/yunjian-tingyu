@@ -1,10 +1,11 @@
 import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';import assert from 'node:assert/strict';import ts from 'typescript';
+import {ensureTestCharacters} from './test-characters.mjs';
 const root=path.resolve(import.meta.dirname,'..'),native=createRequire(path.join(root,'package.json')),loaded=new Map();
 function load(file){if(loaded.has(file))return loaded.get(file);const m={exports:{}};loaded.set(file,m.exports);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,'lib',file+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(n=>n.startsWith('./')?load(n.slice(2)):native(n),m,m.exports);return m.exports;}
 const {freshState,stateSchema,loreSchema}=load('phone-model'),{selectLore}=load('world-info'),{blankCharacter,parseCharacter,parseWorldBook,exportCharacter,exportWorldBook}=load('character-import'),{cardUnits,cardAnalysisPrompt,applyCardAnalysis}=load('card-analysis'),{memoryTask,applyMemoryResult}=load('character-memory'),{buildPrompt}=load('chat-prompt'),{maintainConversation}=load('chat-maintenance'),{produce}=native('immer');const checks=[];
 async function check(name,fn){await fn();checks.push(name);}
 function lore(id,changes={}){return loreSchema.parse({id,title:id,keys:'茶',text:'基础正文',enabled:true,scope:'global',...changes});}
-function fixture(){const s=freshState();s.lore=[];s.threads[s.primary]=[];return s;}
+function fixture(){const s=ensureTestCharacters(freshState(),2);s.lore=[];s.threads[s.primary]=[];return s;}
 const card={character:blankCharacter('冷面剑客','他寡言，拒绝讨好。\n青城坐落在江边。\n城中有一座古塔。'),lore:[],warnings:[],format:'TXT'};
 const split={segments:[{start:0,end:1,kind:'character'},{start:1,end:3,kind:'world',title:'青城',keys:['青城','古塔']}]};
 await check('AI只返回编号，逐片保留换行与全部原文',()=>{assert.equal(cardUnits(card.character.description).join(''),card.character.description);const next=applyCardAnalysis(card,JSON.stringify(split));assert.equal(next.character.description+next.lore[0].text,card.character.description);assert.equal(JSON.parse(next.character.cardExtras).data.description,card.character.description);assert.equal(card.lore.length,0);assert(cardAnalysisPrompt(card).includes('编号不是字符位置'));});

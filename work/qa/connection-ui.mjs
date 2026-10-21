@@ -12,6 +12,10 @@ fs.mkdirSync(out,{recursive:true});const checks=[],errors=[],calls=[];
 const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined,headless:true,args:['--disable-webgl']});
 const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
 const state=load('phone-model').freshState();state.memorySettings.autoExtract=false;state.memorySettings.autoSummary=false;state.threads[state.primary].push({id:'private-history',role:'user',text:'HISTORY_PRIVATE_SENTINEL',timestamp:1,kind:'text'});state.characters[0].aiConnection={provider:'openai',model:'dedicated-model',baseURL:'https://api.openai.com/v1',vision:false,keyScope:'character'};
+// The production fresh-install roster has only one character. Seed an explicit
+// second character for the global-connection failure/retry scenario below.
+state.characters.push({...state.characters[0],id:'char-1',name:'连接测试角色',aiConnection:undefined});
+state.threads['char-1']=[{...state.threads[state.primary][0],id:'hello-connection-fixture'}];
 await context.addInitScript(initial=>{if(sessionStorage.getItem('connection-seeded'))return;sessionStorage.setItem('connection-seeded','1');const r=indexedDB.open('cloudlet-device',1);r.onupgradeneeded=()=>{r.result.createObjectStore('states',{keyPath:'owner'});r.result.createObjectStore('assets',{keyPath:['owner','id']});r.result.createObjectStore('keys',{keyPath:['owner','provider']});r.result.createObjectStore('crypto',{keyPath:'owner'});};r.onsuccess=()=>{const tx=r.result.transaction('states','readwrite');tx.objectStore('states').put({owner:'personal-device',state:initial,version:1,updatedAt:1});tx.oncomplete=()=>r.result.close();};},state);
 let chatStatus=200,modelStatus=200,streamError=0,delay=0,chatText='连接成功';
 await context.route('https://**/*',async route=>{
