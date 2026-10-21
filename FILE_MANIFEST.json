@@ -2762,8 +2762,8 @@
   {
     "path": "work/qa/visual-cleanup.mjs",
     "description": "三种主题四种尺寸的图标单一渲染、插画加载和清理前后样式回归；路径：work/qa/visual-cleanup.mjs",
-    "bytes": 6468,
-    "sha256": "60625d4b27aa789a824d0ab69c8b3e1c3fd6389e0e70271a0a0e9abc073e7cd7"
+    "bytes": 6465,
+    "sha256": "46a71b07e2181fff0f06e276330a04ebf0f222c3378fb5ea19b037a6026f1bcc"
   },
   {
     "path": "work/qa/visual-v2.mjs",
