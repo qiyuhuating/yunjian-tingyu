@@ -14,4 +14,25 @@ check('只有用户保存的核心参与实际字段，卡片和模板不改写'
 check('预算装不下当前资料时明确报错，不假装发送完整上下文',()=>{s.sampling.contextMode='manual';s.sampling.contextTokens=1024;assert.throws(()=>buildPrompt(s,c,c.id,'你好','chat'),/超过上下文预算/);});
 check('追加新消息未用满窗口时保留原始稳定历史前缀',()=>{s.sampling.contextMode='max';const a=selectHistory(s,c.id);s.threads[c.id].push({id:'last',role:'user',text:'这一轮',timestamp:601,kind:'text'});assert.deepEqual(a,selectHistory(s,c.id).slice(0,a.length));});
 check('实时通话按实际语音模型窗口选历史，不固定十二条',()=>{const voice={...s,provider:'openai',model:'gpt-realtime-2.1',baseURL:'',sampling:{...s.sampling,contextMode:'max'}};assert.equal(contextPlan(voice).window,128000);const p=buildPrompt(voice,c,c.id,'语音','voice');assert(p.history.length>12&&p.history.length<600);assert.equal(realtimeContext(p).items.length,p.history.length+2);});
+check('模型输出上限同时约束上下文预算和各协议的实际请求',()=>{
+ const {wireRequest}=load('provider-adapter');
+ for(const [provider,field] of [['openai','max_completion_tokens'],['anthropic','max_tokens'],['gemini','maxOutputTokens'],['compatible','max_tokens']]){
+  const state=freshState();Object.assign(state,{provider,model:'fixture',baseURL:'https://model.example/v1'});state.sampling.maxTokens=4096;state.sampling.thinking=false;
+  state.modelLimits[modelLimitKey(provider,state.baseURL,state.model)]={contextTokens:32768,outputTokens:1024};
+  const plan=contextPlan(state);assert.equal(plan.outputReserve,1024);
+  const parsed=chatInput.parse({provider,model:state.model,baseURL:state.baseURL,apiKey:'fixture-test-key-only',sampling:state.sampling,outputTokenLimit:plan.outputLimit,messages:[{role:'system',content:'test'},{role:'user',content:'hello'}]});
+  const wire=wireRequest(parsed),body=provider==='gemini'?wire.body.generationConfig:wire.body;assert.equal(body[field],1024);
+ }
+});
+check('仅披露输出上限时仍保留元数据，并保留已有窗口预设',()=>{
+ const limits=extractModelLimits('openai',{data:[{id:'gpt-4.1-mini',max_output_tokens:1024}]});assert.equal(limits['gpt-4.1-mini'].outputTokens,1024);
+ const state=freshState();Object.assign(state,{provider:'openai',model:'gpt-4.1-mini'});state.modelLimits[modelLimitKey(state.provider,state.baseURL,state.model)]=limits[state.model];
+ const plan=contextPlan(state);assert.equal(plan.window,1047576);assert.equal(plan.outputReserve,1024);assert.equal(plan.known,true);
+ state.model='unknown';state.modelLimits[modelLimitKey(state.provider,state.baseURL,state.model)]={outputTokens:1024};assert.equal(contextPlan(state).window,32768);assert.equal(contextPlan(state).known,false);
+});
+check('输出上限装不下思考预算时在发送前明确拒绝，不发送无效参数',()=>{
+ const {wireRequest}=load('provider-adapter'),state=freshState();state.provider='anthropic';state.model='claude-haiku-4-5-20251001';state.sampling.thinking=true;state.sampling.reasoningEffort='medium';
+ const input=chatInput.parse({provider:state.provider,model:state.model,apiKey:'fixture-test-key-only',sampling:state.sampling,outputTokenLimit:1024,messages:[{role:'system',content:'test'},{role:'user',content:'hello'}]});assert.throws(()=>wireRequest(input),/降低思考强度/);
+ delete input.outputTokenLimit;assert.equal(wireRequest(input).body.max_tokens,5296);
+});
 console.log(JSON.stringify({passed:checks.length,checks},null,2));

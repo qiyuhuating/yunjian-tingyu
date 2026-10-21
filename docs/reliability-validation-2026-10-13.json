@@ -1,0 +1,814 @@
+{
+  "baseCommit": "4c1d3acff28a40cd8e520be4cee0085d2d6a9faf",
+  "date": "2026-10-13",
+  "coreAndProtocolChecks": 303,
+  "browserChecks": 108,
+  "core": [
+    {
+      "check": "core",
+      "exitCode": 0,
+      "result": {
+        "passed": 26,
+        "checks": [
+          "时间、记忆和新消息变化不改变固定前缀",
+          "修改人设刷新角色资料，核心系统保持不变",
+          "世界书主次关键词、常驻与停用",
+          "DeepSeek 按模式发送参数，不发送弃用惩罚",
+          "兼容服务的重复惩罚仅显式启用",
+          "参数边界拒绝非法值，旧备份自动补全",
+          "真实计量与缺失计量保持区别",
+          "预算未满时历史前缀稳定，手动预算下长会话有界",
+          "角色扮演短回只推进一个节拍并安全解析接话选项",
+          "V3 导入保留开场、后置指令与停用世界书",
+          "导出保留未知扩展、V3 字段和角色世界书",
+          "长字段预览告知截断，未修改导出保留完整原文",
+          "移除世界书后导出不会恢复已删除条目",
+          "PNG tEXt 角色数据",
+          "PNG zTXt 角色数据",
+          "PNG iTXt 角色数据",
+          "拒绝 PNG 校验损坏",
+          "拒绝截断 PNG、损坏 JSON 与超长 TXT",
+          "超大 DOCX 保留原件而不加载全文解析",
+          "长期记忆找回早期相关事实，并隔离其他角色",
+          "阶段摘要不改变固定人设前缀，旧对话能被找回",
+          "阶段摘要按间隔推进，保留来源游标与旧摘要",
+          "重复检测识别复述但允许不同内容，不触发短语误判",
+          "LRC 正文与时间同步，支持多时间戳和 seek",
+          "音乐深链只允许音乐协议或网页，拒绝执行脚本",
+          "旧备份补全记忆和语音设定，默认浅色不跟系统"
+        ]
+      }
+    },
+    {
+      "check": "api-connections",
+      "exitCode": 0,
+      "result": {
+        "total": 24,
+        "passed": 24,
+        "checks": [
+          {
+            "name": "预设服务商采用实际保存的地址",
+            "passed": true
+          },
+          {
+            "name": "粘贴完整接口地址仍能正确发现模型",
+            "passed": true
+          },
+          {
+            "name": "Claude 完整 messages 地址不重复拼接",
+            "passed": true
+          },
+          {
+            "name": "安全边界仍拒绝明文、本机、IP、凭据与 query",
+            "passed": true
+          },
+          {
+            "name": "OpenRouter 流中的余额错误有明确说明",
+            "passed": true
+          },
+          {
+            "name": "流中限流错误保留可操作信息",
+            "passed": true
+          },
+          {
+            "name": "截断的流明确失败且不能伪报成功",
+            "passed": true
+          },
+          {
+            "name": "兼容接口不强加可选 stream_options",
+            "passed": true
+          },
+          {
+            "name": "连接测试请求独立于角色和聊天记录",
+            "passed": true
+          },
+          {
+            "name": "模型列表 404 和余额 402 分别保留原因",
+            "passed": true
+          },
+          {
+            "name": "200 HTML 不会误判为成功连接",
+            "passed": true
+          },
+          {
+            "name": "网络错误和超时有明确原因，用户取消仍为 AbortError",
+            "passed": true
+          },
+          {
+            "name": "正常 DeepSeek/OpenRouter 中文 SSE 与用量可读取",
+            "passed": true
+          },
+          {
+            "name": "新地址的凭据隔离，官方连接保持旧 Key 槽位",
+            "passed": true
+          },
+          {
+            "name": "自定义原生协议拥有独立的地址与角色专属密钥命名空间",
+            "passed": true
+          },
+          {
+            "name": "429 quota 错误仍分类为限流，错误文本不回显凭据",
+            "passed": true
+          },
+          {
+            "name": "OpenRouter 临时并发额度与 Key 限额分别提示",
+            "passed": true
+          },
+          {
+            "name": "只有 finish_reason error 的回复也不能伪报成功",
+            "passed": true
+          },
+          {
+            "name": "服务商在 200 JSON 中返回错误仍能识别",
+            "passed": true
+          },
+          {
+            "name": "无效地址在传输前拒绝，不发送 Key",
+            "passed": true
+          },
+          {
+            "name": "Native catalog timeout is classified as 504",
+            "passed": true
+          },
+          {
+            "name": "Incomplete SSE timeout never emits success",
+            "passed": true
+          },
+          {
+            "name": "Large model catalogs include search results beyond the former 300-entry limit",
+            "passed": true
+          },
+          {
+            "name": "Large catalogs retain context metadata for later model entries",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "check": "core-runtime",
+      "exitCode": 0,
+      "result": {
+        "passed": 20,
+        "checks": [
+          "Fragmented SSE UTF-8 and CRLF boundaries survive",
+          "Multi-line data: events decode as one payload",
+          "SSE usage survives completion and never becomes displayed text",
+          "A disconnected stream cannot report success",
+          "A stream declaring finish_reason without DONE is not complete",
+          "Malformed and upstream error frames cannot be completed",
+          "Media cannot enter non-media operations",
+          "Oversized text is bounded before commit",
+          "Abort before response consumption is honored",
+          "Plain chat uses one real last user message and a single system envelope",
+          "Group chat preserves other-speaker identity but not fabricated user turn",
+          "A repeated group question is not skipped when another member spoke last",
+          "OpenAI truncated upstream after finish_reason must never synthesize DONE",
+          "Anthropic message_stop is an explicit terminal event",
+          "Causal user anchor blocks future queued messages and preserves peer evidence",
+          "Failed restore cleanup never deletes assets referenced by persisted data",
+          "No hidden automatic retry remains in the chat turn",
+          "Failed backup commits never delete assets referenced by older records",
+          "Restoring an archive prepares only referenced blobs and writes nothing before the transaction",
+          "A restore uses a single atomic state/threads/assets transaction before publishing React state"
+        ]
+      }
+    },
+    {
+      "check": "turn-execution",
+      "exitCode": 0,
+      "result": {
+        "passed": 24,
+        "checks": [
+          "Durable pending queue survives serialized restart and never autoplays an uncertain provider POST",
+          "Durable queue requires matching user message and only replays queued receipts",
+          "Turn queue deduplicates IDs but not intentionally repeated text",
+          "Queue prunes removed, saved and no-longer-failed messages",
+          "One-to-one turn persists exactly one reply and one affection increment",
+          "A saved reply may not be charged for again",
+          "Missing user record never generates orphaned assistant messages",
+          "Edited user message must not invoke a stale paid request",
+          "Deleted single-chat character must not silently fall back to another actor",
+          "Speaker bubbles commit atomically rather than one write per bubble",
+          "A failed second group speaker retains first speaker and safe resume cursor",
+          "On persist failure one speaker cannot leave partial bubbles",
+          "Media upload failure is shown but never resends already committed text",
+          "Invalid stale group member plan stops before API call",
+          "Cancelled group turn never charges an API request",
+          "Visible chat routes turn execution exclusively through testable module",
+          "Composer is cleared only after user message persistence resolves",
+          "A successful text turn persists media work and a result receipt without a second AI call",
+          "A failed media side effect retains finished text and a recoverable receipt",
+          "Native generated media and text share a single committed reply transaction",
+          "Native upload failed before completion preserves text plus durable notice",
+          "Stopping persisted intents preserves other threads and uncertain receipts",
+          "A group stopped between speakers resumes only the remaining persisted speaker",
+          "Native blobs are staged with reply commit; a failed commit cannot mark completion"
+        ]
+      }
+    },
+    {
+      "check": "durable-turn-receipts",
+      "exitCode": 0,
+      "result": {
+        "passed": 10,
+        "checks": [
+          "Legacy state defaults to empty receipts",
+          "Sent but uncommitted POST requires manual confirmation after parse",
+          "Committed speaker never repeats after crash",
+          "Uncertain group continuation only resends uncommitted speaker by consent",
+          "A completed receipt cannot repeat billing",
+          "Out-of-order speaker completion is rejected",
+          "Old completion is fenced after explicitly permitted retry",
+          "Late error cannot downgrade a newer attempt",
+          "Media outbox persists pending commands with completed chat turn",
+          "Interrupted media delivery demands approval and fences old responses"
+        ]
+      }
+    },
+    {
+      "check": "agent-workspace-and-collaboration",
+      "exitCode": 0,
+      "result": {
+        "passed": 25,
+        "checks": [
+          "Reject traversal, absolute and .git workspace paths",
+          "Writes require explicit approval and exact revision",
+          "Multi-file edits commit together or leave all previous revisions unchanged",
+          "No access from another thread even with a valid file path",
+          "Legacy state defaults to an empty workspace and agent log",
+          "Real collaboration reads actual file and hands prior review to a second role",
+          "Unapproved file edits and shell execution are never tool capabilities",
+          "An uncertain model call is recorded rather than silently retried",
+          "Deleted and edited automatic memory evidence is excluded, manual notes survive",
+          "Resumed collaboration skips completed reviewers and includes saved evidence",
+          "Changed source cannot be resumed into stale agent review",
+          "Missing saved reviewer output blocks restart rather than rebilling it",
+          "Read-only workspace tools return a copy rather than mutable storage",
+          "Workspace capacity errors are side-effect free before transaction",
+          "Late agent completion is fenced after a manually retried request",
+          "Stale Agent failure cannot poison a newer request",
+          "Agent report provenance rejects modified source, rewritten artifact and chat spoof",
+          "Changed source revision invalidates previously linked Agent results",
+          "Transitive summary provenance rejects tampering in earlier summarized intervals",
+          "Ungrounded legacy automatic memory remains stored but is never injected",
+          "Multi-source factual memory requires every cited source to remain valid",
+          "Same-version tampering of source or report is rejected by content hash",
+          "Summary completion rejects earlier edits, deletions and attachment changes during the request",
+          "ID-only automatic memories cannot bypass missing evidence, including a zero source timestamp",
+          "Same-revision source mutation during Agent request cannot publish a report"
+        ]
+      }
+    },
+    {
+      "check": "character-memory-and-cadence",
+      "exitCode": 0,
+      "result": {
+        "passed": 27,
+        "checks": [
+          "旧备份补齐设置且不修改已保存的系统提示词",
+          "自动记忆有角色归属、原话证据与持久化游标",
+          "编造来源、非逐字证据和密钥记忆被拒绝",
+          "模型概括错误不会替换原话为反向偏好",
+          "短引文不能删除否定、条件、转述和剧情语境",
+          "最长合法原文能无截断保存为记忆且重复候选不复制同一来源",
+          "历史自动记忆也从当前完整来源召回，不召回截断语境",
+          "重复来源编号、已删除来源和失败来源不能替换原文召回",
+          "同一条明确更正可以更新多条旧记忆，不因来源重复留下旧偏好",
+          "用户编辑并锁定的自动记忆按编辑内容召回，原消息删除也不覆盖",
+          "不同角色不会读到别人的私有记忆",
+          "用户编辑和手动记忆不被自动整理覆盖",
+          "明确更正保存旧版本并使用最新原话",
+          "来源删除或内容改变时不提交陈旧记忆",
+          "满库不静默丢弃旧记忆",
+          "群聊自然延迟有界、快速模式可关闭且可取消",
+          "引用优先接话并尊重普通响应人数",
+          "无需凑回复，但首位回应不能静默",
+          "群聊保留实际多行代码与数学，依旧拒绝旁白",
+          "语言与能力预设不污染核心，最近原话保留",
+          "跨会话的历史补提取不会将新偏好回退成旧偏好",
+          "角色不能对其他角色的私聊建立独立提取任务",
+          "旧角色不设独立连接，仍继承原全局服务商且保持旧备份兼容",
+          "不同角色在同一个群各自选择 OpenAI 和 OpenRouter 模型",
+          "自定义角色连接绝不复用其他自定义地址的全局密钥",
+          "测试全局连接能够显式绕过角色专用模型",
+          "修改角色 AI 配置不改变聊天、角色记忆、世界书和系统提示词"
+        ]
+      }
+    },
+    {
+      "check": "roleplay-and-worldbook",
+      "exitCode": 0,
+      "result": {
+        "passed": 27,
+        "checks": [
+          "AI只返回编号，逐片保留换行与全部原文",
+          "AI遗漏、重叠、越界、无人物、无世界均拒绝",
+          "AI注入未知字段和替代正文不改变角色与权限",
+          "大量句子与emoji分片后完全可重组且最多160片",
+          "分析请求与角色历史和核心提示词完全隔离",
+          "常驻、作用域和停用优先于关键词",
+          "四种次关键词逻辑按SillyTavern枚举执行",
+          "英文整词、大小写和中文连续匹配",
+          "扫描深度排除过旧和失败消息",
+          "递归链和循环有界且只选一次",
+          "递归排除和阻止继续触发均生效",
+          "背景预算跳过超大完整条目，仍选择后续短条目",
+          "世界书不再只限12条，位置分别进入前置和后置资料",
+          "角色卡导入SillyTavern扩展深度与逻辑，往返未知字段",
+          "独立世界书对象索引、停用和未知扩展可导入导出",
+          "独立世界书加到角色后导出仍保留未知字段",
+          "不支持深度插入和定时效果有明确告知，导出原规则",
+          "超过100条角色世界书可保存，旧备份仍自动补默认值",
+          "并发旧记忆结果不能回退游标或复活已删除记忆",
+          "库将满时多条提案要么全写入要么全拒绝",
+          "真实Immer提交可应用记忆，不对代理调用structuredClone",
+          "正在整理的来源变成失败消息时拒绝写入",
+          "混有Key的整条消息不能截取其中一部分成为长期记忆",
+          "摘要整理期间原话被编辑则保留旧摘要",
+          "空白摘要不消耗摘要游标",
+          "已整理消息删除后不从头重复提取，时间检查点继续处理新消息",
+          "模板关键词可触发，空背景不会制造命中"
+        ]
+      }
+    },
+    {
+      "check": "reusable-character-card-library",
+      "exitCode": 0,
+      "result": {
+        "passed": 19,
+        "checks": [
+          "旧状态缺仓库时默认空库，原有角色与聊天保持",
+          "仅保存模板不增加聊天角色或世界书",
+          "模板丢弃关系值和模型配置，导出不带连接",
+          "重新导入相同JSON和重排键不重复保存",
+          "同一模板反复创建独立角色和世界书编号",
+          "已有角色编辑和世界书编辑不反写模板或另一角色",
+          "模板编辑不修改原文、实例和世界书",
+          "旧修订编辑、应用和删除均拒绝，不覆盖新卡",
+          "显式更新保留聊天、记忆、关系与AI，仅复制设定",
+          "取消世界书替换时保留既有条目",
+          "删除目标时拒绝更新，不创建意外副本",
+          "复制卡片后名称、编号与内容可独立编辑",
+          "当前模板导出使用最新设定并保留未知V3字段",
+          "保存现有角色不携带全局背景或其他角色世界",
+          "聊天角色满80位仍允许仓库新增，应用失败保持原状态",
+          "世界书满时整次应用失败，不产生半个角色",
+          "模板拒绝连接字段、重复编号和错属世界书",
+          "删除仓库卡不影响已有聊天、世界书、记忆或另一模板",
+          "仓库200张数量上限和12MB总预算都拒绝整批写入"
+        ]
+      }
+    },
+    {
+      "check": "backup-roundtrip",
+      "exitCode": 0,
+      "result": {
+        "passed": 15,
+        "checks": [
+          "1999 attachments export/import roundtrip",
+          "2000 attachments export/import roundtrip",
+          "2001 attachments export/import roundtrip",
+          "over 20 MiB valid multilingual state roundtrip",
+          "legacy v2 ZIP and plain JSON still restore",
+          "legacy v2 with 2001 assets retains attachment integrity checks",
+          "cancellation aborts before export succeeds",
+          "duplicate ZIP entry rejected",
+          "pending assets are exported and real blob size checked",
+          "invalid state cannot complete an export",
+          "asset per-entry and total size limits apply before reading blobs",
+          "oversize state parts and manifests rejected by real decoder",
+          "cancellation while writing asset interrupts streaming",
+          "65,534 ZIP entries roundtrip at classic ZIP limit",
+          "65,535 ZIP entries cannot complete export"
+        ],
+        "failures": []
+      }
+    },
+    {
+      "check": "providers",
+      "exitCode": 0,
+      "result": {
+        "passed": 19,
+        "checks": [
+          "10 个服务商预设无需补地址或模型，均使用 HTTPS",
+          "OpenAI 使用 max_completion_tokens 与 store:false，省略 repetition",
+          "OpenAI 推理型号不发送旧采样和惩罚字段",
+          "DeepSeek 模式选择正确，惩罚设定保留但不发送",
+          "百炼发送存在与重复惩罚，硅基只发送频率惩罚",
+          "Kimi K2.6 固定参数省略并关闭思考，GLM 温度不超过 1",
+          "OpenRouter 要求后端支持显式启用的惩罚",
+          "Claude 使用原生鉴权、系统缓存点、合并用户消息与 base64 图片",
+          "Gemini 使用原生角色、图片、generationConfig 与非 URL 密钥",
+          "自定义 Anthropic 和 Gemini 使用各自原生线路而非伪装 OpenAI",
+          "自定义原生模型发现及 HTTPS 安全边界独立生效",
+          "拒绝本机/内网/IP/明文地址与注入系统消息、远程图片",
+          "模型发现按原生鉴权，过滤 Gemini 非生成模型",
+          "OpenAI 分字节中文与末尾空 choices 用量可读",
+          "Claude 缓存总输入与累计输出准确，不泄露思考事件",
+          "Gemini 只显示正文，输出包含思考用量，缓存缺失保持未知",
+          "中途断流、原生错误与 Gemini 阻断都不会伪造成功",
+          "取消下游会取消上游流",
+          "迁移编码跨字节边界、空文件与中文元数据保持原字节"
+        ]
+      }
+    },
+    {
+      "check": "voice",
+      "exitCode": 0,
+      "result": {
+        "passed": 6,
+        "checks": [
+          "未登录和跨源请求均不请求供应商",
+          "TTS 拒绝私网与超过 4096 字输入",
+          "TTS 正确 POST 音色、速度和文本，返回不缓存音频",
+          "TTS 错误响应和非音频不伪造成功，不泄露供应商错误",
+          "Realtime 发送 SDP、角色指令和真实音频配置",
+          "Realtime 权限失败保留真实错误状态"
+        ]
+      }
+    },
+    {
+      "check": "review-regressions",
+      "exitCode": 0,
+      "result": {
+        "passed": 7,
+        "checks": [
+          "坏默认角色、重复角色和无效群成员在恢复前被拒绝",
+          "原始卡长字段、31开场、41标签和世界书往返无损",
+          "旧V1别名人设仍保留长原文",
+          "失败回答不进历史，失败用户问题仍可重试",
+          "摘要完全独立于角色、接话选项和聊天历史",
+          "3001条历史仍可以继续保存",
+          "拒绝原型属性编号和无效日期，避免隐藏渲染崩溃"
+        ]
+      }
+    },
+    {
+      "check": "group-chat",
+      "exitCode": 0,
+      "result": {
+        "passed": 21,
+        "checks": [
+          "群聊覆盖剧情预设与选项要求",
+          "群成员顺序完整，不固定前三名",
+          "@成员及@所有人准确选择",
+          "排队消息不能改变先前回合的引用和发言人名单",
+          "旧记录可以按名称继续轮换",
+          "其他角色发言作为群消息而非自身历史",
+          "同名角色由ID区分",
+          "短群消息拆成真正的多条消息",
+          "拒绝旁白、过长正文和错误格式",
+          "保留日常括号和人的情绪表达",
+          "群名单属于固定前缀，时间与新消息不改变缓存前缀",
+          "新消息身份可保存，旧记录无需迁移",
+          "群记忆仅在该群内共享，不进入私聊或其他群",
+          "纸条和动态写作独立于剧情预设与接话格式",
+          "群摘要区分成员，不把所有发言记成同一角色",
+          "长度和口吻由角色卡及系统默认，不要求每次指定",
+          "年龄读取角色卡，背景资料与核心分开且用户要求优先",
+          "角色卡与模式变化不能修改核心系统字节",
+          "OpenAI Claude Gemini 的实际系统字段都只有固定核心",
+          "实时语音固定核心与角色历史分开发送",
+          "自然群聊允许日常多句和必要的重要长说明"
+        ]
+      }
+    },
+    {
+      "check": "context-and-core",
+      "exitCode": 0,
+      "result": {
+        "passed": 14,
+        "checks": [
+          "旧备份自动获得最长上下文和原始核心默认值",
+          "DeepSeek Gemini Claude OpenRouter 的模型上限真实字段解析",
+          "恶意或无效元数据不伪造上下文上限",
+          "实时模型元数据优先于官方预设，保留输出和思考余量",
+          "自定义接口按地址隔离，未知模型有明确预算而非假1M",
+          "1M预算实际保留超过100条及400K文字，并通过传输校验",
+          "手动预算真正限制历史，原记录不删除",
+          "只有用户保存的核心参与实际字段，卡片和模板不改写",
+          "预算装不下当前资料时明确报错，不假装发送完整上下文",
+          "追加新消息未用满窗口时保留原始稳定历史前缀",
+          "实时通话按实际语音模型窗口选历史，不固定十二条",
+          "模型输出上限同时约束上下文预算和各协议的实际请求",
+          "仅披露输出上限时仍保留元数据，并保留已有窗口预设",
+          "输出上限装不下思考预算时在发送前明确拒绝，不发送无效参数"
+        ]
+      }
+    },
+    {
+      "check": "typescript",
+      "exitCode": 0
+    },
+    {
+      "check": "diff-whitespace",
+      "exitCode": 0
+    }
+  ],
+  "additionalProtocolSuites": {
+    "verify-media": {
+      "passed": 11,
+      "exitCode": 0
+    },
+    "verify-p0": {
+      "passed": 8,
+      "exitCode": 0
+    }
+  },
+  "browser": {
+    "storage": {
+      "passed": 19,
+      "checks": [
+        "5000 条历史原样保存和读取",
+        "修改设置只写元数据，不重写未变会话",
+        "追加消息只写发生变化的会话",
+        "过期窗口写入冲突被拒绝，历史不被覆盖",
+        "并发相同附件去重，完整原字节保持",
+        "仓库模板和嵌套编辑草稿保留本机头像引用",
+        "完整 ZIP 只写一份共用附件，文本实际压缩并通过摘要校验",
+        "完整备份恢复同时重映射卡片模板和卡片草稿头像",
+        "壁纸、消息、角色草稿的共用引用在恢复时全部映射正确",
+        "备份不能改媒体连接或自动启用付费工具",
+        "状态与会话事务原子性：落盘失败不伪造成功",
+        "事务强制中止后，恢复附件与状态同时回滚",
+        "普通附件在消息与 Blob 同一事务中保存",
+        "删除聊天角色后，仅仓库引用的头像仍被保留",
+        "删除库卡保留原头像附件，避免销毁未提交的新引用",
+        "删除旧用途时不销毁待提交去重附件，新引用仍有完整原件",
+        "真实 IndexedDB 的消息与待发意图共同回滚、读取恢复、外部备份禁止自动发送",
+        "原生生成 Blob、正文、媒体消息、回执同事务成功；强制中止后全部回滚且未知 POST 不自动重放",
+        "页面冷重载后的真实落盘队列恢复，未知原生请求仍不可自动重放"
+      ],
+      "textOriginalBytes": 195000,
+      "backupBytes": 45668,
+      "historyMessages": 5002,
+      "pageErrors": []
+    },
+    "features": {
+      "passed": 17,
+      "checks": [
+        "旧 v1 数据库无损升级并保留 1201 条消息",
+        "日记与角色编辑离开、刷新后恢复且核心不被改写",
+        "模型预设真实显示、存储申请只有一个入口、设置草稿恢复",
+        "壁纸上传、完整显示、刷新、恢复默认及附件原字节保存",
+        "重复图片只存一份原 Blob，表情包授权保留",
+        "搜索真正定位到很早的消息，页面按需渲染",
+        "真实 MediaRecorder 录音可试听、取消、发送并持久化原音频",
+        "320–1440 宽度下录音与聊天没有水平溢出",
+        "聊天模型通过真实媒体适配生成图片并保存，而不是文本占位",
+        "媒体服务权限失败显示未发送，不制造成功图片",
+        "音频转写后真实进入聊天上下文，原音频继续保留",
+        "未发送录音离开确认能保留预览，确认后才丢弃",
+        "授权表情与两条自然短消息是真实消息，原图不复制",
+        "Gemini 原生图片和 PCM 语音真实保存；原始音频发送原生上下文",
+        "角色独立选 DeepSeek，群聊之外真实请求不依赖全局 Gemini 模型",
+        "各应用导航无崩溃；本地虚拟功能有明确范围",
+        "Android multipart 桥接保留音频原字节，旧 APK 明确拒绝而非假转写"
+      ],
+      "pageErrors": [],
+      "providerCalls": "local fixtures",
+      "realMicrophone": "Chromium fake audio capture; actual MediaRecorder Blob",
+      "realDevice": false
+    },
+    "connection-ui": {
+      "passed": 23,
+      "checks": [
+        "设置首页分类直达，初始不展开全部表单",
+        "搜索服务商、生日和壁纸能定位分类",
+        "Key 不触发自动请求，模型和地址始终可编辑",
+        "连接测试只发送当前全局模型及两条独立消息",
+        "模型列表 404 保留提示，手填模型仍可成功测试",
+        "实时模型列表支持搜索和选择",
+        "OpenRouter 切换不会继承 DeepSeek Key",
+        "HTTP 402 余额错误持续显示，重试成功后更新",
+        "SSE 429 限流错误显示原因，不能标记成功",
+        "测试可取消并能再次发起",
+        "修改域名后不自动携带已有凭据，完整路径保存后不重复",
+        "切回官方地址可恢复该地址的已保存 Key",
+        "记忆开关与分段按钮立即保存，并支持方向键",
+        "主题和壁纸采用直接选择，并在暗夜下正确显示",
+        "高级参数和系统提示词草稿切换分类后保留，未保存时不改配置",
+        "刷新后连接与 Key 恢复，且凭据不写入状态",
+        "320/390/768/1440 宽度下设置与弹层均无横向溢出",
+        "切换分类会取消旧模型读取，不污染新页面",
+        "聊天失败原因可见并写入本机，刷新后仍可查看",
+        "暗夜错误操作文字对比度达到 4.5，触控高度至少 44px",
+        "聊天错误直达 API 页面，重试后清除失败状态",
+        "原生桥接保留鉴权与流中错误，取消会终止原生请求",
+        "未出现页面运行错误"
+      ],
+      "pageErrors": [],
+      "fixtureRequests": 13,
+      "realProviderCalls": 0
+    },
+    "storage-scale": {
+      "passed": 5,
+      "checks": [
+        "v1 → v3：5000 条原文、ID、附件摘要、记忆来源与修订及备份一致",
+        "v2 → v3：5000 条原文、ID、附件摘要、记忆来源与修订及备份一致",
+        "1000 条长历史读写与备份完整保留",
+        "5000 条长历史读写与备份完整保留",
+        "20000 条长历史读写与备份完整保留"
+      ],
+      "migrations": [
+        {
+          "fromVersion": 1,
+          "toVersion": 3,
+          "messages": 5000,
+          "messageIdsExact": true,
+          "attachmentSHA256": "07d8ca9b2d76d7b7caff0063f35d90078e510ca0701db6268c1734309d3629f8",
+          "memorySourcesAndRevisionsExact": true,
+          "backupRestoreExact": true
+        },
+        {
+          "fromVersion": 2,
+          "toVersion": 3,
+          "messages": 5000,
+          "messageIdsExact": true,
+          "attachmentSHA256": "07d8ca9b2d76d7b7caff0063f35d90078e510ca0701db6268c1734309d3629f8",
+          "memorySourcesAndRevisionsExact": true,
+          "backupRestoreExact": true
+        }
+      ],
+      "scales": [
+        {
+          "messages": 1000,
+          "messageIdsExact": true,
+          "latencyMs": {
+            "write": 13.099999997764826,
+            "read": 5.400000002235174,
+            "settingsWrite": 2.399999998509884,
+            "append": 3.399999998509884,
+            "backup": 55.5,
+            "decodeBackup": 32
+          },
+          "backupBytes": 18656,
+          "originalTextBytes": 347722,
+          "mainThreadTaskMs": 128.406,
+          "jsHeapAfterBytes": 8699112
+        },
+        {
+          "messages": 5000,
+          "messageIdsExact": true,
+          "latencyMs": {
+            "write": 28.099999997764826,
+            "read": 18.100000001490116,
+            "settingsWrite": 6.399999998509884,
+            "append": 8.800000000745058,
+            "backup": 136.30000000074506,
+            "decodeBackup": 69.29999999701977
+          },
+          "backupBytes": 62577,
+          "originalTextBytes": 1809722,
+          "mainThreadTaskMs": 296.029,
+          "jsHeapAfterBytes": 31025948
+        },
+        {
+          "messages": 20000,
+          "messageIdsExact": true,
+          "latencyMs": {
+            "write": 78.80000000074506,
+            "read": 65.69999999925494,
+            "settingsWrite": 14.300000000745058,
+            "append": 33.80000000074506,
+            "backup": 551.8999999985099,
+            "decodeBackup": 223.69999999925494
+          },
+          "backupBytes": 233768,
+          "originalTextBytes": 7472223,
+          "mainThreadTaskMs": 1091.361,
+          "jsHeapAfterBytes": 167860360
+        }
+      ],
+      "browser": "148.0.7778.96",
+      "platform": "win32",
+      "pageErrors": [],
+      "scope": "Desktop Chromium IndexedDB, one synthetic dataset per scale; heap is sampled after operations, not peak/RSS/Android performance; no DB version change"
+    },
+    "reliability": {
+      "passed": 10,
+      "checks": [
+        "服务商切换隔离模型和地址草稿",
+        "异步日记保存保留新输入且不重复提交",
+        "保存后离开再进入仍保留新实例草稿",
+        "草稿刷新期间保护未完成的保存并恢复原输入",
+        "纸条与动态的异步保存不清空后续输入",
+        "角色保存完成保留随后编辑的人物卡",
+        "无效或截断合成音频不得出现成功语音",
+        "无效图片字节不得出现成功媒体",
+        "MAX_TOKENS 与断流不提交图片或音频",
+        "三块 PCM 流拼接为一份完整语音"
+      ],
+      "failures": [],
+      "pageErrors": [],
+      "providerCalls": "local fixtures",
+      "realDevice": false
+    },
+    "roleplay": {
+      "passed": 10,
+      "checks": [
+        "未连接AI可预览并取消TXT导入，不修改任何角色",
+        "保存连接后真实发起独立分析请求，不发送记忆与历史",
+        "采用拆分可撤销，世界条目均能检查且确认前不落库",
+        "失败的AI拆分显示错误并保留全部原文",
+        "成功拆分后确认导入，人物与世界分开且刷新保留原卡",
+        "拆分后原卡可从编辑界面真实下载，文本与导入文件相同",
+        "拆分后的世界背景真正进入模型请求并保留角色口吻配置",
+        "世界书独立JSON导入有预览、归属选择和原字段保存",
+        "命中解释和关键词设置为实际引擎结果，320宽度无溢出",
+        "取消分析不会把迟到结果写入预览或聊天"
+      ],
+      "analysisRequests": 4,
+      "requestBodies": [
+        {
+          "model": "deepseek-flash",
+          "messageCount": 2
+        },
+        {
+          "model": "deepseek-flash",
+          "messageCount": 2
+        },
+        {
+          "model": "deepseek-flash",
+          "messageCount": 2
+        },
+        {
+          "model": "deepseek-flash",
+          "messageCount": 4
+        },
+        {
+          "model": "deepseek-flash",
+          "messageCount": 2
+        }
+      ],
+      "pageErrors": [],
+      "providerMode": "local HTTP fixtures; no live provider evaluation"
+    },
+    "card-library": {
+      "passed": 14,
+      "checks": [
+        "仅收入卡库不创建聊天角色，刷新后完整留存",
+        "编辑卡片字段、分类、标签和收藏，头像随卡长期保存",
+        "新卡草稿关闭和刷新后可继续编辑，不丢失内容",
+        "同一卡片可反复创建两个独立角色，卡库仍是一张卡",
+        "修改卡片不改已有角色，明确预览后只更新选中的角色",
+        "卡库编辑可AI拆分人物与世界书，再保存和编辑世界书",
+        "导出当前卡片包含修改后人物和世界书，可以重新导入",
+        "删除聊天角色保留库卡，再从库卡创建新角色",
+        "复制与删除库卡不删除现有聊天实例，320宽度无横向溢出",
+        "普通导入默认收入仓库，重复文件不重复保存模板且来源编号有效",
+        "现有聊天角色可存为独立库卡，原角色和历史完整保留",
+        "世界书条目手动加入、编辑和删除只修改模板",
+        "600KB原卡编辑草稿刷新后完整恢复并可保存",
+        "卡库异步保存不清空随后输入，刷新后可继续保存新草稿"
+      ],
+      "analysisRequests": 1,
+      "pageErrors": [],
+      "providerMode": "local HTTP fixtures; no live provider evaluation"
+    },
+    "reference-sky": {
+      "passed": 5,
+      "checks": [
+        "Legacy upgrade changes only theme and revision; state and wallpaper bytes survive; deliberate later theme choice persists",
+        "390×844 home restores blue title, white label pills and original wallpaper without a fog overlay",
+        "Chat restores cool paper background, milk-white assistant bubble and pale-blue user bubble",
+        "320×640, 844×390 and desktop dock remains visible",
+        "Night and rose themes still apply after a deliberate choice and a cold reload"
+      ],
+      "errors": []
+    },
+    "save-recovery": {
+      "checks": [
+        "Real UI upload transaction abort leaves durable state unchanged",
+        "Emergency UI backup contains unsaved attachment bytes",
+        "A second failed retry retains recovery controls and aborts the full transaction",
+        "UI retry and reload preserve attachment reference and exact bytes",
+        "No uncaught page errors"
+      ],
+      "failures": [],
+      "pageErrors": [],
+      "passed": 5
+    }
+  },
+  "saveRecoveryBeforeFix": {
+    "checks": [
+      "Real UI upload transaction abort leaves durable state unchanged",
+      "No uncaught page errors"
+    ],
+    "failures": [
+      {
+        "name": "Emergency UI backup contains unsaved attachment bytes",
+        "error": "page.waitForEvent: Timeout 6000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================"
+      },
+      {
+        "name": "UI retry and reload preserve attachment reference and exact bytes",
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ null\n- [\n-   82,\n-   101,\n-   99,\n-   111,\n-   118,\n-   101,\n-   114,\n-   121,\n-   32,\n-   98,\n-   121,\n-   116,\n-   101,\n-   115,\n-   58,\n-   32,\n-   233,\n-   155,\n-   168,\n-   232,\n-   144,\n-   189,\n-   228,\n-   186,\n-   145,\n-   231,\n-   172,\n-   186,\n-   10,\n-   78,\n-   111,\n-   32,\n-   65,\n-   80,\n-   73,\n-   32,\n-   99,\n-   97,\n-   108,\n-   108,\n-   115,\n-   46,\n-   0,\n-   116,\n-   97,\n-   105,\n-   108\n- ]\n"
+      }
+    ],
+    "pageErrors": []
+  },
+  "androidWebProductionBuild": "passed",
+  "scope": "Local desktop Chromium with real IndexedDB, synthetic data and API fixtures; no paid API, physical Android, signing, deployment or remote Actions.",
+  "limits": "No physical-device pressure test at 540/550 MiB. New v3 archives require the updated reader; v2 ZIP/JSON imports remain supported."
+}

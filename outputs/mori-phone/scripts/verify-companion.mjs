@@ -6,11 +6,57 @@ const {freshState,stateSchema}=load('phone-model'),{memoryTask,applyMemoryResult
 async function check(name,run){await run();checks.push(name);}
 function fixture(){const s=freshState();s.memorySettings.extractEvery=1;s.threads[s.primary]=[{id:'user-fact',role:'user',text:'我喜欢喝不加糖的奶茶，讲数学时请先给例子。',kind:'text',timestamp:1}];return s;}
 function proposal(task,changes={}){return JSON.stringify([{key:'饮食.甜度',category:'preference',text:'用户喜欢无糖奶茶',sourceId:task.sources[0].id,quote:'我喜欢喝不加糖的奶茶',...changes}]);}
+await check('自动记忆保存完整来源哈希，改写后拒绝召回',()=>{
+ const state=fixture(),task=memoryTask(state,state.primary,state.primary);
+ applyMemoryResult(state,task,proposal(task));
+ const record=state.memories.at(-1);
+ assert.match(record.sourceDigest,/^[0-9a-f]{64}$/);
+ assert(validMemorySource(state,record));
+ state.threads[state.primary][0].text+='不过我已经改变了想法。';
+ assert(state.threads[state.primary][0].text.includes(record.evidence));
+ assert(!validMemorySource(state,record));
+ assert(!recallMemories(state,state.primary,'奶茶').includes('我喜欢喝不加糖的奶茶'));
+});
 await check('旧备份补齐设置且不修改已保存的系统提示词',()=>{const s=fixture();delete s.groupSettings;delete s.memoryCursors;delete s.memorySettings.autoExtract;delete s.memorySettings.extractEvery;s.coreSystemPrompt='我保存的核心';const parsed=stateSchema.parse(s);assert.equal(parsed.coreSystemPrompt,'我保存的核心');assert.equal(parsed.groupSettings.cadence,'natural');assert(parsed.memorySettings.autoExtract);});
 await check('自动记忆有角色归属、原话证据与持久化游标',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const m=s.memories.at(-1);assert.equal(m.scope,s.primary);assert.equal(m.origin,'auto');assert.equal(m.evidence,'我喜欢喝不加糖的奶茶');assert(m.text.includes(m.evidence));assert.equal(memoryTask(s,s.primary,s.primary),null);assert(stateSchema.safeParse(s).success);});
-await check('新自动记忆绑定完整来源字节，局部编辑保留引文也会失效',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const m=s.memories.at(-1);assert.match(m.sourceDigest,/^[0-9a-f]{64}$/);assert(validMemorySource(s,m));const source=s.threads[s.primary][0];source.text='我喜欢喝不加糖的奶茶，不过我已经改变主意了，讲数学时请先给例子。';assert(source.text.includes(m.evidence));assert(!validMemorySource(s,m));assert(!recallMemories(s,s.primary,'奶茶').includes('用户明确说过'));});
 await check('编造来源、非逐字证据和密钥记忆被拒绝',()=>{for(const changes of [{sourceId:'missing'},{quote:'我爱吃甜糖'},{text:'api key sk-secret123456'}]){const s=fixture(),task=memoryTask(s,s.primary,s.primary),before=JSON.stringify(s);assert.throws(()=>applyMemoryResult(s,task,proposal(task,changes)));assert.equal(JSON.stringify(s),before);}});
-await check('模型概括错误不会替换原话为反向偏好',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task,{text:'用户喜欢很多糖'}));assert.equal(s.memories.at(-1).text,'用户明确说过：我喜欢喝不加糖的奶茶');});
+await check('模型概括错误不会替换原话为反向偏好',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task,{text:'用户喜欢很多糖'}));assert.equal(s.memories.at(-1).text,s.threads[s.primary][0].text);});
+await check('短引文不能删除否定、条件、转述和剧情语境',()=>{
+ for(const text of ['我不喜欢咖啡，我喜欢茶。','如果将来喜欢咖啡，也不代表现在喜欢。','下面是小说人物的台词。\n“我很喜欢咖啡。”','他说喜欢咖啡，我没有这样说。']){
+  const s=fixture();s.threads[s.primary][0].text=text;const task=memoryTask(s,s.primary,s.primary);
+  applyMemoryResult(s,task,proposal(task,{quote:'喜欢咖啡',text:'用户喜欢咖啡'}));
+  assert.equal(s.memories.at(-1).text,text);assert(recallMemories(s,s.primary,'咖啡').includes(text));
+ }
+});
+await check('最长合法原文能无截断保存为记忆且重复候选不复制同一来源',()=>{
+ const s=fixture(),before=s.memories.length;s.threads[s.primary][0].text='我不喜欢咖啡。'.padEnd(18000,'文');const task=memoryTask(s,s.primary,s.primary);
+ const entry={key:'饮食',category:'preference',text:'喜欢咖啡',sourceId:task.sources[0].id,quote:'喜欢咖啡'};
+ applyMemoryResult(s,task,JSON.stringify([entry,{...entry,key:'饮食2'}]));
+ assert.equal(s.memories.length,before+1);assert.equal(s.memories.at(-1).text,s.threads[s.primary][0].text);assert(stateSchema.safeParse(s).success);
+});
+await check('历史自动记忆也从当前完整来源召回，不召回截断语境',()=>{
+ const s=fixture(),text='我不喜欢咖啡，我喜欢茶。';s.threads[s.primary][0].text=text;
+ s.memories.push({id:'legacy-negation',text:'用户明确说过：喜欢咖啡',scope:s.primary,date:'2026-10-13',origin:'auto',sourceThread:s.primary,sourceIds:['user-fact'],sourceAt:1,evidence:'喜欢咖啡',locked:false,revisions:[]});
+ const recalled=recallMemories(s,s.primary,'咖啡');assert(recalled.includes(text));assert(!recalled.includes('用户明确说过：喜欢咖啡'));
+ s.threads[s.primary][0].text='喜欢咖啡'.padEnd(6000,'文')+'只是虚构人物说的，我不喜欢。';
+ assert(!recallMemories(s,s.primary,'咖啡').includes('喜欢咖啡'));
+});
+await check('重复来源编号、已删除来源和失败来源不能替换原文召回',()=>{
+ for(const change of [s=>s.threads[s.primary].unshift({id:'user-fact',role:'assistant',kind:'text',timestamp:0,text:'喜欢咖啡'}),s=>s.threads[s.primary].pop(),s=>s.threads[s.primary][0].failed=true]){
+  const s=fixture();s.threads[s.primary][0].text='我不喜欢咖啡，我喜欢茶。';const task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task,{quote:'喜欢咖啡'}));change(s);assert(!recallMemories(s,s.primary,'咖啡').includes('喜欢咖啡'));
+ }
+});
+await check('同一条明确更正可以更新多条旧记忆，不因来源重复留下旧偏好',()=>{
+ const s=fixture();s.threads[s.primary]=[{id:'old-coffee',role:'user',kind:'text',timestamp:1,text:'我喜欢咖啡。'},{id:'old-tea',role:'user',kind:'text',timestamp:2,text:'我喜欢红茶。'}];
+ const task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,JSON.stringify([{key:'咖啡',category:'preference',text:'咖啡',sourceId:'old-coffee',quote:'喜欢咖啡'},{key:'茶',category:'preference',text:'茶',sourceId:'old-tea',quote:'喜欢红茶'}]));
+ const coffee=s.memories.find(m=>m.key==='咖啡'),tea=s.memories.find(m=>m.key==='茶'),text='更正，现在我不喝咖啡，也不喝红茶。';s.threads[s.primary].push({id:'correction-both',role:'user',kind:'text',timestamp:3,text});const correction=memoryTask(s,s.primary,s.primary);
+ applyMemoryResult(s,correction,JSON.stringify([{key:'咖啡',category:'preference',text:'不喝咖啡',sourceId:'correction-both',quote:'不喝咖啡',replaces:coffee.id},{key:'茶',category:'preference',text:'不喝红茶',sourceId:'correction-both',quote:'不喝红茶',replaces:tea.id}]));
+ assert.equal(s.memories.find(m=>m.id===coffee.id).text,text);assert.equal(s.memories.find(m=>m.id===tea.id).text,text);assert(!recallMemories(s,s.primary,'饮品').includes('我喜欢红茶'));
+});
+await check('用户编辑并锁定的自动记忆按编辑内容召回，原消息删除也不覆盖',()=>{
+ const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const memory=s.memories.at(-1);memory.text='我现在只喝白水。';memory.locked=true;s.threads[s.primary]=[];
+ assert(recallMemories(s,s.primary,'饮品').includes('我现在只喝白水'));assert(!recallMemories(s,s.primary,'饮品').includes('奶茶'));
+});
 await check('不同角色不会读到别人的私有记忆',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));assert(recallMemories(s,s.primary,'奶茶').includes('不加糖'));assert(!recallMemories(s,s.characters[1].id,'奶茶').includes('不加糖'));assert(!memoryTask(s,s.characters[1].id,s.characters[1].id));});
 await check('用户编辑和手动记忆不被自动整理覆盖',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);s.memories.push({id:'locked',text:'我现在喜欢三分糖',scope:s.primary,date:'2026-10-07',key:'饮食.甜度',origin:'manual',locked:true,revisions:[]});assert.throws(()=>applyMemoryResult(s,task,proposal(task,{replaces:'locked'})),/记忆已被更新/);assert.equal(s.memories.at(-1).text,'我现在喜欢三分糖');});
 await check('明确更正保存旧版本并使用最新原话',()=>{const s=fixture(),task=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,task,proposal(task));const old=s.memories.at(-1),oldText=old.text;s.threads[s.primary].push({id:'correction',role:'user',text:'更正一下，现在我喜欢三分糖的奶茶。',kind:'text',timestamp:2});const next=memoryTask(s,s.primary,s.primary);applyMemoryResult(s,next,proposal(next,{quote:'现在我喜欢三分糖的奶茶',replaces:old.id}));const updated=s.memories.find(m=>m.id===old.id);assert.equal(updated.revisions[0].text,oldText);assert(updated.text.includes('三分糖'));});
@@ -60,4 +106,3 @@ await check('修改角色 AI 配置不改变聊天、角色记忆、世界书和
 });
 
 console.log(JSON.stringify({passed:checks.length,checks},null,2));
-
