@@ -2684,8 +2684,8 @@
   {
     "path": "work/qa/save-recovery.mjs",
     "description": "真实界面的附件保存失败、紧急备份、重复重试与冷重载回归；路径：work/qa/save-recovery.mjs",
-    "bytes": 6692,
-    "sha256": "38b2bc75be7a819de62097f2134b3732737844b1cae1a7b3b24dfbb14d210815"
+    "bytes": 7192,
+    "sha256": "b7c54920db8bf7e0c6e6c3f346ff0d161cc9a8d1ce55d49e7ae40a10b58dbac3"
   },
   {
     "path": "work/qa/security-library.ts",
