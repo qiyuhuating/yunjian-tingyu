@@ -19,7 +19,7 @@ export function extractModelLimits(provider:ProviderId,body:any){
   const id=provider==='gemini'?row.name?.replace(/^models\//,''):row.id;if(typeof id!=='string'||!id.length||id.length>160)continue;
   const supportedParameters=provider==='openrouter'&&Array.isArray(row.supported_parameters)?row.supported_parameters.filter((p:unknown)=>typeof p==='string'&&p.length>0&&p.length<=80).slice(0,80) as string[]:undefined;
   const limit={contextTokens:valid(row.context_window??row.context_length??row.top_provider?.context_length),inputTokens:valid(row.inputTokenLimit??row.max_input_tokens),outputTokens:valid(row.outputTokenLimit??row.max_output_tokens??row.max_tokens??row.top_provider?.max_completion_tokens),...(supportedParameters?{supportedParameters}:{})};
-  if(limit.contextTokens||limit.inputTokens)result[id]=limit;
+  if(limit.contextTokens||limit.inputTokens||limit.outputTokens)result[id]=limit;
  }
  return result;
 }
@@ -35,10 +35,10 @@ function officialLimit(provider:ProviderId,model:string):ModelLimit|undefined{
  return undefined;
 }
 export function contextPlan(state:Pick<PhoneState,'provider'|'model'|'baseURL'|'modelLimits'|'sampling'>){
- const live=state.modelLimits[modelLimitKey(state.provider,state.baseURL,state.model)],known=live||officialLimit(state.provider,state.model),maximum=known?.contextTokens??known?.inputTokens;
+ const live=state.modelLimits[modelLimitKey(state.provider,state.baseURL,state.model)],fallback=officialLimit(state.provider,state.model),maximum=live?.contextTokens??live?.inputTokens??fallback?.contextTokens??fallback?.inputTokens,outputLimit=live?.outputTokens??fallback?.outputTokens;
  const manual=state.sampling.contextMode==='manual',window=manual?Math.min(state.sampling.contextTokens,maximum??MAX_CONTEXT_TOKENS):maximum??32768;
- const output=state.sampling.maxTokens+reasoningPlan(state.provider,state.model,state.sampling.thinking,state.sampling.reasoningEffort).budget;
- return {window,inputTokens:Math.max(0,Math.min(known?.inputTokens??window,window-output)),outputReserve:output,source:manual?'手动预算':live?'服务商模型列表':known?'官方预设':'上限未披露 · 暂用 32K',known:!!known};
+ const output=Math.min(state.sampling.maxTokens+reasoningPlan(state.provider,state.model,state.sampling.thinking,state.sampling.reasoningEffort).budget,outputLimit??Infinity);
+ return {window,inputTokens:Math.max(0,Math.min(live?.inputTokens??fallback?.inputTokens??window,window-output)),outputReserve:output,outputLimit,source:manual?'手动预算':live?.contextTokens||live?.inputTokens?'服务商模型列表':fallback?'官方预设':'上限未披露 · 暂用 32K',known:!!maximum};
 }
 // Conservative byte-based bound, not a claim of exact provider tokenization.
 export function estimateTokens(text:string){return new TextEncoder().encode(text).length;}

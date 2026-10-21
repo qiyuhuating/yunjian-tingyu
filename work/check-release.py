@@ -3,6 +3,7 @@ root=pathlib.Path('outputs/mori-phone').resolve();results=[]
 checks=[('core',['node','scripts/verify-core.mjs']),('providers',['node','scripts/verify-providers.mjs']),('voice',['node','scripts/verify-voice.mjs']),('review-regressions',['node','scripts/verify-review.mjs']),('group-chat',['node','scripts/verify-group.mjs']),('context-and-core',['node','scripts/verify-context.mjs']),('typescript',['node','node_modules/typescript/bin/tsc','--noEmit','--noUnusedLocals','--noUnusedParameters']),('diff-whitespace',['git','diff','--check'])]
 checks.insert(1,('api-connections',['node','scripts/verify-connections.mjs']))
 checks.insert(2,('core-runtime',['node','scripts/verify-runtime.mjs']))
+checks.insert(3,('backup-roundtrip',['node','scripts/verify-backup.mjs','--limits']))
 checks.insert(3,('turn-execution',['node','scripts/verify-turn.mjs']))
 checks.insert(4,('durable-turn-receipts',['node','scripts/verify-receipts.mjs']))
 checks.insert(5,('agent-workspace-and-collaboration',['node','scripts/verify-agents.mjs']))

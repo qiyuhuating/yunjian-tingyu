@@ -14,11 +14,11 @@ import Pet3D from './pet-3d';
 import {assembleChatMessages} from '../lib/ai-messages';
 import {readChatStream} from '../lib/ai-stream';
 import {splitRoleplayReply} from '../lib/roleplay';
-import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,prepareLocalUpload,LocalConflict,clearLegacyArchive,collectOrphanAssets} from '../lib/local-phone';
+import {initializeLocal,writeLocal,readDeviceKey,saveDeviceKey,uploadLocal,prepareLocalUpload,LocalConflict,clearLegacyArchive,collectOrphanAssets,assetReferences,type StagedAsset} from '../lib/local-phone';
 import {backupChunks,stageBackup,type PreparedBackup} from '../lib/local-backup';
 import {getProvider,connectionKeySlot,type ProviderId} from '../lib/providers';
 import {characterConnection} from '../lib/character-ai';
-import {routerModelParameters} from '../lib/context-window';
+import {contextPlan,routerModelParameters} from '../lib/context-window';
 import {nativeMediaFiles} from '../lib/native-media';
 import {validateGeneratedMedia} from '../lib/media-validation';
 import type {AIStats,SavedConnection} from './ui';
@@ -28,10 +28,11 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const [aiStats,setAIStats]=useState<AIStats>({last:null,requests:0,prompt:0,completion:0,firstTokenMs:null,durationMs:null,finishReason:''});
  const draftTimer=useRef<ReturnType<typeof setTimeout>|null>(null),pendingWrites=useRef(0),keyRevision=useRef(0),exporting=useRef(false);
  const data=useRef<PhoneState|null>(null),version=useRef(0),queue=useRef(Promise.resolve()),blocked=useRef(false),restoring=useRef(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
+ const pendingAssets=useRef(new Map<string,StagedAsset>());
  const activeKeySlot=state?connectionKeySlot(state.provider,state.baseURL):'',apiKey=keyEntry.provider===activeKeySlot?keyEntry.value:'',savedAI=keyEntry.provider===activeKeySlot&&keyEntry.saved,serverAI=false,vision=state?.vision??false;
  const toast=useCallback((message:string)=>{setNotice(message);if(timer.current)clearTimeout(timer.current);timer.current=setTimeout(()=>setNotice(''),3500);},[]);
  const setApiKey=(value:string)=>{keyRevision.current++;setKeyEntry({provider:data.current?connectionKeySlot(data.current.provider,data.current.baseURL):'',value,saved:false});};
- const reload=useCallback(async()=>{try{if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;setSync('loading');const row=await initializeLocal(ownerId,setOpening);data.current=row.state;version.current=row.version;setLegacyArchive(!!row.legacyArchive);blocked.current=false;setState(row.state);setSync('saved');void collectOrphanAssets(ownerId).catch(()=>{});}catch(e){setSync('error');const message=e instanceof Error?e.message:'无法读取本机数据。';setOpening(message);toast(message);}},[ownerId,toast]);
+ const reload=useCallback(async()=>{try{if(draftTimer.current){clearTimeout(draftTimer.current);draftTimer.current=null;}await queue.current;setSync('loading');const row=await initializeLocal(ownerId,setOpening);data.current=row.state;version.current=row.version;pendingAssets.current.clear();setLegacyArchive(!!row.legacyArchive);blocked.current=false;setState(row.state);setSync('saved');void collectOrphanAssets(ownerId).catch(()=>{});}catch(e){setSync('error');const message=e instanceof Error?e.message:'无法读取本机数据。';setOpening(message);toast(message);}},[ownerId,toast]);
  useEffect(()=>{void reload();setNow(new Date());const ticker=setInterval(()=>setNow(new Date()),30000);return()=>clearInterval(ticker);},[reload]);
  useEffect(()=>{if(!state)return;let active=true;const revision=keyRevision.current;void (async()=>{let value=await readDeviceKey(ownerId,activeKeySlot);if(!value&&state.provider==='compatible'){const legacy=await readDeviceKey(ownerId,'compatible');if(legacy){await saveDeviceKey(ownerId,activeKeySlot,legacy);await saveDeviceKey(ownerId,'compatible','');value=legacy;}}return value;})().then(value=>{if(active&&revision===keyRevision.current)setKeyEntry({provider:activeKeySlot,value,saved:!!value});}).catch(()=>toast('本机密钥未能读取，请在设置里重新填写。'));return()=>{active=false;};},[ownerId,activeKeySlot,toast]);
  const commit:Commit=useCallback((change,stagedAssets=[])=>{
@@ -39,8 +40,22 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
   if(restoring.current)return Promise.reject(new Error('备份恢复进行中，暂不能修改记录。'));
   if(blocked.current){toast('保存尚未成功。请先重试保存或导出备份。');return Promise.reject(new Error('保存尚未成功。'));}
   let draft:PhoneState;try{draft=produce(data.current,draft=>{change(draft);});}catch(e){toast(e instanceof Error?e.message:'无法保存');return Promise.reject(e);}const validated=stateSchema.safeParse(draft);if(!validated.success){toast('这条内容超出了允许的长度或数量，请缩短后重试。');return Promise.reject(new Error('数据校验失败。'));}
+  for(const asset of stagedAssets)pendingAssets.current.set(asset.id,asset);
   const next=draft;pendingWrites.current++;data.current=next;setState(next);setSync('saving');
-  const operation=queue.current.then(async()=>{if(blocked.current)throw new Error('保存队列已暂停。');version.current=await writeLocal(ownerId,next,version.current,undefined,true,stagedAssets);}).catch(e=>{if(!blocked.current){blocked.current=true;setSync(e instanceof LocalConflict?'conflict':'error');toast(e instanceof Error?e.message:'本机记录暂未保存。');}throw e;}).finally(()=>{pendingWrites.current--;if(!blocked.current)setSync(pendingWrites.current||draftTimer.current?'saving':'saved');});queue.current=operation.catch(()=>{});return operation;
+  const operation=queue.current.then(async()=>{
+   if(blocked.current)throw new Error('保存队列已暂停。');
+   // Keep failed blobs for retry without adding a later snapshot's files here.
+   const refs=new Set(assetReferences(next).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')));
+   const assets=[...pendingAssets.current.values()].filter(asset=>refs.has(asset.id));
+   version.current=await writeLocal(ownerId,next,version.current,undefined,true,assets);
+   for(const asset of assets)if(pendingAssets.current.get(asset.id)===asset)pendingAssets.current.delete(asset.id);
+  }).catch(e=>{if(!blocked.current){blocked.current=true;setSync(e instanceof LocalConflict?'conflict':'error');toast(e instanceof Error?e.message:'本机记录暂未保存。');}throw e;}).finally(()=>{
+   pendingWrites.current--;
+   if(!blocked.current){
+    if(!pendingWrites.current&&data.current){const refs=new Set(assetReferences(data.current).map(ref=>ref.replace(/^local:|^\/api\/assets\//,'')));for(const id of pendingAssets.current.keys())if(!refs.has(id))pendingAssets.current.delete(id);}
+    setSync(pendingWrites.current||draftTimer.current?'saving':'saved');
+   }
+  });queue.current=operation.catch(()=>{});return operation;
  },[ownerId,toast]);
  const setVision=(value:boolean)=>{void commit(s=>{s.vision=value;}).catch(()=>{});};
  const setDraft=useCallback((thread:string,text:string)=>{
@@ -53,7 +68,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
  const open=useCallback((name:string,selected='')=>{if(!window.dispatchEvent(new CustomEvent('cloudlet-before-navigation',{cancelable:true,detail:{app:name,detail:selected}})))return;setApp(name);setDetail(selected);void flushPending().catch(()=>{});if(['chat','face','live'].includes(name))setChatView({app:name,detail:selected});if(name==='browser')window.Android?.openBrowser('');},[flushPending]);
  useEffect(()=>{const back=()=>{setApp('home');setDetail('');};window.addEventListener('cloudlet-browser-return',back);return()=>window.removeEventListener('cloudlet-browser-return',back);},[]);
  useEffect(()=>{const back=()=>{if(['chat','face','live'].includes(app)&&!window.dispatchEvent(new Event('cloudlet-chat-back',{cancelable:true})))return true;const dialog=document.querySelector<HTMLDialogElement>('dialog[open]');if(dialog){dialog.close();return true;}const close=document.querySelector<HTMLButtonElement>('.sheet-backdrop .sheet-close');if(close){close.click();return true;}if(app==='settings'&&!window.dispatchEvent(new Event('cloudlet-settings-back',{cancelable:true})))return true;if(app==='chat'&&detail){open('chat');return true;}if(app!=='home'){open('home');return true;}return false;};window.NativeBack=back;return()=>{if(window.NativeBack===back)delete window.NativeBack;};},[app,detail,open]);
- const exportBackup=async()=>{if(exporting.current){toast('正在打包，请稍等。');return;}exporting.current=true;const controller=new AbortController();backupAbort.current=controller;setBackupProgress('正在准备记录…');try{if(!data.current)return;await queue.current;const snapshot=data.current;await exportChunks(backupChunks(ownerId,snapshot,(done,total)=>setBackupProgress(total?'已打包 '+Math.floor(done/total*100)+'%':'正在打包记录…'),controller.signal),appName+'-'+localDate()+'.zip','application/zip',controller.signal);toast(window.Android?'备份已准备好，请在系统窗口选择保存位置。':'完整备份已生成，不含密钥。');}catch(e){toast(e instanceof Error&&e.name==='AbortError'?'已取消备份，原记录没有改变。':e instanceof Error?e.message:'备份失败。');}finally{exporting.current=false;backupAbort.current=null;setBackupProgress(null);}};
+ const exportBackup=async()=>{if(exporting.current){toast('正在打包，请稍等。');return;}exporting.current=true;const controller=new AbortController();backupAbort.current=controller;setBackupProgress('正在准备记录…');try{if(!data.current)return;await queue.current;const snapshot=data.current,assets=new Map(pendingAssets.current);await exportChunks(backupChunks(ownerId,snapshot,(done,total)=>setBackupProgress(total?'已打包 '+Math.floor(done/total*100)+'%':'正在打包记录…'),controller.signal,assets),appName+'-'+localDate()+'.zip','application/zip',controller.signal);toast(window.Android?'备份已准备好，请在系统窗口选择保存位置。':'完整备份已生成，不含密钥。');}catch(e){toast(e instanceof Error&&e.name==='AbortError'?'已取消备份，原记录没有改变。':e instanceof Error?e.message:'备份失败。');}finally{exporting.current=false;backupAbort.current=null;setBackupProgress(null);}};
  useEffect(()=>{window.NativeRecoveryBackup=exportBackup;});
  const restoreBackup=async(prepared:PreparedBackup)=>{
   if(busy||restoring.current)throw new Error('请等当前任务结束再恢复备份。');
@@ -89,7 +104,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
   if(signal?.aborted)throw new DOMException('已中止','AbortError');
   const messages=await assembleChatMessages({ownerId,state:current,character,thread,text,mode,provider:selected.provider,model:selected.model,baseURL:selected.baseURL,vision:selected.vision,signal,causalUserId});
   const started=performance.now();
-  const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,provider:selected.provider,model:selected.model,baseURL:selected.baseURL,apiKey:selectedKey,supportedParameters:selected.provider==='openrouter'?routerModelParameters(selected.model):undefined,sampling:(mode==='summary'||mode==='analysis')?{...current.sampling,maxTokens:mode==='analysis'?4096:1600,thinking:false,penalties:false,sendRepetition:false}:current.sampling}),signal});
+  const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,provider:selected.provider,model:selected.model,baseURL:selected.baseURL,apiKey:selectedKey,outputTokenLimit:contextPlan({...current,provider:selected.provider,model:selected.model,baseURL:selected.baseURL}).outputLimit,supportedParameters:selected.provider==='openrouter'?routerModelParameters(selected.model):undefined,sampling:(mode==='summary'||mode==='analysis')?{...current.sampling,maxTokens:mode==='analysis'?4096:1600,thinking:false,penalties:false,sendRepetition:false}:current.sampling}),signal});
   if(!res.ok){let message='AI 接口返回 HTTP '+res.status+'，请检查模型、密钥及服务状态。';try{const body=await res.json() as {error?:unknown};if(typeof body.error==='string')message=body.error;}catch{}throw new Error(message);}
   const {answer,usage,firstTokenMs,finishReason,generated}=await readChatStream(res,{signal,onDelta,allowMedia:!!onMedia&&mode!=='summary'&&mode!=='analysis',started});
   if(signal?.aborted)throw new DOMException('已中止','AbortError');if(mode==='summary'&&(answer.length>3000||answer.includes('<cloudlet-choices>')))throw new Error('摘要格式不正确，尚未更新记忆。');if(!answer.trim()&&!generated.length)throw new Error('AI 没有返回文字或媒体，请检查模型名称。');setAIStats(s=>({last:usage,requests:s.requests+1,prompt:s.prompt+(usage?.prompt||0),completion:s.completion+(usage?.completion||0),firstTokenMs,durationMs:performance.now()-started,finishReason}));if(finishReason==='length'){if(mode==='summary'||mode==='analysis')throw new Error('整理结果被截断，尚未更新记忆。');throw new Error('回复被截断，尚未完成；请调高长度上限后重试。');}if(generated.length&&finishReason!=='stop')throw new Error('媒体生成没有完整结束，未发送。');const files=await Promise.all(nativeMediaFiles(generated).map(validateGeneratedMedia));signal?.throwIfAborted();for(const file of files)onMedia?.(file);return mode==='compose'?splitRoleplayReply(answer).text:answer;
@@ -120,7 +135,7 @@ export default function Phone({ownerId,appName='云朵小手机'}:{ownerId:strin
       <button className="note-widget glass" onClick={()=>open('notes')}><span className="note-heading"><span>✎ 小纸条</span><small>{state.notes.length?state.notes.at(-1)?.from:'写给彼此'} <Heart size={11}/></small></span><p>{state.notes.at(-1)?.text||'留一张小纸条，让普通的今天也变得特别。'}</p><span className="note-bottom">{state.notes.length} 张心意，收好啦 <FolderHeart size={15}/></span><span className="note-tape"/></button>
       <div className="home-apps">{['chat','forum','browser','diary'].map(k=>appButton(k))}</div>
       <button className="pet-peek" aria-label={`和${state.pet.name}说说话`} onClick={()=>open('pet')}><Pet3D mood="happy" active={app==='home'}/><span><strong>{state.pet.name}</strong><span className="pet-message">{state.pet.catchphrase}</span></span></button>
-      <div className="phone-dock glass">{['home','calendar','memories','settings'].map(k=>appButton(k,true))}</div><span className="home-indicator"/>
+      <div className="phone-dock glass">{['home','calendar','memories','settings'].map(k=>appButton(k,true))}</div>
      </div>
      {<section style={{display:app==='home'?'none':undefined}} className={`app-window ${((app==='chat'&&detail)||app==='face'||app==='live')?'chat-detail':''}`} aria-label={APP_NAMES[app]||'应用'}><header className="app-header"><button className="icon-button" aria-label="返回桌面" onClick={()=>open('home')}><ChevronLeft size={22}/></button><strong>{APP_NAMES[app]}</strong><button className="icon-button" aria-label="全部应用" onClick={()=>open('all')}><icons.all size={18}/></button></header><div className="module-root"><div style={{display:['chat','face','live'].includes(app)?'contents':'none'}}><RetainedChat view={chatView}/></div>{app!=='home'&&!['chat','face','live'].includes(app)&&<Suspense fallback={<div className="empty" role="status">正在打开…</div>}><Modules key={app+detail}/></Suspense>}</div></section>}
      {backupProgress&&<div className="mobile-save-recovery" role="status"><strong>{backupProgress}</strong><button onClick={()=>backupAbort.current?.abort()}>取消打包</button></div>}{['error','conflict'].includes(sync)&&<div className="mobile-save-recovery" role="alert"><strong>{sync==='conflict'?'其他窗口更新了本机记录':'本机保存未成功'}</strong><p>本页内容仍在。先导出备份，再处理保存。</p><div><button onClick={exportBackup}>导出备份</button>{sync!=='conflict'&&<button onClick={()=>void retrySave()}>重试保存</button>}<button onClick={()=>{if(confirm('重新读取会替换本页未保存内容，请先导出备份。'))void reload();}}>读取设备记录</button></div></div>}
